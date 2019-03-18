@@ -87,10 +87,9 @@ class DepartmentRestTest extends RestTestSuite
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(uri,
-                                                                            HttpMethod.POST,
-                                                                            new HttpEntity<>(createDepartmentRequest, headers),
-                                                                            Void.class);
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri,
+                                                                              HttpMethod.POST,
+                                                                              new HttpEntity<>(createDepartmentRequest, headers), String.class);
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }
