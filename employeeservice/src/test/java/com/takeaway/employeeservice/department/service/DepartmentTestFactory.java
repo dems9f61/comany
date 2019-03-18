@@ -1,13 +1,9 @@
 package com.takeaway.employeeservice.department.service;
 
+import com.takeaway.employeeservice.AbstractTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * User: StMinko
@@ -16,49 +12,33 @@ import java.util.stream.Stream;
  * <p/>
  */
 @Component
-public class DepartmentTestFactory
+public class DepartmentTestFactory extends AbstractTestFactory<Department, DepartmentTestFactory.Builder>
 {
-    public Department createDefault()
+
+    public Builder builder()
     {
-        return builder().create();
+        return new Builder();
     }
 
-    public DepartmentTestFactoryBuilder builder()
-    {
-        return new DepartmentTestFactoryBuilder();
-    }
-
-    private Stream<DepartmentTestFactoryBuilder> manyBuilders(int count)
-    {
-        return IntStream.range(0, count)
-                        .mapToObj(i -> builder());
-    }
-
-    public List<Department> createManyDefault(int count)
-    {
-        return manyBuilders(count).map(DepartmentTestFactoryBuilder::create)
-                                  .collect(Collectors.toList());
-    }
-
-    public static class DepartmentTestFactoryBuilder
+    public static class Builder implements AbstractTestFactory.Builder<Department>
     {
         private long id;
 
         private String departmentName;
 
-        DepartmentTestFactoryBuilder()
+        Builder()
         {
             this.id = RandomUtils.nextInt(10, 10_000);
             this.departmentName = RandomStringUtils.randomAlphabetic(24);
         }
 
-        public DepartmentTestFactoryBuilder id(long id)
+        public Builder id(long id)
         {
             this.id = id;
             return this;
         }
 
-        public DepartmentTestFactoryBuilder departmentName(String departmentName)
+        public Builder departmentName(String departmentName)
         {
             this.departmentName = departmentName;
             return this;

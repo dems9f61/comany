@@ -1,12 +1,8 @@
 package com.takeaway.employeeservice.department.service;
 
+import com.takeaway.employeeservice.AbstractTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * User: StMinko
@@ -16,41 +12,25 @@ import java.util.stream.Stream;
  */
 @Component
 public class DepartmentCreationParameterTestFactory
+        extends AbstractTestFactory<DepartmentCreationParameter, DepartmentCreationParameterTestFactory.Builder>
 {
 
-    public DepartmentCreationParameterBuilder builder()
+    public Builder builder()
     {
-        return new DepartmentCreationParameterBuilder();
+        return new Builder();
     }
 
-    public DepartmentCreationParameter createDefault()
-    {
-        return builder().create();
-    }
-
-    private Stream<DepartmentCreationParameterBuilder> manyBuilders(int count)
-    {
-        return IntStream.range(0, count)
-                        .mapToObj(i -> builder());
-    }
-
-    public List<DepartmentCreationParameter> createManyDefault(int count)
-    {
-        return manyBuilders(count).map(DepartmentCreationParameterBuilder::create)
-                                  .collect(Collectors.toList());
-    }
-
-    public static class DepartmentCreationParameterBuilder
+    public static class Builder implements AbstractTestFactory.Builder<DepartmentCreationParameter>
     {
 
         private String departmentName;
 
-        private DepartmentCreationParameterBuilder()
+        private Builder()
         {
             this.departmentName = RandomStringUtils.randomAlphabetic(8);
         }
 
-        public DepartmentCreationParameterBuilder departmentName(String departmentName)
+        public Builder departmentName(String departmentName)
         {
             this.departmentName = departmentName;
             return this;
