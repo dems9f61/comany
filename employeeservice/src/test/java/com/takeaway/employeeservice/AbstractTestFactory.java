@@ -44,7 +44,6 @@ public abstract class AbstractTestFactory<TYPE, BUILDER_TYPE extends AbstractTes
 
     public interface Builder<TYPE>
     {
-
         TYPE create();
     }
 
