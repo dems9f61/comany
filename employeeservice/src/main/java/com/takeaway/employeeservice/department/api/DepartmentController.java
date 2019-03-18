@@ -8,6 +8,10 @@ import com.takeaway.employeeservice.department.service.CreateDepartmentParameter
 import com.takeaway.employeeservice.department.service.Department;
 import com.takeaway.employeeservice.department.service.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.service.DepartmentServiceException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.net.HttpURLConnection;
 
 /**
  * User: StMinko
@@ -24,6 +29,7 @@ import javax.validation.constraints.NotNull;
  */
 @Slf4j
 @RestController
+@Api(value = "Department service: Operations pertaining to restaurant service interface")
 @RequestMapping(ApiVersions.V1 + "/departments")
 @RequiredArgsConstructor
 public class DepartmentController
@@ -36,6 +42,8 @@ public class DepartmentController
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
+    @ApiOperation(value = "Creates a Department with the request values")
+    @ApiResponses({ @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DepartmentResponse createDepartment(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)

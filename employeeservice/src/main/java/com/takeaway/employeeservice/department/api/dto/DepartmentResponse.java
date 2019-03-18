@@ -1,6 +1,7 @@
 package com.takeaway.employeeservice.department.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,9 +19,10 @@ public class DepartmentResponse
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
-
+    @ApiModelProperty(example = "245")
     private final long   id;
 
+    @ApiModelProperty(example = "Human Resources (HR)")
     private final String departmentName;
 
     // ============================  Constructors  ===========================

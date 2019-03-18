@@ -3,6 +3,7 @@ package com.takeaway.employeeservice.department.api.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.takeaway.employeeservice.department.service.CreateDepartmentParameter;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -23,13 +24,14 @@ public class CreateDepartmentRequest
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
+    @ApiModelProperty(example = "Human Resources (HR)")
     @NotNull
     private final String departmentName;
 
     // ============================  Constructors  ===========================
 
     @JsonCreator
-    public CreateDepartmentRequest(@JsonProperty(value = "departmentName", required = true) String departmentName)
+    CreateDepartmentRequest(@JsonProperty(value = "departmentName", required = true) String departmentName)
     {
         this.departmentName = departmentName;
     }

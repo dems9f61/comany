@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Time: 22:50
  * <p/>
  */
+@DisplayName("Rest tests for the department service")
 class DepartmentRestTest extends RestTestSuite
 {
     // =========================== Class Variables ===========================
