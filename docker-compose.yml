@@ -1,0 +1,19 @@
+version: '3'
+services:
+  rabbit_node_1:
+    image: rabbitmq:3-management
+    hostname: rabbit_node_1
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+
+    tty: true
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_ERLANG_COOKIE: "secret_cookie"
+      RABBITMQ_DEFAULT_VHOST: "/"
+
+    labels:
+      NAME: "rabbitmq1"
+
