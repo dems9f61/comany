@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 /**
  * User: StMinko
@@ -25,7 +25,7 @@ public class CreateDepartmentRequest
     // =============================  Variables  =============================
 
     @ApiModelProperty(example = "Human Resources (HR)")
-    @NotNull
+    @NotBlank(message = "The department name must not be blank")
     private final String departmentName;
 
     // ============================  Constructors  ===========================

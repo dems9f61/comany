@@ -17,7 +17,7 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @Entity
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Table(name = "DEPARTMENTS", uniqueConstraints = { @UniqueConstraint(name = "UNIQUE_NAME", columnNames = { "departmentName" }) })
+@Table(name = "DEPARTMENTS", uniqueConstraints = { @UniqueConstraint(name = "UNIQUE_NAME", columnNames = { "department_name" }) })
 public class Department
 {
     // =========================== Class Variables ===========================
@@ -27,6 +27,7 @@ public class Department
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(name = "department_name", length = 50, nullable = false)
     private String departmentName;
 
     // ============================  Constructors  ===========================
