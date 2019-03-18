@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DepartmentService
+class DepartmentService implements DepartmentServiceCapable
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
@@ -35,7 +35,7 @@ public class DepartmentService
         if (departments.size() > 1)
         {
             String errorMessage = String.format("There are multiple departments by the name '%s' already exists!", departmentName);
-            throw new DepartmentServiceException(DepartmentServiceException.Raison.AMBIGUOUS_RESULTS, errorMessage);
+            throw new DepartmentServiceException(errorMessage);
         }
         return departments.isEmpty() ? Optional.empty() : Optional.of(departments.get(0));
     }
@@ -46,21 +46,21 @@ public class DepartmentService
         return departmentRepository.findAll();
     }
 
-    public Department create(@NonNull DepartmentCreationParameter creationParameter) throws DepartmentServiceException
+    public Department create(@NonNull CreateDepartmentParameter creationParameter) throws DepartmentServiceException
     {
         LOGGER.info("Creating a department with {} ", creationParameter);
         String departmentName = creationParameter.getDepartmentName();
 
         if (StringUtils.isBlank(departmentName))
         {
-            throw new DepartmentServiceException(DepartmentServiceException.Raison.INVALID_REQUEST, "Department name '%s' is blank!");
+            throw new DepartmentServiceException("Department name '%s' is blank!");
         }
 
         List<Department> foundDepartment = departmentRepository.findByDepartmentName(departmentName);
         if (!foundDepartment.isEmpty())
         {
             String errorMessage = String.format("Department name '%s' already exists!", departmentName);
-            throw new DepartmentServiceException(DepartmentServiceException.Raison.ALREADY_EXISTING_DEPARTMENT, errorMessage);
+            throw new DepartmentServiceException(errorMessage);
         }
         Department department = new Department();
         department.setDepartmentName(departmentName);

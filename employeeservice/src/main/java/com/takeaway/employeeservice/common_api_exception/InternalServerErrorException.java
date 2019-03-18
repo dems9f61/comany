@@ -1,25 +1,25 @@
-package com.takeaway.employeeservice.department.service;
+package com.takeaway.employeeservice.common_api_exception;
 
-import lombok.NonNull;
+import org.springframework.http.HttpStatus;
 
 /**
  * User: StMinko
  * Date: 18.03.2019
- * Time: 11:55
+ * Time: 17:19
  * <p/>
  */
-public class DepartmentServiceException extends Exception
+public class InternalServerErrorException extends ApiException
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
 
-    DepartmentServiceException(@NonNull String message)
+    public InternalServerErrorException(String message)
     {
-        super(message);
+        super(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================

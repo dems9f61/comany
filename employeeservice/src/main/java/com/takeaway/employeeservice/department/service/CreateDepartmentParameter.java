@@ -1,25 +1,29 @@
 package com.takeaway.employeeservice.department.service;
 
-import lombok.NonNull;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * User: StMinko
  * Date: 18.03.2019
- * Time: 11:55
+ * Time: 11:53
  * <p/>
  */
-public class DepartmentServiceException extends Exception
+@RequiredArgsConstructor
+@EqualsAndHashCode
+@ToString
+@Getter
+public class CreateDepartmentParameter
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
+
+    private final String departmentName;
+
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
-
-    DepartmentServiceException(@NonNull String message)
-    {
-        super(message);
-    }
-
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================

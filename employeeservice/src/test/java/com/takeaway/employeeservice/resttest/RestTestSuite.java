@@ -1,26 +1,33 @@
-package com.takeaway.employeeservice.department.service;
+package com.takeaway.employeeservice.resttest;
 
-import lombok.NonNull;
+import com.takeaway.employeeservice.IntegrationTestSuite;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpHeaders;
 
 /**
  * User: StMinko
  * Date: 18.03.2019
- * Time: 11:55
+ * Time: 23:04
  * <p/>
  */
-public class DepartmentServiceException extends Exception
+public abstract class RestTestSuite extends IntegrationTestSuite
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
+
+    @Autowired
+    protected TestRestTemplate testRestTemplate;
+
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
-    DepartmentServiceException(@NonNull String message)
+    protected HttpHeaders defaultHttpHeaders()
     {
-        super(message);
+        return new HttpHeaders();
     }
 
-    // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

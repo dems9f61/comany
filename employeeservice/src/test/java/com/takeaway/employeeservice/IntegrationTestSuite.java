@@ -1,6 +1,7 @@
 package com.takeaway.employeeservice;
 
-import com.takeaway.employeeservice.department.service.DepartmentCreationParameterTestFactory;
+import com.takeaway.employeeservice.department.api.dto.CreateDepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.service.CreateDepartmentParameterTestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +23,10 @@ public abstract class IntegrationTestSuite
     // =============================  Variables  =============================
 
     @Autowired
-    protected DepartmentCreationParameterTestFactory departmentCreationParameterTestFactory;
+    protected CreateDepartmentParameterTestFactory createDepartmentParameterTestFactory;
+
+    @Autowired
+    protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

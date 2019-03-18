@@ -1,6 +1,7 @@
 package com.takeaway.employeeservice;
 
-import com.takeaway.employeeservice.department.service.DepartmentCreationParameterTestFactory;
+import com.takeaway.employeeservice.department.api.dto.CreateDepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.service.CreateDepartmentParameterTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,9 +19,11 @@ public abstract class UnitTestSuite
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    protected DepartmentCreationParameterTestFactory departmentCreationParameterTestFactory;
+    protected CreateDepartmentParameterTestFactory createDepartmentParameterTestFactory;
 
     protected DepartmentTestFactory departmentTestFactory;
+
+    protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
@@ -28,8 +31,9 @@ public abstract class UnitTestSuite
     @BeforeEach
     public void initFactories()
     {
-        departmentCreationParameterTestFactory = new DepartmentCreationParameterTestFactory();
+        createDepartmentParameterTestFactory = new CreateDepartmentParameterTestFactory();
         departmentTestFactory = new DepartmentTestFactory();
+        createDepartmentRequestTestFactory = new CreateDepartmentRequestTestFactory();
     }
 
     // =================  protected/package local  Methods ===================
