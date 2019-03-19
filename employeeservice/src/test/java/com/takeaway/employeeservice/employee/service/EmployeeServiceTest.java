@@ -1,5 +1,6 @@
 package com.takeaway.employeeservice.employee.service;
 
+import com.google.common.collect.Lists;
 import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.department.service.Department;
 import com.takeaway.employeeservice.department.service.DepartmentServiceCapable;
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -89,7 +92,7 @@ class EmployeeServiceTest extends UnitTestSuite
     {
         @Test
         @DisplayName("Updating an employee with a valid parameters succeeds")
-        void giveValidParameters_whenUpdate_thenThrowException() throws Exception
+        void giveValidParameters_whenUpdate_thenSucceed() throws Exception
         {
             // Arrange
             String uuid = UUID.randomUUID()
@@ -149,12 +152,78 @@ class EmployeeServiceTest extends UnitTestSuite
         }
     }
 
-
     @Nested
     @DisplayName("when new")
     class WhenNew
     {
+        @Test
+        @DisplayName("Updating an employee with a valid parameters succeeds")
+        void giveValidParameters_whenCreate_thenSucceed() throws Exception
+        {
+            // Arrange
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            Department department = departmentTestFactory.createDefault();
+            doReturn(Optional.of(department)).when(departmentService)
+                                             .findByDepartmentName(employeeParameter.getDepartmentName());
 
+            doReturn(Collections.emptyList()).when(employeeRepository)
+                                             .findByEmailAddress(employeeParameter.getEmailAddress());
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(employee).when(employeeRepository)
+                              .save(any());
+            doNothing().when(employeeEventPublisher)
+                       .employeeCreated(any());
+
+            // Act
+            employeeService.create(employeeParameter);
+
+            // Assert
+            verify(employeeRepository).save(assertArg(persisted -> {
+                assertThat(persisted.getBirthday()
+                                    .toInstant()
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()).isEqualTo(employeeParameter.getBirthday());
+                assertThat(persisted.getUuid()).isNotBlank();
+                assertThat(persisted.getDepartment()
+                                    .getDepartmentName()).isEqualTo(department.getDepartmentName());
+                assertThat(persisted.getEmailAddress()).isEqualTo(employeeParameter.getEmailAddress());
+                assertThat(persisted.getFullName()
+                                    .getFirstName()).isEqualTo(employeeParameter.getFirstName());
+                assertThat(persisted.getFullName()
+                                    .getLastName()).isEqualTo(employeeParameter.getLastName());
+            }));
+            verify(employeeEventPublisher).employeeCreated(assertArg(getDefaultEmployeeConsumer(employee)));
+        }
+
+        @Test
+        @DisplayName("Creating an employee with a unknown department fails")
+        void givenUnknownDepartment_whenCreate_thenThrowException() throws Exception
+        {
+            // Arrange
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            doThrow(DepartmentServiceException.class).when(departmentService)
+                                                     .findByDepartmentName(employeeParameter.getDepartmentName());
+
+            // Act / Assert
+            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+        }
+
+        @Test
+        @DisplayName("Creating an employee with an already used mail")
+        void givenAlreadyUsedEmail_whenCreate_thenThrowException() throws Exception
+        {
+            // Arrange
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            Department department = departmentTestFactory.createDefault();
+            doReturn(Optional.of(department)).when(departmentService)
+                                             .findByDepartmentName(employeeParameter.getDepartmentName());
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(Lists.newArrayList(employee)).when(employeeRepository)
+                                                  .findByEmailAddress(employeeParameter.getEmailAddress());
+
+            // Act / Assert
+            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+        }
     }
 
     private Consumer<Employee> getDefaultEmployeeConsumer(Employee employee)
@@ -169,5 +238,4 @@ class EmployeeServiceTest extends UnitTestSuite
             assertThat(candidate.getFullName()).isEqualTo(employee.getFullName());
         };
     }
-
 }
