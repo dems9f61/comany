@@ -19,8 +19,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -59,7 +58,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
     class WhenNew
     {
         @Test
-        @DisplayName("Creating an employee with a valid parameter succeeds")
+        @DisplayName("Creating an employee with valid parameters succeeds")
         void givenValidRequestParams_whenCreate_thenSucceed() throws Exception
         {
             // Arrange
@@ -229,6 +228,86 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Assert
             assertThat(employeeService.findByUuid(uuid)).isEmpty();
             verify(employeeEventPublisher).employeeDeleted(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(uuid)));
+        }
+    }
+
+    @Nested
+    @DisplayName("when update")
+    class WhenUpdate
+    {
+        @Test
+        @DisplayName("Updating an employee with valid parameters succeeds")
+        void givenValidRequestParams_whenUpdate_thenSucceed() throws Exception
+        {
+            // Arrange
+            DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
+            departmentService.create(departmentParameter);
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
+                                                                              .departmentName(departmentParameter.getDepartmentName())
+                                                                              .create();
+            Employee employee = employeeService.create(employeeParameter);
+
+            EmployeeParameter updateParameters = employeeParameterTestFactory.createDefault();
+            DepartmentParameter newDepartmentParameter = departmentParameterTestFactory.builder()
+                                                                                       .departmentName(updateParameters.getDepartmentName())
+                                                                                       .create();
+            departmentService.create(newDepartmentParameter);
+
+            // Act
+            employeeService.update(employee.getUuid(), updateParameters);
+
+            // Assert
+            Optional<Employee> updated = employeeService.findByUuid(employee.getUuid());
+            if (!updated.isPresent())
+            {
+                fail("Fail to retrieve the updated employee");
+            }
+            else
+            {
+                Employee updatedEmployee = updated.get();
+                assertThat(updatedEmployee.getEmailAddress()).isEqualTo(updateParameters.getEmailAddress());
+                assertThat(updatedEmployee.getFullName()
+                                          .getFirstName()).isEqualTo(updateParameters.getFirstName());
+                assertThat(updatedEmployee.getFullName()
+                                          .getLastName()).isEqualTo(updateParameters.getLastName());
+                assertThat(updatedEmployee.getBirthday()
+                                          .toInstant()
+                                          .atZone(ZoneId.systemDefault())
+                                          .toLocalDate()).isEqualTo(updateParameters.getBirthday());
+                assertThat(updatedEmployee.getDepartment()
+                                          .getDepartmentName()).isEqualTo(updateParameters.getDepartmentName());
+                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
+                        updatedEmployee.getUuid())));
+            }
+        }
+
+        @Test
+        @DisplayName("Updating an employee with wrong uuid fails")
+        void givenUnknownUuid_whenUpdate_thenThrowException()
+        {
+            // Arrange
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+
+            // Act / Assert
+            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(UUID.randomUUID()
+                                                                                                                  .toString(), employeeParameter));
+        }
+
+        @Test
+        @DisplayName("Updating an employee with unknown department fails")
+        void givenUnknownDepartment_whenUpdate_thenThrowException() throws Exception
+        {
+            // Arrange
+            DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
+            departmentService.create(departmentParameter);
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
+                                                                              .departmentName(departmentParameter.getDepartmentName())
+                                                                              .create();
+            Employee employee = employeeService.create(employeeParameter);
+            EmployeeParameter updateParameters = employeeParameterTestFactory.createDefault();
+
+            // Act / Assert
+            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(employee.getUuid(), updateParameters));
         }
     }
 }

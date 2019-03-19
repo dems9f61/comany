@@ -36,9 +36,8 @@ public class Employee
     @AttributeOverrides(value = {
             @AttributeOverride(name = "firstName", column = @Column(name = "first_name")),
             @AttributeOverride(name = "lastName", column = @Column(name = "last_name")) })
-    private FullName fullName;
+    private FullName fullName = new FullName();
 
-    @Temporal(TemporalType.DATE)
     @Column(length = 10)
     private Date birthday;
 

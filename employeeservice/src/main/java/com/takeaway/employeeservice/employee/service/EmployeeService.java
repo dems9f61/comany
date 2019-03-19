@@ -6,10 +6,12 @@ import com.takeaway.employeeservice.department.service.DepartmentServiceExceptio
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -74,29 +76,26 @@ class EmployeeService implements EmployeeServiceCapable
                                                                                                departmentName)));
     }
 
-    //    public Employee update(@NonNull String uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
-    //    {
-    //        LOGGER.info("Updating an employeeToUpdate {} with {} ", uuid, updateParameter);
-    //        Optional<Employee> optionalEmployee = findByUuid(uuid);
-    //        if(!optionalEmployee.isPresent()){
-    //            throw new EmployeeServiceException(String.format("Employee with uuid '%s' could not be found!", uuid))
-    //        }
-    //
-    //        Employee employee = optionalEmployee.get();
-    //        String newEmailAddress = updateParameter.getEmailAddress();
-    //        if(!StringUtils.equals(employee.getEmailAddress(), newEmailAddress)){
-    //            employee.setEmailAddress(newEmailAddress);
-    //        }
-    //
-    //        String firstName = updateParameter.getFirstName();
-    //        String lastName = updateParameter.getLastName();
-    //        Employee.FullName oldFullName = employee.getFullName();
-    //        if (oldFullName.equals(new ))
-    //        {
-    //            employee.setEmailAddress(newEmailAddress);
-    //        }
-    //
-    //    }
+    public void update(@NonNull String uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
+    {
+        LOGGER.info("Updating an employeeToUpdate {} with {} ", uuid, updateParameter);
+        Optional<Employee> optionalEmployee = findByUuid(uuid);
+        if (!optionalEmployee.isPresent())
+        {
+            throw new EmployeeServiceException(String.format("Employee with uuid '%s' could not be found!", uuid));
+        }
+
+        Employee employee = optionalEmployee.get();
+        boolean hasUpdated = updateEmailAddress(updateParameter, employee);
+        hasUpdated = updateFullName(updateParameter, employee) || hasUpdated;
+        hasUpdated = updateBirthDay(updateParameter, employee) || hasUpdated;
+        hasUpdated = updateDepartment(updateParameter, employee) || hasUpdated;
+        if (hasUpdated)
+        {
+            Employee updatedEmployee = employeeRepository.save(employee);
+            messagePublisher.employeeUpdated(updatedEmployee);
+        }
+    }
 
     public Optional<Employee> findByUuid(@NonNull String uuid)
     {
@@ -140,6 +139,81 @@ class EmployeeService implements EmployeeServiceCapable
             throw new EmployeeServiceException(e);
         }
         return departmentOptional;
+    }
+
+    private boolean updateEmailAddress(EmployeeParameter updateParameter, Employee employee)
+    {
+        boolean hasUpdated = false;
+        String newEmailAddress = updateParameter.getEmailAddress();
+        if (!StringUtils.equals(employee.getEmailAddress(), newEmailAddress))
+        {
+            employee.setEmailAddress(newEmailAddress);
+            hasUpdated = true;
+        }
+        return hasUpdated;
+    }
+
+    private boolean updateFullName(EmployeeParameter updateParameter, Employee employee)
+    {
+        boolean hasUpdated = false;
+        String newFirstName = updateParameter.getFirstName();
+        Employee.FullName fullName = employee.getFullName();
+        if (!StringUtils.equals(fullName.getFirstName(), newFirstName))
+        {
+            fullName.setFirstName(newFirstName);
+            hasUpdated = true;
+        }
+        String newLastName = updateParameter.getLastName();
+        if (!StringUtils.equals(fullName.getLastName(), newLastName))
+        {
+            fullName.setLastName(newLastName);
+            hasUpdated = true;
+        }
+        return hasUpdated;
+    }
+
+    private boolean updateBirthDay(EmployeeParameter updateParameter, Employee employee)
+    {
+        boolean hasUpdated = false;
+        LocalDate newBirthDayAsLocalDate = updateParameter.getBirthday();
+        Date oldBirthDay = employee.getBirthday();
+        LocalDate oldBirthDayAsLocalDate = oldBirthDay == null ?
+                null :
+                oldBirthDay.toInstant()
+                           .atZone(ZoneId.systemDefault())
+                           .toLocalDate();
+        if (ObjectUtils.notEqual(newBirthDayAsLocalDate, oldBirthDayAsLocalDate))
+        {
+            employee.setBirthday(Date.from(newBirthDayAsLocalDate.atStartOfDay(ZoneId.systemDefault())
+                                                                 .toInstant()));
+            hasUpdated = true;
+        }
+        return hasUpdated;
+    }
+
+    private boolean updateDepartment(EmployeeParameter updateParameter, Employee employee) throws EmployeeServiceException
+    {
+        boolean hasUpdated = false;
+        String newDepartmentName = updateParameter.getDepartmentName();
+        if (!StringUtils.equals(newDepartmentName,
+                                employee.getDepartment()
+                                        .getDepartmentName()))
+        {
+            try
+            {
+                Department department = departmentService.findByDepartmentName(newDepartmentName)
+                                                         .orElseThrow(() -> new EmployeeServiceException(String.format(
+                                                                 "A department with name '%s' could not be found!",
+                                                                 newDepartmentName)));
+                employee.setDepartment(department);
+            }
+            catch (DepartmentServiceException e)
+            {
+                throw new EmployeeServiceException(e);
+            }
+            hasUpdated = true;
+        }
+        return hasUpdated;
     }
 
     // ============================  Inner Classes  ==========================
