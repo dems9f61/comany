@@ -1,23 +1,24 @@
-package com.takeaway.employeeservice.department.service;
+package com.takeaway.employeeservice.employee.service;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: StMinko
- * Date: 18.03.2019
- * Time: 11:48
+ * Date: 19.03.2019
+ * Time: 09:47
  * <p/>
  */
-@Repository
-interface DepartmentRepository extends JpaRepository<Department, Integer>
+public interface EmployeeRepository extends JpaRepository<Employee, String>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
 
-    List<Department> findByDepartmentName(String departmentName);
+    Optional<Employee> findByUuid(String uuid);
+
+    List<Employee> findByEmailAddress(String emailAddress);
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

@@ -46,14 +46,14 @@ class DepartmentService implements DepartmentServiceCapable
         return departmentRepository.findAll();
     }
 
-    public Department create(@NonNull CreateDepartmentParameter creationParameter) throws DepartmentServiceException
+    public Department create(@NonNull DepartmentParameter departmentParameter) throws DepartmentServiceException
     {
-        LOGGER.info("Creating a department with {} ", creationParameter);
-        String departmentName = creationParameter.getDepartmentName();
+        LOGGER.info("Creating a department with {} ", departmentParameter);
+        String departmentName = departmentParameter.getDepartmentName();
 
         if (StringUtils.isBlank(departmentName))
         {
-            throw new DepartmentServiceException("Department name '%s' is blank!");
+            throw new DepartmentServiceException("Department name is blank!");
         }
 
         List<Department> foundDepartment = departmentRepository.findByDepartmentName(departmentName);

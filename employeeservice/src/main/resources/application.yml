@@ -7,4 +7,5 @@ spring.rabbitmq:
   password: rabbitmq
 
 exchange:
-  name: employeeExchange
+  exchange-name: employeeExchange
+

@@ -4,8 +4,8 @@ import com.takeaway.employeeservice.ApiVersions;
 import com.takeaway.employeeservice.common_api_exception.BadRequestException;
 import com.takeaway.employeeservice.department.api.dto.CreateDepartmentRequest;
 import com.takeaway.employeeservice.department.api.dto.DepartmentResponse;
-import com.takeaway.employeeservice.department.service.CreateDepartmentParameter;
 import com.takeaway.employeeservice.department.service.Department;
+import com.takeaway.employeeservice.department.service.DepartmentParameter;
 import com.takeaway.employeeservice.department.service.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.service.DepartmentServiceException;
 import io.swagger.annotations.Api;
@@ -48,7 +48,7 @@ public class DepartmentController
     @ResponseStatus(HttpStatus.CREATED)
     public DepartmentResponse createDepartment(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
     {
-        CreateDepartmentParameter createDepartmentParameter = createDepartmentRequest.toCreateDepartmentParameter();
+        DepartmentParameter createDepartmentParameter = createDepartmentRequest.toCreateDepartmentParameter();
         try
         {
             Department department = departmentService.create(createDepartmentParameter);

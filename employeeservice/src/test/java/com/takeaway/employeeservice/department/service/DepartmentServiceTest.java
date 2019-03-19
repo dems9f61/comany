@@ -44,9 +44,9 @@ class DepartmentServiceTest extends UnitTestSuite
         void givenEmptyDepartmentName_whenCreate_thenStatusSucceed()
         {
             // Arrange
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.builder()
-                                                                                              .departmentName(" ")
-                                                                                              .create();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
+                                                                                  .departmentName(" ")
+                                                                                  .create();
 
             // Act / Assert
             assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
@@ -57,9 +57,9 @@ class DepartmentServiceTest extends UnitTestSuite
         void givenNullDepartmentName_whenCreate_thenStatusSucceed()
         {
             // Arrange
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.builder()
-                                                                                              .departmentName(null)
-                                                                                              .create();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
+                                                                                  .departmentName(null)
+                                                                                  .create();
             // Act / Assert
             assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
         }
@@ -69,7 +69,7 @@ class DepartmentServiceTest extends UnitTestSuite
         void givenAlreadyExistingDepartmentName_whenCreate_thenTThrowException()
         {
             // Arrange
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.createDefault();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
             doReturn(Lists.newArrayList(departmentTestFactory.createDefault())).when(departmentRepository)
                                                                                .findByDepartmentName(creationParameter.getDepartmentName());
 
@@ -82,7 +82,7 @@ class DepartmentServiceTest extends UnitTestSuite
         void givenValidRequestParams_whenCreate_thenStatusSucceed() throws Exception
         {
             // Arrange
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.createDefault();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
             doReturn(Lists.emptyList()).when(departmentRepository)
                                        .findByDepartmentName(creationParameter.getDepartmentName());
             doReturn(departmentTestFactory.createDefault()).when(departmentRepository)

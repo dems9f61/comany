@@ -2,7 +2,7 @@ package com.takeaway.employeeservice.department.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.takeaway.employeeservice.department.service.CreateDepartmentParameter;
+import com.takeaway.employeeservice.department.service.DepartmentParameter;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,9 +36,9 @@ public class CreateDepartmentRequest
         this.departmentName = departmentName;
     }
 
-    public CreateDepartmentParameter toCreateDepartmentParameter()
+    public DepartmentParameter toCreateDepartmentParameter()
     {
-        return new CreateDepartmentParameter(departmentName);
+        return new DepartmentParameter(departmentName);
     }
 
     // ===========================  public  Methods  =========================

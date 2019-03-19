@@ -1,24 +1,34 @@
-package com.takeaway.employeeservice.department.service;
+package com.takeaway.employeeservice.employee.service;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+
+import java.time.LocalDate;
 
 /**
  * User: StMinko
- * Date: 18.03.2019
- * Time: 11:53
+ * Date: 19.03.2019
+ * Time: 09:41
  * <p/>
  */
-@RequiredArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
-public class CreateDepartmentParameter
+@Builder
+public class EmployeeParameter
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
+
+    private final String emailAddress;
+
+    private final String firstName;
+
+    private final String lastName;
+
+    private final LocalDate birthday;
 
     private final String departmentName;
 

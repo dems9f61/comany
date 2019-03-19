@@ -1,40 +1,26 @@
 package com.takeaway.employeeservice.department.service;
 
-import com.takeaway.employeeservice.employee.service.Employee;
-import lombok.*;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * User: StMinko
  * Date: 18.03.2019
- * Time: 11:30
+ * Time: 11:53
  * <p/>
  */
-
-@Getter
-@Setter
-@ToString
+@RequiredArgsConstructor
 @EqualsAndHashCode
-@Entity
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Table(name = "DEPARTMENTS")
-public class Department
+@ToString
+@Getter
+public class DepartmentParameter
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
-    @Column(name = "department_name", length = 50, nullable = false, unique = true)
-    private String departmentName;
-
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private Set<Employee> employees = new HashSet<>();
+    private final String departmentName;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

@@ -38,7 +38,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
         void givenValidRequestParams_whenCreate_thenStatusSucceed() throws Exception
         {
             // Arrange
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.createDefault();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
 
             // Act
             Department department = departmentService.create(creationParameter);
@@ -56,14 +56,14 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
         {
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.builder()
-                                                                                              .departmentName(departmentName)
-                                                                                              .create();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
+                                                                                  .departmentName(departmentName)
+                                                                                  .create();
             departmentService.create(creationParameter);
 
-            CreateDepartmentParameter creationParameter_2 = createDepartmentParameterTestFactory.builder()
-                                                                                                .departmentName(departmentName)
-                                                                                                .create();
+            DepartmentParameter creationParameter_2 = departmentParameterTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
             // Act / Assert
             assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter_2));
         }
@@ -73,9 +73,9 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
         void givenBlankDepartmentName_whenCreate_thenThrowException()
         {
             // Arrange
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.builder()
-                                                                                              .departmentName(" ")
-                                                                                              .create();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
+                                                                                  .departmentName(" ")
+                                                                                  .create();
             // Act / Assert
             assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
         }
@@ -85,9 +85,9 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
         void givenNullDepartmentName_whenCreate_thenThrowException()
         {
             // Arrange
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.builder()
-                                                                                              .departmentName(null)
-                                                                                              .create();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
+                                                                                  .departmentName(null)
+                                                                                  .create();
             // Act / Assert
             assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
         }
@@ -103,8 +103,8 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
         {
             // Arrange
             departmentRepository.deleteAll();
-            List<CreateDepartmentParameter> creationParameters = createDepartmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
-            for (CreateDepartmentParameter creationParameter : creationParameters)
+            List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
+            for (DepartmentParameter creationParameter : creationParameters)
             {
                 departmentService.create(creationParameter);
             }
@@ -113,7 +113,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
             List<Department> all = departmentService.findAll();
 
             // Assert
-            assertThat(all).hasSameSizeAs(creationParameters);
+            assertThat(all.size()).isEqualTo(creationParameters.size());
         }
 
         @Test
@@ -121,21 +121,24 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
         void givenDepartments_whenFindByDepartmentName_thenReturnDepartment() throws Exception
         {
             // Arrange
-            List<CreateDepartmentParameter> creationParameters = createDepartmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
-            for (CreateDepartmentParameter creationParameter : creationParameters)
+            List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
+            for (DepartmentParameter creationParameter : creationParameters)
             {
                 departmentService.create(creationParameter);
             }
 
-            CreateDepartmentParameter creationParameter = createDepartmentParameterTestFactory.createDefault();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
             Department department = departmentService.create(creationParameter);
 
             // Act
             Optional<Department> found = departmentService.findByDepartmentName(creationParameter.getDepartmentName());
 
             // Assert
-            assertThat(found).isPresent()
-                             .hasValue(department);
+
+            assertThat(found).isPresent();
+            Department foundDepartment = found.get();
+            assertThat(foundDepartment.getId()).isEqualTo(department.getId());
+            assertThat(foundDepartment.getDepartmentName()).isEqualTo(department.getDepartmentName());
         }
 
         @Test
@@ -143,8 +146,8 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
         void givenNotExistingDepartmentName_whenFindByDepartmentName_thenReturnNothing() throws Exception
         {
             // Arrange
-            List<CreateDepartmentParameter> creationParameters = createDepartmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
-            for (CreateDepartmentParameter creationParameter : creationParameters)
+            List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
+            for (DepartmentParameter creationParameter : creationParameters)
             {
                 departmentService.create(creationParameter);
             }

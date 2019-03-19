@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * <p/>
  */
 @Component
-public class CreateDepartmentParameterTestFactory extends AbstractTestFactory<CreateDepartmentParameter, CreateDepartmentParameterTestFactory.Builder>
+public class DepartmentParameterTestFactory extends AbstractTestFactory<DepartmentParameter, DepartmentParameterTestFactory.Builder>
 {
 
     public Builder builder()
@@ -19,7 +19,7 @@ public class CreateDepartmentParameterTestFactory extends AbstractTestFactory<Cr
         return new Builder();
     }
 
-    public static class Builder implements AbstractTestFactory.Builder<CreateDepartmentParameter>
+    public static class Builder implements AbstractTestFactory.Builder<DepartmentParameter>
     {
 
         private String departmentName;
@@ -35,9 +35,9 @@ public class CreateDepartmentParameterTestFactory extends AbstractTestFactory<Cr
             return this;
         }
 
-        public CreateDepartmentParameter create()
+        public DepartmentParameter create()
         {
-            return new CreateDepartmentParameter(departmentName);
+            return new DepartmentParameter(departmentName);
         }
     }
 }

@@ -1,26 +1,25 @@
-package com.takeaway.employeeservice.department.service;
+package com.takeaway.employeeservice.employee.service;
 
 import lombok.NonNull;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * User: StMinko
- * Date: 18.03.2019
- * Time: 16:16
+ * Date: 19.03.2019
+ * Time: 09:52
  * <p/>
  */
-public interface DepartmentServiceCapable
+public interface EmployeeServiceCapable
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
 
-    Department create(@NonNull DepartmentParameter departmentParameter) throws DepartmentServiceException;
+    Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException;
 
-    Optional<Department> findByDepartmentName(@NonNull String departmentName) throws DepartmentServiceException;
+    Optional<Employee> findByUuid(@NonNull String uuid);
 
-    List<Department> findAll();
+    void deleteByUuid(@NonNull String uuid) throws EmployeeServiceException;
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================
