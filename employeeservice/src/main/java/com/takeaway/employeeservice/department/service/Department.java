@@ -33,7 +33,7 @@ public class Department
     @Column(name = "department_name", length = 50, nullable = false, unique = true)
     private String departmentName;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private Set<Employee> employees = new HashSet<>();
 
     // ============================  Constructors  ===========================

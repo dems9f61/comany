@@ -64,9 +64,9 @@ class EmployeeService implements EmployeeServiceCapable
             newEmployee.setBirthday(Date.from(creationParameter.getBirthday()
                                                                .atStartOfDay(ZoneId.systemDefault())
                                                                .toInstant()));
-            newEmployee.setDepartment(departmentOptional.get());
-
+            newEmployee.setDepartment(department);
             Employee savedEmployee = employeeRepository.save(newEmployee);
+
             messagePublisher.employeeCreated(savedEmployee);
             return savedEmployee;
         })
@@ -74,7 +74,27 @@ class EmployeeService implements EmployeeServiceCapable
                                                                                                departmentName)));
     }
 
-    //    public Employee update(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException {
+    //    public Employee update(@NonNull String uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
+    //    {
+    //        LOGGER.info("Updating an employeeToUpdate {} with {} ", uuid, updateParameter);
+    //        Optional<Employee> optionalEmployee = findByUuid(uuid);
+    //        if(!optionalEmployee.isPresent()){
+    //            throw new EmployeeServiceException(String.format("Employee with uuid '%s' could not be found!", uuid))
+    //        }
+    //
+    //        Employee employee = optionalEmployee.get();
+    //        String newEmailAddress = updateParameter.getEmailAddress();
+    //        if(!StringUtils.equals(employee.getEmailAddress(), newEmailAddress)){
+    //            employee.setEmailAddress(newEmailAddress);
+    //        }
+    //
+    //        String firstName = updateParameter.getFirstName();
+    //        String lastName = updateParameter.getLastName();
+    //        Employee.FullName oldFullName = employee.getFullName();
+    //        if (oldFullName.equals(new ))
+    //        {
+    //            employee.setEmailAddress(newEmailAddress);
+    //        }
     //
     //    }
 

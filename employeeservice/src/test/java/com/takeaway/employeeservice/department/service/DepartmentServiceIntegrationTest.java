@@ -134,7 +134,6 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
             Optional<Department> found = departmentService.findByDepartmentName(creationParameter.getDepartmentName());
 
             // Assert
-
             assertThat(found).isPresent();
             Department foundDepartment = found.get();
             assertThat(foundDepartment.getId()).isEqualTo(department.getId());
