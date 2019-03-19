@@ -73,7 +73,7 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
             return this;
         }
 
-        public LocalDate generateRandomDate()
+        private LocalDate generateRandomDate()
         {
             long minDay = LocalDate.of(1970, 1, 1)
                                    .toEpochDay();

@@ -3,6 +3,8 @@ package com.takeaway.employeeservice;
 import com.takeaway.employeeservice.department.api.dto.CreateDepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentParameterTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentTestFactory;
+import com.takeaway.employeeservice.employee.service.EmployeeParameterTestFactory;
+import com.takeaway.employeeservice.employee.service.EmployeeTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,6 +27,10 @@ public abstract class UnitTestSuite
 
     protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
 
+    protected EmployeeTestFactory employeeTestFactory;
+
+    protected EmployeeParameterTestFactory employeeParameterTestFactory;
+
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
@@ -34,6 +40,8 @@ public abstract class UnitTestSuite
         departmentParameterTestFactory = new DepartmentParameterTestFactory();
         departmentTestFactory = new DepartmentTestFactory();
         createDepartmentRequestTestFactory = new CreateDepartmentRequestTestFactory();
+        employeeTestFactory = new EmployeeTestFactory();
+        employeeParameterTestFactory = new EmployeeParameterTestFactory();
     }
 
     // =================  protected/package local  Methods ===================
