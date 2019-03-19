@@ -18,6 +18,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
@@ -227,6 +228,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
 
             // Assert
             assertThat(employeeService.findByUuid(uuid)).isEmpty();
+            verify(employeeEventPublisher).employeeDeleted(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(uuid)));
         }
     }
 }
