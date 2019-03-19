@@ -1,6 +1,9 @@
 package com.takeaway.employeeservice.employee.service;
 
 import com.takeaway.employeeservice.UnitTestSuite;
+import com.takeaway.employeeservice.department.service.Department;
+import com.takeaway.employeeservice.department.service.DepartmentServiceCapable;
+import com.takeaway.employeeservice.department.service.DepartmentServiceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,6 +12,7 @@ import org.mockito.Mock;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +31,9 @@ class EmployeeServiceTest extends UnitTestSuite
 {
     @Mock
     private EmployeeEventPublisher employeeEventPublisher;
+
+    @Mock
+    private DepartmentServiceCapable departmentService;
 
     @Mock
     private EmployeeRepository employeeRepository;
@@ -72,15 +79,7 @@ class EmployeeServiceTest extends UnitTestSuite
 
             // Assert
             verify(employeeRepository).deleteById(uuid);
-            verify(employeeEventPublisher).employeeDeleted(assertArg(publishedEmployee -> {
-                assertThat(publishedEmployee.getBirthday()).isEqualTo(employee.getBirthday());
-                assertThat(publishedEmployee.getUuid()).isEqualTo(employee.getUuid());
-                assertThat(publishedEmployee.getDepartment()
-                                            .getId()).isEqualTo(employee.getDepartment()
-                                                                        .getId());
-                assertThat(publishedEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-                assertThat(publishedEmployee.getFullName()).isEqualTo(employee.getFullName());
-            }));
+            verify(employeeEventPublisher).employeeDeleted(assertArg(getDefaultEmployeeConsumer(employee)));
         }
     }
 
@@ -89,6 +88,32 @@ class EmployeeServiceTest extends UnitTestSuite
     class WhenUpdate
     {
         @Test
+        @DisplayName("Updating an employee with a valid parameters succeeds")
+        void giveValidParameters_whenUpdate_thenThrowException() throws Exception
+        {
+            // Arrange
+            String uuid = UUID.randomUUID()
+                              .toString();
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(Optional.of(employee)).when(employeeRepository)
+                                           .findByUuid(uuid);
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            Department department = departmentTestFactory.createDefault();
+
+            doReturn(Optional.of(department)).when(departmentService)
+                                             .findByDepartmentName(employeeParameter.getDepartmentName());
+            doReturn(employee).when(employeeRepository)
+                              .save(any());
+
+            // Act
+            employeeService.update(uuid, employeeParameter);
+
+            // Assert
+            verify(employeeRepository).save(assertArg(getDefaultEmployeeConsumer(employee)));
+            verify(employeeEventPublisher).employeeUpdated(assertArg(getDefaultEmployeeConsumer(employee)));
+        }
+
+        @Test
         @DisplayName("Updating an employee with a wrong uuid fails")
         void givenUnknownUuid_whenUpdate_thenThrowException()
         {
@@ -96,14 +121,34 @@ class EmployeeServiceTest extends UnitTestSuite
             String uuid = UUID.randomUUID()
                               .toString();
             doReturn(Optional.empty()).when(employeeRepository)
-                                      .findByUuid(any());
+                                      .findByUuid(uuid);
 
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
 
             // Act / Assert
             assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(uuid, employeeParameter));
         }
+
+        @Test
+        @DisplayName("Updating an employee with a unknown department fails")
+        void givenUnknownDepartment_whenUpdate_thenThrowException() throws Exception
+        {
+            // Arrange
+            String uuid = UUID.randomUUID()
+                              .toString();
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(Optional.of(employee)).when(employeeRepository)
+                                           .findByUuid(uuid);
+
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            doThrow(DepartmentServiceException.class).when(departmentService)
+                                                     .findByDepartmentName(employeeParameter.getDepartmentName());
+
+            // Act / Assert
+            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(uuid, employeeParameter));
+        }
     }
+
 
     @Nested
     @DisplayName("when new")
@@ -111,4 +156,18 @@ class EmployeeServiceTest extends UnitTestSuite
     {
 
     }
+
+    private Consumer<Employee> getDefaultEmployeeConsumer(Employee employee)
+    {
+        return candidate -> {
+            assertThat(candidate.getBirthday()).isEqualTo(employee.getBirthday());
+            assertThat(candidate.getUuid()).isEqualTo(employee.getUuid());
+            assertThat(candidate.getDepartment()
+                                .getId()).isEqualTo(employee.getDepartment()
+                                                            .getId());
+            assertThat(candidate.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+            assertThat(candidate.getFullName()).isEqualTo(employee.getFullName());
+        };
+    }
+
 }
