@@ -171,14 +171,21 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             Optional<Employee> foundEmployeeOpt = employeeService.findByUuid(employee.getUuid());
 
             // Assert
-            assertThat(foundEmployeeOpt).isPresent();
-            Employee foundEmployee = foundEmployeeOpt.get();
-            assertThat(foundEmployee.getUuid()).isEqualTo(employee.getUuid());
-            assertThat(foundEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-            assertThat(foundEmployee.getFullName()).isEqualTo(employee.getFullName());
-            assertThat(foundEmployee.getDepartment()
-                                    .getId()).isEqualTo(employee.getDepartment()
-                                                                .getId());
+            if (!foundEmployeeOpt.isPresent())
+            {
+                fail("Fail to retrieve the  employee");
+            }
+            else
+            {
+                Employee foundEmployee = foundEmployeeOpt.get();
+                assertThat(foundEmployee.getUuid()).isEqualTo(employee.getUuid());
+                assertThat(foundEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+                assertThat(foundEmployee.getFullName()).isEqualTo(employee.getFullName());
+                assertThat(foundEmployee.getDepartment()
+                                        .getId()).isEqualTo(employee.getDepartment()
+                                                                    .getId());
+            }
+
         }
     }
 
