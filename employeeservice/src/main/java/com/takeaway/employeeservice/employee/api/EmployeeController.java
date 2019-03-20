@@ -53,7 +53,7 @@ public class EmployeeController
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeResponse createEmployee(@RequestBody @NotNull @Valid EmployeeRequest employeeRequest)
     {
-        LOGGER.info("Creating an employee by the id {}", employeeRequest);
+        LOGGER.info("Creating an employee by the request {}", employeeRequest);
         EmployeeParameter employeeParameter = employeeRequest.toEmployerParameter();
         try
         {
@@ -90,7 +90,7 @@ public class EmployeeController
     @ResponseStatus(HttpStatus.OK)
     public EmployeeResponse findUserByUuid(@NotBlank @PathVariable("uuid") String uuid)
     {
-        LOGGER.info("Retrieving an employee by the id {}", uuid);
+        LOGGER.info("Retrieving an employee by the uuid {}", uuid);
         return employeeService.findByUuid(uuid)
                               .map(employee -> new EmployeeResponse(employee.getUuid(),
                                                                     employee.getEmailAddress(),
@@ -111,6 +111,7 @@ public class EmployeeController
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@NotBlank @PathVariable("uuid") final String uuid)
     {
+        LOGGER.info("Deleting an employee by the uuid {}", uuid);
         try
         {
             employeeService.deleteByUuid(uuid);
