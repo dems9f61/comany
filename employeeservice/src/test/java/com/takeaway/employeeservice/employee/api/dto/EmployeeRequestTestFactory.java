@@ -1,26 +1,24 @@
-package com.takeaway.employeeservice.employee.service;
+package com.takeaway.employeeservice.employee.api.dto;
 
 import com.takeaway.employeeservice.AbstractTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
 /**
  * User: StMinko
- * Date: 19.03.2019
- * Time: 11:11
+ * Date: 20.03.2019
+ * Time: 00:54
  * <p/>
  */
-@Component
-public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeeParameter, EmployeeParameterTestFactory.Builder>
+public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequest, EmployeeRequestTestFactory.Builder>
 {
     public Builder builder()
     {
         return new Builder();
     }
 
-    public static class Builder implements AbstractTestFactory.Builder<EmployeeParameter>
+    public static class Builder implements AbstractTestFactory.Builder<EmployeeRequest>
     {
         private String emailAddress;
 
@@ -35,10 +33,10 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
         Builder()
         {
             this.emailAddress = generateRandomEmail();
-            this.firstName = RandomStringUtils.randomAlphabetic(10);
-            this.lastName = RandomStringUtils.randomAlphabetic(13);
             this.birthday = generateRandomDate();
-            this.departmentName = RandomStringUtils.randomAlphabetic(24);
+            this.firstName = RandomStringUtils.randomAlphabetic(20);
+            this.lastName = RandomStringUtils.randomAlphabetic(10);
+            this.departmentName = RandomStringUtils.randomAlphabetic(10);
         }
 
         public Builder emailAddress(String emailAddress)
@@ -71,9 +69,9 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
             return this;
         }
 
-        public EmployeeParameter create()
+        public EmployeeRequest create()
         {
-            return new EmployeeParameter(emailAddress, firstName, lastName, birthday, departmentName);
+            return new EmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
         }
     }
 }

@@ -2,7 +2,7 @@ package com.takeaway.employeeservice.department.api;
 
 import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.common_api_exception.BadRequestException;
-import com.takeaway.employeeservice.department.api.dto.CreateDepartmentRequest;
+import com.takeaway.employeeservice.department.api.dto.DepartmentRequest;
 import com.takeaway.employeeservice.department.api.dto.DepartmentResponse;
 import com.takeaway.employeeservice.department.service.Department;
 import com.takeaway.employeeservice.department.service.DepartmentServiceCapable;
@@ -42,9 +42,9 @@ class DepartmentControllerTest extends UnitTestSuite
         void givenUnderlyingException_whenCreate_thenThrowBadRequestException() throws Exception
         {
             // Arrange
-            CreateDepartmentRequest departmentRequest = createDepartmentRequestTestFactory.createDefault();
+            DepartmentRequest departmentRequest = createDepartmentRequestTestFactory.createDefault();
             doThrow(DepartmentServiceException.class).when(departmentService)
-                                                     .create(departmentRequest.toCreateDepartmentParameter());
+                                                     .create(departmentRequest.toDepartmentParameter());
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentController.createDepartment(departmentRequest));
@@ -55,10 +55,10 @@ class DepartmentControllerTest extends UnitTestSuite
         void giveValidRequest_whenCreate_thenSucceed() throws Exception
         {
             // Arrange
-            CreateDepartmentRequest departmentRequest = createDepartmentRequestTestFactory.createDefault();
+            DepartmentRequest departmentRequest = createDepartmentRequestTestFactory.createDefault();
             Department department = departmentTestFactory.createDefault();
             doReturn(department).when(departmentService)
-                                .create(departmentRequest.toCreateDepartmentParameter());
+                                .create(departmentRequest.toDepartmentParameter());
 
             // Act
             DepartmentResponse departmentResponse = departmentController.createDepartment(departmentRequest);

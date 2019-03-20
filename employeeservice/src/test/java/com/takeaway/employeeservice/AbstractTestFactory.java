@@ -1,6 +1,11 @@
 package com.takeaway.employeeservice;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
+
+import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -45,6 +50,23 @@ public abstract class AbstractTestFactory<TYPE, BUILDER_TYPE extends AbstractTes
     public interface Builder<TYPE>
     {
         TYPE create();
+
+        default LocalDate generateRandomDate()
+        {
+            long minDay = LocalDate.of(1970, 1, 1)
+                                   .toEpochDay();
+            long maxDay = LocalDate.now()
+                                   .toEpochDay();
+            long randomDay = ThreadLocalRandom.current()
+                                              .nextLong(minDay, maxDay);
+
+            return LocalDate.ofEpochDay(randomDay);
+        }
+
+        default String generateRandomEmail()
+        {
+            return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
+        }
     }
 
     // ============================  End of class  ===========================

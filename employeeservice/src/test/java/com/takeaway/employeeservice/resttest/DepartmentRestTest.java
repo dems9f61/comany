@@ -1,7 +1,7 @@
 package com.takeaway.employeeservice.resttest;
 
 import com.takeaway.employeeservice.ApiVersions;
-import com.takeaway.employeeservice.department.api.dto.CreateDepartmentRequest;
+import com.takeaway.employeeservice.department.api.dto.DepartmentRequest;
 import com.takeaway.employeeservice.department.api.dto.DepartmentResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
@@ -36,9 +36,9 @@ class DepartmentRestTest extends RestTestSuite
         {
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                                .departmentName(departmentName)
-                                                                                                .create();
+            DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
 
             String uri = String.format("%s/departments", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
@@ -58,9 +58,9 @@ class DepartmentRestTest extends RestTestSuite
         void givenBlankDepartmentName_whenCreateUser_thenStatus400()
         {
             // Arrange
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                                .departmentName("  ")
-                                                                                                .create();
+            DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
+                                                                                    .departmentName("  ")
+                                                                                    .create();
 
             String uri = String.format("%s/departments", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
@@ -79,9 +79,9 @@ class DepartmentRestTest extends RestTestSuite
         void givenNullDepartmentName_whenCreateUser_thenStatus400()
         {
             // Arrange
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                                .departmentName(null)
-                                                                                                .create();
+            DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
+                                                                                    .departmentName(null)
+                                                                                    .create();
 
             String uri = String.format("%s/departments", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
@@ -99,7 +99,7 @@ class DepartmentRestTest extends RestTestSuite
         void givenValidDepartmentName_whenCreateUser_thenStatus200()
         {
             // Arrange
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
+            DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.createDefault();
             String uri = String.format("%s/departments", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 

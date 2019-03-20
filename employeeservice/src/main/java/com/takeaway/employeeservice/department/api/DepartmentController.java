@@ -2,7 +2,7 @@ package com.takeaway.employeeservice.department.api;
 
 import com.takeaway.employeeservice.ApiVersions;
 import com.takeaway.employeeservice.common_api_exception.BadRequestException;
-import com.takeaway.employeeservice.department.api.dto.CreateDepartmentRequest;
+import com.takeaway.employeeservice.department.api.dto.DepartmentRequest;
 import com.takeaway.employeeservice.department.api.dto.DepartmentResponse;
 import com.takeaway.employeeservice.department.service.Department;
 import com.takeaway.employeeservice.department.service.DepartmentParameter;
@@ -29,7 +29,7 @@ import java.net.HttpURLConnection;
  */
 @Slf4j
 @RestController
-@Api(value = "Department service: Operations pertaining to restaurant service interface")
+@Api(value = "Department service: Operations pertaining to department service interface")
 @RequestMapping(ApiVersions.V1 + "/departments")
 @RequiredArgsConstructor
 public class DepartmentController
@@ -46,9 +46,9 @@ public class DepartmentController
     @ApiResponses({ @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DepartmentResponse createDepartment(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
+    public DepartmentResponse createDepartment(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
     {
-        DepartmentParameter createDepartmentParameter = createDepartmentRequest.toCreateDepartmentParameter();
+        DepartmentParameter createDepartmentParameter = departmentRequest.toDepartmentParameter();
         try
         {
             Department department = departmentService.create(createDepartmentParameter);

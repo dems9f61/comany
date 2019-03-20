@@ -62,7 +62,7 @@ public class Employee
     @Getter
     @Embeddable
     @EqualsAndHashCode
-    static class FullName
+    public static class FullName
     {
         private String firstName;
 

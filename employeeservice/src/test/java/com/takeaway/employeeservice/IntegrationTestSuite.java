@@ -1,6 +1,6 @@
 package com.takeaway.employeeservice;
 
-import com.takeaway.employeeservice.department.api.dto.CreateDepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.api.dto.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentParameterTestFactory;
 import com.takeaway.employeeservice.employee.service.EmployeeParameterTestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ public abstract class IntegrationTestSuite
     protected EmployeeParameterTestFactory employeeParameterTestFactory;
 
     @Autowired
-    protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
+    protected DepartmentRequestTestFactory departmentRequestTestFactory;
 
     @Autowired
     protected PlatformTransactionManager transactionManager;

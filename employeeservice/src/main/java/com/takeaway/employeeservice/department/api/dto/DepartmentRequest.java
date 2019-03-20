@@ -1,6 +1,7 @@
 package com.takeaway.employeeservice.department.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.takeaway.employeeservice.department.service.DepartmentParameter;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,10 +17,11 @@ import javax.validation.constraints.NotBlank;
  * Time: 17:43
  * <p/>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @ToString
 @EqualsAndHashCode
-public class CreateDepartmentRequest
+public class DepartmentRequest
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
@@ -31,12 +33,12 @@ public class CreateDepartmentRequest
     // ============================  Constructors  ===========================
 
     @JsonCreator
-    CreateDepartmentRequest(@JsonProperty(value = "departmentName", required = true) String departmentName)
+    DepartmentRequest(@JsonProperty(value = "departmentName", required = true) String departmentName)
     {
         this.departmentName = departmentName;
     }
 
-    public DepartmentParameter toCreateDepartmentParameter()
+    public DepartmentParameter toDepartmentParameter()
     {
         return new DepartmentParameter(departmentName);
     }

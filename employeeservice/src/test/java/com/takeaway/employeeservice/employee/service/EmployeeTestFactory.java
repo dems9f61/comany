@@ -4,12 +4,9 @@ import com.takeaway.employeeservice.AbstractTestFactory;
 import com.takeaway.employeeservice.department.service.Department;
 import com.takeaway.employeeservice.department.service.DepartmentTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * User: StMinko
@@ -40,7 +37,8 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
         {
             this.emailAddress = generateRandomEmail();
             this.department = departmentTestFactory.createDefault();
-            this.birthday = generateRandomDate();
+            this.birthday = Date.from(generateRandomDate().atStartOfDay(ZoneId.systemDefault())
+                                                          .toInstant());
             this.fullName = new Employee.FullName();
             this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
             this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
@@ -77,25 +75,6 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
                            .setDepartment(department)
                            .setEmailAddress(emailAddress)
                            .setFullName(fullName);
-        }
-
-        private Date generateRandomDate()
-        {
-            long minDay = LocalDate.of(1970, 1, 1)
-                                   .toEpochDay();
-            long maxDay = LocalDate.now()
-                                   .toEpochDay();
-            long randomDay = ThreadLocalRandom.current()
-                                              .nextLong(minDay, maxDay);
-
-            LocalDate localDate = LocalDate.ofEpochDay(randomDay);
-            return Date.from(localDate.atStartOfDay(ZoneId.systemDefault())
-                                      .toInstant());
-        }
-
-        private String generateRandomEmail()
-        {
-            return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
         }
     }
 }
