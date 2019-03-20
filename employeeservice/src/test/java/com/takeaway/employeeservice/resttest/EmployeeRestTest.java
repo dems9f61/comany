@@ -11,9 +11,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
 
-import java.time.ZoneId;
-import java.util.Date;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -57,9 +54,7 @@ class EmployeeRestTest extends RestTestSuite
             assertThat(employeeResponse.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
             assertThat(employeeResponse.getFirstName()).isEqualTo(employeeRequest.getFirstName());
             assertThat(employeeResponse.getLastName()).isEqualTo(employeeRequest.getLastName());
-            assertThat(employeeResponse.getBirthday()).isEqualTo(Date.from(employeeRequest.getBirthday()
-                                                                                          .atStartOfDay(ZoneId.systemDefault())
-                                                                                          .toInstant()));
+            assertThat(employeeResponse.getBirthday()).isEqualTo(employeeRequest.getBirthday());
         }
 
         @Test

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 /**
  * User: StMinko
@@ -73,7 +75,12 @@ public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequ
 
         public EmployeeRequest create()
         {
-            return new EmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
+            return new EmployeeRequest(emailAddress,
+                                       firstName,
+                                       lastName,
+                                       Date.from(birthday.atStartOfDay(ZoneId.systemDefault())
+                                                         .toInstant()),
+                                       departmentName);
         }
     }
 }

@@ -6,15 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.takeaway.employeeservice.employee.service.EmployeeParameter;
-import com.takeaway.employeeservice.utils.LocalDateDeserializer;
-import com.takeaway.employeeservice.utils.LocalDateSerializer;
+import com.takeaway.employeeservice.utils.JsonDateDeSerializer;
+import com.takeaway.employeeservice.utils.JsonDateSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 /**
  * User: StMinko
@@ -41,10 +42,10 @@ public class EmployeeRequest
     private final String lastName;
 
     @ApiModelProperty(example = "1980-06-13")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private final LocalDate birthday;
+    @JsonDeserialize(using = JsonDateDeSerializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @DateTimeFormat(pattern = "YYYY-MM-DD")
+    private final Date birthday;
 
     @ApiModelProperty(example = "Java Development")
     private final String departmentName;
@@ -55,7 +56,7 @@ public class EmployeeRequest
     EmployeeRequest(@JsonProperty(value = "emailAddress", required = true) String emailAddress,
                     @JsonProperty(value = "firstName", required = true) String firstName,
                     @JsonProperty(value = "lastName", required = true) String lastName,
-                    @JsonProperty(value = "birthday", required = true) LocalDate birthday,
+                    @JsonProperty(value = "birthday", required = true) Date birthday,
                     @JsonProperty(value = "departmentName", required = true) String departmentName)
     {
         this.emailAddress = emailAddress;
@@ -69,7 +70,9 @@ public class EmployeeRequest
     {
         return EmployeeParameter.builder()
                                 .emailAddress(emailAddress)
-                                .birthday(birthday)
+                                .birthday(birthday.toInstant()
+                                                  .atZone(ZoneId.systemDefault())
+                                                  .toLocalDate())
                                 .firstName(firstName)
                                 .departmentName(departmentName)
                                 .lastName(lastName)
