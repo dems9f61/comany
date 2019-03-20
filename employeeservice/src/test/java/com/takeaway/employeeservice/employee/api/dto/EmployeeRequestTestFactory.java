@@ -2,6 +2,7 @@ package com.takeaway.employeeservice.employee.api.dto;
 
 import com.takeaway.employeeservice.AbstractTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
  * Time: 00:54
  * <p/>
  */
+@Component
 public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequest, EmployeeRequestTestFactory.Builder>
 {
     public Builder builder()

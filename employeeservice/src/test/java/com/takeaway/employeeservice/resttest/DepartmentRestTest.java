@@ -96,7 +96,7 @@ class DepartmentRestTest extends RestTestSuite
 
         @Test
         @DisplayName("POST: 'http://.../departments' returns CREATED if the specified name is valid")
-        void givenValidDepartmentName_whenCreateUser_thenStatus200()
+        void givenValidDepartmentName_whenCreateUser_thenStatus201()
         {
             // Arrange
             DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.createDefault();

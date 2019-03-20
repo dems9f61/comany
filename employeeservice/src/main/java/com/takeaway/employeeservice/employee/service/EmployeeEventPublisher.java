@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-class EmployeeEventPublisher
+public class EmployeeEventPublisher
 {
     // =========================== Class Variables ===========================
     enum Action
@@ -43,9 +43,8 @@ class EmployeeEventPublisher
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
 
-    void employeeCreated(Employee employee)
+    public void employeeCreated(Employee employee)
     {
         LOGGER.info("Sending creation message on {}", employee);
         EmployeeCreatedMessage createdMessage = new EmployeeCreatedMessage();
@@ -53,7 +52,7 @@ class EmployeeEventPublisher
         template.convertAndSend(messagingConfig.getExchangeName(), Action.CREATION.message, createdMessage);
     }
 
-    void employeeDeleted(Employee employee)
+    public void employeeDeleted(Employee employee)
     {
         LOGGER.info("Sending deletion message on {}", employee);
         EmployeeDeletedMessage deletedMessage = new EmployeeDeletedMessage();
@@ -61,7 +60,7 @@ class EmployeeEventPublisher
         template.convertAndSend(messagingConfig.getExchangeName(), Action.DELETION.message, deletedMessage);
     }
 
-    void employeeUpdated(Employee employee)
+    public void employeeUpdated(Employee employee)
     {
         LOGGER.info("Sending update message on {}", employee);
         EmployeeUpdatedMessage updatedMessage = new EmployeeUpdatedMessage();
@@ -69,6 +68,7 @@ class EmployeeEventPublisher
         template.convertAndSend(messagingConfig.getExchangeName(), Action.UPDATE.message, updatedMessage);
     }
 
+    // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
 

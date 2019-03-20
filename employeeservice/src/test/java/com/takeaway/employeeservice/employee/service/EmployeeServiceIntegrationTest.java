@@ -6,12 +6,10 @@ import com.takeaway.employeeservice.department.service.DepartmentParameter;
 import com.takeaway.employeeservice.department.service.DepartmentServiceCapable;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -20,8 +18,6 @@ import java.util.stream.IntStream;
 
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -33,25 +29,11 @@ import static org.mockito.Mockito.verify;
 @DisplayName("Integration tests for the employee service")
 class EmployeeServiceIntegrationTest extends IntegrationTestSuite
 {
-    @SpyBean
-    private EmployeeEventPublisher employeeEventPublisher;
-
     @Autowired
     private DepartmentServiceCapable departmentService;
 
     @Autowired
     private EmployeeService employeeService;
-
-    @BeforeEach
-    void setUp()
-    {
-        doNothing().when(employeeEventPublisher)
-                   .employeeCreated(any());
-        doNothing().when(employeeEventPublisher)
-                   .employeeDeleted(any());
-        doNothing().when(employeeEventPublisher)
-                   .employeeUpdated(any());
-    }
 
     @Nested
     @DisplayName("when new")

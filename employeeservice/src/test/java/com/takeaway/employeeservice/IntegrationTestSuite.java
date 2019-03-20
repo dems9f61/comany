@@ -2,13 +2,18 @@ package com.takeaway.employeeservice;
 
 import com.takeaway.employeeservice.department.api.dto.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentParameterTestFactory;
+import com.takeaway.employeeservice.employee.api.dto.EmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.service.EmployeeEventPublisher;
 import com.takeaway.employeeservice.employee.service.EmployeeParameterTestFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.PlatformTransactionManager;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -34,10 +39,25 @@ public abstract class IntegrationTestSuite
     protected DepartmentRequestTestFactory departmentRequestTestFactory;
 
     @Autowired
-    protected PlatformTransactionManager transactionManager;
+    protected EmployeeRequestTestFactory employeeRequestTestFactory;
+
+    @SpyBean
+    protected EmployeeEventPublisher employeeEventPublisher;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
+
+    @BeforeEach
+    void setUp()
+    {
+        doNothing().when(employeeEventPublisher)
+                   .employeeCreated(any());
+        doNothing().when(employeeEventPublisher)
+                   .employeeDeleted(any());
+        doNothing().when(employeeEventPublisher)
+                   .employeeUpdated(any());
+    }
+
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
