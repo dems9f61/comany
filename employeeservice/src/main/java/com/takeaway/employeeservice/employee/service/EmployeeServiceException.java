@@ -27,13 +27,13 @@ public class EmployeeServiceException extends Exception
 
     // ============================  Constructors  ===========================
 
-    EmployeeServiceException(@NonNull Reason reason, @NonNull String message)
+    public EmployeeServiceException(@NonNull Reason reason, @NonNull String message)
     {
         super(message);
         this.reason = reason;
     }
 
-    EmployeeServiceException(@NonNull Exception exception)
+    public EmployeeServiceException(@NonNull Exception exception)
     {
         super(exception);
         this.reason = Reason.GENERIC;

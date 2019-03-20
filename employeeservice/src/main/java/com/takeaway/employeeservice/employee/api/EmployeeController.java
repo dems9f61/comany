@@ -112,6 +112,7 @@ public class EmployeeController
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody @NotNull @Valid EmployeeRequest employeeRequest)
     {
+        LOGGER.info("Updating an employee by the uuid {} and {}", uuid, employeeRequest);
         try
         {
             employeeService.update(uuid, employeeRequest.toEmployerParameter());
