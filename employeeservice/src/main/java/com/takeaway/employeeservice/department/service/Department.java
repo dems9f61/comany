@@ -1,5 +1,6 @@
 package com.takeaway.employeeservice.department.service;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.takeaway.employeeservice.employee.service.Employee;
 import lombok.*;
 
@@ -16,8 +17,8 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = "employees")
+@EqualsAndHashCode(exclude = "employees")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Table(name = "DEPARTMENTS")
@@ -33,6 +34,7 @@ public class Department
     @Column(name = "department_name", length = 50, nullable = false, unique = true)
     private String departmentName;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private Set<Employee> employees = new HashSet<>();
 

@@ -3,7 +3,7 @@ package com.takeaway.employeeservice;
 import com.takeaway.employeeservice.department.api.dto.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentParameterTestFactory;
 import com.takeaway.employeeservice.employee.api.dto.EmployeeRequestTestFactory;
-import com.takeaway.employeeservice.employee.service.EmployeeEventPublisher;
+import com.takeaway.employeeservice.employee.service.EmployeeEventPublisherCapable;
 import com.takeaway.employeeservice.employee.service.EmployeeParameterTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ public abstract class IntegrationTestSuite
     protected EmployeeRequestTestFactory employeeRequestTestFactory;
 
     @SpyBean
-    protected EmployeeEventPublisher employeeEventPublisher;
+    protected EmployeeEventPublisherCapable employeeEventPublisher;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

@@ -3,6 +3,7 @@ package com.takeaway.employeeservice.employee.service;
 import com.takeaway.employeeservice.config.MessagingConfig;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
@@ -16,20 +17,20 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class EmployeeEventPublisher
+class EmployeeEventPublisher implements EmployeeEventPublisherCapable
 {
     // =========================== Class Variables ===========================
-    enum Action
+    enum EventType
     {
-        CREATION("takeaway.employee.created"),
+        EMPLOYEE_CREATED("takeaway.employee.created"),
 
-        UPDATE("takeaway.employee.updated"),
+        EMPLOYEE_UPDATED("takeaway.employee.updated"),
 
-        DELETION("takeaway.employee.deleted");
+        EMPLOYEE_DELETED("takeaway.employee.deleted");
 
         private final String message;
 
-        Action(String message)
+        EventType(String message)
         {
             this.message = message;
         }
@@ -44,50 +45,44 @@ public class EmployeeEventPublisher
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    public void employeeCreated(Employee employee)
+    public void employeeCreated(Employee createdEmployee)
     {
-        LOGGER.info("Sending creation message on {}", employee);
-        EmployeeCreatedMessage createdMessage = new EmployeeCreatedMessage();
-        createdMessage.setEmployee(employee);
-        template.convertAndSend(messagingConfig.getExchangeName(), Action.CREATION.message, createdMessage);
+        LOGGER.info("Sending creation message on {}", createdEmployee);
+        EmployeeMessage createdEmployeeMesage = new EmployeeMessage();
+        createdEmployeeMesage.setEventType(EventType.EMPLOYEE_CREATED);
+        createdEmployeeMesage.setEmployee(createdEmployee);
+        template.convertAndSend(messagingConfig.getExchangeName(), EventType.EMPLOYEE_CREATED.message, createdEmployeeMesage);
     }
 
-    public void employeeDeleted(Employee employee)
+    public void employeeDeleted(Employee deletedEmployee)
     {
-        LOGGER.info("Sending deletion message on {}", employee);
-        EmployeeDeletedMessage deletedMessage = new EmployeeDeletedMessage();
-        deletedMessage.setEmployee(employee);
-        template.convertAndSend(messagingConfig.getExchangeName(), Action.DELETION.message, deletedMessage);
+        LOGGER.info("Sending deletion message on {}", deletedEmployee);
+        EmployeeMessage deletedEmployeeMessage = new EmployeeMessage();
+        deletedEmployeeMessage.setEmployee(deletedEmployee);
+        deletedEmployeeMessage.setEventType(EventType.EMPLOYEE_DELETED);
+        template.convertAndSend(messagingConfig.getExchangeName(), EventType.EMPLOYEE_DELETED.message, deletedEmployeeMessage);
     }
 
-    public void employeeUpdated(Employee employee)
+    public void employeeUpdated(Employee updatedEmployee)
     {
-        LOGGER.info("Sending update message on {}", employee);
-        EmployeeUpdatedMessage updatedMessage = new EmployeeUpdatedMessage();
-        updatedMessage.setEmployee(employee);
-        template.convertAndSend(messagingConfig.getExchangeName(), Action.UPDATE.message, updatedMessage);
+        LOGGER.info("Sending update message on {}", updatedEmployee);
+        EmployeeMessage updatedEmployeeMesage = new EmployeeMessage();
+        updatedEmployeeMesage.setEventType(EventType.EMPLOYEE_CREATED);
+        updatedEmployeeMesage.setEmployee(updatedEmployee);
+        template.convertAndSend(messagingConfig.getExchangeName(), EventType.EMPLOYEE_UPDATED.message, updatedEmployeeMesage);
     }
 
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
 
+    @ToString
     @Data
-    private static class EmployeeCreatedMessage
+    private static class EmployeeMessage
     {
-        private Employee employee;
-    }
+        private EventType eventType;
 
-    @Data
-    private static class EmployeeUpdatedMessage
-    {
-        private Employee employee;
-    }
-
-    @Data
-    private static class EmployeeDeletedMessage
-    {
-        private Employee employee;
+        private Employee  employee;
     }
 
     // ============================  End of class  ===========================

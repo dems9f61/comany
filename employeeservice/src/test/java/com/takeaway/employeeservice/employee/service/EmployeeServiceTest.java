@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 class EmployeeServiceTest extends UnitTestSuite
 {
     @Mock
-    private EmployeeEventPublisher employeeEventPublisher;
+    private EmployeeEventPublisherCapable employeeEventPublisher;
 
     @Mock
     private DepartmentServiceCapable departmentService;

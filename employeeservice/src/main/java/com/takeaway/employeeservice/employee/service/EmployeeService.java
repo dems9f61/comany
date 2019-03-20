@@ -39,7 +39,7 @@ class EmployeeService implements EmployeeServiceCapable
 
     private final DepartmentServiceCapable departmentService;
 
-    private final EmployeeEventPublisher messagePublisher;
+    private final EmployeeEventPublisherCapable messagePublisher;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

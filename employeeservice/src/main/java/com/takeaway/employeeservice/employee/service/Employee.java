@@ -1,5 +1,6 @@
 package com.takeaway.employeeservice.employee.service;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.takeaway.employeeservice.department.service.Department;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,6 +42,7 @@ public class Employee
     @Column(length = 10)
     private Date birthday;
 
+    @JsonManagedReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
