@@ -44,7 +44,7 @@ public class EmployeeRequest
     @ApiModelProperty(example = "1980-06-13")
     @JsonDeserialize(using = JsonDateDeSerializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
-    @DateTimeFormat(pattern = "YYYY-MM-DD")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private final Date birthday;
 
     @ApiModelProperty(example = "Java Development")
