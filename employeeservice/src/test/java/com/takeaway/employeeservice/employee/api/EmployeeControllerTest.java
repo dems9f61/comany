@@ -6,6 +6,7 @@ import com.takeaway.employeeservice.common_api_exception.InternalServerErrorExce
 import com.takeaway.employeeservice.common_api_exception.ResourceNotFoundException;
 import com.takeaway.employeeservice.employee.api.dto.EmployeeRequest;
 import com.takeaway.employeeservice.employee.service.Employee;
+import com.takeaway.employeeservice.employee.service.EmployeeParameter;
 import com.takeaway.employeeservice.employee.service.EmployeeServiceCapable;
 import com.takeaway.employeeservice.employee.service.EmployeeServiceException;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static com.takeaway.employeeservice.employee.service.EmployeeServiceException.Reason.INVALID_REQUEST;
 import static com.takeaway.employeeservice.employee.service.EmployeeServiceException.Reason.NOT_FOUND;
@@ -132,7 +134,68 @@ class EmployeeControllerTest extends UnitTestSuite
     @DisplayName("when update")
     class WhenUpdate
     {
+        @Test
+        @DisplayName("Updating an employee with a valid request succeeds")
+        void givenValidRequest_whenUpdate_thenSucceed() throws Exception
+        {
+            // Arrange
+            String uuid = UUID.randomUUID()
+                              .toString();
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            doNothing().when(employeeService)
+                       .update(any(), any());
 
+            // Act
+            employeeController.updateEmployee(uuid, employeeRequest);
+
+            // Assert
+            verify(employeeService).update(eq(uuid), assertArg(getEmployeeParameterConsumer(employeeRequest)));
+        }
+
+        @Test
+        @DisplayName("Updating an employee throws ResourceNotFoundException if the underlying service throws a Not Found")
+        void givenUnderlyingNotFound_whenCreate_thenThrowNotFoundException() throws Exception
+        {
+            // Arrange
+            String uuid = UUID.randomUUID()
+                              .toString();
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            doThrow(new EmployeeServiceException(NOT_FOUND, "")).when(employeeService)
+                                                                .update(uuid, employeeRequest.toEmployerParameter());
+
+            // Act / Assert
+            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
+        }
+
+        @Test
+        @DisplayName("Updating an employee throws BadRequestException if the underlying service throws a Invalid Request")
+        void givenUnderlyingInvalidRequest_whenCreate_thenThrowBadRequestException() throws Exception
+        {
+            // Arrange
+            String uuid = UUID.randomUUID()
+                              .toString();
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            doThrow(new EmployeeServiceException(INVALID_REQUEST, "")).when(employeeService)
+                                                                      .update(uuid, employeeRequest.toEmployerParameter());
+
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
+        }
+
+        @Test
+        @DisplayName("Updating an employee throws InternalServerErrorException if the underlying service throws a unknown reason")
+        void givenUnderlyingInvalidGenericException_whenUpdate_thenThrowInternalServerErrorException() throws Exception
+        {
+            // Arrange
+            String uuid = UUID.randomUUID()
+                              .toString();
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            doThrow(new EmployeeServiceException(new Exception())).when(employeeService)
+                                                                  .update(uuid, employeeRequest.toEmployerParameter());
+
+            // Act / Assert
+            assertThatExceptionOfType(InternalServerErrorException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
+        }
     }
 
     @Nested
@@ -153,16 +216,7 @@ class EmployeeControllerTest extends UnitTestSuite
             employeeController.createEmployee(employeeRequest);
 
             // Assert
-            verify(employeeService).create(assertArg(employeeParameter -> {
-                assertThat(employeeParameter.getBirthday()).isEqualTo(employeeRequest.getBirthday()
-                                                                                     .toInstant()
-                                                                                     .atZone(ZoneId.systemDefault())
-                                                                                     .toLocalDate());
-                assertThat(employeeParameter.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
-                assertThat(employeeParameter.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
-                assertThat(employeeParameter.getFirstName()).isEqualTo(employeeRequest.getFirstName());
-                assertThat(employeeParameter.getLastName()).isEqualTo(employeeRequest.getLastName());
-            }));
+            verify(employeeService).create(assertArg(getEmployeeParameterConsumer(employeeRequest)));
         }
 
         @Test
@@ -203,5 +257,19 @@ class EmployeeControllerTest extends UnitTestSuite
             // Act / Assert
             assertThatExceptionOfType(InternalServerErrorException.class).isThrownBy(() -> employeeController.createEmployee(employeeRequest));
         }
+    }
+
+    private Consumer<EmployeeParameter> getEmployeeParameterConsumer(EmployeeRequest employeeRequest)
+    {
+        return employeeParameter -> {
+            assertThat(employeeParameter.getBirthday()).isEqualTo(employeeRequest.getBirthday()
+                                                                                 .toInstant()
+                                                                                 .atZone(ZoneId.systemDefault())
+                                                                                 .toLocalDate());
+            assertThat(employeeParameter.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
+            assertThat(employeeParameter.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
+            assertThat(employeeParameter.getFirstName()).isEqualTo(employeeRequest.getFirstName());
+            assertThat(employeeParameter.getLastName()).isEqualTo(employeeRequest.getLastName());
+        };
     }
 }
