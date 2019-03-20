@@ -1,5 +1,6 @@
 package com.takeaway.employeeservice.employee.service;
 
+import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -11,17 +12,31 @@ import lombok.NonNull;
 public class EmployeeServiceException extends Exception
 {
     // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
 
-    EmployeeServiceException(@NonNull String message)
+    public enum Reason
     {
-        super(message);
+        NOT_FOUND,
+        INVALID_REQUEST,
+        GENERIC
     }
 
-    EmployeeServiceException(Exception exception)
+    // =============================  Variables  =============================
+
+    @Getter
+    private final Reason reason;
+
+    // ============================  Constructors  ===========================
+
+    EmployeeServiceException(@NonNull Reason reason, @NonNull String message)
+    {
+        super(message);
+        this.reason = reason;
+    }
+
+    EmployeeServiceException(@NonNull Exception exception)
     {
         super(exception);
+        this.reason = Reason.GENERIC;
     }
 
     // ===========================  public  Methods  =========================

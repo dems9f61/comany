@@ -2,6 +2,7 @@ package com.takeaway.employeeservice.employee.api;
 
 import com.takeaway.employeeservice.ApiVersions;
 import com.takeaway.employeeservice.common_api_exception.BadRequestException;
+import com.takeaway.employeeservice.common_api_exception.InternalServerErrorException;
 import com.takeaway.employeeservice.common_api_exception.ResourceNotFoundException;
 import com.takeaway.employeeservice.employee.api.dto.EmployeeRequest;
 import com.takeaway.employeeservice.employee.api.dto.EmployeeResponse;
@@ -45,7 +46,9 @@ public class EmployeeController
     // ===========================  public  Methods  =========================
 
     @ApiOperation(value = "Creates an employee with the request values")
-    @ApiResponses({ @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "") })
+    @ApiResponses({
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = ""),
+            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "A necessary sub resource was not found") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeResponse createEmployee(@RequestBody @NotNull @Valid EmployeeRequest employeeRequest)
@@ -67,7 +70,23 @@ public class EmployeeController
         }
         catch (EmployeeServiceException caught)
         {
-            throw new BadRequestException(caught.getMessage(), caught.getCause());
+            EmployeeServiceException.Reason reason = caught.getReason();
+            switch (reason)
+            {
+                case NOT_FOUND:
+                {
+                    throw new ResourceNotFoundException("A necessary sub resource was not found!");
+                }
+                case INVALID_REQUEST:
+                {
+                    throw new BadRequestException(caught.getMessage(), caught.getCause());
+                }
+                default:
+                {
+                    throw new InternalServerErrorException(caught.getMessage());
+                }
+            }
+
         }
     }
 
@@ -90,6 +109,31 @@ public class EmployeeController
                                                                     employee.getDepartment()
                                                                             .getDepartmentName()))
                               .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified uuid!"));
+    }
+
+    @ApiOperation(value = "Deletes permanently an employee")
+    @ApiResponses({
+            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "Could not delete employee by the specified uuid!") })
+    @DeleteMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@NotBlank @PathVariable("uuid") final String uuid)
+    {
+        try
+        {
+            employeeService.deleteByUuid(uuid);
+        }
+        catch (EmployeeServiceException caught)
+        {
+            EmployeeServiceException.Reason reason = caught.getReason();
+            if (reason == EmployeeServiceException.Reason.NOT_FOUND)
+            {
+                throw new ResourceNotFoundException(caught.getMessage());
+            }
+            else
+            {
+                throw new InternalServerErrorException(caught.getMessage());
+            }
+        }
     }
 
     // =================  protected/package local  Methods ===================

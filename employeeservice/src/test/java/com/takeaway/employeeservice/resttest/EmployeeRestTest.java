@@ -60,8 +60,8 @@ class EmployeeRestTest extends RestTestSuite
         }
 
         @Test
-        @DisplayName("POST: 'http://.../employees' returns BAD REQUEST if the specified department name doesn't exist ")
-        void givenUnknownDepartment_whenCreateEmployee_thenStatus400()
+        @DisplayName("POST: 'http://.../employees' returns NOT FOUND if the specified department name doesn't exist ")
+        void givenUnknownDepartment_whenCreateEmployee_thenStatus404()
         {
             EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
             String uri = String.format("%s/employees", ApiVersions.V1);
@@ -74,7 +74,7 @@ class EmployeeRestTest extends RestTestSuite
                                                                               String.class);
 
             // Assert
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         }
 
         @Test
@@ -152,6 +152,55 @@ class EmployeeRestTest extends RestTestSuite
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(responseEntity.getBody()).isEqualTo(persistedEmployee);
+        }
+    }
+
+    @Nested
+    @DisplayName("when delete")
+    class WhenDelete
+    {
+        @Test
+        @DisplayName("DELETE: 'http://.../employees/{uuid}' returns NOT FOUND if the specified uuid doesn't exist")
+        void givenUnknownUuid_whenDeleteEmployeeByUuid_thenStatus404()
+        {
+            //Arrange
+            String uri = String.format("%s/employees", ApiVersions.V1);
+            String wrongUuid = UUID.randomUUID()
+                                   .toString();
+
+            // Act
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, wrongUuid),
+                                                                            HttpMethod.DELETE,
+                                                                            new HttpEntity<>(defaultHttpHeaders()),
+                                                                            Void.class);
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("DELETE: 'http://.../employees/{uuid}' returns NO CONTENT if the specified uuid exists")
+        void givenEmployee_whenDeleteEmployeeByUuid_thenStatus204()
+        {
+            // Arrange
+            String departmentName = RandomStringUtils.randomAlphabetic(23);
+            createAndPersistDepartment(departmentName);
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                        .departmentName(departmentName)
+                                                                        .create();
+            EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
+            String uuidToDelete = persistedEmployee.getUuid();
+            String uri = String.format("%s/employees", ApiVersions.V1);
+
+            // Act
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToDelete),
+                                                                                        HttpMethod.DELETE,
+                                                                                        new HttpEntity<>(defaultHttpHeaders()),
+                                                                                        EmployeeResponse.class);
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            assertThat(responseEntity.getBody()).isNull();
         }
     }
 

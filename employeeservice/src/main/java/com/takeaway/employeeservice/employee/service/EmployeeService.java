@@ -17,6 +17,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.takeaway.employeeservice.employee.service.EmployeeServiceException.Reason.INVALID_REQUEST;
+import static com.takeaway.employeeservice.employee.service.EmployeeServiceException.Reason.NOT_FOUND;
+
 /**
  * User: StMinko
  * Date: 19.03.2019
@@ -51,7 +54,7 @@ class EmployeeService implements EmployeeServiceCapable
 
         if (!employeesWithSameEmail.isEmpty())
         {
-            throw new EmployeeServiceException(String.format("Email '%s' is already used", emailAddress));
+            throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email '%s' is already used", emailAddress));
         }
 
         return departmentOptional.map(department -> {
@@ -72,7 +75,8 @@ class EmployeeService implements EmployeeServiceCapable
             messagePublisher.employeeCreated(savedEmployee);
             return savedEmployee;
         })
-                                 .orElseThrow(() -> new EmployeeServiceException(String.format("Department name '%s' could not be found!",
+                                 .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND,
+                                                                                 String.format("Department name '%s' could not be found!",
                                                                                                departmentName)));
     }
 
@@ -82,7 +86,7 @@ class EmployeeService implements EmployeeServiceCapable
         Optional<Employee> optionalEmployee = findByUuid(uuid);
         if (!optionalEmployee.isPresent())
         {
-            throw new EmployeeServiceException(String.format("Employee with uuid '%s' could not be found!", uuid));
+            throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid '%s' could not be found!", uuid));
         }
 
         Employee employee = optionalEmployee.get();
@@ -115,7 +119,7 @@ class EmployeeService implements EmployeeServiceCapable
         }
         else
         {
-            throw new EmployeeServiceException(String.format("Employee with uuid '%s' could not be foubnd!", uuid));
+            throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid '%s' could not be found!", uuid));
         }
     }
 
@@ -126,7 +130,7 @@ class EmployeeService implements EmployeeServiceCapable
     {
         if (StringUtils.isBlank(departmentName))
         {
-            throw new EmployeeServiceException("Department name is blank!");
+            throw new EmployeeServiceException(INVALID_REQUEST, "Department name is blank!");
         }
 
         Optional<Department> departmentOptional;
@@ -202,7 +206,7 @@ class EmployeeService implements EmployeeServiceCapable
             try
             {
                 Department department = departmentService.findByDepartmentName(newDepartmentName)
-                                                         .orElseThrow(() -> new EmployeeServiceException(String.format(
+                                                         .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND, String.format(
                                                                  "A department with name '%s' could not be found!",
                                                                  newDepartmentName)));
                 employee.setDepartment(department);
