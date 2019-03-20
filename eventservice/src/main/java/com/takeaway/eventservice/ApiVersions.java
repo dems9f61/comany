@@ -1,30 +1,25 @@
-package com.takeaway.eventservice.messaging;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.takeaway.eventservice.messaging.dto.Employee;
-import com.takeaway.eventservice.messaging.dto.EventType;
-import lombok.Data;
-import lombok.ToString;
+package com.takeaway.eventservice;
 
 /**
  * User: StMinko
- * Date: 20.03.2019
- * Time: 15:59
+ * Date: 18.03.2019
+ * Time: 17:24
  * <p/>
  */
-@Data
-@ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class EmployeeMessage
+public final class ApiVersions
 {
     // =========================== Class Variables ===========================
+
+    public static final String V1 = "/api/v1";
+
     // =============================  Variables  =============================
-
-    private EventType eventType;
-
-    private Employee employee;
-
     // ============================  Constructors  ===========================
+
+    private ApiVersions()
+    {
+        throw new AssertionError("This is not meant to be instantiated");
+    }
+
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================

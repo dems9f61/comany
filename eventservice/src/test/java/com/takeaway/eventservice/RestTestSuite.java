@@ -1,32 +1,32 @@
-package com.takeaway.eventservice.messaging;
+package com.takeaway.eventservice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.takeaway.eventservice.messaging.dto.Employee;
-import com.takeaway.eventservice.messaging.dto.EventType;
-import lombok.Data;
-import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpHeaders;
 
 /**
  * User: StMinko
- * Date: 20.03.2019
- * Time: 15:59
+ * Date: 18.03.2019
+ * Time: 23:04
  * <p/>
  */
-@Data
-@ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class EmployeeMessage
+public abstract class RestTestSuite extends IntegrationTestSuite
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    private EventType eventType;
-
-    private Employee employee;
+    @Autowired
+    protected TestRestTemplate testRestTemplate;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
+
+    protected HttpHeaders defaultHttpHeaders()
+    {
+        return new HttpHeaders();
+    }
+
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

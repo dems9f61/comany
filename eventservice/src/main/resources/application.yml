@@ -10,3 +10,7 @@ rabbitmq:
   exchange-name: employee-exchange
   queue-name: employee-message
   routing-key: employee-message
+
+config:
+  async-enabled: true
+

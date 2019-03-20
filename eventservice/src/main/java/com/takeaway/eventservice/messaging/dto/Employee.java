@@ -1,33 +1,50 @@
-package com.takeaway.eventservice.messaging;
+package com.takeaway.eventservice.messaging.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.takeaway.eventservice.messaging.dto.Employee;
-import com.takeaway.eventservice.messaging.dto.EventType;
 import lombok.Data;
 import lombok.ToString;
+
+import java.util.Date;
 
 /**
  * User: StMinko
  * Date: 20.03.2019
- * Time: 15:59
+ * Time: 14:09
  * <p/>
  */
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmployeeMessage
+public class Employee
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    private EventType eventType;
+    private String uuid;
 
-    private Employee employee;
+    private String emailAddress;
+
+    private FullName fullName = new FullName();
+
+    private Date birthday;
+
+    private Department department;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
+
+    @Data
+    @ToString
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class FullName
+    {
+        private String firstName;
+
+        private String lastName;
+    }
+
     // ============================  End of class  ===========================
 }
