@@ -6,6 +6,7 @@ spring.rabbitmq:
   username: rabbitmq
   password: rabbitmq
 
-exchange:
-  exchange-name: employeeExchange
+rabbitmq:
+  exchange-name: employee-exchange
+  routing-key: employee-message
 

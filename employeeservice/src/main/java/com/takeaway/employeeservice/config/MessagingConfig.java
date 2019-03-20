@@ -28,7 +28,7 @@ import java.time.ZonedDateTime;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "exchange")
+@ConfigurationProperties(prefix = "rabbitmq")
 @Validated
 public class MessagingConfig
 {
@@ -37,6 +37,9 @@ public class MessagingConfig
 
     @NotBlank
     private String exchangeName;
+
+    @NotBlank
+    private String routingKey;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

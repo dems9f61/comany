@@ -13,7 +13,7 @@ import lombok.ToString;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmployeeMessage
+class EmployeeMessage
 {
     // =========================== Class Variables ===========================
 

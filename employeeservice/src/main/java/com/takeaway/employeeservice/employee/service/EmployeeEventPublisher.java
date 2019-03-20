@@ -22,18 +22,11 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
     // =========================== Class Variables ===========================
     enum EventType
     {
-        EMPLOYEE_CREATED("takeaway.employee.created"),
+        EMPLOYEE_CREATED,
 
-        EMPLOYEE_UPDATED("takeaway.employee.updated"),
+        EMPLOYEE_UPDATED,
 
-        EMPLOYEE_DELETED("takeaway.employee.deleted");
-
-        private final String message;
-
-        EventType(String message)
-        {
-            this.message = message;
-        }
+        EMPLOYEE_DELETED
     }
 
     // =============================  Variables  =============================
@@ -48,10 +41,10 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
     public void employeeCreated(Employee createdEmployee)
     {
         LOGGER.info("Sending creation message on {}", createdEmployee);
-        EmployeeMessage createdEmployeeMesage = new EmployeeMessage();
-        createdEmployeeMesage.setEventType(EventType.EMPLOYEE_CREATED);
-        createdEmployeeMesage.setEmployee(createdEmployee);
-        template.convertAndSend(messagingConfig.getExchangeName(), EventType.EMPLOYEE_CREATED.message, createdEmployeeMesage);
+        EmployeeMessage createdEmployeeMessage = new EmployeeMessage();
+        createdEmployeeMessage.setEventType(EventType.EMPLOYEE_CREATED);
+        createdEmployeeMessage.setEmployee(createdEmployee);
+        template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), createdEmployeeMessage);
     }
 
     public void employeeDeleted(Employee deletedEmployee)
@@ -60,16 +53,16 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
         EmployeeMessage deletedEmployeeMessage = new EmployeeMessage();
         deletedEmployeeMessage.setEmployee(deletedEmployee);
         deletedEmployeeMessage.setEventType(EventType.EMPLOYEE_DELETED);
-        template.convertAndSend(messagingConfig.getExchangeName(), EventType.EMPLOYEE_DELETED.message, deletedEmployeeMessage);
+        template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), deletedEmployeeMessage);
     }
 
     public void employeeUpdated(Employee updatedEmployee)
     {
         LOGGER.info("Sending update message on {}", updatedEmployee);
-        EmployeeMessage updatedEmployeeMesage = new EmployeeMessage();
-        updatedEmployeeMesage.setEventType(EventType.EMPLOYEE_CREATED);
-        updatedEmployeeMesage.setEmployee(updatedEmployee);
-        template.convertAndSend(messagingConfig.getExchangeName(), EventType.EMPLOYEE_UPDATED.message, updatedEmployeeMesage);
+        EmployeeMessage updatedEmployeeMessage = new EmployeeMessage();
+        updatedEmployeeMessage.setEventType(EventType.EMPLOYEE_UPDATED);
+        updatedEmployeeMessage.setEmployee(updatedEmployee);
+        template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), updatedEmployeeMessage);
     }
 
     // =================  protected/package local  Methods ===================

@@ -8,8 +8,6 @@ import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.amqp.core.ExchangeTypes.TOPIC;
-
 /**
  * User: StMinko
  * Date: 20.03.2019
@@ -25,23 +23,10 @@ class EmployeeEventReceiver
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
-
-    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "employee-deleted", durable = "true"), exchange = @Exchange(value = "${exchange.exchange-name}", type = TOPIC), key = "#.employee.deleted"))
-    public void receiveEmployeeDeletedMessage(EmployeeMessage message)
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "${rabbitmq.queue-name}", durable = "true"), exchange = @Exchange(value = "${rabbitmq.exchange-name}"), key = "${rabbitmq.routing-key}"))
+    public void receiveEmployeeMessage(EmployeeMessage message)
     {
-        LOGGER.info("###### Received Message on deleted employee ##### {}", message);
-    }
-
-    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "employee-updated", durable = "true"), exchange = @Exchange(value = "${exchange.exchange-name}", type = TOPIC), key = "#.employee.updated"))
-    public void receiveEmployeeUpdatedMessage(EmployeeMessage message)
-    {
-        LOGGER.info("###### Received Message on updated employee ##### {}", message);
-    }
-
-    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "employee-updated", durable = "true"), exchange = @Exchange(value = "${exchange.exchange-name}", type = TOPIC), key = "#.employee.updated"))
-    public void receiveEmployeeCreatedMessage(EmployeeMessage message)
-    {
-        LOGGER.info("###### Received Message on created employee ##### {}", message);
+        LOGGER.info("###### Received Message on employee ##### {}", message);
     }
 
     // =================  protected/package local  Methods ===================
