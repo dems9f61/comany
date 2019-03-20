@@ -50,6 +50,8 @@ class EmployeeEventRestTest extends RestTestSuite
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             List<EmployeeEventResponse> eventResponses = responseEntity.getBody();
+            assertThat(eventResponses).isNotNull()
+                                      .isNotEmpty();
             long previousId = Long.MIN_VALUE;
             for (EmployeeEventResponse event : eventResponses)
             {
