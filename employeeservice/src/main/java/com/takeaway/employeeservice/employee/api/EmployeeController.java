@@ -74,19 +74,12 @@ public class EmployeeController
             switch (reason)
             {
                 case NOT_FOUND:
-                {
                     throw new ResourceNotFoundException("A necessary sub resource was not found!");
-                }
                 case INVALID_REQUEST:
-                {
                     throw new BadRequestException(caught.getMessage(), caught.getCause());
-                }
                 default:
-                {
                     throw new InternalServerErrorException(caught.getMessage());
-                }
             }
-
         }
     }
 
