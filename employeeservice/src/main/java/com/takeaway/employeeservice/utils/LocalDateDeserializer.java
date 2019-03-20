@@ -19,7 +19,7 @@ public class LocalDateDeserializer extends StdDeserializer<LocalDate>
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
 
-    protected LocalDateDeserializer()
+    public LocalDateDeserializer()
     {
         super(LocalDate.class);
     }
