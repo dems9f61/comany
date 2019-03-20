@@ -156,6 +156,107 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Nested
+    @DisplayName("when update")
+    class WhenUpdate
+    {
+        @Test
+        @DisplayName("PUT: 'http://.../employees/{uuid}' returns NOT FOUND if the specified employee doesn't exist ")
+        void givenUnknownEmployee_whenUpdateEmployee_thenStatus404()
+        {
+            // Arrange
+            String departmentName = RandomStringUtils.randomAlphabetic(23);
+            createAndPersistDepartment(departmentName);
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                        .departmentName(departmentName)
+                                                                        .create();
+            String uri = String.format("%s/employees/", ApiVersions.V1);
+            HttpHeaders headers = defaultHttpHeaders();
+            String wrongUuid = UUID.randomUUID()
+                                   .toString();
+
+            // Act
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, wrongUuid),
+                                                                            HttpMethod.PUT,
+                                                                            new HttpEntity<>(employeeRequest, headers),
+                                                                            Void.class);
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("PUT: 'http://.../employees/{uuid}' returns NOT FOUND if the specified department doesn't exist ")
+        void givenUnknownDepartment_whenUpdateEmployee_thenStatus404()
+        {
+            // Arrange
+            String departmentName = RandomStringUtils.randomAlphabetic(23);
+            createAndPersistDepartment(departmentName);
+
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                        .departmentName(departmentName)
+                                                                        .create();
+            EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
+            String uuidToUpdate = persistedEmployee.getUuid();
+            String unknownDepartmentName = RandomStringUtils.randomAlphabetic(32);
+            EmployeeRequest updateRequest = employeeRequestTestFactory.builder()
+                                                                      .departmentName(unknownDepartmentName)
+                                                                      .create();
+
+            String uri = String.format("%s/employees", ApiVersions.V1);
+            HttpHeaders headers = defaultHttpHeaders();
+
+            // Act
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
+                                                                            HttpMethod.PUT,
+                                                                            new HttpEntity<>(updateRequest, headers),
+                                                                            Void.class);
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("PUT: 'http://.../employees/{uuid} returns NO CONTENT if the specified parameters are valid")
+        void givenValidParameters_whenUpdateEmployee_thenStatus204()
+        {
+            // Arrange
+            String firstDepartmentName = RandomStringUtils.randomAlphabetic(23);
+            createAndPersistDepartment(firstDepartmentName);
+
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                        .departmentName(firstDepartmentName)
+                                                                        .create();
+            EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
+            String uuidToUpdate = persistedEmployee.getUuid();
+
+            String secondDepartmentName = RandomStringUtils.randomAlphabetic(23);
+            createAndPersistDepartment(secondDepartmentName);
+
+            EmployeeRequest updateRequest = employeeRequestTestFactory.builder()
+                                                                      .departmentName(secondDepartmentName)
+                                                                      .create();
+            String uri = String.format("%s/employees", ApiVersions.V1);
+            HttpHeaders headers = defaultHttpHeaders();
+
+            // Act
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
+                                                                                        HttpMethod.PUT,
+                                                                                        new HttpEntity<>(updateRequest, headers),
+                                                                                        EmployeeResponse.class);
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            assertThat(responseEntity.getBody()).isNull();
+
+            EmployeeResponse updatedEmployee = findPersistedEmployee(uuidToUpdate);
+            assertThat(updatedEmployee.getEmailAddress()).isEqualTo(updateRequest.getEmailAddress());
+            assertThat(updatedEmployee.getFirstName()).isEqualTo(updateRequest.getFirstName());
+            assertThat(updatedEmployee.getLastName()).isEqualTo(updateRequest.getLastName());
+            assertThat(updatedEmployee.getBirthday()).isEqualTo(updateRequest.getBirthday());
+            assertThat(updatedEmployee.getDepartmentName()).isEqualTo(updateRequest.getDepartmentName());
+        }
+    }
+
+    @Nested
     @DisplayName("when delete")
     class WhenDelete
     {
@@ -222,5 +323,16 @@ class EmployeeRestTest extends RestTestSuite
         // Act
         return testRestTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(employeeRequest, headers), EmployeeResponse.class)
                                .getBody();
+    }
+
+    private EmployeeResponse findPersistedEmployee(String uuidToFind)
+    {
+        String uri = String.format("%s/employees", ApiVersions.V1);
+
+        ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToFind),
+                                                                                    HttpMethod.GET,
+                                                                                    new HttpEntity<>(defaultHttpHeaders()),
+                                                                                    EmployeeResponse.class);
+        return responseEntity.getBody();
     }
 }

@@ -104,12 +104,39 @@ public class EmployeeController
                               .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified uuid!"));
     }
 
+    @ApiOperation(value = "Updates an employee with the request values")
+    @ApiResponses({
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = ""),
+            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
+    @PutMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody @NotNull @Valid EmployeeRequest employeeRequest)
+    {
+        try
+        {
+            employeeService.update(uuid, employeeRequest.toEmployerParameter());
+        }
+        catch (EmployeeServiceException caught)
+        {
+            EmployeeServiceException.Reason reason = caught.getReason();
+            switch (reason)
+            {
+                case NOT_FOUND:
+                    throw new ResourceNotFoundException(caught.getMessage());
+                case INVALID_REQUEST:
+                    throw new BadRequestException(caught.getMessage(), caught.getCause());
+                default:
+                    throw new InternalServerErrorException(caught.getMessage());
+            }
+        }
+    }
+
     @ApiOperation(value = "Deletes permanently an employee")
     @ApiResponses({
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "Could not delete employee by the specified uuid!") })
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@NotBlank @PathVariable("uuid") final String uuid)
+    public void deleteEmployee(@NotBlank @PathVariable("uuid") String uuid)
     {
         LOGGER.info("Deleting an employee by the uuid {}", uuid);
         try
