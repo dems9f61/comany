@@ -1,7 +1,6 @@
 package com.takeaway.employeeservice.utils;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
@@ -24,7 +23,7 @@ public class JsonDateDeSerializer extends JsonDeserializer<Date>
     // ===========================  public  Methods  =========================
 
     @Override
-    public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+    public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException
     {
         try
         {
