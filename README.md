@@ -36,9 +36,8 @@ By default, the employee service will be running at port 8081 and the employee e
 
 ### The employee service
 - To start the employee service, run the `empoyeeservice` bootRun task.
-- Once started, all employee related endpoints can be reached using <http://localhost:8081/api/v1/employees/>
-- All department related endpoints can be triggered using <http://localhost:8081/api/v1/departments/>
-- YThe Swagger API can be inspected here <http://localhost:8081/swagger-ui.html>
+- Once started, all employee related endpoints can be reached using <http://localhost:8081/api/v1/employees/> and all department related endpoints can be triggered using <http://localhost:8081/api/v1/departments/>
+- The Swagger API can be inspected here <http://localhost:8081/swagger-ui.html>
 
 ## Testing
 Feel free to use [Postman](https://www.getpostman.com/) to test the APIs.
