@@ -47,8 +47,7 @@ class EmployeeService implements EmployeeServiceCapable
         LOGGER.info("Creating an employee with {} ", creationParameter);
         String departmentName = StringUtils.trim(creationParameter.getDepartmentName());
         Optional<Department> departmentOptional = findDepartmentByName(departmentName);
-        String emailAddress = StringUtils.trim(creationParameter.getEmailAddress()
-                                                                .trim());
+        String emailAddress = StringUtils.trim(creationParameter.getEmailAddress());
         List<Employee> employeesWithSameEmail = employeeRepository.findByEmailAddress(emailAddress);
         if (!employeesWithSameEmail.isEmpty())
         {

@@ -92,15 +92,16 @@ public class EmployeeController
     {
         LOGGER.info("Retrieving an employee by the uuid {}", uuid);
         return employeeService.findByUuid(uuid)
-                              .map(employee -> new EmployeeResponse(employee.getUuid(),
-                                                                    employee.getEmailAddress(),
-                                                                    employee.getFullName()
-                                                                            .getFirstName(),
-                                                                    employee.getFullName()
-                                                                            .getLastName(),
-                                                                    employee.getBirthday(),
-                                                                    employee.getDepartment()
-                                                                            .getDepartmentName()))
+                              .map(employee -> {
+                                  Employee.FullName fullName = employee.getFullName();
+                                  return new EmployeeResponse(employee.getUuid(),
+                                                              employee.getEmailAddress(),
+                                                              fullName != null ? fullName.getFirstName() : null,
+                                                              fullName != null ? fullName.getLastName() : null,
+                                                              employee.getBirthday(),
+                                                              employee.getDepartment()
+                                                                      .getDepartmentName());
+                              })
                               .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified uuid!"));
     }
 

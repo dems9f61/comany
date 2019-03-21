@@ -52,10 +52,10 @@ public class EmployeeRequest
     // ============================  Constructors  ===========================
 
     @JsonCreator
-    EmployeeRequest(@JsonProperty(value = "emailAddress", required = true) String emailAddress,
-                    @JsonProperty(value = "firstName", required = true) String firstName,
-                    @JsonProperty(value = "lastName", required = true) String lastName,
-                    @JsonProperty(value = "birthday", required = true) Date birthday,
+    EmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
+                    @JsonProperty(value = "firstName") String firstName,
+                    @JsonProperty(value = "lastName") String lastName,
+                    @JsonProperty(value = "birthday") Date birthday,
                     @JsonProperty(value = "departmentName", required = true) String departmentName)
     {
         this.emailAddress = emailAddress;
