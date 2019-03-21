@@ -12,7 +12,7 @@ the in-memory-database `H2` for convenience reasons.
 
 ## Start the rabbitmq server
 Both the employee and the event backend-services share messages over a queue provider through [rabbitmq](https://www.rabbitmq.com/).
-Go to the project root folder and before doing anything else, be sure to run the rabbitmq instance by using following command
+Go to the project root folder and before doing anything else, be sure that your port 15672 has not been allocated. Then run the rabbitmq instance by using following command
 
 ```sh
 $ docker-compose up
