@@ -1,11 +1,10 @@
 package com.takeaway.eventservice.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
  * User: StMinko
@@ -15,18 +14,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @Slf4j
 @ControllerAdvice
-public class ExceptionMapper extends ResponseEntityExceptionHandler
+public class ExceptionMapper
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
-    @Order(1)
+
     @ExceptionHandler(value = { Exception.class })
     protected ResponseEntity<String> handleException(Exception exception)
     {
-        return handleApiException(new InternalServerErrorException(exception.getMessage()));
+        return handleApiException(new InternalServerErrorException(ExceptionUtils.getStackTrace(exception)));
     }
 
     private ResponseEntity<String> handleApiException(ApiException exception)

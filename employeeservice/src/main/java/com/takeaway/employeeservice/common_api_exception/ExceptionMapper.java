@@ -2,6 +2,7 @@ package com.takeaway.employeeservice.common_api_exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -94,7 +95,7 @@ public class ExceptionMapper
     @ExceptionHandler(value = { Exception.class })
     protected ResponseEntity<String> handleException(Exception exception)
     {
-        return handleApiException(new InternalServerErrorException(exception.getMessage()));
+        return handleApiException(new InternalServerErrorException(ExceptionUtils.getStackTrace(exception)));
     }
 
     // ===========================  private  Methods  ========================
