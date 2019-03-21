@@ -1,7 +1,6 @@
 package com.takeaway.eventservice.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,7 +24,7 @@ public class ExceptionMapper
     @ExceptionHandler(value = { Exception.class })
     protected ResponseEntity<String> handleException(Exception exception)
     {
-        return handleApiException(new InternalServerErrorException(ExceptionUtils.getStackTrace(exception)));
+        return handleApiException(new InternalServerErrorException(exception.getMessage()));
     }
 
     private ResponseEntity<String> handleApiException(ApiException exception)

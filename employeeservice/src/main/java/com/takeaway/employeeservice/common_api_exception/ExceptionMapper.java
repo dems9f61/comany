@@ -2,9 +2,9 @@ package com.takeaway.employeeservice.common_api_exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -62,14 +62,23 @@ public class ExceptionMapper
         return handleApiException(new BadRequestException(errorMsg));
     }
 
-    @Order(2)
+    @Order(4)
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    protected ResponseEntity<String> handleNotReadableException(HttpMessageNotReadableException notReadableException)
+    {
+        Throwable mostSpecificCause = notReadableException.getMostSpecificCause();
+        String errorMessage = mostSpecificCause != null ? mostSpecificCause.getMessage() : notReadableException.getMessage();
+        return handleBadRequestException(new BadRequestException(errorMessage));
+    }
+
+    @Order(4)
     @ExceptionHandler(value = BadRequestException.class)
     protected ResponseEntity<String> handleBadRequestException(BadRequestException badRequestException)
     {
         return handleApiException(badRequestException);
     }
 
-    @Order(3)
+    @Order(5)
     @ExceptionHandler(value = ResourceNotFoundException.class)
     protected ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException)
     {
@@ -80,7 +89,7 @@ public class ExceptionMapper
     @ExceptionHandler(value = { Exception.class })
     protected ResponseEntity<String> handleException(Exception exception)
     {
-        return handleApiException(new InternalServerErrorException(ExceptionUtils.getStackTrace(exception)));
+        return handleApiException(new InternalServerErrorException(exception.getMessage()));
     }
 
     // ===========================  private  Methods  ========================

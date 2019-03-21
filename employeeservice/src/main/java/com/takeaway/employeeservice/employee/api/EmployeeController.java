@@ -1,6 +1,7 @@
 package com.takeaway.employeeservice.employee.api;
 
 import com.takeaway.employeeservice.ApiVersions;
+import com.takeaway.employeeservice.common_api_exception.ApiException;
 import com.takeaway.employeeservice.common_api_exception.BadRequestException;
 import com.takeaway.employeeservice.common_api_exception.InternalServerErrorException;
 import com.takeaway.employeeservice.common_api_exception.ResourceNotFoundException;
@@ -48,7 +49,7 @@ public class EmployeeController
     @ApiOperation(value = "Creates an employee with the request values")
     @ApiResponses({
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = ""),
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "A necessary sub resource was not found") })
+            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeResponse createEmployee(@RequestBody @NotNull @Valid EmployeeRequest employeeRequest)
@@ -70,16 +71,7 @@ public class EmployeeController
         }
         catch (EmployeeServiceException caught)
         {
-            EmployeeServiceException.Reason reason = caught.getReason();
-            switch (reason)
-            {
-                case NOT_FOUND:
-                    throw new ResourceNotFoundException("A necessary sub resource was not found!");
-                case INVALID_REQUEST:
-                    throw new BadRequestException(caught.getMessage(), caught.getCause());
-                default:
-                    throw new InternalServerErrorException(caught.getMessage());
-            }
+            throw translateInApiException(caught);
         }
     }
 
@@ -120,16 +112,7 @@ public class EmployeeController
         }
         catch (EmployeeServiceException caught)
         {
-            EmployeeServiceException.Reason reason = caught.getReason();
-            switch (reason)
-            {
-                case NOT_FOUND:
-                    throw new ResourceNotFoundException(caught.getMessage());
-                case INVALID_REQUEST:
-                    throw new BadRequestException(caught.getMessage(), caught.getCause());
-                default:
-                    throw new InternalServerErrorException(caught.getMessage());
-            }
+            throw translateInApiException(caught);
         }
     }
 
@@ -161,6 +144,22 @@ public class EmployeeController
 
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
+
+    private ApiException translateInApiException(EmployeeServiceException caught)
+    {
+        EmployeeServiceException.Reason reason = caught.getReason();
+        switch (reason)
+        {
+            case NOT_FOUND:
+                return new ResourceNotFoundException(caught.getMessage());
+            case INVALID_REQUEST:
+                return new BadRequestException(caught.getMessage(), caught.getCause());
+            default:
+                return new InternalServerErrorException(caught.getMessage());
+        }
+    }
+
+
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================
 }

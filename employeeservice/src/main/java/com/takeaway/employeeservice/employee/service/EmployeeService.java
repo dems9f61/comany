@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,15 +46,11 @@ class EmployeeService implements EmployeeServiceCapable
     public Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException
     {
         LOGGER.info("Creating an employee with {} ", creationParameter);
+        String emailAddress = StringUtils.trim(creationParameter.getEmailAddress());
+        validateUniquenessOfEmail(emailAddress);
+
         String departmentName = StringUtils.trim(creationParameter.getDepartmentName());
         Optional<Department> departmentOptional = findDepartmentByName(departmentName);
-        String emailAddress = StringUtils.trim(creationParameter.getEmailAddress());
-        List<Employee> employeesWithSameEmail = employeeRepository.findByEmailAddress(emailAddress);
-        if (!employeesWithSameEmail.isEmpty())
-        {
-            throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email '%s' is already used", emailAddress));
-        }
-
         return departmentOptional.map(department -> {
             Employee newEmployee = new Employee();
             newEmployee.setEmailAddress(emailAddress);
@@ -69,8 +66,7 @@ class EmployeeService implements EmployeeServiceCapable
             messagePublisher.employeeCreated(savedEmployee);
             return savedEmployee;
         })
-                                 .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND,
-                                                                                 String.format("Department name '%s' could not be found!",
+                                 .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND, String.format("Department name '%s' could not be found!",
                                                                                                departmentName)));
     }
 
@@ -194,9 +190,10 @@ class EmployeeService implements EmployeeServiceCapable
             try
             {
                 Department department = departmentService.findByDepartmentName(newDepartmentName)
-                                                         .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND, String.format(
-                                                                 "A department with name '%s' could not be found!",
-                                                                 newDepartmentName)));
+                                                         .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND,
+                                                                                                         String.format(
+                                                                                                                 "A department with name '%s' could not be found!",
+                                                                                                                 newDepartmentName)));
                 employee.setDepartment(department);
             }
             catch (DepartmentServiceException e)
@@ -207,6 +204,18 @@ class EmployeeService implements EmployeeServiceCapable
         }
         return hasUpdated;
     }
+
+    private void validateUniquenessOfEmail(String emailAddress) throws EmployeeServiceException
+    {
+        List<Employee> employeesWithSameEmail = StringUtils.isBlank(emailAddress) ?
+                Collections.emptyList() :
+                employeeRepository.findByEmailAddress(emailAddress);
+        if (!employeesWithSameEmail.isEmpty())
+        {
+            throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email '%s' is already used", emailAddress));
+        }
+    }
+
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================
