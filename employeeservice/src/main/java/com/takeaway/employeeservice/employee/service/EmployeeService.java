@@ -138,7 +138,7 @@ class EmployeeService implements EmployeeServiceCapable
     private boolean updateEmailAddress(EmployeeParameter updateParameter, Employee employee)
     {
         boolean hasUpdated = false;
-        String newEmailAddress = updateParameter.getEmailAddress();
+        String newEmailAddress = StringUtils.trim(updateParameter.getEmailAddress());
         if (!StringUtils.equals(employee.getEmailAddress(), newEmailAddress))
         {
             employee.setEmailAddress(newEmailAddress);
@@ -151,18 +151,33 @@ class EmployeeService implements EmployeeServiceCapable
     {
         boolean hasUpdated = false;
         String newFirstName = updateParameter.getFirstName();
-        Employee.FullName fullName = employee.getFullName();
-        if (!StringUtils.equals(fullName.getFirstName(), newFirstName))
-        {
-            fullName.setFirstName(newFirstName);
-            hasUpdated = true;
-        }
         String newLastName = updateParameter.getLastName();
-        if (!StringUtils.equals(fullName.getLastName(), newLastName))
+        Employee.FullName fullName = employee.getFullName();
+        if (fullName != null)
         {
-            fullName.setLastName(newLastName);
-            hasUpdated = true;
+            if (!StringUtils.equals(fullName.getFirstName(), newFirstName))
+            {
+                fullName.setFirstName(newFirstName);
+                hasUpdated = true;
+            }
+            if (!StringUtils.equals(fullName.getLastName(), newLastName))
+            {
+                fullName.setLastName(newLastName);
+                hasUpdated = true;
+            }
         }
+        else
+        {
+            if (newFirstName != null || newLastName != null)
+            {
+                fullName = new Employee.FullName();
+                fullName.setFirstName(newFirstName);
+                fullName.setFirstName(newLastName);
+                employee.setFullName(fullName);
+                hasUpdated = true;
+            }
+        }
+
         return hasUpdated;
     }
 
