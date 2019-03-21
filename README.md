@@ -1,5 +1,5 @@
 # PROJECT
-This project includes both the backend services.
+This project includes both backend services.
 
 ## Requirements
 - Install [Docker](https://docs.docker.com/) and start the docker deamon
