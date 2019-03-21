@@ -3,5 +3,5 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = 'comany'
+rootProject.name = 'company'
 include 'employeeservice', 'eventservice'
