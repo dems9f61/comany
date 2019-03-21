@@ -23,7 +23,7 @@ After starting the rabbitmq instance, check if you can reach [http://localhost:1
 **Note:** The rabbitmq credentials can be found and adjusted in the respectively `yml` file of each service
 
 ## The employee service and the employee event service
-Since starting the employee-event service will get all needed queues and exchanges on the rabbitmq server created, it might appear preferable to start the employee-event service first.   
+Since starting the employee-event service will create all needed queues and exchanges on the rabbitmq server, it might appear more judiciously to start the employee-event service first.   
 
 **Note:** The respectively service port can also be found and adjusted in the `yml` file of each service. 
 By default, the employee service will be running at port 8081 and the employee event service will be running at port 8083. 
