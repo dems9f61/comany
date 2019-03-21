@@ -23,7 +23,7 @@ After starting the rabbitmq instance, check if you can reach [http://localhost:1
 **Note:** The rabbitmq credentials can be found and adjusted in the respectively `yml` file of each service
 
 ## The employee service and the employee event service
-Since starting the employee-event service will create all needed queues and exchanges on the rabbitmq server, it might appear more judiciously to start the employee-event service first.   
+Since starting the employee-event service will create all needed queues and exchanges on the rabbitmq server, it might appear more preferable to start the employee-event service first.   
 
 **Note:** The respectively service port can also be found and adjusted in the `yml` file of each service. 
 By default, the employee service will be running at port 8081 and the employee event service will be running at port 8083. 
@@ -31,14 +31,14 @@ By default, the employee service will be running at port 8081 and the employee e
 ### The employee-event service 
 **Reminder:** Starting the employee-event service will get all needed queues, exchanges on the rabbitmq server automatically created
 - To start the employee-event service, run the `eventservice` bootRun task.
-- All employee events related endpoints can be reached using <http://localhost:8083/api/v1/employees/>
-- You can inspect the Swagger API here <http://localhost:8083/swagger-ui.html>
+- Once started, all employee events related endpoints can be triggered using <http://localhost:8083/api/v1/employees/>
+- The Swagger API can be inspected here <http://localhost:8083/swagger-ui.html>
 
 ### The employee service
 - To start the employee service, run the `empoyeeservice` bootRun task.
-- All employee related endpoints can be reached using <http://localhost:8081/api/v1/employees/>
-- All department related endpoints can be reached using <http://localhost:8081/api/v1/departments/>
-- You can inspect the Swagger API here <http://localhost:8081/swagger-ui.html>
+- Once started, all employee related endpoints can be reached using <http://localhost:8081/api/v1/employees/>
+- All department related endpoints can be triggered using <http://localhost:8081/api/v1/departments/>
+- YThe Swagger API can be inspected here <http://localhost:8081/swagger-ui.html>
 
 ## Testing
-You can use [Postman](https://www.getpostman.com/) to test the APIs.
+Feel free to use [Postman](https://www.getpostman.com/) to test the APIs.
