@@ -37,7 +37,7 @@ class EmployeeEventRestTest extends RestTestSuite
             // Arrange
             String uuid = UUID.randomUUID()
                               .toString();
-            publishRandomEventsFor(uuid);
+            receiveRandomMessageFor(uuid);
 
             String uri = String.format("%s/events", ApiVersions.V1);
 

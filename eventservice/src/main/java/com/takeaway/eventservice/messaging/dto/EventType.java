@@ -12,5 +12,5 @@ public enum EventType
 
     EMPLOYEE_UPDATED,
 
-    EMPLOYEE_DELETED;
+    EMPLOYEE_DELETED
 }

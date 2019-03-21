@@ -75,7 +75,6 @@ public class MessagingConfig
                                                                                Jackson2JsonMessageConverter converter,
                                                                                MethodInterceptor retryOperationsInterceptor)
     {
-
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(converter);

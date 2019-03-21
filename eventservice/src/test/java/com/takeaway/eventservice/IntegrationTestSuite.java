@@ -1,19 +1,19 @@
 package com.takeaway.eventservice;
 
-import com.takeaway.eventservice.messaging.EmployeeEvent;
+import com.takeaway.eventservice.messaging.EmployeeEventTestFactory;
+import com.takeaway.eventservice.messaging.EmployeeMessage;
+import com.takeaway.eventservice.messaging.EmployeeMessageReceiver;
+import com.takeaway.eventservice.messaging.EmployeeMessageTestFactory;
 import com.takeaway.eventservice.messaging.dto.Employee;
 import com.takeaway.eventservice.messaging.dto.EmployeeTestFactory;
-import com.takeaway.eventservice.messaging.dto.EventType;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
-import java.util.Random;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -32,26 +32,31 @@ public abstract class IntegrationTestSuite
     // =============================  Variables  =============================
 
     @Autowired
-    protected ApplicationEventPublisher eventPublisher;
+    protected EmployeeTestFactory employeeTestFactory;
 
     @Autowired
-    protected EmployeeTestFactory employeeTestFactory;
+    protected EmployeeEventTestFactory employeeEventTestFactory;
+
+    @Autowired
+    protected EmployeeMessageTestFactory employeeMessageTestFactory;
+
+    @Autowired
+    private EmployeeMessageReceiver employeeMessageReceiver;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    public void publishRandomEventsFor(String uuid)
+    public void receiveRandomMessageFor(String uuid)
     {
         List<Employee> employees = employeeTestFactory.createManyDefault(RandomUtils.nextInt(30, 100));
-        EventType[] values = EventType.values();
         employees.forEach(employee -> {
-            Random random = new Random();
-            EventType value = values[random.nextInt(values.length)];
             employee.setUuid(uuid);
-            eventPublisher.publishEvent(new EmployeeEvent(employee, value));
+            EmployeeMessage employeeMessage = employeeMessageTestFactory.builder()
+                                                                        .employee(employee)
+                                                                        .create();
+            employeeMessageReceiver.receiveEmployeeMessage(employeeMessage);
         });
     }
-
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Employee
+public class Employee implements Serializable
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
@@ -39,7 +40,7 @@ public class Employee
     @Data
     @ToString
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class FullName
+    public static class FullName implements Serializable
     {
         private String firstName;
 

@@ -1,6 +1,5 @@
 package com.takeaway.eventservice.messaging;
 
-import com.takeaway.eventservice.employee_event.service.PersistentEmployeeEvent;
 import com.takeaway.eventservice.messaging.dto.Employee;
 import com.takeaway.eventservice.messaging.dto.EventType;
 import lombok.EqualsAndHashCode;
@@ -34,22 +33,6 @@ public class EmployeeEvent extends ApplicationEvent
         super(employee);
         this.employee = employee;
         this.eventType = eventType;
-    }
-
-    public PersistentEmployeeEvent toPersistent()
-    {
-        PersistentEmployeeEvent persistentEmployeeEvent = new PersistentEmployeeEvent();
-        persistentEmployeeEvent.setEventType(eventType);
-        persistentEmployeeEvent.setBirthday(employee.getBirthday());
-        persistentEmployeeEvent.setEmailAddress(employee.getEmailAddress());
-        persistentEmployeeEvent.setFirstName(employee.getFullName()
-                                                     .getFirstName());
-        persistentEmployeeEvent.setLastName(employee.getFullName()
-                                                    .getLastName());
-        persistentEmployeeEvent.setUuid(employee.getUuid());
-        persistentEmployeeEvent.setDepartmentName(employee.getDepartment()
-                                                          .getDepartmentName());
-        return persistentEmployeeEvent;
     }
 
     // ===========================  public  Methods  =========================

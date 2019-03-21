@@ -33,7 +33,7 @@ public class ExceptionMapper
 
     @Order(1)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception)
+    protected ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception)
     {
         List<FieldError> fieldErrors = exception.getBindingResult()
                                                 .getFieldErrors();

@@ -1,6 +1,7 @@
 package com.takeaway.eventservice.employee_event.service;
 
 import com.takeaway.eventservice.messaging.EmployeeEvent;
+import com.takeaway.eventservice.messaging.dto.Employee;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +36,21 @@ public class EmployeeEventService
     @EventListener
     public void handleEmployeeEvent(@NonNull EmployeeEvent employeeEvent)
     {
-        PersistentEmployeeEvent persistentEmployeeEvent = employeeEvent.toPersistent();
+        PersistentEmployeeEvent persistentEmployeeEvent = new PersistentEmployeeEvent();
+        Employee employee = employeeEvent.getEmployee();
+        persistentEmployeeEvent.setEventType(employeeEvent.getEventType());
+        persistentEmployeeEvent.setBirthday(employee.getBirthday());
+        persistentEmployeeEvent.setEmailAddress(employee.getEmailAddress());
+        Employee.FullName fullName = employee.getFullName();
+        persistentEmployeeEvent.setFirstName(fullName.getFirstName());
+        persistentEmployeeEvent.setLastName(fullName.getLastName());
+        persistentEmployeeEvent.setUuid(employee.getUuid());
+        persistentEmployeeEvent.setDepartmentName(employee.getDepartment()
+                                                          .getDepartmentName());
         employeeEventRepository.save(persistentEmployeeEvent);
     }
 
-    public List<PersistentEmployeeEvent> findAllByOrderByIdAsc(String uuid)
+    public List<PersistentEmployeeEvent> findAllByOrderByIdAsc(@NonNull String uuid)
     {
         return employeeEventRepository.findAllByOrderByIdAsc()
                                       .parallelStream()

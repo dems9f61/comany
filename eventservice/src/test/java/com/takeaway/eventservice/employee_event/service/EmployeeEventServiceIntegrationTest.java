@@ -3,16 +3,12 @@ package com.takeaway.eventservice.employee_event.service;
 import com.takeaway.eventservice.IntegrationTestSuite;
 import com.takeaway.eventservice.messaging.EmployeeEvent;
 import com.takeaway.eventservice.messaging.dto.Employee;
-import com.takeaway.eventservice.messaging.dto.EventType;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +34,7 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
         // Arrange
         String uuid = UUID.randomUUID()
                           .toString();
-        publishRandomEventsFor(uuid);
+        receiveRandomMessageFor(uuid);
 
         // Act
         List<PersistentEmployeeEvent> allDescOrderedById = employeeEventService.findAllByOrderByIdAsc(uuid);
@@ -53,26 +49,34 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
         }
     }
 
-    @DisplayName("handled employee events must be persisted")
+    @DisplayName("Handling an employee events makes it persistent")
     @Test
-    void givenEmployeeEvent_whenHandleEvent_thenPersistEvent()
+    void givenEmployeeEvent_whenHandle_thenPersistEvent()
     {
         // Arrange
         employeeEventRepository.deleteAll();
-        List<Employee> employeeList = employeeTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
-        EventType[] values = EventType.values();
-        List<EmployeeEvent> employeeEvents = employeeList.stream()
-                                                         .map(employee -> {
-                                                             Random random = new Random();
-                                                             EventType value = values[random.nextInt(values.length)];
-                                                             return new EmployeeEvent(employee, value);
-                                                         })
-                                                         .collect(Collectors.toList());
+        Employee employee = employeeTestFactory.createDefault();
+        EmployeeEvent employeeEvent = employeeEventTestFactory.builder()
+                                                              .employee(employee)
+                                                              .create();
 
         // Act
-        employeeEvents.forEach(employeeEvent -> employeeEventService.handleEmployeeEvent(employeeEvent));
+        employeeEventService.handleEmployeeEvent(employeeEvent);
 
         // Assert
-        assertThat(employeeEventRepository.findAll()).hasSameSizeAs(employeeEvents);
+        List<PersistentEmployeeEvent> allEvents = employeeEventRepository.findAll();
+        assertThat(allEvents).isNotEmpty()
+                             .hasSize(1);
+        PersistentEmployeeEvent persistentEmployeeEvent = allEvents.get(0);
+        assertThat(persistentEmployeeEvent.getId()).isGreaterThan(0);
+        assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(employee.getBirthday());
+        assertThat(persistentEmployeeEvent.getDepartmentName()).isEqualTo(employee.getDepartment()
+                                                                                  .getDepartmentName());
+        assertThat(persistentEmployeeEvent.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+        assertThat(persistentEmployeeEvent.getUuid()).isEqualTo(employee.getUuid());
+        assertThat(persistentEmployeeEvent.getFirstName()).isEqualTo(employee.getFullName()
+                                                                             .getFirstName());
+        assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName()
+                                                                            .getLastName());
     }
 }

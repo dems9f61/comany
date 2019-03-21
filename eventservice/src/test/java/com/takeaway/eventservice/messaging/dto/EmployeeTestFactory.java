@@ -5,10 +5,8 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -61,8 +59,8 @@ public class EmployeeTestFactory
         {
             this.emailAddress = generateRandomEmail();
             this.department = departmentTestFactory.createDefault();
-            this.birthday = Date.from(generateRandomDate().atStartOfDay(ZoneId.systemDefault())
-                                                          .toInstant());
+            LocalDate localDate = generateRandomDate();
+            this.birthday = java.sql.Date.valueOf(localDate);
             this.fullName = new Employee.FullName();
             this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
             this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
@@ -94,14 +92,20 @@ public class EmployeeTestFactory
 
         private LocalDate generateRandomDate()
         {
-            long minDay = LocalDate.of(1970, 1, 1)
-                                   .toEpochDay();
-            long maxDay = LocalDate.now()
-                                   .toEpochDay();
-            long randomDay = ThreadLocalRandom.current()
-                                              .nextLong(minDay, maxDay);
+            return createRandomDate(1900, 2000);
+        }
 
-            return LocalDate.ofEpochDay(randomDay);
+        private int createRandomIntBetween(int start, int end)
+        {
+            return start + (int) Math.round(Math.random() * (end - start));
+        }
+
+        private LocalDate createRandomDate(int startYear, int endYear)
+        {
+            int day = createRandomIntBetween(1, 28);
+            int month = createRandomIntBetween(1, 12);
+            int year = createRandomIntBetween(startYear, endYear);
+            return LocalDate.of(year, month, day);
         }
 
         private String generateRandomEmail()

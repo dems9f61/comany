@@ -3,7 +3,9 @@ package com.takeaway.eventservice.messaging;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.takeaway.eventservice.messaging.dto.Employee;
 import com.takeaway.eventservice.messaging.dto.EventType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -15,6 +17,8 @@ import lombok.ToString;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmployeeMessage
 {
     // =========================== Class Variables ===========================

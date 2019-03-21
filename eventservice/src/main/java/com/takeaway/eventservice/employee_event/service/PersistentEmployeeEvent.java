@@ -1,10 +1,7 @@
 package com.takeaway.eventservice.employee_event.service;
 
 import com.takeaway.eventservice.messaging.dto.EventType;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,6 +16,7 @@ import java.util.Date;
 @Setter
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Entity
 @Table(name = "EMPLOYEE_EVENTS")
 public class PersistentEmployeeEvent
@@ -46,6 +44,7 @@ public class PersistentEmployeeEvent
     @Column(name = "last_name", updatable = false)
     private String lastName;
 
+    @Temporal(TemporalType.DATE)
     @Column(length = 10, updatable = false)
     private Date birthday;
 

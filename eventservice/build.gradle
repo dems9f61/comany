@@ -38,26 +38,27 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
-       implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-       implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-       implementation 'org.springframework.boot:spring-boot-starter-validation'
-       implementation 'org.springframework.boot:spring-boot-starter-web'
-       implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${apacheCommonLang3Version}"
-       implementation 'com.h2database:h2'
-       implementation("org.projectlombok:lombok:${lombokVersion}")
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${apacheCommonLang3Version}"
+    implementation 'com.h2database:h2'
+    implementation("org.projectlombok:lombok:${lombokVersion}")
 
-       compile group: 'io.springfox', name: 'springfox-swagger-ui', version: "${swaggerUiVersion}"
-       compile group: 'io.springfox', name: 'springfox-swagger2', version: "${springfoxVersion}"
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: "${swaggerUiVersion}"
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: "${springfoxVersion}"
 
-       annotationProcessor 'org.projectlombok:lombok'
-       compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 
-       testImplementation 'org.springframework.boot:spring-boot-starter-test'
-       testImplementation group: 'org.apache.maven.plugins', name: 'maven-surefire-plugin', version: "${mavenSurefirePluginVersion}"
-       testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitJupiterVersion}"
-       testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitJupiterVersion}"
-       testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${junitJupiterVersion}"
-       testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: "${junitJupiterVersion}"
-       testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoJunitJupiterVersion}"
-       testImplementation group: 'org.mockito', name: 'mockito-core', version: "${mockitoJunitJupiterVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation group: 'org.apache.maven.plugins', name: 'maven-surefire-plugin', version: "${mavenSurefirePluginVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoJunitJupiterVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: "${mockitoJunitJupiterVersion}"
+    testImplementation group: 'info.solidsoft.mockito', name: 'mockito-java8', version: "${mockitoJava8Version}"
 }

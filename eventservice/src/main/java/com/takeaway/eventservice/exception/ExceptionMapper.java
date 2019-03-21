@@ -1,32 +1,34 @@
-package com.takeaway.eventservice.messaging.dto;
+package com.takeaway.eventservice.exception;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.ToString;
-
-import java.io.Serializable;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
  * User: StMinko
- * Date: 20.03.2019
- * Time: 14:09
+ * Date: 18.03.2019
+ * Time: 17:17
  * <p/>
  */
-@Data
-@ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Department implements Serializable
+@Slf4j
+@ControllerAdvice
+public class ExceptionMapper
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
-
-    private long id;
-
-    private String departmentName;
-
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
+
+    @ExceptionHandler(value = { Exception.class })
+    protected ResponseEntity<String> handleException(Exception exception)
+    {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body(exception.getMessage());
+    }
+
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

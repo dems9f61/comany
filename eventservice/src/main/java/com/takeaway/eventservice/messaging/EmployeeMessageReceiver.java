@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-class EmployeeEventReceiver
+public class EmployeeMessageReceiver
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
