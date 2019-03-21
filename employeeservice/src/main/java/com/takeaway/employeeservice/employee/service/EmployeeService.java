@@ -204,7 +204,11 @@ class EmployeeService implements EmployeeServiceCapable
     private boolean updateDepartment(EmployeeParameter updateParameter, Employee employee) throws EmployeeServiceException
     {
         boolean hasUpdated = false;
-        String newDepartmentName = updateParameter.getDepartmentName();
+        String newDepartmentName = StringUtils.trim(updateParameter.getDepartmentName());
+        if (StringUtils.isBlank(newDepartmentName))
+        {
+            throw new EmployeeServiceException(INVALID_REQUEST, "A department cannot be blank!");
+        }
         if (!StringUtils.equals(newDepartmentName,
                                 employee.getDepartment()
                                         .getDepartmentName()))

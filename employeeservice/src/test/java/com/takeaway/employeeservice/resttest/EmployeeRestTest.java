@@ -234,6 +234,37 @@ class EmployeeRestTest extends RestTestSuite
     class WhenUpdate
     {
         @Test
+        @DisplayName("PUT: 'http://.../employees/{uuid}' returns BAD REQUEST if the specified department is blank")
+        void givenNewBlankDepartment_whenUpdateEmployee_thenStatus400()
+        {
+            // Arrange
+            String firstDepartmentName = RandomStringUtils.randomAlphabetic(23);
+            createAndPersistDepartment(firstDepartmentName);
+
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                        .departmentName(firstDepartmentName)
+                                                                        .create();
+            EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
+            String uuidToUpdate = persistedEmployee.getUuid();
+
+            EmployeeRequest updateRequest = employeeRequestTestFactory.builder()
+                                                                      .departmentName(null)
+                                                                      .create();
+
+            String uri = String.format("%s/employees", ApiVersions.V1);
+            HttpHeaders headers = defaultHttpHeaders();
+
+            // Act
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
+                                                                              HttpMethod.PUT,
+                                                                              new HttpEntity<>(updateRequest, headers),
+                                                                              String.class);
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
         @DisplayName("PUT: 'http://.../employees/{uuid}' returns NOT FOUND if the specified employee doesn't exist ")
         void givenUnknownEmployee_whenUpdateEmployee_thenStatus404()
         {
