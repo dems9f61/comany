@@ -17,7 +17,7 @@ Go to the project root folder and before doing anything else, be sure that your 
 ```sh
 $ docker-compose up
 ``` 
-It will run the commands in `docker-compose.yml`, downloading a rabbitmq image and running the related container.
+It will run the commands in `docker-compose.yml`, downloading a rabbitmq image (rabbitmq:3-management) and running the related container.
 After starting the rabbitmq instance, check if you can reach [http://localhost:15672/](http://localhost:15672) with `rabbitmq` and `rabbitmq`.
 
 **Note:** the rabbitmq credentials can be found and adjusted in the respectively `yml` file of each service
