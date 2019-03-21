@@ -11,7 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
@@ -75,20 +74,6 @@ public class ExceptionMapper
     protected ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException)
     {
         return handleApiException(resourceNotFoundException);
-    }
-
-    @Order(4)
-    @ExceptionHandler(ConstraintViolationException.class)
-    protected ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException constraintViolationException)
-    {
-        String errorMessage = "Constraints violated: " + constraintViolationException.getConstraintViolations()
-                                                                                     .stream()
-                                                                                     .map(violation -> String.format(
-                                                                                             "{Property path: :%s, Error message: :%s}",
-                                                                                             violation.getPropertyPath(),
-                                                                                             violation.getMessage()))
-                                                                                     .collect(joining(", ", "[", "]"));
-        return handleBadRequestException(new BadRequestException(errorMessage));
     }
 
     @Order(1999)

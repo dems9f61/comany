@@ -47,11 +47,11 @@ class EmployeeService implements EmployeeServiceCapable
     public Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException
     {
         LOGGER.info("Creating an employee with {} ", creationParameter);
-        String departmentName = creationParameter.getDepartmentName();
+        String departmentName = StringUtils.trim(creationParameter.getDepartmentName());
         Optional<Department> departmentOptional = findDepartmentByName(departmentName);
-        String emailAddress = creationParameter.getEmailAddress();
+        String emailAddress = StringUtils.trim(creationParameter.getEmailAddress()
+                                                                .trim());
         List<Employee> employeesWithSameEmail = employeeRepository.findByEmailAddress(emailAddress);
-
         if (!employeesWithSameEmail.isEmpty())
         {
             throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email '%s' is already used", emailAddress));
@@ -62,8 +62,8 @@ class EmployeeService implements EmployeeServiceCapable
             newEmployee.setEmailAddress(emailAddress);
 
             Employee.FullName fullName = new Employee.FullName();
-            fullName.setFirstName(creationParameter.getFirstName());
-            fullName.setLastName(creationParameter.getLastName());
+            fullName.setFirstName(StringUtils.trim(creationParameter.getFirstName()));
+            fullName.setLastName(StringUtils.trim(creationParameter.getLastName()));
             newEmployee.setFullName(fullName);
 
             newEmployee.setBirthday(Date.from(creationParameter.getBirthday()
