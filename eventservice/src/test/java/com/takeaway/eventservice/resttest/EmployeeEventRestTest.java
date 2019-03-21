@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Time: 21:14
  * <p/>
  */
-@DisplayName("Rest tests for the employee service")
+@DisplayName("Rest tests for the employee event service")
 class EmployeeEventRestTest extends RestTestSuite
 {
     @Nested
