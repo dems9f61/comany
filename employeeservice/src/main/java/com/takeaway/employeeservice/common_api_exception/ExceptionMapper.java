@@ -3,10 +3,12 @@ package com.takeaway.employeeservice.common_api_exception;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -62,7 +64,7 @@ public class ExceptionMapper
         return handleApiException(new BadRequestException(errorMsg));
     }
 
-    @Order(4)
+    @Order(2)
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     protected ResponseEntity<String> handleNotReadableException(HttpMessageNotReadableException notReadableException)
     {
@@ -71,18 +73,27 @@ public class ExceptionMapper
         return handleBadRequestException(new BadRequestException(errorMessage));
     }
 
-    @Order(4)
+    @Order(3)
     @ExceptionHandler(value = BadRequestException.class)
     protected ResponseEntity<String> handleBadRequestException(BadRequestException badRequestException)
     {
         return handleApiException(badRequestException);
     }
 
-    @Order(5)
+    @Order(4)
     @ExceptionHandler(value = ResourceNotFoundException.class)
     protected ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException)
     {
         return handleApiException(resourceNotFoundException);
+    }
+
+    @Order(5)
+    @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
+    protected ResponseEntity<String> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException mediaNotSupportedException)
+    {
+        String errorMsg = "Unsupported content type: " + mediaNotSupportedException.getContentType();
+        errorMsg += "\nSupported content types: " + MediaType.toString(mediaNotSupportedException.getSupportedMediaTypes());
+        return handleApiException(new BadRequestException(errorMsg));
     }
 
     @Order(1999)

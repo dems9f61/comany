@@ -60,6 +60,40 @@ class EmployeeRestTest extends RestTestSuite
         }
 
         @Test
+        @DisplayName("POST: 'http://.../employees' returns CREATED even if only the department name is specified")
+        void givenOnlyDepartment_whenCreateEmployee_thenStatus201()
+        {
+            String departmentName = RandomStringUtils.randomAlphabetic(23);
+            createAndPersistDepartment(departmentName);
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                        .birthday(null)
+                                                                        .emailAddress(null)
+                                                                        .firstName(null)
+                                                                        .lastName(null)
+                                                                        .departmentName(departmentName)
+                                                                        .create();
+            String uri = String.format("%s/employees", ApiVersions.V1);
+            HttpHeaders headers = defaultHttpHeaders();
+
+            // Act
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(uri,
+                                                                                        HttpMethod.POST,
+                                                                                        new HttpEntity<>(employeeRequest, headers),
+                                                                                        EmployeeResponse.class);
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+            EmployeeResponse employeeResponse = responseEntity.getBody();
+            assertThat(employeeResponse).isNotNull();
+            assertThat(employeeResponse.getUuid()).isNotBlank();
+            assertThat(employeeResponse.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
+            assertThat(employeeResponse.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
+            assertThat(employeeResponse.getFirstName()).isEqualTo(employeeRequest.getFirstName());
+            assertThat(employeeResponse.getLastName()).isEqualTo(employeeRequest.getLastName());
+            assertThat(employeeResponse.getBirthday()).isEqualTo(employeeRequest.getBirthday());
+        }
+
+        @Test
         @DisplayName("POST: 'http://.../employees' returns NOT FOUND if the specified department name doesn't exist ")
         void givenUnknownDepartment_whenCreateEmployee_thenStatus404()
         {
@@ -100,6 +134,46 @@ class EmployeeRestTest extends RestTestSuite
                                                                               HttpMethod.POST,
                                                                               new HttpEntity<>(newEmployeeRequest, headers),
                                                                               String.class);
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../employees' returns BAD REQUEST if no field is set")
+        void givenEmptyRequest_whenCreateEmployee_thenStatus400()
+        {
+            // Arrange
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                        .birthday(null)
+                                                                        .emailAddress(null)
+                                                                        .firstName(null)
+                                                                        .lastName(null)
+                                                                        .departmentName(null)
+                                                                        .create();
+            String uri = String.format("%s/employees", ApiVersions.V1);
+            HttpHeaders headers = defaultHttpHeaders();
+
+            // Act
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri,
+                                                                              HttpMethod.POST,
+                                                                              new HttpEntity<>(employeeRequest, headers),
+                                                                              String.class);
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../employees' returns BAD REQUEST if no the request is null")
+        void givenNullRequest_whenCreateEmployee_thenStatus400()
+        {
+            // Arrange
+            String uri = String.format("%s/employees", ApiVersions.V1);
+            HttpHeaders headers = defaultHttpHeaders();
+
+            // Act
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(null, headers), String.class);
 
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
