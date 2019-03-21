@@ -6,7 +6,7 @@ This project includes both the backend services.
 - Install [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 - Import the project (using the default Gradle Wrapper and Java SDK 1.8)
 
-## The Database 
+## The database 
 Even though Docker is great for running databases in a development environment, I chose not to use it and I contented myself using
 the in-memory-database `H2` for convenience reasons. 
 
