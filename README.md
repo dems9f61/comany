@@ -22,14 +22,14 @@ After starting the rabbitmq instance, check if you can reach [http://localhost:1
 
 **Note:** The rabbitmq credentials can be found and adjusted in the respectively `yml` file of each service
 
-## Start the the employee service and the employee event services
+## The employee service and the employee event service
 Since starting the employee-event service will get all needed queues and exchanges on the rabbitmq server created, it might appear preferable to start the employee-event service first.   
 
 **Note:** The respectively service port can also be found and adjusted in the `yml` file of each service. 
 By default, the employee service will be running at port 8081 and the employee event service will be running at port 8083. 
 
 ### The employee-event service 
-**Note:** Starting the employee-event service will get all needed queues, exchanges on the rabbitmq server created
+**Reminder:** Starting the employee-event service will get all needed queues, exchanges on the rabbitmq server automatically created
 - To start the employee-event service, run the `eventservice` bootRun task.
 - All employee events related endpoints can be reached using <http://localhost:8083/api/v1/employees/>
 - You can inspect the Swagger API here <http://localhost:8083/swagger-ui.html>
