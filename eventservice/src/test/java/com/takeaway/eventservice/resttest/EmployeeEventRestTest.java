@@ -60,5 +60,23 @@ class EmployeeEventRestTest extends RestTestSuite
                 previousId = currentId;
             }
         }
+
+        @Test
+        @DisplayName("GET: 'http://.../events/{uuid}' returns 4xx for blank uuid ")
+        void givenBlankUuid_whenFindByUuid_thenStatus404()
+        {
+            // Arrange
+            String uri = String.format("%s/events", ApiVersions.V1);
+            String blankUuid = "";
+
+            // Act
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, blankUuid),
+                                                                              HttpMethod.GET,
+                                                                              new HttpEntity<>(defaultHttpHeaders()),
+                                                                              String.class);
+            // Assert
+            assertThat(responseEntity.getStatusCode()
+                                     .is4xxClientError()).isTrue();
+        }
     }
 }
