@@ -39,4 +39,5 @@ By default, the employee service will be running at port 8081 and the employee e
 - All employee events related endpoints can be reached using <http://localhost:8083/api/v1/employees/>
 - You can inspect the Swagger API here <http://localhost:8083/swagger-ui.htm>
 
-You can use [Postman](https://www.getpostman.com/) to test the API
+## Testing
+You can use [Postman](https://www.getpostman.com/) to test the APIs.
