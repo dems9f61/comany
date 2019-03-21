@@ -206,13 +206,10 @@ class EmployeeServiceTest extends UnitTestSuite
 
         @Test
         @DisplayName("Creating an employee with an already used mail")
-        void givenAlreadyUsedEmail_whenCreate_thenThrowException() throws Exception
+        void givenAlreadyUsedEmail_whenCreate_thenThrowException()
         {
             // Arrange
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-            Department department = departmentTestFactory.createDefault();
-            doReturn(Optional.of(department)).when(departmentService)
-                                             .findByDepartmentName(employeeParameter.getDepartmentName());
             Employee employee = employeeTestFactory.createDefault();
             doReturn(Lists.newArrayList(employee)).when(employeeRepository)
                                                   .findByEmailAddress(employeeParameter.getEmailAddress());

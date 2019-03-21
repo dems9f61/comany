@@ -55,10 +55,17 @@ class EmployeeService implements EmployeeServiceCapable
             Employee newEmployee = new Employee();
             newEmployee.setEmailAddress(emailAddress);
 
-            Employee.FullName fullName = new Employee.FullName();
-            fullName.setFirstName(StringUtils.trim(creationParameter.getFirstName()));
-            fullName.setLastName(StringUtils.trim(creationParameter.getLastName()));
-            newEmployee.setFullName(fullName);
+            String firstName = StringUtils.trim(creationParameter.getFirstName());
+            String lastName = StringUtils.trim(creationParameter.getLastName());
+            if (!StringUtils.isBlank(firstName) || StringUtils.isBlank(lastName))
+            {
+                Employee.FullName fullName = new Employee.FullName();
+                fullName.setFirstName(StringUtils.trim(firstName));
+
+                fullName.setLastName(StringUtils.trim(lastName));
+                newEmployee.setFullName(fullName);
+            }
+
             newEmployee.setBirthday(creationParameter.getBirthday());
             newEmployee.setDepartment(department);
             Employee savedEmployee = employeeRepository.save(newEmployee);
@@ -150,8 +157,8 @@ class EmployeeService implements EmployeeServiceCapable
     private boolean updateFullName(EmployeeParameter updateParameter, Employee employee)
     {
         boolean hasUpdated = false;
-        String newFirstName = updateParameter.getFirstName();
-        String newLastName = updateParameter.getLastName();
+        String newFirstName = StringUtils.trim(updateParameter.getFirstName());
+        String newLastName = StringUtils.trim(updateParameter.getLastName());
         Employee.FullName fullName = employee.getFullName();
         if (fullName != null)
         {
@@ -168,7 +175,7 @@ class EmployeeService implements EmployeeServiceCapable
         }
         else
         {
-            if (newFirstName != null || newLastName != null)
+            if (!StringUtils.isBlank(newFirstName) || !StringUtils.isBlank(newLastName))
             {
                 fullName = new Employee.FullName();
                 fullName.setFirstName(newFirstName);
@@ -230,7 +237,6 @@ class EmployeeService implements EmployeeServiceCapable
             throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email '%s' is already used", emailAddress));
         }
     }
-
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================
