@@ -83,7 +83,7 @@ public class SwaggerConfig
 
     private String description()
     {
-        return "Swagger API documentation of the takeaway employee-service coding hallenge.";
+        return "Swagger API documentation of this micro service.";
     }
 
     private String version()
