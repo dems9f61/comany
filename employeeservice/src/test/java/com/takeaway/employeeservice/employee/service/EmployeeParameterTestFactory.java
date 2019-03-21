@@ -4,7 +4,7 @@ import com.takeaway.employeeservice.AbstractTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * User: StMinko
@@ -28,7 +28,7 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
 
         private String lastName;
 
-        private LocalDate birthday;
+        private Date birthday;
 
         private String departmentName;
 
@@ -37,7 +37,7 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
             this.emailAddress = generateRandomEmail();
             this.firstName = RandomStringUtils.randomAlphabetic(10);
             this.lastName = RandomStringUtils.randomAlphabetic(13);
-            this.birthday = generateRandomDate();
+            this.birthday = java.sql.Date.valueOf(generateRandomDate());
             this.departmentName = RandomStringUtils.randomAlphabetic(24);
         }
 
@@ -59,7 +59,7 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
             return this;
         }
 
-        public Builder birthday(LocalDate birthday)
+        public Builder birthday(Date birthday)
         {
             this.birthday = birthday;
             return this;

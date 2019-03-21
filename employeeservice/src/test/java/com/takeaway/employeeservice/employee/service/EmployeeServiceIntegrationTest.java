@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -66,11 +64,8 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             assertThat(department).isNotNull();
             assertThat(department.getDepartmentName()).isEqualTo(employeeParameter.getDepartmentName());
             Date birthday = employee.getBirthday();
-            assertThat(birthday).isNotNull();
-            LocalDate birthDateAsLocalDate = birthday.toInstant()
-                                                     .atZone(ZoneId.systemDefault())
-                                                     .toLocalDate();
-            assertThat(birthDateAsLocalDate).isEqualTo(employeeParameter.getBirthday());
+            assertThat(birthday).isNotNull()
+                                .isEqualTo(employeeParameter.getBirthday());
             verify(employeeEventPublisher).employeeCreated(employee);
         }
 
@@ -259,10 +254,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                           .getFirstName()).isEqualTo(updateParameters.getFirstName());
                 assertThat(updatedEmployee.getFullName()
                                           .getLastName()).isEqualTo(updateParameters.getLastName());
-                assertThat(updatedEmployee.getBirthday()
-                                          .toInstant()
-                                          .atZone(ZoneId.systemDefault())
-                                          .toLocalDate()).isEqualTo(updateParameters.getBirthday());
+                assertThat(updatedEmployee.getBirthday()).isEqualTo(updateParameters.getBirthday());
                 assertThat(updatedEmployee.getDepartment()
                                           .getDepartmentName()).isEqualTo(updateParameters.getDepartmentName());
                 verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(

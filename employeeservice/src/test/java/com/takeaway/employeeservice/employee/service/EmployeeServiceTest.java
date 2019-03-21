@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -179,10 +178,7 @@ class EmployeeServiceTest extends UnitTestSuite
 
             // Assert
             verify(employeeRepository).save(assertArg(persisted -> {
-                assertThat(persisted.getBirthday()
-                                    .toInstant()
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDate()).isEqualTo(employeeParameter.getBirthday());
+                assertThat(persisted.getBirthday()).isEqualTo(employeeParameter.getBirthday());
                 assertThat(persisted.getUuid()).isNotBlank();
                 assertThat(persisted.getDepartment()
                                     .getDepartmentName()).isEqualTo(department.getDepartmentName());

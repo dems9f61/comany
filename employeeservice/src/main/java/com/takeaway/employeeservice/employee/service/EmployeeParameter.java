@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * User: StMinko
@@ -28,7 +28,7 @@ public class EmployeeParameter
 
     private final String lastName;
 
-    private final LocalDate birthday;
+    private final Date birthday;
 
     private final String departmentName;
 

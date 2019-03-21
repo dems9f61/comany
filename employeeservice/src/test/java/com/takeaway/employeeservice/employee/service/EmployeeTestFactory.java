@@ -5,7 +5,6 @@ import com.takeaway.employeeservice.department.service.Department;
 import com.takeaway.employeeservice.department.service.DepartmentTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -37,8 +36,7 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
         {
             this.emailAddress = generateRandomEmail();
             this.department = departmentTestFactory.createDefault();
-            this.birthday = Date.from(generateRandomDate().atStartOfDay(ZoneId.systemDefault())
-                                                          .toInstant());
+            this.birthday = java.sql.Date.valueOf(generateRandomDate());
             this.fullName = new Employee.FullName();
             this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
             this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));

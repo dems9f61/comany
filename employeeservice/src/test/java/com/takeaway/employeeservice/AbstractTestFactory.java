@@ -53,7 +53,7 @@ public abstract class AbstractTestFactory<TYPE, BUILDER_TYPE extends AbstractTes
 
         default LocalDate generateRandomDate()
         {
-            long minDay = LocalDate.of(1970, 1, 1)
+            long minDay = LocalDate.of(1900, 1, 1)
                                    .toEpochDay();
             long maxDay = LocalDate.now()
                                    .toEpochDay();

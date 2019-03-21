@@ -59,8 +59,7 @@ public class EmployeeTestFactory
         {
             this.emailAddress = generateRandomEmail();
             this.department = departmentTestFactory.createDefault();
-            LocalDate localDate = generateRandomDate();
-            this.birthday = java.sql.Date.valueOf(localDate);
+            this.birthday = java.sql.Date.valueOf(generateRandomDate());
             this.fullName = new Employee.FullName();
             this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
             this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));

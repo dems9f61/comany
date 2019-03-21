@@ -11,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -65,10 +63,7 @@ class EmployeeService implements EmployeeServiceCapable
             fullName.setFirstName(StringUtils.trim(creationParameter.getFirstName()));
             fullName.setLastName(StringUtils.trim(creationParameter.getLastName()));
             newEmployee.setFullName(fullName);
-
-            newEmployee.setBirthday(Date.from(creationParameter.getBirthday()
-                                                               .atStartOfDay(ZoneId.systemDefault())
-                                                               .toInstant()));
+            newEmployee.setBirthday(creationParameter.getBirthday());
             newEmployee.setDepartment(department);
             Employee savedEmployee = employeeRepository.save(newEmployee);
 
@@ -179,17 +174,11 @@ class EmployeeService implements EmployeeServiceCapable
     private boolean updateBirthDay(EmployeeParameter updateParameter, Employee employee)
     {
         boolean hasUpdated = false;
-        LocalDate newBirthDayAsLocalDate = updateParameter.getBirthday();
+        Date newBirthDay = updateParameter.getBirthday();
         Date oldBirthDay = employee.getBirthday();
-        LocalDate oldBirthDayAsLocalDate = oldBirthDay == null ?
-                null :
-                oldBirthDay.toInstant()
-                           .atZone(ZoneId.systemDefault())
-                           .toLocalDate();
-        if (ObjectUtils.notEqual(newBirthDayAsLocalDate, oldBirthDayAsLocalDate))
+        if (ObjectUtils.notEqual(oldBirthDay, newBirthDay))
         {
-            employee.setBirthday(Date.from(newBirthDayAsLocalDate.atStartOfDay(ZoneId.systemDefault())
-                                                                 .toInstant()));
+            employee.setBirthday(newBirthDay);
             hasUpdated = true;
         }
         return hasUpdated;

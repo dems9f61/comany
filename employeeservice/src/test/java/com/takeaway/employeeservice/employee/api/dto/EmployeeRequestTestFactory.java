@@ -4,8 +4,6 @@ import com.takeaway.employeeservice.AbstractTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -30,14 +28,14 @@ public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequ
 
         private String lastName;
 
-        private LocalDate birthday;
+        private Date birthday;
 
         private String departmentName;
 
         Builder()
         {
             this.emailAddress = generateRandomEmail();
-            this.birthday = generateRandomDate();
+            this.birthday = java.sql.Date.valueOf(generateRandomDate());
             this.firstName = RandomStringUtils.randomAlphabetic(20);
             this.lastName = RandomStringUtils.randomAlphabetic(10);
             this.departmentName = RandomStringUtils.randomAlphabetic(10);
@@ -61,7 +59,7 @@ public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequ
             return this;
         }
 
-        public Builder birthday(LocalDate birthday)
+        public Builder birthday(Date birthday)
         {
             this.birthday = birthday;
             return this;
@@ -77,9 +75,7 @@ public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequ
         {
             return new EmployeeRequest(emailAddress,
                                        firstName,
-                                       lastName,
-                                       Date.from(birthday.atStartOfDay(ZoneId.systemDefault())
-                                                         .toInstant()),
+                                       lastName, birthday,
                                        departmentName);
         }
     }

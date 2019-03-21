@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -262,10 +261,7 @@ class EmployeeControllerTest extends UnitTestSuite
     private Consumer<EmployeeParameter> getEmployeeParameterConsumer(EmployeeRequest employeeRequest)
     {
         return employeeParameter -> {
-            assertThat(employeeParameter.getBirthday()).isEqualTo(employeeRequest.getBirthday()
-                                                                                 .toInstant()
-                                                                                 .atZone(ZoneId.systemDefault())
-                                                                                 .toLocalDate());
+            assertThat(employeeParameter.getBirthday()).isEqualTo(employeeRequest.getBirthday());
             assertThat(employeeParameter.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
             assertThat(employeeParameter.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
             assertThat(employeeParameter.getFirstName()).isEqualTo(employeeRequest.getFirstName());

@@ -39,7 +39,8 @@ public class Employee
             @AttributeOverride(name = "lastName", column = @Column(name = "last_name")) })
     private FullName fullName = new FullName();
 
-    @Column(length = 10)
+    @Column(length = 7)
+    @Temporal(TemporalType.DATE)
     private Date birthday;
 
     @JsonManagedReference

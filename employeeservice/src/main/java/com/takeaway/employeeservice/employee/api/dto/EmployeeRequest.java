@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -70,9 +69,7 @@ public class EmployeeRequest
     {
         return EmployeeParameter.builder()
                                 .emailAddress(emailAddress)
-                                .birthday(birthday.toInstant()
-                                                  .atZone(ZoneId.systemDefault())
-                                                  .toLocalDate())
+                                .birthday(birthday)
                                 .firstName(firstName)
                                 .departmentName(departmentName)
                                 .lastName(lastName)
