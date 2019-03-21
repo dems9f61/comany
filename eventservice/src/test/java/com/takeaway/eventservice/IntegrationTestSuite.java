@@ -7,6 +7,7 @@ import com.takeaway.eventservice.messaging.EmployeeMessageTestFactory;
 import com.takeaway.eventservice.messaging.dto.Employee;
 import com.takeaway.eventservice.messaging.dto.EmployeeTestFactory;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,9 +49,22 @@ public abstract class IntegrationTestSuite
 
     public void receiveRandomMessageFor(String uuid)
     {
-        List<Employee> employees = employeeTestFactory.createManyDefault(RandomUtils.nextInt(30, 100));
+        receiveRandomMessageFor(uuid, 0);
+    }
+
+    public void receiveRandomMessageFor(int count)
+    {
+        receiveRandomMessageFor(null, 0);
+    }
+
+    public void receiveRandomMessageFor(String uuid, int count)
+    {
+        List<Employee> employees = employeeTestFactory.createManyDefault(count <= 0 ? RandomUtils.nextInt(30, 100) : count);
         employees.forEach(employee -> {
-            employee.setUuid(uuid);
+            if (!StringUtils.isBlank(uuid))
+            {
+                employee.setUuid(uuid);
+            }
             EmployeeMessage employeeMessage = employeeMessageTestFactory.builder()
                                                                         .employee(employee)
                                                                         .create();

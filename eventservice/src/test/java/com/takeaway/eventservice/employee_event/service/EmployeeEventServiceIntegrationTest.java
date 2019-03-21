@@ -3,6 +3,7 @@ package com.takeaway.eventservice.employee_event.service;
 import com.takeaway.eventservice.IntegrationTestSuite;
 import com.takeaway.eventservice.messaging.EmployeeEvent;
 import com.takeaway.eventservice.messaging.dto.Employee;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
 {
     @Autowired
-    EmployeeEventRepository employeeEventRepository;
+    private EmployeeEventRepository employeeEventRepository;
 
     @Autowired
     private EmployeeEventService employeeEventService;
 
-    @DisplayName("All published employee events appear in ascending order")
+    @DisplayName("All published employee events to a specific uuid appear in ascending order")
     @Test
     void givenPublishedEmployeeEventsForAnyEmployee_whenFindAll_thenReturnDescendingOrderedList()
     {
@@ -47,6 +48,23 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
             assertThat(previousId).isLessThan(currentId);
             previousId = currentId;
         }
+    }
+
+    @DisplayName("Finding published employee events returns an empty collection For a not unknown uuid ")
+    @Test
+    void givenUnknownUuid_whenFindAll_thenReturnEmptyList()
+    {
+        // Arrange
+        receiveRandomMessageFor(RandomUtils.nextInt(10, 20));
+        String unknownUuid = UUID.randomUUID()
+                                 .toString();
+
+        // Act
+        List<PersistentEmployeeEvent> events = employeeEventService.findAllByOrderByIdAsc(unknownUuid);
+
+        // Assert
+        assertThat(events).isNotNull()
+                          .isEmpty();
     }
 
     @DisplayName("Handling an employee events makes it persistent")
