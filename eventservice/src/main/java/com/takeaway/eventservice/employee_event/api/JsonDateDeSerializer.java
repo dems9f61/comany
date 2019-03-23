@@ -15,7 +15,7 @@ import java.util.Date;
  * Time: 00:05
  * <p/>
  */
-public class JsonDateDeSerializer extends JsonDeserializer<Date>
+class JsonDateDeSerializer extends JsonDeserializer<Date>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
@@ -27,7 +27,7 @@ public class JsonDateDeSerializer extends JsonDeserializer<Date>
     {
         try
         {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(jsonParser.getValueAsString());
+            return new SimpleDateFormat(UsableDateFormat.DEFAULT.getDateFormat()).parse(jsonParser.getValueAsString());
         }
         catch (ParseException caught)
         {

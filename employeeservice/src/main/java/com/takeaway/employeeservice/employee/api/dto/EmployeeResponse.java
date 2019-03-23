@@ -3,8 +3,6 @@ package com.takeaway.employeeservice.employee.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.takeaway.employeeservice.utils.JsonDateDeSerializer;
-import com.takeaway.employeeservice.utils.JsonDateSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -42,7 +40,7 @@ public class EmployeeResponse
     @ApiModelProperty(example = "1980-03-23")
     @JsonDeserialize(using = JsonDateDeSerializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
     private final Date birthday;
 
     @ApiModelProperty(example = "Java Development")

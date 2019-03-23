@@ -50,7 +50,7 @@ public class EmployeeEventResponse
     @ApiModelProperty(example = "1980-03-23")
     @JsonDeserialize(using = JsonDateDeSerializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
     private Date birthday;
 
     @ApiModelProperty(example = "Java Development")
