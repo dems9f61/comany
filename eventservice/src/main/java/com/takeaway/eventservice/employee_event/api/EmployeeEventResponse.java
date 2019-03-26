@@ -33,6 +33,7 @@ public class EmployeeEventResponse
     @ApiModelProperty(example = "67")
     private long id;
 
+    @ApiModelProperty(example = "EMPLOYEE_CREATED")
     private EventType eventType;
 
     @ApiModelProperty(example = "6a225af8-e783-4e60-a5d0-418830330eab")

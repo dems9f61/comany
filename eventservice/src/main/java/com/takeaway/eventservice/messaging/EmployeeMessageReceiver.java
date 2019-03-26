@@ -1,5 +1,6 @@
 package com.takeaway.eventservice.messaging;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Exchange;
@@ -29,7 +30,7 @@ public class EmployeeMessageReceiver
     // ===========================  public  Methods  =========================
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "${rabbitmq.queue-name}", durable = "true"), exchange = @Exchange(value = "${rabbitmq.exchange-name}"), key = "${rabbitmq.routing-key}"))
-    public void receiveEmployeeMessage(EmployeeMessage message)
+    public void receiveEmployeeMessage(@NonNull EmployeeMessage message)
     {
         LOGGER.info("###### Received Message on employee ##### {}", message);
         eventPublisher.publishEvent(new EmployeeEvent(message.getEmployee(), message.getEventType()));
