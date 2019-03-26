@@ -28,7 +28,7 @@ public class EmployeeEvent extends ApplicationEvent
 
     // ============================  Constructors  ===========================
 
-    public EmployeeEvent(@NonNull Employee employee, @NonNull EventType eventType)
+    EmployeeEvent(@NonNull Employee employee, @NonNull EventType eventType)
     {
         super(employee);
         this.employee = employee;
