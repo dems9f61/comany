@@ -1,7 +1,9 @@
 package com.takeaway.employeeservice.employee.service;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String>
 
     Optional<Employee> findByUuid(String uuid);
 
+    @Lock(value = LockModeType.PESSIMISTIC_READ)
     List<Employee> findByEmailAddress(String emailAddress);
 
     // ============================  Inner Classes  ==========================

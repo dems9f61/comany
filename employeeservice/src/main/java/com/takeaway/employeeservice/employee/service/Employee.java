@@ -2,10 +2,7 @@ package com.takeaway.employeeservice.employee.service;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.takeaway.employeeservice.department.service.Department;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -30,23 +27,28 @@ public class Employee
     @Id
     private String uuid;
 
-    @Column(name = "email_address", unique = true)
+    @Column(name = "EMAIL_ADDRESS", unique = true)
     private String emailAddress;
 
     @Embedded
     @AttributeOverrides(value = {
-            @AttributeOverride(name = "firstName", column = @Column(name = "first_name")),
-            @AttributeOverride(name = "lastName", column = @Column(name = "last_name")) })
+            @AttributeOverride(name = "firstName", column = @Column(name = "FIRST_NAME")),
+            @AttributeOverride(name = "lastName", column = @Column(name = "LAST_NAME")) })
     private FullName fullName = new FullName();
 
-    @Column(length = 7)
+    @Column(length = 7, name = "BIRTHDAY")
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
     @JsonManagedReference
     @ManyToOne(optional = false)
-    @JoinColumn(name = "department_id", nullable = false)
+    @JoinColumn(name = "DEPARTMENT_ID", nullable = false)
     private Department department;
+
+    @Setter(value = AccessLevel.PRIVATE)
+    @Column(nullable = false)
+    @Version
+    private long version;
 
     // ============================  Constructors  ===========================
 

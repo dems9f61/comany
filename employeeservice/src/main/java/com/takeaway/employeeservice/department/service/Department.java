@@ -31,12 +31,17 @@ public class Department
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "department_name", length = 50, nullable = false, unique = true)
+    @Column(name = "DEPARTMENT_NAME", length = 50, nullable = false, unique = true)
     private String departmentName;
 
     @JsonBackReference
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private Set<Employee> employees = new HashSet<>();
+
+    @Setter(value = AccessLevel.PRIVATE)
+    @Column(nullable = false)
+    @Version
+    private long version;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
