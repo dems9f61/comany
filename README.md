@@ -31,7 +31,7 @@ By default, the employee-service will be running at port 8081 and the employee e
 ### The employee event-service 
 **Reminder:** Starting the employee event-service will get all needed queues and exchanges on the rabbitmq server automatically created
 - To start the employee event-service, run the `eventservice` bootRun task.
-- Once started, all employee events related endpoints can be triggered using <http://localhost:8083/api/v1/employees/>
+- Once started, all employee events related endpoints can be triggered using <http://localhost:8083/api/v1/events/>
 - The Swagger API can be inspected here <http://localhost:8083/swagger-ui.html>
 
 ### The employee-service
