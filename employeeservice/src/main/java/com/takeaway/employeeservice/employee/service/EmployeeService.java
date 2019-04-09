@@ -43,6 +43,7 @@ class EmployeeService implements EmployeeServiceCapable
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
+    @Transactional
     public Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException
     {
         LOGGER.info("Creating an employee with {} ", creationParameter);
@@ -77,6 +78,7 @@ class EmployeeService implements EmployeeServiceCapable
                                                                                                departmentName)));
     }
 
+    @Transactional
     public void update(@NonNull String uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
     {
         LOGGER.info("Updating an employeeToUpdate {} with {} ", uuid, updateParameter);
@@ -104,6 +106,7 @@ class EmployeeService implements EmployeeServiceCapable
         return employeeRepository.findByUuid(uuid);
     }
 
+    @Transactional
     public void deleteByUuid(@NonNull String uuid) throws EmployeeServiceException
     {
         LOGGER.info("Deleting an employee with {} ", uuid);

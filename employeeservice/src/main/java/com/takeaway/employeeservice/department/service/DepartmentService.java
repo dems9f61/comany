@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
  */
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 class DepartmentService implements DepartmentServiceCapable
 {
@@ -46,6 +48,7 @@ class DepartmentService implements DepartmentServiceCapable
         return departmentRepository.findAll();
     }
 
+    @Transactional
     public Department create(@NonNull DepartmentParameter departmentParameter) throws DepartmentServiceException
     {
         LOGGER.info("Creating a department with {} ", departmentParameter);
