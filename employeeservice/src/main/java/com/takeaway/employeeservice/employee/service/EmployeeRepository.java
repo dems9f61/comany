@@ -18,9 +18,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, String>
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
 
+    @Lock(value = LockModeType.READ)
     Optional<Employee> findByUuid(String uuid);
 
-    @Lock(value = LockModeType.PESSIMISTIC_READ)
+    @Lock(value = LockModeType.READ)
     List<Employee> findByEmailAddress(String emailAddress);
 
     // ============================  Inner Classes  ==========================
