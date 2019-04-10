@@ -12,11 +12,6 @@ import java.util.Date;
  */
 public interface EmployeeRequest
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-
    String getEmailAddress();
 
    String getFirstName();
@@ -37,9 +32,4 @@ public interface EmployeeRequest
                                 .departmentName(getDepartmentName())
                                 .build();
     }
-
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
 }
