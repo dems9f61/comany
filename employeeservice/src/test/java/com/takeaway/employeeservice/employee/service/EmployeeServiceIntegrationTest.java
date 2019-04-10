@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -220,7 +221,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
     class WhenUpdate
     {
         @Test
-        @DisplayName("Updating an employee with valid parameters succeeds")
+        @DisplayName("Updating all employee fields with valid parameters succeeds")
         void givenValidRequestParams_whenUpdate_thenSucceed() throws Exception
         {
             // Arrange
@@ -257,6 +258,151 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                 assertThat(updatedEmployee.getBirthday()).isEqualTo(updateParameters.getBirthday());
                 assertThat(updatedEmployee.getDepartment()
                                           .getDepartmentName()).isEqualTo(updateParameters.getDepartmentName());
+                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
+                        updatedEmployee.getUuid())));
+            }
+        }
+
+        @Test
+        @DisplayName("Updating an employee birthday succeeds without affecting other values")
+        void givenValidBirthday_whenUpdate_thenUpdateOnlyBirthDay() throws Exception
+        {
+            // Arrange
+            DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
+            departmentService.create(departmentParameter);
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
+                                                                              .departmentName(departmentParameter.getDepartmentName())
+                                                                              .create();
+            Employee employee = employeeService.create(employeeParameter);
+
+            LocalDate localDate = employeeParameterTestFactory.builder()
+                                                              .generateRandomDate();
+            java.sql.Date newBirthDay = java.sql.Date.valueOf(localDate);
+            EmployeeParameter updateParameters = employeeParameterTestFactory.builder()
+                                                                             .emailAddress(null)
+                                                                             .departmentName(null)
+                                                                             .firstName(null)
+                                                                             .lastName(null)
+                                                                             .birthday(newBirthDay)
+                                                                             .create();
+
+            // Act
+            employeeService.update(employee.getUuid(), updateParameters);
+
+            // Assert
+            Optional<Employee> updated = employeeService.findByUuid(employee.getUuid());
+            if (!updated.isPresent())
+            {
+                fail("Fail to retrieve the updated employee");
+            }
+            else
+            {
+                Employee updatedEmployee = updated.get();
+                assertThat(updatedEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+                assertThat(updatedEmployee.getFullName()
+                                          .getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+                assertThat(updatedEmployee.getFullName()
+                                          .getLastName()).isEqualTo(employee.getFullName().getLastName());
+                assertThat(updatedEmployee.getDepartment()
+                                          .getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
+                assertThat(updatedEmployee.getBirthday()).isEqualTo(newBirthDay);
+                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
+                        updatedEmployee.getUuid())));
+            }
+        }
+
+        @Test
+        @DisplayName("Updating an employee full name succeeds without affecting other values")
+        void givenValidFullName_whenUpdate_thenUpdateOnlyFullName() throws Exception
+        {
+            // Arrange
+            DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
+            departmentService.create(departmentParameter);
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
+                                                                              .departmentName(departmentParameter.getDepartmentName())
+                                                                              .create();
+            Employee employee = employeeService.create(employeeParameter);
+
+            String expectedFirstName = RandomStringUtils.randomAlphabetic(23);
+            String expectedLastName = RandomStringUtils.randomAlphabetic(23);
+
+            EmployeeParameter updateParameters = employeeParameterTestFactory.builder()
+                                                                             .emailAddress(null)
+                                                                             .departmentName(null)
+                                                                             .firstName(expectedFirstName)
+                                                                             .lastName(expectedLastName)
+                                                                             .birthday(null)
+                                                                             .create();
+
+            // Act
+            employeeService.update(employee.getUuid(), updateParameters);
+
+            // Assert
+            Optional<Employee> updated = employeeService.findByUuid(employee.getUuid());
+            if (!updated.isPresent())
+            {
+                fail("Fail to retrieve the updated employee");
+            }
+            else
+            {
+                Employee updatedEmployee = updated.get();
+                assertThat(updatedEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+                assertThat(updatedEmployee.getFullName()
+                                          .getFirstName()).isEqualTo(expectedFirstName);
+                assertThat(updatedEmployee.getFullName()
+                                          .getLastName()).isEqualTo(expectedLastName);
+                assertThat(updatedEmployee.getDepartment()
+                                          .getDepartmentName()).isEqualTo(employee.getDepartment()
+                                                                                  .getDepartmentName());
+                assertThat(updatedEmployee.getBirthday()).isEqualTo(employee.getBirthday());
+                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
+                        updatedEmployee.getUuid())));
+            }
+        }
+
+        @Test
+        @DisplayName("Updating an employee email succeeds without affecting other values")
+        void givenValidEmail_whenUpdate_thenUpdateOnlyEmail() throws Exception
+        {
+            // Arrange
+            DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
+            departmentService.create(departmentParameter);
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
+                                                                              .departmentName(departmentParameter.getDepartmentName())
+                                                                              .create();
+            Employee employee = employeeService.create(employeeParameter);
+
+            String expectedEmail =employeeParameterTestFactory.builder().generateRandomEmail();
+
+            EmployeeParameter updateParameters = employeeParameterTestFactory.builder()
+                                                                             .emailAddress(expectedEmail)
+                                                                             .departmentName(null)
+                                                                             .firstName(null)
+                                                                             .lastName(null)
+                                                                             .birthday(null)
+                                                                             .create();
+
+            // Act
+            employeeService.update(employee.getUuid(), updateParameters);
+
+            // Assert
+            Optional<Employee> updated = employeeService.findByUuid(employee.getUuid());
+            if (!updated.isPresent())
+            {
+                fail("Fail to retrieve the updated employee");
+            }
+            else
+            {
+                Employee updatedEmployee = updated.get();
+                assertThat(updatedEmployee.getEmailAddress()).isEqualTo(expectedEmail);
+                assertThat(updatedEmployee.getFullName()
+                                          .getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+                assertThat(updatedEmployee.getFullName()
+                                          .getLastName()).isEqualTo(employee.getFullName().getLastName());
+                assertThat(updatedEmployee.getDepartment()
+                                          .getDepartmentName()).isEqualTo(employee.getDepartment()
+                                                                                  .getDepartmentName());
+                assertThat(updatedEmployee.getBirthday()).isEqualTo(employee.getBirthday());
                 verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
                         updatedEmployee.getUuid())));
             }

@@ -11,10 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.takeaway.employeeservice.employee.service.EmployeeServiceException.Reason.INVALID_REQUEST;
 import static com.takeaway.employeeservice.employee.service.EmployeeServiceException.Reason.NOT_FOUND;
@@ -149,7 +146,7 @@ class EmployeeService implements EmployeeServiceCapable
     {
         boolean hasUpdated = false;
         String newEmailAddress = StringUtils.trim(updateParameter.getEmailAddress());
-        if (!StringUtils.equals(employee.getEmailAddress(), newEmailAddress))
+        if (StringUtils.isNotBlank(newEmailAddress) && !StringUtils.equals(employee.getEmailAddress(), newEmailAddress))
         {
             employee.setEmailAddress(newEmailAddress);
             hasUpdated = true;
@@ -165,12 +162,12 @@ class EmployeeService implements EmployeeServiceCapable
         Employee.FullName fullName = employee.getFullName();
         if (fullName != null)
         {
-            if (!StringUtils.equals(fullName.getFirstName(), newFirstName))
+            if (StringUtils.isNotBlank(newFirstName) && !StringUtils.equals(fullName.getFirstName(), newFirstName))
             {
                 fullName.setFirstName(newFirstName);
                 hasUpdated = true;
             }
-            if (!StringUtils.equals(fullName.getLastName(), newLastName))
+            if (StringUtils.isNotBlank(newLastName) && !StringUtils.equals(fullName.getLastName(), newLastName))
             {
                 fullName.setLastName(newLastName);
                 hasUpdated = true;
@@ -178,7 +175,7 @@ class EmployeeService implements EmployeeServiceCapable
         }
         else
         {
-            if (!StringUtils.isBlank(newFirstName) || !StringUtils.isBlank(newLastName))
+            if (StringUtils.isNotBlank(newFirstName) || StringUtils.isNotBlank(newLastName))
             {
                 fullName = new Employee.FullName();
                 fullName.setFirstName(newFirstName);
@@ -196,7 +193,7 @@ class EmployeeService implements EmployeeServiceCapable
         boolean hasUpdated = false;
         Date newBirthDay = updateParameter.getBirthday();
         Date oldBirthDay = employee.getBirthday();
-        if (ObjectUtils.notEqual(oldBirthDay, newBirthDay))
+        if (Objects.nonNull(newBirthDay) && ObjectUtils.notEqual(oldBirthDay, newBirthDay))
         {
             employee.setBirthday(newBirthDay);
             hasUpdated = true;
@@ -208,13 +205,9 @@ class EmployeeService implements EmployeeServiceCapable
     {
         boolean hasUpdated = false;
         String newDepartmentName = StringUtils.trim(updateParameter.getDepartmentName());
-        if (StringUtils.isBlank(newDepartmentName))
-        {
-            throw new EmployeeServiceException(INVALID_REQUEST, "A department cannot be blank!");
-        }
-        if (!StringUtils.equals(newDepartmentName,
-                                employee.getDepartment()
-                                        .getDepartmentName()))
+        if (StringUtils.isNotBlank(newDepartmentName) && !StringUtils.equals(newDepartmentName,
+                                                                             employee.getDepartment()
+                                                                                     .getDepartmentName()))
         {
             try
             {
