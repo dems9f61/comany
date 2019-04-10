@@ -2,7 +2,8 @@ package com.takeaway.employeeservice;
 
 import com.takeaway.employeeservice.department.api.dto.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentParameterTestFactory;
-import com.takeaway.employeeservice.employee.api.dto.EmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.api.dto.CreateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.api.dto.UpdateEmployeeRequestTestFactory;
 import com.takeaway.employeeservice.employee.service.EmployeeEventPublisherCapable;
 import com.takeaway.employeeservice.employee.service.EmployeeParameterTestFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,10 @@ public abstract class IntegrationTestSuite
     protected DepartmentRequestTestFactory departmentRequestTestFactory;
 
     @Autowired
-    protected EmployeeRequestTestFactory employeeRequestTestFactory;
+    protected CreateEmployeeRequestTestFactory createEmployeeRequestTestFactory;
+
+    @Autowired
+    protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
 
     @SpyBean
     protected EmployeeEventPublisherCapable employeeEventPublisher;

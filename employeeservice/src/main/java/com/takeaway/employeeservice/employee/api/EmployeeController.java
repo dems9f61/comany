@@ -5,8 +5,9 @@ import com.takeaway.employeeservice.common_api_exception.ApiException;
 import com.takeaway.employeeservice.common_api_exception.BadRequestException;
 import com.takeaway.employeeservice.common_api_exception.InternalServerErrorException;
 import com.takeaway.employeeservice.common_api_exception.ResourceNotFoundException;
-import com.takeaway.employeeservice.employee.api.dto.EmployeeRequest;
+import com.takeaway.employeeservice.employee.api.dto.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.api.dto.EmployeeResponse;
+import com.takeaway.employeeservice.employee.api.dto.UpdateEmployeeRequest;
 import com.takeaway.employeeservice.employee.service.Employee;
 import com.takeaway.employeeservice.employee.service.EmployeeParameter;
 import com.takeaway.employeeservice.employee.service.EmployeeServiceCapable;
@@ -52,10 +53,10 @@ public class EmployeeController
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EmployeeResponse createEmployee(@RequestBody @NotNull @Valid EmployeeRequest employeeRequest)
+    public EmployeeResponse createEmployee(@RequestBody @NotNull @Valid CreateEmployeeRequest createEmployeeRequest)
     {
-        LOGGER.info("Creating an employee by the request {}", employeeRequest);
-        EmployeeParameter employeeParameter = employeeRequest.toEmployerParameter();
+        LOGGER.info("Creating an employee by the request {}", createEmployeeRequest);
+        EmployeeParameter employeeParameter = createEmployeeRequest.toEmployerParameter();
         try
         {
             Employee employee = employeeService.create(employeeParameter);
@@ -103,12 +104,12 @@ public class EmployeeController
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
     @PatchMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody @NotNull @Valid EmployeeRequest employeeRequest)
+    public void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
     {
-        LOGGER.info("Updating an employee by the uuid {} and {}", uuid, employeeRequest);
+        LOGGER.info("Updating an employee by the uuid {} and {}", uuid, updateEmployeeRequest);
         try
         {
-            employeeService.update(uuid, employeeRequest.toEmployerParameter());
+            employeeService.update(uuid, updateEmployeeRequest.toEmployerParameter());
         }
         catch (EmployeeServiceException caught)
         {

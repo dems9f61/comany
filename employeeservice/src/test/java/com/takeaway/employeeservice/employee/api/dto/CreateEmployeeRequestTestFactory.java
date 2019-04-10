@@ -13,14 +13,14 @@ import java.util.Date;
  * <p/>
  */
 @Component
-public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequest, EmployeeRequestTestFactory.Builder>
+public class CreateEmployeeRequestTestFactory extends AbstractTestFactory<CreateEmployeeRequest, CreateEmployeeRequestTestFactory.Builder>
 {
     public Builder builder()
     {
         return new Builder();
     }
 
-    public static class Builder implements AbstractTestFactory.Builder<EmployeeRequest>
+    public static class Builder implements AbstractTestFactory.Builder<CreateEmployeeRequest>
     {
         private String emailAddress;
 
@@ -71,12 +71,12 @@ public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequ
             return this;
         }
 
-        public EmployeeRequest create()
+        public CreateEmployeeRequest create()
         {
-            return new EmployeeRequest(emailAddress,
-                                       firstName,
-                                       lastName, birthday,
-                                       departmentName);
+            return new CreateEmployeeRequest(emailAddress,
+                                             firstName,
+                                             lastName, birthday,
+                                             departmentName);
         }
     }
 }

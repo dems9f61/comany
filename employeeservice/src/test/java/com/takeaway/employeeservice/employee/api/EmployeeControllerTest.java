@@ -4,7 +4,9 @@ import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.common_api_exception.BadRequestException;
 import com.takeaway.employeeservice.common_api_exception.InternalServerErrorException;
 import com.takeaway.employeeservice.common_api_exception.ResourceNotFoundException;
+import com.takeaway.employeeservice.employee.api.dto.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.api.dto.EmployeeRequest;
+import com.takeaway.employeeservice.employee.api.dto.UpdateEmployeeRequest;
 import com.takeaway.employeeservice.employee.service.Employee;
 import com.takeaway.employeeservice.employee.service.EmployeeParameter;
 import com.takeaway.employeeservice.employee.service.EmployeeServiceCapable;
@@ -140,7 +142,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             String uuid = UUID.randomUUID()
                               .toString();
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
             doNothing().when(employeeService)
                        .update(any(), any());
 
@@ -158,7 +160,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             String uuid = UUID.randomUUID()
                               .toString();
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(NOT_FOUND, "")).when(employeeService)
                                                                 .update(uuid, employeeRequest.toEmployerParameter());
 
@@ -173,7 +175,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             String uuid = UUID.randomUUID()
                               .toString();
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(INVALID_REQUEST, "")).when(employeeService)
                                                                       .update(uuid, employeeRequest.toEmployerParameter());
 
@@ -188,7 +190,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             String uuid = UUID.randomUUID()
                               .toString();
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(new Exception())).when(employeeService)
                                                                   .update(uuid, employeeRequest.toEmployerParameter());
 
@@ -206,7 +208,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenValidRequest_whenCreate_thenSucceed() throws Exception
         {
             // Arrange
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
             Employee employee = employeeTestFactory.createDefault();
             doReturn(employee).when(employeeService)
                               .create(any());
@@ -223,7 +225,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnderlyingNotFound_whenCreate_thenThrowNotFoundException() throws Exception
         {
             // Arrange
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(NOT_FOUND, "")).when(employeeService)
                                                                 .create(employeeRequest.toEmployerParameter());
 
@@ -236,7 +238,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnderlyingInvalidRequest_whenCreate_thenThrowBadRequestException() throws Exception
         {
             // Arrange
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(INVALID_REQUEST, "")).when(employeeService)
                                                                       .create(employeeRequest.toEmployerParameter());
 
@@ -249,7 +251,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnderlyingInvalidGenericException_whenCreate_thenThrowInternalServerErrorException() throws Exception
         {
             // Arrange
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(new Exception())).when(employeeService)
                                                                   .create(employeeRequest.toEmployerParameter());
 

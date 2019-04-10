@@ -3,7 +3,8 @@ package com.takeaway.employeeservice;
 import com.takeaway.employeeservice.department.api.dto.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentParameterTestFactory;
 import com.takeaway.employeeservice.department.service.DepartmentTestFactory;
-import com.takeaway.employeeservice.employee.api.dto.EmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.api.dto.CreateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.api.dto.UpdateEmployeeRequestTestFactory;
 import com.takeaway.employeeservice.employee.service.EmployeeParameterTestFactory;
 import com.takeaway.employeeservice.employee.service.EmployeeTestFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,9 @@ public abstract class UnitTestSuite
 
     protected EmployeeParameterTestFactory employeeParameterTestFactory;
 
-    protected EmployeeRequestTestFactory employeeRequestTestFactory;
+    protected CreateEmployeeRequestTestFactory createEmployeeRequestTestFactory;
+
+    protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
@@ -45,7 +48,8 @@ public abstract class UnitTestSuite
         createDepartmentRequestTestFactory = new DepartmentRequestTestFactory();
         employeeTestFactory = new EmployeeTestFactory();
         employeeParameterTestFactory = new EmployeeParameterTestFactory();
-        employeeRequestTestFactory = new EmployeeRequestTestFactory();
+        createEmployeeRequestTestFactory = new CreateEmployeeRequestTestFactory();
+        updateEmployeeRequestTestFactory = new UpdateEmployeeRequestTestFactory();
     }
 
     // =================  protected/package local  Methods ===================

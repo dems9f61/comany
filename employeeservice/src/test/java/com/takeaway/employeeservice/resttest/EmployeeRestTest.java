@@ -3,8 +3,9 @@ package com.takeaway.employeeservice.resttest;
 import com.takeaway.employeeservice.ApiVersions;
 import com.takeaway.employeeservice.department.api.dto.DepartmentRequest;
 import com.takeaway.employeeservice.department.api.dto.DepartmentResponse;
-import com.takeaway.employeeservice.employee.api.dto.EmployeeRequest;
+import com.takeaway.employeeservice.employee.api.dto.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.api.dto.EmployeeResponse;
+import com.takeaway.employeeservice.employee.api.dto.UpdateEmployeeRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -36,16 +37,16 @@ class EmployeeRestTest extends RestTestSuite
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .departmentName(departmentName)
-                                                                        .create();
+            CreateEmployeeRequest createEmployeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
             String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
             ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(uri,
                                                                                         HttpMethod.POST,
-                                                                                        new HttpEntity<>(employeeRequest, headers),
+                                                                                        new HttpEntity<>(createEmployeeRequest, headers),
                                                                                         EmployeeResponse.class);
 
             // Assert
@@ -53,11 +54,11 @@ class EmployeeRestTest extends RestTestSuite
             EmployeeResponse employeeResponse = responseEntity.getBody();
             assertThat(employeeResponse).isNotNull();
             assertThat(employeeResponse.getUuid()).isNotBlank();
-            assertThat(employeeResponse.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
-            assertThat(employeeResponse.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
-            assertThat(employeeResponse.getFirstName()).isEqualTo(employeeRequest.getFirstName());
-            assertThat(employeeResponse.getLastName()).isEqualTo(employeeRequest.getLastName());
-            assertThat(employeeResponse.getBirthday()).isEqualTo(employeeRequest.getBirthday());
+            assertThat(employeeResponse.getDepartmentName()).isEqualTo(createEmployeeRequest.getDepartmentName());
+            assertThat(employeeResponse.getEmailAddress()).isEqualTo(createEmployeeRequest.getEmailAddress());
+            assertThat(employeeResponse.getFirstName()).isEqualTo(createEmployeeRequest.getFirstName());
+            assertThat(employeeResponse.getLastName()).isEqualTo(createEmployeeRequest.getLastName());
+            assertThat(employeeResponse.getBirthday()).isEqualTo(createEmployeeRequest.getBirthday());
         }
 
         @Test
@@ -66,13 +67,13 @@ class EmployeeRestTest extends RestTestSuite
         {
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .birthday(null)
-                                                                        .emailAddress(null)
-                                                                        .firstName(null)
-                                                                        .lastName(null)
-                                                                        .departmentName(departmentName)
-                                                                        .create();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .birthday(null)
+                                                                                    .emailAddress(null)
+                                                                                    .firstName(null)
+                                                                                    .lastName(null)
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
             String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
@@ -98,7 +99,7 @@ class EmployeeRestTest extends RestTestSuite
         @DisplayName("POST: 'http://.../employees' returns NOT FOUND if the specified department name doesn't exist ")
         void givenUnknownDepartment_whenCreateEmployee_thenStatus404()
         {
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
             String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
@@ -119,16 +120,16 @@ class EmployeeRestTest extends RestTestSuite
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .departmentName(departmentName)
-                                                                        .create();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
             createAndPersistEmployee(employeeRequest);
             String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
-            EmployeeRequest newEmployeeRequest = employeeRequestTestFactory.builder()
-                                                                           .emailAddress(employeeRequest.getEmailAddress())
-                                                                           .create();
+            CreateEmployeeRequest newEmployeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                       .emailAddress(employeeRequest.getEmailAddress())
+                                                                                       .create();
 
             // Act
             ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri,
@@ -145,20 +146,20 @@ class EmployeeRestTest extends RestTestSuite
         void givenEmptyRequest_whenCreateEmployee_thenStatus400()
         {
             // Arrange
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .birthday(null)
-                                                                        .emailAddress(null)
-                                                                        .firstName(null)
-                                                                        .lastName(null)
-                                                                        .departmentName(null)
-                                                                        .create();
+            CreateEmployeeRequest createEmployeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .birthday(null)
+                                                                                    .emailAddress(null)
+                                                                                    .firstName(null)
+                                                                                    .lastName(null)
+                                                                                    .departmentName(null)
+                                                                                    .create();
             String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
             ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri,
                                                                               HttpMethod.POST,
-                                                                              new HttpEntity<>(employeeRequest, headers),
+                                                                              new HttpEntity<>(createEmployeeRequest, headers),
                                                                               String.class);
 
             // Assert
@@ -211,10 +212,10 @@ class EmployeeRestTest extends RestTestSuite
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .departmentName(departmentName)
-                                                                        .create();
-            EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
+            CreateEmployeeRequest createEmployeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
+            EmployeeResponse persistedEmployee = createAndPersistEmployee(createEmployeeRequest);
             String uuidToFind = persistedEmployee.getUuid();
             String uri = String.format("%s/employees", ApiVersions.V1);
 
@@ -241,9 +242,9 @@ class EmployeeRestTest extends RestTestSuite
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .departmentName(departmentName)
-                                                                        .create();
+           UpdateEmployeeRequest updateEmployeeRequest = updateEmployeeRequestTestFactory.builder()
+                                                                                   .departmentName(departmentName)
+                                                                                   .create();
             String uri = String.format("%s/employees/", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
             String wrongUuid = UUID.randomUUID()
@@ -252,7 +253,7 @@ class EmployeeRestTest extends RestTestSuite
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, wrongUuid),
                                                                             HttpMethod.PATCH,
-                                                                            new HttpEntity<>(employeeRequest, headers),
+                                                                            new HttpEntity<>(updateEmployeeRequest, headers),
                                                                             Void.class);
 
             // Assert
@@ -267,15 +268,15 @@ class EmployeeRestTest extends RestTestSuite
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
 
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .departmentName(departmentName)
-                                                                        .create();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
             String uuidToUpdate = persistedEmployee.getUuid();
             String unknownDepartmentName = RandomStringUtils.randomAlphabetic(32);
-            EmployeeRequest updateRequest = employeeRequestTestFactory.builder()
-                                                                      .departmentName(unknownDepartmentName)
-                                                                      .create();
+            UpdateEmployeeRequest updateRequest = updateEmployeeRequestTestFactory.builder()
+                                                                                  .departmentName(unknownDepartmentName)
+                                                                                  .create();
 
             String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
@@ -298,18 +299,18 @@ class EmployeeRestTest extends RestTestSuite
             String firstDepartmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(firstDepartmentName);
 
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .departmentName(firstDepartmentName)
-                                                                        .create();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .departmentName(firstDepartmentName)
+                                                                                    .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
             String uuidToUpdate = persistedEmployee.getUuid();
 
             String secondDepartmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(secondDepartmentName);
 
-            EmployeeRequest updateRequest = employeeRequestTestFactory.builder()
-                                                                      .departmentName(secondDepartmentName)
-                                                                      .create();
+            UpdateEmployeeRequest updateRequest = updateEmployeeRequestTestFactory.builder()
+                                                                                  .departmentName(secondDepartmentName)
+                                                                                  .create();
             String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
@@ -338,22 +339,22 @@ class EmployeeRestTest extends RestTestSuite
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
 
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .departmentName(departmentName)
-                                                                        .create();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
             String uuidToUpdate = persistedEmployee.getUuid();
 
             LocalDate localDate = employeeParameterTestFactory.builder()
                                                               .generateRandomDate();
             java.sql.Date newBirthDay = java.sql.Date.valueOf(localDate);
-            EmployeeRequest updateRequest = employeeRequestTestFactory.builder()
-                                                                      .departmentName(null)
-                                                                      .firstName(null)
-                                                                      .lastName(null)
-                                                                      .birthday(newBirthDay)
-                                                                      .emailAddress(null)
-                                                                      .create();
+            UpdateEmployeeRequest updateRequest = updateEmployeeRequestTestFactory.builder()
+                                                                                  .departmentName(null)
+                                                                                  .firstName(null)
+                                                                                  .lastName(null)
+                                                                                  .birthday(newBirthDay)
+                                                                                  .emailAddress(null)
+                                                                                  .create();
             String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
@@ -405,9 +406,9 @@ class EmployeeRestTest extends RestTestSuite
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
-            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
-                                                                        .departmentName(departmentName)
-                                                                        .create();
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
             String uuidToDelete = persistedEmployee.getUuid();
             String uri = String.format("%s/employees", ApiVersions.V1);
@@ -434,7 +435,7 @@ class EmployeeRestTest extends RestTestSuite
         testRestTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
     }
 
-    private EmployeeResponse createAndPersistEmployee(EmployeeRequest employeeRequest)
+    private EmployeeResponse createAndPersistEmployee(CreateEmployeeRequest employeeRequest)
     {
         String uri = String.format("%s/employees", ApiVersions.V1);
         HttpHeaders headers = defaultHttpHeaders();
