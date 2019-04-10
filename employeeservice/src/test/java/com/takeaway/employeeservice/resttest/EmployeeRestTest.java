@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -230,11 +231,11 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Nested
-    @DisplayName("when update")
-    class WhenUpdate
+    @DisplayName("when partial update")
+    class WhenPartialUpdate
     {
         @Test
-        @DisplayName("PUT: 'http://.../employees/{uuid}' returns NOT FOUND if the specified employee doesn't exist ")
+        @DisplayName("PATCH: 'http://.../employees/{uuid}' returns NOT FOUND if the specified employee doesn't exist ")
         void givenUnknownEmployee_whenUpdateEmployee_thenStatus404()
         {
             // Arrange
@@ -250,7 +251,7 @@ class EmployeeRestTest extends RestTestSuite
 
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, wrongUuid),
-                                                                            HttpMethod.PUT,
+                                                                            HttpMethod.PATCH,
                                                                             new HttpEntity<>(employeeRequest, headers),
                                                                             Void.class);
 
@@ -259,7 +260,7 @@ class EmployeeRestTest extends RestTestSuite
         }
 
         @Test
-        @DisplayName("PUT: 'http://.../employees/{uuid}' returns NOT FOUND if the specified department doesn't exist ")
+        @DisplayName("PATCH: 'http://.../employees/{uuid}' returns NOT FOUND if the specified department doesn't exist ")
         void givenUnknownDepartment_whenUpdateEmployee_thenStatus404()
         {
             // Arrange
@@ -281,7 +282,7 @@ class EmployeeRestTest extends RestTestSuite
 
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
-                                                                            HttpMethod.PUT,
+                                                                            HttpMethod.PATCH,
                                                                             new HttpEntity<>(updateRequest, headers),
                                                                             Void.class);
 
@@ -290,7 +291,7 @@ class EmployeeRestTest extends RestTestSuite
         }
 
         @Test
-        @DisplayName("PUT: 'http://.../employees/{uuid} returns NO CONTENT if the specified parameters are valid")
+        @DisplayName("PATCH: 'http://.../employees/{uuid} returns NO CONTENT if the specified parameters are valid")
         void givenValidParameters_whenUpdateEmployee_thenStatus204()
         {
             // Arrange
@@ -314,7 +315,7 @@ class EmployeeRestTest extends RestTestSuite
 
             // Act
             ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
-                                                                                        HttpMethod.PUT,
+                                                                                        HttpMethod.PATCH,
                                                                                         new HttpEntity<>(updateRequest, headers),
                                                                                         EmployeeResponse.class);
             // Assert
@@ -327,6 +328,50 @@ class EmployeeRestTest extends RestTestSuite
             assertThat(updatedEmployee.getLastName()).isEqualTo(updateRequest.getLastName());
             assertThat(updatedEmployee.getBirthday()).isEqualTo(updateRequest.getBirthday());
             assertThat(updatedEmployee.getDepartmentName()).isEqualTo(updateRequest.getDepartmentName());
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../employees/{uuid} returns NO CONTENT on only updating birthday")
+        void givenNewBirthDay_whenUpdateEmployee_thenStatus204()
+        {
+            // Arrange
+            String departmentName = RandomStringUtils.randomAlphabetic(23);
+            createAndPersistDepartment(departmentName);
+
+            EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                        .departmentName(departmentName)
+                                                                        .create();
+            EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
+            String uuidToUpdate = persistedEmployee.getUuid();
+
+            LocalDate localDate = employeeParameterTestFactory.builder()
+                                                              .generateRandomDate();
+            java.sql.Date newBirthDay = java.sql.Date.valueOf(localDate);
+            EmployeeRequest updateRequest = employeeRequestTestFactory.builder()
+                                                                      .departmentName(null)
+                                                                      .firstName(null)
+                                                                      .lastName(null)
+                                                                      .birthday(newBirthDay)
+                                                                      .emailAddress(null)
+                                                                      .create();
+            String uri = String.format("%s/employees", ApiVersions.V1);
+            HttpHeaders headers = defaultHttpHeaders();
+
+            // Act
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
+                                                                                        HttpMethod.PATCH,
+                                                                                        new HttpEntity<>(updateRequest, headers),
+                                                                                        EmployeeResponse.class);
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            assertThat(responseEntity.getBody()).isNull();
+
+            EmployeeResponse updatedEmployee = findPersistedEmployee(uuidToUpdate);
+            assertThat(updatedEmployee.getEmailAddress()).isEqualTo(persistedEmployee.getEmailAddress());
+            assertThat(updatedEmployee.getFirstName()).isEqualTo(persistedEmployee.getFirstName());
+            assertThat(updatedEmployee.getLastName()).isEqualTo(persistedEmployee.getLastName());
+            assertThat(updatedEmployee.getBirthday()).isEqualTo(newBirthDay);
+            assertThat(updatedEmployee.getDepartmentName()).isEqualTo(persistedEmployee.getDepartmentName());
         }
     }
 

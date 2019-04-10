@@ -101,7 +101,7 @@ public class EmployeeController
     @ApiResponses({
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = ""),
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
-    @PutMapping("/{uuid}")
+    @PatchMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody @NotNull @Valid EmployeeRequest employeeRequest)
     {
