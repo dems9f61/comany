@@ -6,7 +6,8 @@ buildscript {
         junitJupiterVersion = '5.3.2'
         mockitoJunitJupiterVersion = '2.24.5'
         mockitoJava8Version = '2.5.0'
-        apacheCommonLang3Version = '3.8.1'
+        apacheCommonsLang3Version = '3.8.1'
+        apacheCommonsCollections = '4.0'
         springfoxVersion = '2.9.2'
         swaggerUiVersion = '2.9.2'
         httpClientVesion = '4.5.8'
@@ -43,8 +44,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${apacheCommonLang3Version}"
-    
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${apacheCommonsLang3Version}"
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: "${apacheCommonsCollections}"
     implementation 'com.h2database:h2'
     implementation("org.projectlombok:lombok:${lombokVersion}")
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: "${httpClientVesion}"

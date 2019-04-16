@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"version"})
 @Entity
 @Table(name = "EMPLOYEES")
 public class Employee
@@ -41,7 +41,7 @@ public class Employee
     private Date birthday;
 
     @JsonManagedReference
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "DEPARTMENT_ID", nullable = false)
     private Department department;
 
@@ -66,6 +66,7 @@ public class Employee
     @Setter
     @Getter
     @Embeddable
+    @ToString
     @EqualsAndHashCode
     public static class FullName
     {
