@@ -1,12 +1,37 @@
+spring:
+  application.name: employeeservice
+  output.ansi.enabled: ALWAYS
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/employeeservice
+    username: user
+    password: pwd
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: rabbitmq
+    password: rabbitmq
+
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+    # Hibernat SQL Debug output on local profile - want to see the SQL
+    org.hibernate.sql: DEBUG
+    org.hibernate.SQL: DEBUG
+
 server.port: 8081
 
-spring.rabbitmq:
-  port: 5672
-  host: localhost
-  username: rabbitmq
-  password: rabbitmq
-
-rabbitmq:
+amqp:
   exchange-name: employee-exchange
   routing-key: employee-message
-

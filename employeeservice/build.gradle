@@ -11,6 +11,7 @@ buildscript {
         springfoxVersion = '2.9.2'
         swaggerUiVersion = '2.9.2'
         httpClientVesion = '4.5.8'
+        postgreVersion = '42.2.5'
 	}
 	repositories {
 		mavenCentral()
@@ -46,7 +47,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${apacheCommonsLang3Version}"
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: "${apacheCommonsCollections}"
-    implementation 'com.h2database:h2'
+    implementation group: 'org.postgresql', name: 'postgresql', version:  "${postgreVersion}"
+    
     implementation("org.projectlombok:lombok:${lombokVersion}")
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: "${httpClientVesion}"
 

@@ -1,12 +1,16 @@
+spring:
+  application.name: eventservice
+  output.ansi.enabled: ALWAYS
+
+  rabbitmq:
+   port: 5672
+   host: localhost
+   username: rabbitmq
+   password: rabbitmq
+
 server.port: 8083
 
-spring.rabbitmq:
-  port: 5672
-  host: localhost
-  username: rabbitmq
-  password: rabbitmq
-
-rabbitmq:
+amqp:
   exchange-name: employee-exchange
   queue-name: employee-message
   routing-key: employee-message

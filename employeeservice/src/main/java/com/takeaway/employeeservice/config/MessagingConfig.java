@@ -28,7 +28,7 @@ import java.time.ZonedDateTime;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "rabbitmq")
+@ConfigurationProperties(prefix = "amqp")
 @Validated
 public class MessagingConfig
 {

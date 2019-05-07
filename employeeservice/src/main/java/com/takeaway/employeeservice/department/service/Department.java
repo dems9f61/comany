@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+
 /**
  * User: StMinko
  * Date: 18.03.2019
@@ -19,8 +20,8 @@ import java.util.Set;
 @Setter
 @ToString(exclude = "employees")
 @EqualsAndHashCode(exclude = {"employees", "version"})
-@Entity
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Entity
 @Table(name = "DEPARTMENTS")
 public class Department
 {
@@ -39,8 +40,8 @@ public class Department
 
     @JsonBackReference
     @OneToMany(mappedBy = "department",
-               cascade = CascadeType.ALL,
-               orphanRemoval = true)
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private Set<Employee> employees = new HashSet<>();
 
     @Setter(value = AccessLevel.PRIVATE)

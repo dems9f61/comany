@@ -29,9 +29,9 @@ public class EmployeeMessageReceiver
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "${rabbitmq.queue-name}", durable = "true"),
-                                             exchange = @Exchange(value = "${rabbitmq.exchange-name}"),
-                                             key = "${rabbitmq.routing-key}"))
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "${amqp.queue-name}", durable = "true"),
+                                             exchange = @Exchange(value = "${amqp.exchange-name}"),
+                                             key = "${amqp.routing-key}"))
     public void receiveEmployeeMessage(@NonNull EmployeeMessage message)
     {
         LOGGER.info("###### Received Message on employee ##### {}", message);

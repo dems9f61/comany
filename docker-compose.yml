@@ -1,19 +1,38 @@
 version: '3'
 services:
+  #####################################
+  # RabbitMQ
+  #####################################
   rabbit_node_1:
-    image: rabbitmq:3-management
+    image: rabbitmq:alpine
     hostname: rabbit_node_1
     ports:
     - "5672:5672"
     - "15672:15672"
-
-    tty: true
     environment:
       RABBITMQ_DEFAULT_USER: "rabbitmq"
       RABBITMQ_DEFAULT_PASS: "rabbitmq"
       RABBITMQ_ERLANG_COOKIE: "secret_cookie"
       RABBITMQ_DEFAULT_VHOST: "/"
+  #####################################
+  # Databases
+  #####################################
+  employee_service_db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: employeeservice
+    ports:
+    - "5432:5432"
 
-    labels:
-      NAME: "rabbitmq1"
-
+  event_service_db:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pwd
+      MONGO_INITDB_DATABASE: eventservice
+    ports:
+    - "27017:27017"
