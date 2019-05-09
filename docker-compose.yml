@@ -1,11 +1,12 @@
-version: '3'
+version: '3.7'
 services:
   #####################################
   # RabbitMQ
   #####################################
-  rabbit_node_1:
+  rabbitmq:
     image: rabbitmq:alpine
-    hostname: rabbit_node_1
+    container_name: rabbitmq
+    restart: always
     ports:
     - "5672:5672"
     - "15672:15672"
@@ -14,11 +15,18 @@ services:
       RABBITMQ_DEFAULT_PASS: "rabbitmq"
       RABBITMQ_ERLANG_COOKIE: "secret_cookie"
       RABBITMQ_DEFAULT_VHOST: "/"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   #####################################
   # Databases
   #####################################
   employee_service_db:
     image: postgres:alpine
+    container_name: employee_service_postgredb
     restart: always
     environment:
       POSTGRES_USER: user
@@ -26,12 +34,18 @@ services:
       POSTGRES_DB: employeeservice
     ports:
     - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "employeeservice", "-U", "user" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   event_service_db:
     image: mongo:latest
+    container_name: event_service_mongodb
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_USERNAME: user
       MONGO_INITDB_ROOT_PASSWORD: pwd
       MONGO_INITDB_DATABASE: eventservice
     ports:

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -29,9 +30,6 @@ public class EmployeeEventResponse
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
-
-    @ApiModelProperty(example = "67")
-    private long id;
 
     @ApiModelProperty(example = "EMPLOYEE_CREATED")
     private EventType eventType;
@@ -57,11 +55,12 @@ public class EmployeeEventResponse
     @ApiModelProperty(example = "Java Development")
     private String departmentName;
 
+    @ApiModelProperty(example = "2019-05-09T12:27:05.549Z")
+    private Instant createdAt;
     // ============================  Constructors  ===========================
 
     EmployeeEventResponse(PersistentEmployeeEvent employeeEvent)
     {
-        this.id = employeeEvent.getId();
         this.eventType = employeeEvent.getEventType();
         this.uuid = employeeEvent.getUuid();
         this.emailAddress = employeeEvent.getEmailAddress();
@@ -69,6 +68,7 @@ public class EmployeeEventResponse
         this.lastName = employeeEvent.getLastName();
         this.birthday = employeeEvent.getBirthday();
         this.departmentName = employeeEvent.getDepartmentName();
+        this.createdAt = employeeEvent.getCreatedAt();
     }
 
     // ===========================  public  Methods  =========================

@@ -8,6 +8,20 @@ spring:
    username: rabbitmq
    password: rabbitmq
 
+  data:
+    mongodb:
+      port: 27017
+      host: localhost
+      username: user
+      password: pwd
+      database: eventservice
+      authentication-database: admin
+
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+
 server.port: 8083
 
 amqp:

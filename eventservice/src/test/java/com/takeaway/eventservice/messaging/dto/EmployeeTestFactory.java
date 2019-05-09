@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -45,6 +46,8 @@ public class EmployeeTestFactory
 
     public static class Builder
     {
+        private String uuid;
+
         private String emailAddress;
 
         private Employee.FullName fullName;
@@ -57,6 +60,7 @@ public class EmployeeTestFactory
 
         Builder()
         {
+            this.uuid = UUID.randomUUID().toString();
             this.emailAddress = generateRandomEmail();
             this.department = departmentTestFactory.createDefault();
             this.birthday = java.sql.Date.valueOf(generateRandomDate());
@@ -116,6 +120,7 @@ public class EmployeeTestFactory
         {
             Employee employee = new Employee();
             return employee.setBirthday(birthday)
+                           .setUuid(uuid)
                            .setDepartment(department)
                            .setEmailAddress(emailAddress)
                            .setFullName(fullName);

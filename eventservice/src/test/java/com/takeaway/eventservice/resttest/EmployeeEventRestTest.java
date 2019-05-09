@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,12 +53,15 @@ class EmployeeEventRestTest extends RestTestSuite
             List<EmployeeEventResponse> eventResponses = responseEntity.getBody();
             assertThat(eventResponses).isNotNull()
                                       .isNotEmpty();
-            long previousId = Long.MIN_VALUE;
+            Instant previous = null;
             for (EmployeeEventResponse event : eventResponses)
             {
-                long currentId = event.getId();
-                assertThat(previousId).isLessThan(currentId);
-                previousId = currentId;
+                Instant current = event.getCreatedAt();
+                if (previous != null)
+                {
+                    assertThat(previous).isBefore(current);
+                }
+                previous = current;
             }
         }
 

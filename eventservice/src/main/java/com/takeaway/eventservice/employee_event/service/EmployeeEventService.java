@@ -53,9 +53,9 @@ public class EmployeeEventService
         employeeEventRepository.save(persistentEmployeeEvent);
     }
 
-    public List<PersistentEmployeeEvent> findAllByOrderByIdAsc(@NonNull String uuid)
+    public List<PersistentEmployeeEvent> findAllByOrderByCreatedAtAsc(@NonNull String uuid)
     {
-        return employeeEventRepository.findAllByOrderByIdAsc()
+        return employeeEventRepository.findAllByOrderByCreatedAtAsc()
                                       .parallelStream()
                                       .filter(event -> StringUtils.equals(event.getUuid(), uuid))
                                       .collect(Collectors.toList());

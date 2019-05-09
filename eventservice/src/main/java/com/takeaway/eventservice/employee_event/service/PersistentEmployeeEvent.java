@@ -2,8 +2,11 @@ package com.takeaway.eventservice.employee_event.service;
 
 import com.takeaway.eventservice.messaging.dto.EventType;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -17,39 +20,31 @@ import java.util.Date;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Entity
-@Table(name = "EMPLOYEE_EVENTS")
+@Document(collection="employeeenvents")
 public class PersistentEmployeeEvent
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private String id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(updatable = false)
     private EventType eventType;
 
-    @Column(name = "uuid", updatable = false)
     private String uuid;
 
-    @Column(name = "email_address", updatable = false)
     private String emailAddress;
 
-    @Column(name = "first_name", updatable = false)
     private String firstName;
 
-    @Column(name = "last_name", updatable = false)
     private String lastName;
 
-    @Temporal(TemporalType.DATE)
-    @Column(length = 10, updatable = false)
     private Date birthday;
 
-    @Column(name = "department_name", updatable = false)
     private String departmentName;
+
+    @CreatedDate
+    private Instant createdAt;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

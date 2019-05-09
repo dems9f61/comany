@@ -9,6 +9,7 @@ buildscript {
         apacheCommonsLang3Version = '3.8.1'
         springfoxVersion = '2.9.2'
         swaggerUiVersion = '2.9.2'
+        mongoDBVersion = '2.1.6.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -39,11 +40,10 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${apacheCommonsLang3Version}"
-    implementation 'com.h2database:h2'
+    implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: "${mongoDBVersion}"
     implementation("org.projectlombok:lombok:${lombokVersion}")
 
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: "${swaggerUiVersion}"

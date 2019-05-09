@@ -78,13 +78,13 @@ class EmployeeEventServiceTest extends UnitTestSuite
             String uuid = UUID.randomUUID()
                               .toString();
             doReturn(Collections.emptyList()).when(employeeEventRepository)
-                                             .findAllByOrderByIdAsc();
+                                             .findAllByOrderByCreatedAtAsc();
 
             // Act
-            employeeEventService.findAllByOrderByIdAsc(uuid);
+            employeeEventService.findAllByOrderByCreatedAtAsc(uuid);
 
             // Assert
-            verify(employeeEventRepository).findAllByOrderByIdAsc();
+            verify(employeeEventRepository).findAllByOrderByCreatedAtAsc();
         }
     }
 }

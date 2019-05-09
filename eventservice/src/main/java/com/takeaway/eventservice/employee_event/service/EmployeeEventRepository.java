@@ -1,6 +1,6 @@
 package com.takeaway.eventservice.employee_event.service;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,12 +12,12 @@ import java.util.List;
  * <p/>
  */
 @Repository
-interface EmployeeEventRepository extends JpaRepository<PersistentEmployeeEvent, Integer>
+interface EmployeeEventRepository extends MongoRepository<PersistentEmployeeEvent, String>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
 
-    List<PersistentEmployeeEvent> findAllByOrderByIdAsc();
+    List<PersistentEmployeeEvent> findAllByOrderByCreatedAtAsc();
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

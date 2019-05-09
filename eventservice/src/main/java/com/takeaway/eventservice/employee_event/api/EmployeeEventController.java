@@ -39,7 +39,7 @@ public class EmployeeEventController
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeEventResponse> getAllEmployeeEvents(@NotBlank @PathVariable("uuid") String uuid)
     {
-        return employeeEventService.findAllByOrderByIdAsc(uuid)
+        return employeeEventService.findAllByOrderByCreatedAtAsc(uuid)
                                    .stream()
                                    .map(EmployeeEventResponse::new)
                                    .collect(Collectors.toList());

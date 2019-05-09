@@ -179,7 +179,7 @@ class EmployeeService implements EmployeeServiceCapable
             {
                 fullName = new Employee.FullName();
                 fullName.setFirstName(newFirstName);
-                fullName.setFirstName(newLastName);
+                fullName.setLastName(newLastName);
                 employee.setFullName(fullName);
                 hasUpdated = true;
             }

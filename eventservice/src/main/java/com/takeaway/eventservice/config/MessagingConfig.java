@@ -32,7 +32,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "rabbitmq")
+@ConfigurationProperties(prefix = "amqp")
 @Validated
 @RequiredArgsConstructor
 public class MessagingConfig
