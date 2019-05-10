@@ -32,7 +32,7 @@ The event-service must expose a REST API that contains just one endpoint to:
 
 ### Additional tasks
 * Use [Swagger](https://swagger.io) to expose the employee-service and event-service endpoints
-* Run the message broker and databases you've chosen to store the employee's data and employee event's data 
+* Run the message broker and databases chosen to store the employee's data and employee event's data 
 in Docker containers (instead of in-memory database).       
 
 # Implementation
