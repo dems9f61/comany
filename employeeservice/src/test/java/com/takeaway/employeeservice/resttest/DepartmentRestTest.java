@@ -1,8 +1,8 @@
 package com.takeaway.employeeservice.resttest;
 
 import com.takeaway.employeeservice.ApiVersions;
-import com.takeaway.employeeservice.department.api.dto.DepartmentRequest;
-import com.takeaway.employeeservice.department.api.dto.DepartmentResponse;
+import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequest;
+import com.takeaway.employeeservice.department.boundary.dto.DepartmentResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

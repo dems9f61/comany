@@ -1,12 +1,12 @@
 package com.takeaway.employeeservice;
 
-import com.takeaway.employeeservice.department.api.dto.DepartmentRequestTestFactory;
-import com.takeaway.employeeservice.department.service.DepartmentParameterTestFactory;
-import com.takeaway.employeeservice.department.service.DepartmentTestFactory;
-import com.takeaway.employeeservice.employee.api.dto.CreateEmployeeRequestTestFactory;
-import com.takeaway.employeeservice.employee.api.dto.UpdateEmployeeRequestTestFactory;
-import com.takeaway.employeeservice.employee.service.EmployeeParameterTestFactory;
-import com.takeaway.employeeservice.employee.service.EmployeeTestFactory;
+import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
+import com.takeaway.employeeservice.department.entity.DepartmentTestFactory;
+import com.takeaway.employeeservice.employee.boundary.dto.CreateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.boundary.dto.UpdateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
+import com.takeaway.employeeservice.employee.entity.EmployeeTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

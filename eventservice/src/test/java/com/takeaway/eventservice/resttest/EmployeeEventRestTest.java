@@ -2,7 +2,7 @@ package com.takeaway.eventservice.resttest;
 
 import com.takeaway.eventservice.ApiVersions;
 import com.takeaway.eventservice.RestTestSuite;
-import com.takeaway.eventservice.employee_event.api.EmployeeEventResponse;
+import com.takeaway.eventservice.employeeevent.boundary.EmployeeEventResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

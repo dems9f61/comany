@@ -1,11 +1,11 @@
 package com.takeaway.employeeservice;
 
-import com.takeaway.employeeservice.department.api.dto.DepartmentRequestTestFactory;
-import com.takeaway.employeeservice.department.service.DepartmentParameterTestFactory;
-import com.takeaway.employeeservice.employee.api.dto.CreateEmployeeRequestTestFactory;
-import com.takeaway.employeeservice.employee.api.dto.UpdateEmployeeRequestTestFactory;
-import com.takeaway.employeeservice.employee.service.EmployeeEventPublisherCapable;
-import com.takeaway.employeeservice.employee.service.EmployeeParameterTestFactory;
+import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
+import com.takeaway.employeeservice.employee.boundary.dto.CreateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.boundary.dto.UpdateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.control.EmployeeEventPublisherCapable;
+import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
