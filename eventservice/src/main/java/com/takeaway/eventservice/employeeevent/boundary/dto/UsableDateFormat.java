@@ -1,10 +1,10 @@
-package com.takeaway.eventservice.employeeevent.boundary;
+package com.takeaway.eventservice.employeeevent.boundary.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import static com.takeaway.eventservice.employeeevent.boundary.UsableDateFormat.Constants.DEFAULT_DATE_FORMAT;
+import static com.takeaway.eventservice.employeeevent.boundary.dto.UsableDateFormat.Constants.DEFAULT_DATE_FORMAT;
 
 /**
  * User: StMinko
@@ -15,13 +15,13 @@ import static com.takeaway.eventservice.employeeevent.boundary.UsableDateFormat.
 @Getter
 @ToString
 @RequiredArgsConstructor
-enum UsableDateFormat
+public enum UsableDateFormat
 {
     DEFAULT(DEFAULT_DATE_FORMAT);
 
     private final String dateFormat;
 
-    static class Constants
+    public static class Constants
     {
         static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 

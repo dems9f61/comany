@@ -1,20 +1,21 @@
-package com.takeaway.eventservice.employeeevent.boundary;
+package com.takeaway.eventservice.employeeevent.boundary.dto;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * User: StMinko
  * Date: 20.03.2019
- * Time: 00:15
+ * Time: 00:05
  * <p/>
  */
-public class JsonDateSerializer extends JsonSerializer<Date>
+public class JsonDateDeSerializer extends JsonDeserializer<Date>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
@@ -22,10 +23,16 @@ public class JsonDateSerializer extends JsonSerializer<Date>
     // ===========================  public  Methods  =========================
 
     @Override
-    public void serialize(Date value, JsonGenerator jsonGenerator, SerializerProvider provider) throws IOException
+    public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException
     {
-        String string = new SimpleDateFormat(UsableDateFormat.DEFAULT.getDateFormat()).format(value);
-        jsonGenerator.writeString(string);
+        try
+        {
+            return new SimpleDateFormat(UsableDateFormat.DEFAULT.getDateFormat()).parse(jsonParser.getValueAsString());
+        }
+        catch (ParseException caught)
+        {
+            throw new IOException(caught.getLocalizedMessage());
+        }
     }
 
     // =================  protected/package local  Methods ===================

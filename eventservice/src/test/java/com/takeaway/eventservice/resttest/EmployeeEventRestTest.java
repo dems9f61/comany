@@ -2,18 +2,20 @@ package com.takeaway.eventservice.resttest;
 
 import com.takeaway.eventservice.ApiVersions;
 import com.takeaway.eventservice.RestTestSuite;
-import com.takeaway.eventservice.employeeevent.boundary.EmployeeEventResponse;
+import com.takeaway.eventservice.employeeevent.boundary.EmployeeEventController;
+import com.takeaway.eventservice.employeeevent.boundary.dto.ApiResponsePage;
+import com.takeaway.eventservice.employeeevent.boundary.dto.EmployeeEventResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,21 +42,21 @@ class EmployeeEventRestTest extends RestTestSuite
                               .toString();
             receiveRandomMessageFor(uuid);
 
-            String uri = String.format("%s/events", ApiVersions.V1);
+            String uri =  String.format("%s%s", ApiVersions.V1, EmployeeEventController.BASE_URI);
 
             // Act
-            ResponseEntity<List<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuid),
-                                                                                                   HttpMethod.GET,
-                                                                                                   new HttpEntity<>(defaultHttpHeaders()),
-                                                                                                   new ParameterizedTypeReference<List<EmployeeEventResponse>>() {});
+            ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuid),
+                                                                                                              HttpMethod.GET,
+                                                                                                              new HttpEntity<>(defaultHttpHeaders()),
+                                                                                                              new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
 
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-            List<EmployeeEventResponse> eventResponses = responseEntity.getBody();
-            assertThat(eventResponses).isNotNull()
-                                      .isNotEmpty();
+            Page<EmployeeEventResponse> eventResponsePage = responseEntity.getBody();
+            assertThat(eventResponsePage).isNotNull()
+                                         .isNotEmpty();
             Instant previous = null;
-            for (EmployeeEventResponse event : eventResponses)
+            for (EmployeeEventResponse event : eventResponsePage)
             {
                 Instant current = event.getCreatedAt();
                 if (previous != null)
@@ -70,7 +72,7 @@ class EmployeeEventRestTest extends RestTestSuite
         void givenBlankUuid_whenFindByUuid_thenStatus404()
         {
             // Arrange
-            String uri = String.format("%s/events", ApiVersions.V1);
+            String uri = String.format("%s%s", ApiVersions.V1, EmployeeEventController.BASE_URI);
             String blankUuid = "";
 
             // Act

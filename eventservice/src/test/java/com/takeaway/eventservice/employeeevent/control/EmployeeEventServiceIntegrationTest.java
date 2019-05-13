@@ -8,6 +8,8 @@ import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.Instant;
 import java.util.List;
@@ -37,10 +39,12 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
         // Arrange
         String uuid = UUID.randomUUID()
                           .toString();
-        receiveRandomMessageFor(uuid);
+        int eventCount = RandomUtils.nextInt(50, 60);
+        receiveRandomMessageFor(uuid, eventCount);
+        PageRequest pageRequest = PageRequest.of(0, 10, null);
 
         // Act
-        List<PersistentEmployeeEvent> allDescOrderedByCreatedAt = employeeEventService.findAllByOrderByCreatedAtAsc(uuid);
+        Page<PersistentEmployeeEvent> allDescOrderedByCreatedAt = employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, pageRequest);
 
         // Assert
         Instant previous = null;
@@ -59,12 +63,14 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
     void givenUnknownUuid_whenFindAll_thenReturnEmptyList()
     {
         // Arrange
-        receiveRandomMessageFor(RandomUtils.nextInt(10, 20));
+        int eventCount = RandomUtils.nextInt(10, 20);
+        receiveRandomMessageFor(eventCount);
         String unknownUuid = UUID.randomUUID()
                                  .toString();
+        PageRequest pageRequest = PageRequest.of(0, eventCount, null);
 
         // Act
-        List<PersistentEmployeeEvent> events = employeeEventService.findAllByOrderByCreatedAtAsc(unknownUuid);
+        Page<PersistentEmployeeEvent> events = employeeEventService.findByUuidOrderByCreatedAtAsc(unknownUuid, pageRequest);
 
         // Assert
         assertThat(events).isNotNull()

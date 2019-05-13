@@ -1,22 +1,25 @@
 package com.takeaway.eventservice.employeeevent.control;
 
 import com.takeaway.eventservice.UnitTestSuite;
+import com.takeaway.eventservice.employeeevent.entity.PersistentEmployeeEvent;
 import com.takeaway.eventservice.messaging.EmployeeEvent;
 import com.takeaway.eventservice.messaging.dto.Employee;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Collections;
 import java.util.UUID;
 
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * User: StMinko
@@ -77,14 +80,22 @@ class EmployeeEventServiceTest extends UnitTestSuite
             // Arrange
             String uuid = UUID.randomUUID()
                               .toString();
-            doReturn(Collections.emptyList()).when(employeeEventRepository)
-                                             .findAllByOrderByCreatedAtAsc();
+            Pageable mockPageable = mock(Pageable.class);
+            int expectedPageNumber = RandomUtils.nextInt(0, 23);
+            doReturn(expectedPageNumber).when(mockPageable).getPageNumber();
+
+            Page<PersistentEmployeeEvent> mockPageableResult = (Page<PersistentEmployeeEvent>) mock(Page.class);
+            doReturn(mockPageableResult).when(employeeEventRepository).findByUuid(eq(uuid), any(Pageable.class));
 
             // Act
-            employeeEventService.findAllByOrderByCreatedAtAsc(uuid);
+            employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, mockPageable);
 
             // Assert
-            verify(employeeEventRepository).findAllByOrderByCreatedAtAsc();
+            verify(employeeEventRepository).findByUuid(eq(uuid), assertArg(pageable -> {
+                assertThat(pageable.getPageNumber()).isEqualTo(expectedPageNumber);
+                assertThat(pageable.getPageSize()).isEqualTo(EmployeeEventService.MAX_PAGE_SIZE);
+                assertThat(pageable.getSort()).isEqualTo(EmployeeEventService.CREATED_AT_WITH_ASC_SORT);
+            }));
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.employeeevent.boundary;
+package com.takeaway.eventservice.employeeevent.boundary.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -59,7 +59,7 @@ public class EmployeeEventResponse
     private Instant createdAt;
     // ============================  Constructors  ===========================
 
-    EmployeeEventResponse(PersistentEmployeeEvent employeeEvent)
+    public EmployeeEventResponse(PersistentEmployeeEvent employeeEvent)
     {
         this.eventType = employeeEvent.getEventType();
         this.uuid = employeeEvent.getUuid();

@@ -1,17 +1,20 @@
 package com.takeaway.eventservice.employeeevent.boundary;
 
 import com.takeaway.eventservice.ApiVersions;
+import com.takeaway.eventservice.employeeevent.boundary.dto.ApiResponsePage;
+import com.takeaway.eventservice.employeeevent.boundary.dto.EmployeeEventResponse;
 import com.takeaway.eventservice.employeeevent.control.EmployeeEventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: StMinko
@@ -22,11 +25,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @Api(value = "Employee event service: Operations related to employee event service interface")
-@RequestMapping(ApiVersions.V1 + "/events")
+@RequestMapping(value = ApiVersions.V1 + EmployeeEventController.BASE_URI,
+                produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 @RequiredArgsConstructor
 public class EmployeeEventController
 {
     // =========================== Class Variables ===========================
+
+    public static final String BASE_URI = "/events";
+
     // =============================  Variables  =============================
 
     private final EmployeeEventService employeeEventService;
@@ -37,12 +44,11 @@ public class EmployeeEventController
     @ApiOperation(value = "Retrieves all events related to an employee in ascending order")
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeEventResponse> getAllEmployeeEvents(@NotBlank @PathVariable("uuid") String uuid)
+    public ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotBlank @PathVariable("uuid") String uuid, Pageable pageable)
     {
-        return employeeEventService.findAllByOrderByCreatedAtAsc(uuid)
-                                   .stream()
-                                   .map(EmployeeEventResponse::new)
-                                   .collect(Collectors.toList());
+        Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, pageable)
+                                                                                 .map(EmployeeEventResponse::new);
+        return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
     }
 
     // =================  protected/package local  Methods ===================

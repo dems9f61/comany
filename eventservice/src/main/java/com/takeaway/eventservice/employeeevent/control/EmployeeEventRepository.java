@@ -1,10 +1,10 @@
 package com.takeaway.eventservice.employeeevent.control;
 
 import com.takeaway.eventservice.employeeevent.entity.PersistentEmployeeEvent;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * User: StMinko
@@ -18,7 +18,7 @@ interface EmployeeEventRepository extends MongoRepository<PersistentEmployeeEven
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
 
-    List<PersistentEmployeeEvent> findAllByOrderByCreatedAtAsc();
+    Page<PersistentEmployeeEvent> findByUuid(String uuid, Pageable pageable);
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

@@ -6,13 +6,13 @@ import com.takeaway.eventservice.messaging.dto.Employee;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: StMinko
@@ -26,6 +26,11 @@ import java.util.stream.Collectors;
 public class EmployeeEventService
 {
     // =========================== Class Variables ===========================
+
+    static final Sort CREATED_AT_WITH_ASC_SORT = new Sort(Sort.Direction.ASC, "createdAt");
+
+    static final int MAX_PAGE_SIZE = 1000;
+
     // =============================  Variables  =============================
 
     private final EmployeeEventRepository employeeEventRepository;
@@ -54,12 +59,10 @@ public class EmployeeEventService
         employeeEventRepository.save(persistentEmployeeEvent);
     }
 
-    public List<PersistentEmployeeEvent> findAllByOrderByCreatedAtAsc(@NonNull String uuid)
+    public Page<PersistentEmployeeEvent> findByUuidOrderByCreatedAtAsc(@NonNull String uuid, Pageable pageable)
     {
-        return employeeEventRepository.findAllByOrderByCreatedAtAsc()
-                                      .parallelStream()
-                                      .filter(event -> StringUtils.equals(event.getUuid(), uuid))
-                                      .collect(Collectors.toList());
+        PageRequest createdAtPageRequest = PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE, CREATED_AT_WITH_ASC_SORT);
+        return employeeEventRepository.findByUuid(uuid, createdAtPageRequest);
     }
 
     // =================  protected/package local  Methods ===================
