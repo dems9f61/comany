@@ -14,7 +14,7 @@ import java.util.Optional;
  * Time: 09:47
  * <p/>
  */
-public interface EmployeeRepository extends JpaRepository<Employee, String>
+interface EmployeeRepository extends JpaRepository<Employee, String>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================

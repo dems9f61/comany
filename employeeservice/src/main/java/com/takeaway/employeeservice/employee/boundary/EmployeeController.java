@@ -35,11 +35,14 @@ import java.net.HttpURLConnection;
 @Slf4j
 @RestController
 @Api(value = "Employee service: Operations pertaining to the employee service interface")
-@RequestMapping(ApiVersions.V1 + "/employees")
+@RequestMapping(ApiVersions.V1 + EmployeeController.BASE_URI)
 @RequiredArgsConstructor
 public class EmployeeController
 {
     // =========================== Class Variables ===========================
+
+    public static final String BASE_URI = "/employees";
+
     // =============================  Variables  =============================
 
     private final EmployeeServiceCapable employeeService;
