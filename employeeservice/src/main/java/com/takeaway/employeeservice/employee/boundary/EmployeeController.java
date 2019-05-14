@@ -56,7 +56,7 @@ public class EmployeeController
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EmployeeResponse createEmployee(@RequestBody @NotNull @Valid CreateEmployeeRequest createEmployeeRequest)
+    EmployeeResponse createEmployee(@RequestBody @NotNull @Valid CreateEmployeeRequest createEmployeeRequest)
     {
         LOGGER.info("Creating an employee by the request {}", createEmployeeRequest);
         EmployeeParameter employeeParameter = createEmployeeRequest.toEmployerParameter();
@@ -84,7 +84,7 @@ public class EmployeeController
     @ApiResponses({
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "Could not find employee by the specified uuid!") })
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeResponse findUserByUuid(@NotBlank @PathVariable("uuid") String uuid)
+    EmployeeResponse findEmployee(@NotBlank @PathVariable("uuid") String uuid)
     {
         LOGGER.info("Retrieving an employee by the uuid {}", uuid);
         return employeeService.findByUuid(uuid)
@@ -107,7 +107,7 @@ public class EmployeeController
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
     @PatchMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
+    void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
     {
         LOGGER.info("Updating an employee by the uuid {} and {}", uuid, updateEmployeeRequest);
         try
@@ -125,7 +125,7 @@ public class EmployeeController
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "Could not delete employee by the specified uuid!") })
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEmployee(@NotBlank @PathVariable("uuid") String uuid)
+    void deleteEmployee(@NotBlank @PathVariable("uuid") String uuid)
     {
         LOGGER.info("Deleting an employee by the uuid {}", uuid);
         try
@@ -162,7 +162,6 @@ public class EmployeeController
                 return new InternalServerErrorException(caught.getMessage());
         }
     }
-
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

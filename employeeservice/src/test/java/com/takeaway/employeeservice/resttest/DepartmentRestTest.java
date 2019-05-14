@@ -1,6 +1,7 @@
 package com.takeaway.employeeservice.resttest;
 
 import com.takeaway.employeeservice.ApiVersions;
+import com.takeaway.employeeservice.department.boundary.DepartmentController;
 import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequest;
 import com.takeaway.employeeservice.department.boundary.dto.DepartmentResponse;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -40,7 +41,7 @@ class DepartmentRestTest extends RestTestSuite
                                                                                     .departmentName(departmentName)
                                                                                     .create();
 
-            String uri = String.format("%s/departments", ApiVersions.V1);
+            String uri = String.format("%s%s", ApiVersions.V1, DepartmentController.BASE_URI);
             HttpHeaders headers = defaultHttpHeaders();
             testRestTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
 

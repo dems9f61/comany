@@ -30,11 +30,14 @@ import java.net.HttpURLConnection;
 @Slf4j
 @RestController
 @Api(value = "Department service: Operations pertaining to department service interface")
-@RequestMapping(ApiVersions.V1 + "/departments")
+@RequestMapping(ApiVersions.V1 + DepartmentController.BASE_URI)
 @RequiredArgsConstructor
 public class DepartmentController
 {
     // =========================== Class Variables ===========================
+
+    public static final String BASE_URI = "/departments";
+
     // =============================  Variables  =============================
 
     private final DepartmentServiceCapable departmentService;
@@ -46,7 +49,7 @@ public class DepartmentController
     @ApiResponses({ @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DepartmentResponse createDepartment(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
+    DepartmentResponse createDepartment(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
     {
         DepartmentParameter createDepartmentParameter = departmentRequest.toDepartmentParameter();
         try

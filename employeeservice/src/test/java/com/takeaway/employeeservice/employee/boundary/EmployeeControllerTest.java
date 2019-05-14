@@ -109,7 +109,7 @@ class EmployeeControllerTest extends UnitTestSuite
                                       .findByUuid(uuid);
 
             // Act / Assert
-            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findUserByUuid(uuid));
+            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(uuid));
         }
 
         @Test
@@ -124,7 +124,7 @@ class EmployeeControllerTest extends UnitTestSuite
                                            .findByUuid(any());
 
             // Act
-            employeeController.findUserByUuid(uuid);
+            employeeController.findEmployee(uuid);
 
             // Assert
             verify(employeeService).findByUuid(uuid);
