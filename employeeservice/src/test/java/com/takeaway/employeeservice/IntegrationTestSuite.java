@@ -1,5 +1,6 @@
 package com.takeaway.employeeservice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
 import com.takeaway.employeeservice.employee.boundary.dto.CreateEmployeeRequestTestFactory;
@@ -47,6 +48,9 @@ public abstract class IntegrationTestSuite
 
     @SpyBean
     protected EmployeeEventPublisherCapable employeeEventPublisher;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

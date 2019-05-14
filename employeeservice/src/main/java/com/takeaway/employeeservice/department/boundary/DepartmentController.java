@@ -7,7 +7,7 @@ import com.takeaway.employeeservice.department.control.DepartmentParameter;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.control.DepartmentServiceException;
 import com.takeaway.employeeservice.department.entity.Department;
-import com.takeaway.employeeservice.error.BadRequestException;
+import com.takeaway.employeeservice.error.entity.BadRequestException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -30,13 +30,13 @@ import java.net.HttpURLConnection;
 @Slf4j
 @RestController
 @Api(value = "Department service: Operations pertaining to department service interface")
-@RequestMapping(ApiVersions.V1 + DepartmentController.BASE_URI)
+@RequestMapping(DepartmentController.BASE_URI)
 @RequiredArgsConstructor
 public class DepartmentController
 {
     // =========================== Class Variables ===========================
 
-    public static final String BASE_URI = "/departments";
+    public static final String BASE_URI = ApiVersions.V1+ "/departments";
 
     // =============================  Variables  =============================
 

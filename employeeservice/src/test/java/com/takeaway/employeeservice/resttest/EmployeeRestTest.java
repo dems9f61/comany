@@ -1,6 +1,6 @@
 package com.takeaway.employeeservice.resttest;
 
-import com.takeaway.employeeservice.ApiVersions;
+import com.takeaway.employeeservice.department.boundary.DepartmentController;
 import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequest;
 import com.takeaway.employeeservice.department.boundary.dto.DepartmentResponse;
 import com.takeaway.employeeservice.employee.boundary.EmployeeController;
@@ -39,13 +39,12 @@ class EmployeeRestTest extends RestTestSuite
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
             CreateEmployeeRequest createEmployeeRequest = createEmployeeRequestTestFactory.builder()
-                                                                                    .departmentName(departmentName)
-                                                                                    .create();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
+                                                                                          .departmentName(departmentName)
+                                                                                          .create();
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(EmployeeController.BASE_URI,
                                                                                         HttpMethod.POST,
                                                                                         new HttpEntity<>(createEmployeeRequest, headers),
                                                                                         EmployeeResponse.class);
@@ -75,11 +74,10 @@ class EmployeeRestTest extends RestTestSuite
                                                                                     .lastName(null)
                                                                                     .departmentName(departmentName)
                                                                                     .create();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(EmployeeController.BASE_URI,
                                                                                         HttpMethod.POST,
                                                                                         new HttpEntity<>(employeeRequest, headers),
                                                                                         EmployeeResponse.class);
@@ -101,11 +99,10 @@ class EmployeeRestTest extends RestTestSuite
         void givenUnknownDepartment_whenCreateEmployee_thenStatus404()
         {
             CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(EmployeeController.BASE_URI,
                                                                               HttpMethod.POST,
                                                                               new HttpEntity<>(employeeRequest, headers),
                                                                               String.class);
@@ -125,7 +122,6 @@ class EmployeeRestTest extends RestTestSuite
                                                                                     .departmentName(departmentName)
                                                                                     .create();
             createAndPersistEmployee(employeeRequest);
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
             HttpHeaders headers = defaultHttpHeaders();
 
             CreateEmployeeRequest newEmployeeRequest = createEmployeeRequestTestFactory.builder()
@@ -133,7 +129,7 @@ class EmployeeRestTest extends RestTestSuite
                                                                                        .create();
 
             // Act
-            ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(EmployeeController.BASE_URI,
                                                                               HttpMethod.POST,
                                                                               new HttpEntity<>(newEmployeeRequest, headers),
                                                                               String.class);
@@ -148,17 +144,16 @@ class EmployeeRestTest extends RestTestSuite
         {
             // Arrange
             CreateEmployeeRequest createEmployeeRequest = createEmployeeRequestTestFactory.builder()
-                                                                                    .birthday(null)
-                                                                                    .emailAddress(null)
-                                                                                    .firstName(null)
-                                                                                    .lastName(null)
-                                                                                    .departmentName(null)
-                                                                                    .create();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
+                                                                                          .birthday(null)
+                                                                                          .emailAddress(null)
+                                                                                          .firstName(null)
+                                                                                          .lastName(null)
+                                                                                          .departmentName(null)
+                                                                                          .create();
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(EmployeeController.BASE_URI,
                                                                               HttpMethod.POST,
                                                                               new HttpEntity<>(createEmployeeRequest, headers),
                                                                               String.class);
@@ -172,11 +167,13 @@ class EmployeeRestTest extends RestTestSuite
         void givenNullRequest_whenCreateEmployee_thenStatus400()
         {
             // Arrange
-            String uri = String.format("%s/employees", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(null, headers), String.class);
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(EmployeeController.BASE_URI,
+                                                                              HttpMethod.POST,
+                                                                              new HttpEntity<>(null, headers),
+                                                                              String.class);
 
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -192,12 +189,11 @@ class EmployeeRestTest extends RestTestSuite
         void givenUnknownUuid_whenFindEmployeeByUuid_thenStatus404()
         {
             // Arrange
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
             String wrongUuid = UUID.randomUUID()
                                    .toString();
 
             // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, wrongUuid),
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, wrongUuid),
                                                                             HttpMethod.GET,
                                                                             new HttpEntity<>(defaultHttpHeaders()),
                                                                             Void.class);
@@ -214,14 +210,15 @@ class EmployeeRestTest extends RestTestSuite
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
             CreateEmployeeRequest createEmployeeRequest = createEmployeeRequestTestFactory.builder()
-                                                                                    .departmentName(departmentName)
-                                                                                    .create();
+                                                                                          .departmentName(departmentName)
+                                                                                          .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(createEmployeeRequest);
             String uuidToFind = persistedEmployee.getUuid();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
 
             // Act
-            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToFind),
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
+                                                                                                      EmployeeController.BASE_URI,
+                                                                                                      uuidToFind),
                                                                                         HttpMethod.GET,
                                                                                         new HttpEntity<>(defaultHttpHeaders()),
                                                                                         EmployeeResponse.class);
@@ -243,16 +240,15 @@ class EmployeeRestTest extends RestTestSuite
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(departmentName);
-           UpdateEmployeeRequest updateEmployeeRequest = updateEmployeeRequestTestFactory.builder()
-                                                                                   .departmentName(departmentName)
-                                                                                   .create();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
+            UpdateEmployeeRequest updateEmployeeRequest = updateEmployeeRequestTestFactory.builder()
+                                                                                          .departmentName(departmentName)
+                                                                                          .create();
             HttpHeaders headers = defaultHttpHeaders();
             String wrongUuid = UUID.randomUUID()
                                    .toString();
 
             // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, wrongUuid),
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, wrongUuid),
                                                                             HttpMethod.PATCH,
                                                                             new HttpEntity<>(updateEmployeeRequest, headers),
                                                                             Void.class);
@@ -278,12 +274,10 @@ class EmployeeRestTest extends RestTestSuite
             UpdateEmployeeRequest updateRequest = updateEmployeeRequestTestFactory.builder()
                                                                                   .departmentName(unknownDepartmentName)
                                                                                   .create();
-
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, uuidToUpdate),
                                                                             HttpMethod.PATCH,
                                                                             new HttpEntity<>(updateRequest, headers),
                                                                             Void.class);
@@ -312,11 +306,12 @@ class EmployeeRestTest extends RestTestSuite
             UpdateEmployeeRequest updateRequest = updateEmployeeRequestTestFactory.builder()
                                                                                   .departmentName(secondDepartmentName)
                                                                                   .create();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
+                                                                                                      EmployeeController.BASE_URI,
+                                                                                                      uuidToUpdate),
                                                                                         HttpMethod.PATCH,
                                                                                         new HttpEntity<>(updateRequest, headers),
                                                                                         EmployeeResponse.class);
@@ -356,11 +351,12 @@ class EmployeeRestTest extends RestTestSuite
                                                                                   .birthday(newBirthDay)
                                                                                   .emailAddress(null)
                                                                                   .create();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToUpdate),
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
+                                                                                                      EmployeeController.BASE_URI,
+                                                                                                      uuidToUpdate),
                                                                                         HttpMethod.PATCH,
                                                                                         new HttpEntity<>(updateRequest, headers),
                                                                                         EmployeeResponse.class);
@@ -386,12 +382,11 @@ class EmployeeRestTest extends RestTestSuite
         void givenUnknownUuid_whenDeleteEmployeeByUuid_thenStatus404()
         {
             //Arrange
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
             String wrongUuid = UUID.randomUUID()
                                    .toString();
 
             // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, wrongUuid),
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, wrongUuid),
                                                                             HttpMethod.DELETE,
                                                                             new HttpEntity<>(defaultHttpHeaders()),
                                                                             Void.class);
@@ -412,10 +407,11 @@ class EmployeeRestTest extends RestTestSuite
                                                                                     .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
             String uuidToDelete = persistedEmployee.getUuid();
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
 
             // Act
-            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToDelete),
+            ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
+                                                                                                      EmployeeController.BASE_URI,
+                                                                                                      uuidToDelete),
                                                                                         HttpMethod.DELETE,
                                                                                         new HttpEntity<>(defaultHttpHeaders()),
                                                                                         EmployeeResponse.class);
@@ -431,25 +427,29 @@ class EmployeeRestTest extends RestTestSuite
         DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
                                                                                 .departmentName(departmentName)
                                                                                 .create();
-        String uri = String.format("%s/departments", ApiVersions.V1);
         HttpHeaders headers = defaultHttpHeaders();
-        testRestTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
+        testRestTemplate.exchange(DepartmentController.BASE_URI,
+                                  HttpMethod.POST,
+                                  new HttpEntity<>(createDepartmentRequest, headers),
+                                  DepartmentResponse.class);
     }
 
     private EmployeeResponse createAndPersistEmployee(CreateEmployeeRequest employeeRequest)
     {
-        String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
+        // Arrange
         HttpHeaders headers = defaultHttpHeaders();
 
         // Act
-        return testRestTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(employeeRequest, headers), EmployeeResponse.class)
+        return testRestTemplate.exchange(EmployeeController.BASE_URI,
+                                         HttpMethod.POST,
+                                         new HttpEntity<>(employeeRequest, headers),
+                                         EmployeeResponse.class)
                                .getBody();
     }
 
     private EmployeeResponse findPersistedEmployee(String uuidToFind)
     {
-        String uri = String.format("%s%s", ApiVersions.V1, EmployeeController.BASE_URI);
-        ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuidToFind),
+        ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, uuidToFind),
                                                                                     HttpMethod.GET,
                                                                                     new HttpEntity<>(defaultHttpHeaders()),
                                                                                     EmployeeResponse.class);

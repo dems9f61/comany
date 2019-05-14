@@ -8,10 +8,10 @@ import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceCapable;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceException;
 import com.takeaway.employeeservice.employee.entity.Employee;
-import com.takeaway.employeeservice.error.ApiException;
-import com.takeaway.employeeservice.error.BadRequestException;
-import com.takeaway.employeeservice.error.InternalServerErrorException;
-import com.takeaway.employeeservice.error.ResourceNotFoundException;
+import com.takeaway.employeeservice.error.entity.ApiException;
+import com.takeaway.employeeservice.error.entity.BadRequestException;
+import com.takeaway.employeeservice.error.entity.InternalServerErrorException;
+import com.takeaway.employeeservice.error.entity.ResourceNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -35,13 +35,13 @@ import java.net.HttpURLConnection;
 @Slf4j
 @RestController
 @Api(value = "Employee service: Operations pertaining to the employee service interface")
-@RequestMapping(ApiVersions.V1 + EmployeeController.BASE_URI)
+@RequestMapping(EmployeeController.BASE_URI)
 @RequiredArgsConstructor
 public class EmployeeController
 {
     // =========================== Class Variables ===========================
 
-    public static final String BASE_URI = "/employees";
+    public static final String BASE_URI = ApiVersions.V1 + "/employees";
 
     // =============================  Variables  =============================
 

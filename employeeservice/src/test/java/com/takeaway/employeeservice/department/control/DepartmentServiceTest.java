@@ -42,7 +42,7 @@ class DepartmentServiceTest extends UnitTestSuite
     {
         @Test
         @DisplayName("Creating a department with a empty department name fails")
-        void givenEmptyDepartmentName_whenCreate_thenStatusSucceed()
+        void givenEmptyDepartmentName_whenCreate_thenThrowException()
         {
             // Arrange
             DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
@@ -55,7 +55,7 @@ class DepartmentServiceTest extends UnitTestSuite
 
         @Test
         @DisplayName("Creating a department with a null department name fails")
-        void givenNullDepartmentName_whenCreate_thenStatusSucceed()
+        void givenNullDepartmentName_whenCreate_thenThrowException()
         {
             // Arrange
             DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
@@ -67,7 +67,7 @@ class DepartmentServiceTest extends UnitTestSuite
 
         @Test
         @DisplayName("Creating a departments with a already existing name fails")
-        void givenAlreadyExistingDepartmentName_whenCreate_thenTThrowException()
+        void givenAlreadyExistingDepartmentName_whenCreate_thenThrowException()
         {
             // Arrange
             DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();

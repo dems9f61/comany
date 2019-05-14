@@ -1,5 +1,9 @@
-package com.takeaway.employeeservice.error;
+package com.takeaway.employeeservice.error.boundary;
 
+import com.takeaway.employeeservice.error.entity.ApiException;
+import com.takeaway.employeeservice.error.entity.BadRequestException;
+import com.takeaway.employeeservice.error.entity.InternalServerErrorException;
+import com.takeaway.employeeservice.error.entity.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;

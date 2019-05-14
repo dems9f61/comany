@@ -1,6 +1,5 @@
 package com.takeaway.employeeservice.resttest;
 
-import com.takeaway.employeeservice.ApiVersions;
 import com.takeaway.employeeservice.department.boundary.DepartmentController;
 import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequest;
 import com.takeaway.employeeservice.department.boundary.dto.DepartmentResponse;
@@ -40,13 +39,11 @@ class DepartmentRestTest extends RestTestSuite
             DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
                                                                                     .departmentName(departmentName)
                                                                                     .create();
-
-            String uri = String.format("%s%s", ApiVersions.V1, DepartmentController.BASE_URI);
             HttpHeaders headers = defaultHttpHeaders();
-            testRestTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
+            testRestTemplate.exchange( DepartmentController.BASE_URI, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
 
             // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
                                                                             HttpMethod.POST,
                                                                             new HttpEntity<>(createDepartmentRequest, headers),
                                                                             Void.class);
@@ -63,11 +60,10 @@ class DepartmentRestTest extends RestTestSuite
                                                                                     .departmentName("  ")
                                                                                     .create();
 
-            String uri = String.format("%s/departments", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
                                                                             HttpMethod.POST,
                                                                             new HttpEntity<>(createDepartmentRequest, headers),
                                                                             Void.class);
@@ -84,11 +80,10 @@ class DepartmentRestTest extends RestTestSuite
                                                                                     .departmentName(null)
                                                                                     .create();
 
-            String uri = String.format("%s/departments", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<String> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<String> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
                                                                               HttpMethod.POST,
                                                                               new HttpEntity<>(createDepartmentRequest, headers), String.class);
             // Assert
@@ -101,11 +96,10 @@ class DepartmentRestTest extends RestTestSuite
         {
             // Arrange
             DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.createDefault();
-            String uri = String.format("%s/departments", ApiVersions.V1);
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
-            ResponseEntity<DepartmentResponse> responseEntity = testRestTemplate.exchange(uri,
+            ResponseEntity<DepartmentResponse> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
                                                                                           HttpMethod.POST,
                                                                                           new HttpEntity<>(createDepartmentRequest, headers),
                                                                                           DepartmentResponse.class);
