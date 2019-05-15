@@ -1,23 +1,29 @@
-package com.takeaway.eventservice.error;
+package com.takeaway.eventservice.error.entity;
 
 import org.springframework.http.HttpStatus;
 
 /**
  * User: StMinko
  * Date: 18.03.2019
- * Time: 17:19
+ * Time: 11:22
  * <p/>
  */
-public class InternalServerErrorException extends ApiException
+public class BadRequestException extends ApiException
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
 
-    public InternalServerErrorException(String message)
+    public BadRequestException(String message)
     {
-        super(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        super(HttpStatus.BAD_REQUEST, message);
     }
+
+    public BadRequestException(Throwable cause)
+    {
+        super(HttpStatus.BAD_REQUEST, cause);
+    }
+
 
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
@@ -23,16 +24,17 @@ import javax.validation.constraints.NotBlank;
  * <p/>
  */
 @Slf4j
+@Validated
 @RestController
 @Api(value = "Employee event service: Operations related to employee event service interface")
-@RequestMapping(value = ApiVersions.V1 + EmployeeEventController.BASE_URI,
+@RequestMapping(value = EmployeeEventController.BASE_URI,
                 produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 @RequiredArgsConstructor
 public class EmployeeEventController
 {
     // =========================== Class Variables ===========================
 
-    public static final String BASE_URI = "/events";
+    public static final String BASE_URI = ApiVersions.V1 + "/events";
 
     // =============================  Variables  =============================
 

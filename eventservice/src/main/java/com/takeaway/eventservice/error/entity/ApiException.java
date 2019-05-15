@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.error;
+package com.takeaway.eventservice.error.entity;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  * Time: 11:17
  * <p/>
  */
-class ApiException extends RuntimeException
+public class ApiException extends RuntimeException
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
@@ -19,13 +19,19 @@ class ApiException extends RuntimeException
 
     // ============================  Constructors  ===========================
 
-    public ApiException(String message, HttpStatus httpStatus)
+    public ApiException(HttpStatus httpStatus, String message)
     {
         super(message);
         this.httpStatus = httpStatus;
     }
 
-    public ApiException(String message, HttpStatus httpStatus, Throwable cause)
+    public ApiException(HttpStatus httpStatus, Throwable cause)
+    {
+        super(cause);
+        this.httpStatus = httpStatus;
+    }
+
+    public ApiException(HttpStatus httpStatus, Throwable cause, String message)
     {
         super(message, cause);
         this.httpStatus = httpStatus;

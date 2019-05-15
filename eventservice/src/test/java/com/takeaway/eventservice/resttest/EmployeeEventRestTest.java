@@ -1,6 +1,5 @@
 package com.takeaway.eventservice.resttest;
 
-import com.takeaway.eventservice.ApiVersions;
 import com.takeaway.eventservice.RestTestSuite;
 import com.takeaway.eventservice.employeeevent.boundary.EmployeeEventController;
 import com.takeaway.eventservice.employeeevent.boundary.dto.ApiResponsePage;
@@ -42,10 +41,10 @@ class EmployeeEventRestTest extends RestTestSuite
                               .toString();
             receiveRandomMessageFor(uuid);
 
-            String uri =  String.format("%s%s", ApiVersions.V1, EmployeeEventController.BASE_URI);
-
             // Act
-            ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, uuid),
+            ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
+                                                                                                                            EmployeeEventController.BASE_URI,
+                                                                                                                            uuid),
                                                                                                               HttpMethod.GET,
                                                                                                               new HttpEntity<>(defaultHttpHeaders()),
                                                                                                               new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
@@ -65,24 +64,6 @@ class EmployeeEventRestTest extends RestTestSuite
                 }
                 previous = current;
             }
-        }
-
-        @Test
-        @DisplayName("GET: 'http://.../events/{uuid}' returns 4xx for blank uuid ")
-        void givenBlankUuid_whenFindByUuid_thenStatus404()
-        {
-            // Arrange
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeEventController.BASE_URI);
-            String blankUuid = "";
-
-            // Act
-            ResponseEntity<String> responseEntity = testRestTemplate.exchange(String.format("%s/%s", uri, blankUuid),
-                                                                              HttpMethod.GET,
-                                                                              new HttpEntity<>(defaultHttpHeaders()),
-                                                                              String.class);
-            // Assert
-            assertThat(responseEntity.getStatusCode()
-                                     .is4xxClientError()).isTrue();
         }
     }
 }

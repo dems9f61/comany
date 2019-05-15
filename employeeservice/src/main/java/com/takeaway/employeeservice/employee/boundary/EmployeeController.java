@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,6 +34,7 @@ import java.net.HttpURLConnection;
  * <p/>
  */
 @Slf4j
+@Validated
 @RestController
 @Api(value = "Employee service: Operations pertaining to the employee service interface")
 @RequestMapping(EmployeeController.BASE_URI)
@@ -49,104 +51,105 @@ public class EmployeeController
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
     @ApiOperation(value = "Creates an employee with the request values")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = ""),
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    EmployeeResponse createEmployee(@RequestBody @NotNull @Valid CreateEmployeeRequest createEmployeeRequest)
-    {
-        LOGGER.info("Creating an employee by the request {}", createEmployeeRequest);
-        EmployeeParameter employeeParameter = createEmployeeRequest.toEmployerParameter();
-        try
+        @ApiResponses({
+                @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = ""),
+                @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
+        @PostMapping
+        @ResponseStatus(HttpStatus.CREATED)
+        EmployeeResponse createEmployee(@RequestBody @NotNull @Valid CreateEmployeeRequest createEmployeeRequest)
         {
-            Employee employee = employeeService.create(employeeParameter);
-            return new EmployeeResponse(employee.getUuid(),
-                                        employee.getEmailAddress(),
-                                        employee.getFullName()
-                                                .getFirstName(),
-                                        employee.getFullName()
-                                                .getLastName(),
-                                        employee.getBirthday(),
-                                        employee.getDepartment()
-                                                .getDepartmentName());
-        }
-        catch (EmployeeServiceException caught)
-        {
-            throw translateInApiException(caught);
-        }
-    }
-
-    @ApiOperation(value = "Retrieves an employee by a given uuid")
-    @GetMapping("/{uuid}")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "Could not find employee by the specified uuid!") })
-    @ResponseStatus(HttpStatus.OK)
-    EmployeeResponse findEmployee(@NotBlank @PathVariable("uuid") String uuid)
-    {
-        LOGGER.info("Retrieving an employee by the uuid {}", uuid);
-        return employeeService.findByUuid(uuid)
-                              .map(employee -> {
-                                  Employee.FullName fullName = employee.getFullName();
-                                  return new EmployeeResponse(employee.getUuid(),
-                                                              employee.getEmailAddress(),
-                                                              fullName != null ? fullName.getFirstName() : null,
-                                                              fullName != null ? fullName.getLastName() : null,
-                                                              employee.getBirthday(),
-                                                              employee.getDepartment()
-                                                                      .getDepartmentName());
-                              })
-                              .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified uuid!"));
-    }
-
-    @ApiOperation(value = "Updates an employee with the request values")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = ""),
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
-    @PatchMapping("/{uuid}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
-    {
-        LOGGER.info("Updating an employee by the uuid {} and {}", uuid, updateEmployeeRequest);
-        try
-        {
-            employeeService.update(uuid, updateEmployeeRequest.toEmployerParameter());
-        }
-        catch (EmployeeServiceException caught)
-        {
-            throw translateInApiException(caught);
-        }
-    }
-
-    @ApiOperation(value = "Deletes permanently an employee")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "Could not delete employee by the specified uuid!") })
-    @DeleteMapping("/{uuid}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteEmployee(@NotBlank @PathVariable("uuid") String uuid)
-    {
-        LOGGER.info("Deleting an employee by the uuid {}", uuid);
-        try
-        {
-            employeeService.deleteByUuid(uuid);
-        }
-        catch (EmployeeServiceException caught)
-        {
-            EmployeeServiceException.Reason reason = caught.getReason();
-            if (reason == EmployeeServiceException.Reason.NOT_FOUND)
+            LOGGER.info("Creating an employee by the request {}", createEmployeeRequest);
+            EmployeeParameter employeeParameter = createEmployeeRequest.toEmployerParameter();
+            try
             {
-                throw new ResourceNotFoundException(caught.getMessage());
+                Employee employee = employeeService.create(employeeParameter);
+                return new EmployeeResponse(employee.getUuid(),
+                                            employee.getEmailAddress(),
+                                            employee.getFullName()
+                                                    .getFirstName(),
+                                            employee.getFullName()
+                                                    .getLastName(),
+                                            employee.getBirthday(),
+                                            employee.getDepartment()
+                                                    .getDepartmentName());
             }
-            else
+            catch (EmployeeServiceException caught)
             {
-                throw new InternalServerErrorException(caught.getMessage());
+                throw translateInApiException(caught);
             }
         }
-    }
 
-    // =================  protected/package local  Methods ===================
+        @ApiOperation(value = "Retrieves an employee by a given uuid")
+        @GetMapping("/{uuid}")
+        @ApiResponses({
+                @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "Could not find employee by the specified uuid!") })
+        @ResponseStatus(HttpStatus.OK)
+        EmployeeResponse findEmployee(@NotBlank @PathVariable("uuid") String uuid)
+        {
+            LOGGER.info("Retrieving an employee by the uuid {}", uuid);
+            return employeeService.findByUuid(uuid)
+                                  .map(employee -> {
+                                      Employee.FullName fullName = employee.getFullName();
+                                      return new EmployeeResponse(employee.getUuid(),
+                                                                  employee.getEmailAddress(),
+                                                                  fullName != null ? fullName.getFirstName() : null,
+                                                                  fullName != null ? fullName.getLastName() : null,
+                                                                  employee.getBirthday(),
+                                                                  employee.getDepartment()
+                                                                          .getDepartmentName());
+                                  })
+                                  .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified uuid!"));
+        }
+
+        @ApiOperation(value = "Updates an employee with the request values")
+        @ApiResponses({
+                @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = ""),
+                @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "") })
+        @PatchMapping("/{uuid}")
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
+        {
+            LOGGER.info("Updating an employee by the uuid {} and {}", uuid, updateEmployeeRequest);
+            try
+            {
+                employeeService.update(uuid, updateEmployeeRequest.toEmployerParameter());
+            }
+            catch (EmployeeServiceException caught)
+            {
+                throw translateInApiException(caught);
+            }
+        }
+
+        @ApiOperation(value = "Deletes permanently an employee")
+        @ApiResponses({
+                @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "Could not delete employee by the specified uuid!") })
+        @DeleteMapping("/{uuid}")
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        void deleteEmployee(@NotBlank @PathVariable("uuid") String uuid)
+        {
+            LOGGER.info("Deleting an employee by the uuid {}", uuid);
+            try
+            {
+                employeeService.deleteByUuid(uuid);
+            }
+            catch (EmployeeServiceException caught)
+            {
+                EmployeeServiceException.Reason reason = caught.getReason();
+                if (reason == EmployeeServiceException.Reason.NOT_FOUND)
+                {
+                    throw new ResourceNotFoundException(caught.getMessage());
+                }
+                else
+                {
+                    throw new InternalServerErrorException(caught.getMessage());
+                }
+            }
+        }
+
+
     // ===========================  private  Methods  ========================
 
     private ApiException translateInApiException(EmployeeServiceException caught)

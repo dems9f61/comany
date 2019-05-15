@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
@@ -29,7 +30,7 @@ import static java.util.stream.Collectors.joining;
  */
 @Slf4j
 @ControllerAdvice
-public class ExceptionMapper
+public class GlobalExceptionMapper
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
@@ -69,6 +70,20 @@ public class ExceptionMapper
     }
 
     @Order(2)
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException constraintViolationException)
+    {
+        String errorMessage = "Constraints violated: " + constraintViolationException.getConstraintViolations()
+                                                                                     .stream()
+                                                                                     .map(violation -> String.format(
+                                                                                             "{Property path: :%s, Error message: :%s}",
+                                                                                             violation.getPropertyPath(),
+                                                                                             violation.getMessage()))
+                                                                                     .collect(joining(", ", "[", "]"));
+        return handleBadRequestException(new BadRequestException(errorMessage));
+    }
+
+    @Order(3)
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     protected ResponseEntity<String> handleNotReadableException(HttpMessageNotReadableException notReadableException)
     {
@@ -77,21 +92,21 @@ public class ExceptionMapper
         return handleBadRequestException(new BadRequestException(errorMessage));
     }
 
-    @Order(3)
+    @Order(4)
     @ExceptionHandler(value = BadRequestException.class)
     protected ResponseEntity<String> handleBadRequestException(BadRequestException badRequestException)
     {
         return handleApiException(badRequestException);
     }
 
-    @Order(4)
+    @Order(5)
     @ExceptionHandler(value = ResourceNotFoundException.class)
     protected ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException)
     {
         return handleApiException(resourceNotFoundException);
     }
 
-    @Order(5)
+    @Order(6)
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
     protected ResponseEntity<String> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException mediaNotSupportedException)
     {

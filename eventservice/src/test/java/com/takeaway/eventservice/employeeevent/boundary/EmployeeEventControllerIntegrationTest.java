@@ -1,6 +1,5 @@
 package com.takeaway.eventservice.employeeevent.boundary;
 
-import com.takeaway.eventservice.ApiVersions;
 import com.takeaway.eventservice.IntegrationTestSuite;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -46,7 +45,7 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
     {
         @Test
         @DisplayName("GET: 'http://.../events/{uuid}' returns OK and an list ")
-        void givenEmployeeVents_whenFindByUuid_thenStatus200AndAscSortedList() throws Exception
+        void givenEmployeeVents_whenFindByUuid_thenStatus200AndContent() throws Exception
         {
             // Arrange
             String uuid = UUID.randomUUID()
@@ -54,7 +53,7 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
             int expectedEventCount = RandomUtils.nextInt(10, 20);
             receiveRandomMessageFor(uuid, expectedEventCount);
 
-            String uri = String.format("%s%s/{uuid}", ApiVersions.V1, EmployeeEventController.BASE_URI);
+            String uri = String.format("%s/{uuid}", EmployeeEventController.BASE_URI);
 
             // Act / Assert
             mockMvc.perform(get(uri, uuid))
@@ -65,16 +64,21 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
         }
 
         @Test
-        @DisplayName("GET: 'http://.../events/{uuid}' returns 4xx for blank uuid ")
-        void givenBlankUuid_whenFindByUuid_thenStatus404() throws Exception
+        @DisplayName("GET: 'http://.../events/{uuid}' returns 400 for blank uuid ")
+        void givenBlankUuid_whenFindByUuid_thenStatus400() throws Exception
         {
             // Arrange
-            String uri = String.format("%s%s", ApiVersions.V1, EmployeeEventController.BASE_URI);
-            String blankUuid = "";
+            String blankUuid = " ";
+            String uri = String.format("%s/{uuid}", EmployeeEventController.BASE_URI);
 
             // Act / Assert
             mockMvc.perform(get(uri, blankUuid))
-                   .andExpect(status().is4xxClientError());
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$.errorMessage", containsString("must not be blank")))
+                   .andExpect(jsonPath("$.time", notNullValue()))
+                   .andExpect(jsonPath("$.constraintViolations", notNullValue()))
+                   .andExpect(jsonPath("$.constraintViolations", hasSize(1)))
+                   .andExpect(jsonPath("$.httpStatus", is(400)));
         }
     }
 
