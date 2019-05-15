@@ -1,6 +1,6 @@
 package com.takeaway.eventservice.error.entity;
 
-/**
+/*
  * User: StMinko
  * Date: 15.05.2019
  * Time: 14:04
@@ -19,7 +19,7 @@ import java.util.List;
  * Entity to be serialized via REST to the client in case on any error that may occur within any REST Call
  */
 @Getter
-public class ErrorInfo
+public final class ErrorInfo
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
@@ -61,7 +61,7 @@ public class ErrorInfo
     // ============================  Inner Classes  ==========================
 
     @Getter
-    public static class ConstraintViolationError
+    public static final class ConstraintViolationError
     {
         private final String rootClass;
 
