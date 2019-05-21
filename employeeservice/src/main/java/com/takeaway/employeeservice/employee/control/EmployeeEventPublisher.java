@@ -41,7 +41,7 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
 
     public void employeeCreated(Employee createdEmployee)
     {
-        LOGGER.info("Sending creation message on {}", createdEmployee);
+        LOGGER.info("Sending creation message {}", createdEmployee);
         EmployeeMessage createdEmployeeMessage = new EmployeeMessage();
         createdEmployeeMessage.setEventType(EventType.EMPLOYEE_CREATED);
         createdEmployeeMessage.setEmployee(createdEmployee);
@@ -50,7 +50,7 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
 
     public void employeeDeleted(Employee deletedEmployee)
     {
-        LOGGER.info("Sending deletion message on {}", deletedEmployee);
+        LOGGER.info("Sending deletion message {}", deletedEmployee);
         EmployeeMessage deletedEmployeeMessage = new EmployeeMessage();
         deletedEmployeeMessage.setEmployee(deletedEmployee);
         deletedEmployeeMessage.setEventType(EventType.EMPLOYEE_DELETED);
@@ -59,7 +59,7 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
 
     public void employeeUpdated(Employee updatedEmployee)
     {
-        LOGGER.info("Sending update message on {}", updatedEmployee);
+        LOGGER.info("Sending update message {}", updatedEmployee);
         EmployeeMessage updatedEmployeeMessage = new EmployeeMessage();
         updatedEmployeeMessage.setEventType(EventType.EMPLOYEE_UPDATED);
         updatedEmployeeMessage.setEmployee(updatedEmployee);
