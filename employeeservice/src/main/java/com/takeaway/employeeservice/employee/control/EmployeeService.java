@@ -87,10 +87,10 @@ class EmployeeService implements EmployeeServiceCapable
         }
 
         Employee employee = optionalEmployee.get();
-        boolean hasChanged = hasEmailAddressChanged(updateParameter, employee);
-        hasChanged = hasFullNameChanged(updateParameter, employee) || hasChanged;
-        hasChanged = hasBirthDayChanged(updateParameter, employee) || hasChanged;
-        hasChanged = hasDepartmentChanged(updateParameter, employee) || hasChanged;
+        boolean hasChanged = hasEmailAddressChangedAfterUpdate(updateParameter, employee);
+        hasChanged = hasFullNameChangedAfterUpdate(updateParameter, employee) || hasChanged;
+        hasChanged = hasBirthDayChangedAfterUpdate(updateParameter, employee) || hasChanged;
+        hasChanged = hasDepartmentChangedAfterUpdate(updateParameter, employee) || hasChanged;
         if (hasChanged)
         {
             Employee updatedEmployee = employeeRepository.save(employee);
@@ -143,7 +143,7 @@ class EmployeeService implements EmployeeServiceCapable
         return departmentOptional;
     }
 
-    private boolean hasEmailAddressChanged(EmployeeParameter updateParameter, Employee employee)
+    private boolean hasEmailAddressChangedAfterUpdate(EmployeeParameter updateParameter, Employee employee)
     {
         boolean hasUpdated = false;
         String newEmailAddress = StringUtils.trim(updateParameter.getEmailAddress());
@@ -155,7 +155,7 @@ class EmployeeService implements EmployeeServiceCapable
         return hasUpdated;
     }
 
-    private boolean hasFullNameChanged(EmployeeParameter updateParameter, Employee employee)
+    private boolean hasFullNameChangedAfterUpdate(EmployeeParameter updateParameter, Employee employee)
     {
         boolean hasUpdated = false;
         String newFirstName = StringUtils.trim(updateParameter.getFirstName());
@@ -189,7 +189,7 @@ class EmployeeService implements EmployeeServiceCapable
         return hasUpdated;
     }
 
-    private boolean hasBirthDayChanged(EmployeeParameter updateParameter, Employee employee)
+    private boolean hasBirthDayChangedAfterUpdate(EmployeeParameter updateParameter, Employee employee)
     {
         boolean hasUpdated = false;
         Date newBirthDay = updateParameter.getBirthday();
@@ -202,7 +202,7 @@ class EmployeeService implements EmployeeServiceCapable
         return hasUpdated;
     }
 
-    private boolean hasDepartmentChanged(EmployeeParameter updateParameter, Employee employee) throws EmployeeServiceException
+    private boolean hasDepartmentChangedAfterUpdate(EmployeeParameter updateParameter, Employee employee) throws EmployeeServiceException
     {
         boolean hasUpdated = false;
         String newDepartmentName = StringUtils.trim(updateParameter.getDepartmentName());
