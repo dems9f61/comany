@@ -72,7 +72,8 @@ class EmployeeService implements EmployeeServiceCapable
             messagePublisher.employeeCreated(savedEmployee);
             return savedEmployee;
         })
-                                 .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND, String.format("Department name '%s' could not be found!",
+                                 .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND,
+                                                                                 String.format("Department name '%s' could not be found!",
                                                                                                departmentName)));
     }
 
@@ -141,6 +142,17 @@ class EmployeeService implements EmployeeServiceCapable
             throw new EmployeeServiceException(e);
         }
         return departmentOptional;
+    }
+
+    private void validateUniquenessOfEmail(String emailAddress) throws EmployeeServiceException
+    {
+        List<Employee> employeesWithSameEmail = StringUtils.isBlank(emailAddress) ?
+                Collections.emptyList() :
+                employeeRepository.findByEmailAddress(emailAddress);
+        if (!employeesWithSameEmail.isEmpty())
+        {
+            throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email '%s' is already used", emailAddress));
+        }
     }
 
     private boolean hasEmailAddressChangedAfterUpdate(EmployeeParameter updateParameter, Employee employee)
@@ -226,17 +238,6 @@ class EmployeeService implements EmployeeServiceCapable
             hasUpdated = true;
         }
         return hasUpdated;
-    }
-
-    private void validateUniquenessOfEmail(String emailAddress) throws EmployeeServiceException
-    {
-        List<Employee> employeesWithSameEmail = StringUtils.isBlank(emailAddress) ?
-                Collections.emptyList() :
-                employeeRepository.findByEmailAddress(emailAddress);
-        if (!employeesWithSameEmail.isEmpty())
-        {
-            throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email '%s' is already used", emailAddress));
-        }
     }
 
     // ============================  Inner Classes  ==========================
