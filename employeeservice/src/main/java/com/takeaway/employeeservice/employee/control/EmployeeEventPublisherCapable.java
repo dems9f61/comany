@@ -15,7 +15,7 @@ public interface EmployeeEventPublisherCapable
 
     void employeeCreated(Employee createdEmployee);
 
-    void employeeDeleted(Employee deleteEmployee);
+    void employeeDeleted(Employee deletedEmployee);
 
     void employeeUpdated(Employee updatedEmployee);
 
