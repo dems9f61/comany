@@ -6,10 +6,14 @@ import com.takeaway.employeeservice.error.entity.InternalServerErrorException;
 import com.takeaway.employeeservice.error.entity.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -115,6 +119,27 @@ public class GlobalExceptionMapper
         return handleApiException(new BadRequestException(errorMsg));
     }
 
+    @Order(7)
+    @ExceptionHandler(value = TransactionSystemException.class)
+    public ResponseEntity<String> handleTransactionSystemException(TransactionSystemException exception)
+    {
+        return handleNestedRuntimeException(exception);
+    }
+
+    @Order(8)
+    @ExceptionHandler(value = InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<String> handleTransactionSystemException(InvalidDataAccessApiUsageException exception)
+    {
+        return handleNestedRuntimeException(exception);
+    }
+
+    @Order(9)
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException exception)
+    {
+        return handleNestedRuntimeException(exception);
+    }
+
     @Order(1999)
     @ExceptionHandler(value = { Exception.class })
     protected ResponseEntity<String> handleException(Exception exception)
@@ -123,6 +148,21 @@ public class GlobalExceptionMapper
     }
 
     // ===========================  private  Methods  ========================
+
+    private ResponseEntity<String> handleNestedRuntimeException(NestedRuntimeException exception)
+    {
+        Throwable mostSpecificCause = exception.getMostSpecificCause();
+        if (mostSpecificCause instanceof ConstraintViolationException)
+        {
+            return handleConstraintViolationException((ConstraintViolationException) mostSpecificCause);
+        }
+        if (mostSpecificCause instanceof IllegalArgumentException)
+        {
+            IllegalArgumentException illegalArgumentException = (IllegalArgumentException) mostSpecificCause;
+            return handleBadRequestException(new BadRequestException(illegalArgumentException));
+        }
+        return handleException(exception);
+    }
 
     private ResponseEntity<String> handleApiException(ApiException exception)
     {

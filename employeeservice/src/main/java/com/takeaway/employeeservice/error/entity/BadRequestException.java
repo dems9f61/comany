@@ -14,6 +14,11 @@ public class BadRequestException extends ApiException
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
 
+    public BadRequestException(Throwable cause)
+    {
+        super(cause, HttpStatus.BAD_REQUEST);
+    }
+
     public BadRequestException(String message)
     {
         super(message, HttpStatus.BAD_REQUEST);
