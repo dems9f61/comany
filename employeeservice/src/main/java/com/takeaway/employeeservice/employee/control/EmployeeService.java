@@ -11,6 +11,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
 
@@ -26,6 +27,7 @@ import static com.takeaway.employeeservice.employee.control.EmployeeServiceExcep
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
+@Validated
 @Service
 class EmployeeService implements EmployeeServiceCapable
 {

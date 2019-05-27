@@ -115,7 +115,7 @@ public class EmployeeController
                     message = "") })
     @PatchMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
+    void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
     {
         LOGGER.info("Updating an employee by the uuid {} and {}", uuid, updateEmployeeRequest);
         try
