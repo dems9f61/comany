@@ -1,12 +1,14 @@
 package com.takeaway.employeeservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.takeaway.employeeservice.aop.DatabaseEntryTrackingAspect;
 import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
 import com.takeaway.employeeservice.employee.boundary.dto.CreateEmployeeRequestTestFactory;
 import com.takeaway.employeeservice.employee.boundary.dto.UpdateEmployeeRequestTestFactory;
 import com.takeaway.employeeservice.employee.control.EmployeeEventPublisherCapable;
 import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * <p/>
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = { EmployeeServiceApplication.class })
+@SpringBootTest(webEnvironment = RANDOM_PORT,
+        classes = { EmployeeServiceApplication.class })
 public abstract class IntegrationTestSuite
 {
     // =========================== Class Variables ===========================
@@ -46,6 +49,9 @@ public abstract class IntegrationTestSuite
     @Autowired
     protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
 
+    @Autowired
+    protected DatabaseEntryTrackingAspect databaseEntryTrackingAspect;
+
     @SpyBean
     protected EmployeeEventPublisherCapable employeeEventPublisher;
 
@@ -64,6 +70,11 @@ public abstract class IntegrationTestSuite
                    .employeeDeleted(any());
         doNothing().when(employeeEventPublisher)
                    .employeeUpdated(any());
+    }
+
+    @AfterEach
+    void tearDown(){
+        databaseEntryTrackingAspect.cleanDatabase();
     }
 
     // =================  protected/package local  Methods ===================
