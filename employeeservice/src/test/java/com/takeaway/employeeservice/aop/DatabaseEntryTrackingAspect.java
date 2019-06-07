@@ -41,6 +41,7 @@ public class DatabaseEntryTrackingAspect
 
     public void cleanDatabase()
     {
+        LOGGER.info("Cleaning up the test database");
         employeeRepositoryTestHelper.cleanDatabase(savedEmployees);
         departmentRepositoryTestHelper.cleanDatabase(savedDepartments);
     }
@@ -51,16 +52,18 @@ public class DatabaseEntryTrackingAspect
             returning = "savedEmployee")
     void afterCompletingEmployeeSave(Employee savedEmployee)
     {
-        LOGGER.info("Tracking test employee '{}'", savedEmployee);
-        savedEmployees.add(savedEmployee.getUuid());
+        String employeeUuid = savedEmployee.getUuid();
+        LOGGER.info("Tracking test employee '{}'", employeeUuid);
+        savedEmployees.add(employeeUuid);
     }
 
     @AfterReturning(value = "com.takeaway.employeeservice.aop.DatabaseEntryJoinPointConfig.saveDepartmentExecution()",
             returning = "savedDepartment")
     void afterCompletingDepartmentSave(Department savedDepartment)
     {
-        LOGGER.info("Tracking test department '{}'", savedDepartment);
-        savedDepartments.add(savedDepartment.getId());
+        long departmentId = savedDepartment.getId();
+        LOGGER.info("Tracking test department '{}'", departmentId);
+        savedDepartments.add(departmentId);
     }
 
     // ===========================  private  Methods  ========================
