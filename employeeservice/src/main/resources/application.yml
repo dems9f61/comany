@@ -33,5 +33,5 @@ logging:
 server.port: 8081
 
 amqp:
-  exchange-name: employee-exchange
-  routing-key: employee-message
+  exchange-name: employee.exchange
+  routing-key: employee.message

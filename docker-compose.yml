@@ -4,7 +4,7 @@ services:
   # RabbitMQ
   #####################################
   rabbitmq:
-    image: rabbitmq:alpine
+    image: rabbitmq:management-alpine
     container_name: rabbitmq
     restart: always
     ports:
@@ -15,11 +15,6 @@ services:
       RABBITMQ_DEFAULT_PASS: "rabbitmq"
       RABBITMQ_ERLANG_COOKIE: "secret_cookie"
       RABBITMQ_DEFAULT_VHOST: "/"
-    healthcheck:
-      test: ["CMD", "rabbitmqctl", "status" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   #####################################
   # Databases
@@ -34,11 +29,6 @@ services:
       POSTGRES_DB: employeeservice
     ports:
     - "5432:5432"
-    healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "employeeservice", "-U", "user" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   event_service_db:
     image: mongo:latest

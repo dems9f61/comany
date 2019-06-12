@@ -14,7 +14,6 @@ import org.springframework.amqp.rabbit.retry.RepublishMessageRecoverer;
 import org.springframework.amqp.support.converter.ClassMapper;
 import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +21,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -39,16 +40,26 @@ public class MessagingConfig
 {
     // =========================== Class Variables ===========================
 
-    private static final String ERROR_QUEUE_NAME = "errorQueue";
+    private static final String ERROR = "error";
 
-    private static final String ERROR_EXCHANGE_NAME = "errorExchange";
-
-    private static final String ERROR_ROUTING_KEY = "error";
+    private static final String DEAD_LETTER = "deadLetter";
 
     // =============================  Variables  =============================
 
     @NotBlank
     private String exchangeName;
+
+    @NotBlank
+    private String queueName;
+
+    @NotBlank
+    private String routingKey;
+
+    @Min(value = 1)
+    private int concurrentConsumers;
+
+    @Max(value = 20)
+    private int maxConcurrentConsumers;
 
     private final ConnectionFactory cachingConnectionFactory;
 
@@ -78,23 +89,10 @@ public class MessagingConfig
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(converter);
+        factory.setConcurrentConsumers(concurrentConsumers);
+        factory.setMaxConcurrentConsumers(maxConcurrentConsumers);
         factory.setAdviceChain(retryOperationsInterceptor);
         return factory;
-    }
-
-    @Primary
-    @Bean
-    public MethodInterceptor interceptor(RabbitTemplate rabbitTemplate, @Qualifier(ERROR_QUEUE_NAME) Queue errorQueue)
-    {
-
-        ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-        backOffPolicy.setInitialInterval(1000);
-
-        return RetryInterceptorBuilder.stateless()
-                                      .backOffPolicy(backOffPolicy)
-                                      .maxAttempts(3)
-                                      .recoverer(new RepublishMessageRecoverer(rabbitTemplate, errorQueue.getName(), ERROR_ROUTING_KEY))
-                                      .build();
     }
 
     @Bean
@@ -105,24 +103,98 @@ public class MessagingConfig
         return rabbitAdmin;
     }
 
-    @Bean(name = ERROR_EXCHANGE_NAME)
-    public Exchange errorExchange()
+    @Primary
+    @Bean
+    public MethodInterceptor interceptor(RabbitTemplate rabbitTemplate)
     {
-        return new DirectExchange(ERROR_ROUTING_KEY);
-    }
+        ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+        backOffPolicy.setInitialInterval(1000);
 
-    @Bean(name = ERROR_QUEUE_NAME)
-    public Queue errorQueue()
-    {
-        return new Queue(ERROR_ROUTING_KEY, true);
+        return RetryInterceptorBuilder.stateless()
+                                      .backOffPolicy(backOffPolicy)
+                                      .maxAttempts(3)
+                                      .recoverer(new RepublishMessageRecoverer(rabbitTemplate, errorQueue().getName(), routingKey))
+                                      .build();
     }
 
     @Bean
-    public Binding errorBinding(@Qualifier(ERROR_EXCHANGE_NAME) Exchange exchange, @Qualifier(ERROR_QUEUE_NAME) Queue queue)
+    public Exchange exchange()
     {
-        return BindingBuilder.bind(queue)
-                             .to(exchange)
-                             .with(ERROR_ROUTING_KEY)
+        DirectExchange deadLetterExchange = new DirectExchange(exchangeName, true, false);
+        deadLetterExchange.setAdminsThatShouldDeclare(admin());
+        return deadLetterExchange;
+    }
+
+    @Bean
+    public Exchange deadLetterExchange()
+    {
+        DirectExchange deadLetterExchange = new DirectExchange(exchangeName + "." + DEAD_LETTER, true, false);
+        deadLetterExchange.setAdminsThatShouldDeclare(admin());
+        return deadLetterExchange;
+    }
+
+    @Bean
+    public Exchange errorExchange()
+    {
+        DirectExchange errorExchange = new DirectExchange(exchangeName + "." + ERROR, true, false);
+        errorExchange.setAdminsThatShouldDeclare(admin());
+        return errorExchange;
+    }
+
+    @Bean
+    public Queue queue()
+    {
+        Queue queue = QueueBuilder.durable(queueName)
+                                  .withArgument("x-message-ttl", 10000)
+                                  .withArgument("x-dead-letter-exchange", exchangeName + "." + DEAD_LETTER)
+                                  .withArgument("x-dead-letter-routing-key", routingKey)
+                                  .build();
+        queue.setAdminsThatShouldDeclare(admin());
+        return queue;
+    }
+
+    @Bean
+    public Queue deadLetterQueue()
+    {
+        Queue queue = QueueBuilder.durable(queueName + "." + DEAD_LETTER)
+                                  .build();
+        queue.setAdminsThatShouldDeclare(admin());
+        return queue;
+    }
+
+    @Bean
+    public Queue errorQueue()
+    {
+        Queue queue = QueueBuilder.durable(queueName + "." + ERROR)
+                                  .build();
+        queue.setAdminsThatShouldDeclare(admin());
+        return queue;
+    }
+
+    @Bean
+    public Binding queueBinding()
+    {
+        return BindingBuilder.bind(queue())
+                             .to(exchange())
+                             .with(routingKey)
+                             .noargs();
+    }
+
+    @Bean
+    public Binding queueBindingDlx()
+    {
+        return BindingBuilder.bind(deadLetterQueue())
+                             .to(deadLetterExchange())
+                             .with(routingKey)
+                             .noargs();
+    }
+
+    @Bean
+    public Binding queueBindingError()
+    {
+        return BindingBuilder.bind(errorQueue())
+                             .to(errorExchange())
+                             .with(routingKey)
                              .noargs();
     }
 

@@ -3,9 +3,6 @@ package com.takeaway.eventservice.messaging;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.Exchange;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -29,13 +26,11 @@ public class EmployeeMessageReceiver
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "${amqp.queue-name}", durable = "true"),
-                                             exchange = @Exchange(value = "${amqp.exchange-name}"),
-                                             key = "${amqp.routing-key}"))
-    public void receiveEmployeeMessage(@NonNull EmployeeMessage message)
+    @RabbitListener(queues = "${amqp.queue-name}")
+    public void receiveEmployeeMessage(@NonNull EmployeeMessage employeeMessage)
     {
-        LOGGER.info("###### Received Message on employee ##### {}", message);
-        eventPublisher.publishEvent(new EmployeeEvent(message.getEmployee(), message.getEventType()));
+        LOGGER.info("###### Received Message on employee ##### {}", employeeMessage);
+        eventPublisher.publishEvent(new EmployeeEvent(employeeMessage.getEmployee(), employeeMessage.getEventType()));
     }
 
     // =================  protected/package local  Methods ===================

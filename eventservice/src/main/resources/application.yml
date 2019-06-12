@@ -25,9 +25,11 @@ logging:
 server.port: 8083
 
 amqp:
-  exchange-name: employee-exchange
-  queue-name: employee-message
-  routing-key: employee-message
+  exchange-name: employee.exchange
+  routing-key: employee.message
+  queue-name: employee.queue
+  concurrent-consumers: 2
+  max-concurrent-consumers: 20
 
 config:
   async-enabled: true

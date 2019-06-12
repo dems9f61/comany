@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.validation.annotation.Validated;
 
@@ -47,12 +48,11 @@ public class MessagingConfig
     @Bean
     @Primary
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
-                                         RetryTemplate retryTemplate,
                                          Jackson2JsonMessageConverter messageConverter,
                                          MessagePostProcessor messagePostProcessor)
     {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setRetryTemplate(retryTemplate);
+        template.setRetryTemplate(retryTemplate());
         template.setExchange(exchangeName);
         template.setMessageConverter(messageConverter);
         template.setBeforePublishPostProcessors(messagePostProcessor);
@@ -73,11 +73,17 @@ public class MessagingConfig
     public RetryTemplate retryTemplate()
     {
         RetryTemplate retryTemplate = new RetryTemplate();
+
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
+        retryPolicy.setMaxAttempts(5);
+        retryTemplate.setRetryPolicy(retryPolicy);
+
         ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
         backOffPolicy.setInitialInterval(500);
         backOffPolicy.setMultiplier(10.0);
         backOffPolicy.setMaxInterval(10000);
         retryTemplate.setBackOffPolicy(backOffPolicy);
+
         return retryTemplate;
     }
 
