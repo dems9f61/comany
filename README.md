@@ -44,7 +44,7 @@ in Docker containers (instead of in-memory database).
 
 ## The databases 
 The employee-service manages employee and department entities which are in relation with each other. Because of that, I decided to go for a relational database and I chose [postgreSQL](https://www.postgresql.org/).
-The event-service on the other hand manage only event entities, which are in relation with no entity. Thus I decided to go for a document-oriented database and I picked [mongoDB](https://www.mongodb.com/).     
+The event-service on the other hand manages only event entities, which are in relation with no entity. Thus I decided to go for a document-oriented database and I picked [mongoDB](https://www.mongodb.com/).     
 
 ## The message broker
 Both the employee- and the event-services share messages over a queue provider through [rabbitmq](https://www.rabbitmq.com/).
