@@ -1,8 +1,9 @@
-package com.takeaway.eventservice.messaging;
+package com.takeaway.eventservice.employeeevent.messaging;
 
-import com.takeaway.eventservice.messaging.dto.Employee;
-import com.takeaway.eventservice.messaging.dto.EmployeeTestFactory;
-import com.takeaway.eventservice.messaging.dto.EventType;
+import com.takeaway.eventservice.employeeevent.messaging.dto.EmployeeTestFactory;
+import com.takeaway.eventservice.employeeevent.messaging.entity.Employee;
+import com.takeaway.eventservice.employeeevent.messaging.entity.EmployeeMessage;
+import com.takeaway.eventservice.employeeevent.messaging.entity.EventType;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -10,21 +11,20 @@ import java.util.Random;
 /**
  * User: StMinko
  * Date: 21.03.2019
- * Time: 11:45
+ * Time: 12:20
  * <p/>
  */
 @Component
-public class EmployeeEventTestFactory
+public class EmployeeMessageTestFactory
 {
-
-    public EmployeeEvent createDefault()
+    public EmployeeMessage createDefault()
     {
         return builder().create();
     }
 
-    public EmployeeEventTestFactory.Builder builder()
+    public Builder builder()
     {
-        return new Builder();
+        return new EmployeeMessageTestFactory.Builder();
     }
 
     public static class Builder
@@ -43,21 +43,21 @@ public class EmployeeEventTestFactory
             eventType = values[random.nextInt(values.length)];
         }
 
-        public Builder employee(Employee employee)
+        public EmployeeMessageTestFactory.Builder employee(Employee employee)
         {
             this.employee = employee;
             return this;
         }
 
-        public Builder eventType(EventType eventType)
+        public EmployeeMessageTestFactory.Builder eventType(EventType eventType)
         {
             this.eventType = eventType;
             return this;
         }
 
-        public EmployeeEvent create()
+        public EmployeeMessage create()
         {
-            return new EmployeeEvent(employee, eventType);
+            return new EmployeeMessage(eventType, employee);
         }
     }
 }

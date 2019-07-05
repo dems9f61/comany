@@ -1,8 +1,6 @@
-package com.takeaway.eventservice.messaging;
+package com.takeaway.eventservice.employeeevent.messaging.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.takeaway.eventservice.messaging.dto.Employee;
-import com.takeaway.eventservice.messaging.dto.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

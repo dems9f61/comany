@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.messaging.dto;
+package com.takeaway.eventservice.employeeevent.messaging.entity;
 
 /**
  * User: StMinko

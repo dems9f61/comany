@@ -1,10 +1,9 @@
-package com.takeaway.eventservice.employeeevent.boundary.dto;
+package com.takeaway.eventservice.employeeevent.management.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.takeaway.eventservice.employeeevent.entity.PersistentEmployeeEvent;
-import com.takeaway.eventservice.messaging.dto.EventType;
+import com.takeaway.eventservice.employeeevent.messaging.entity.EventType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

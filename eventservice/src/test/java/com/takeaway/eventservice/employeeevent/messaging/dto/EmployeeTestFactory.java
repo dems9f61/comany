@@ -1,5 +1,7 @@
-package com.takeaway.eventservice.messaging.dto;
+package com.takeaway.eventservice.employeeevent.messaging.dto;
 
+import com.takeaway.eventservice.employeeevent.messaging.entity.Department;
+import com.takeaway.eventservice.employeeevent.messaging.entity.Employee;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;

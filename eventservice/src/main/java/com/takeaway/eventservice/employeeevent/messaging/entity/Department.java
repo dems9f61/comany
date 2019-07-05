@@ -1,11 +1,10 @@
-package com.takeaway.eventservice.messaging.dto;
+package com.takeaway.eventservice.employeeevent.messaging.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * User: StMinko
@@ -16,36 +15,19 @@ import java.util.Date;
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Employee implements Serializable
+public class Department implements Serializable
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    private String uuid;
+    private long id;
 
-    private String emailAddress;
-
-    private FullName fullName = new FullName();
-
-    private Date birthday;
-
-    private Department department;
+    private String departmentName;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
-
-    @Data
-    @ToString
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class FullName implements Serializable
-    {
-        private String firstName;
-
-        private String lastName;
-    }
-
     // ============================  End of class  ===========================
 }

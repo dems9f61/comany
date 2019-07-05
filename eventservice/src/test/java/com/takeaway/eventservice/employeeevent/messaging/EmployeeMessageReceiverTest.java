@@ -1,6 +1,9 @@
-package com.takeaway.eventservice.messaging;
+package com.takeaway.eventservice.employeeevent.messaging;
 
 import com.takeaway.eventservice.UnitTestSuite;
+import com.takeaway.eventservice.employeeevent.messaging.boundary.EmployeeMessageReceiver;
+import com.takeaway.eventservice.employeeevent.messaging.entity.EmployeeEvent;
+import com.takeaway.eventservice.employeeevent.messaging.entity.EmployeeMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

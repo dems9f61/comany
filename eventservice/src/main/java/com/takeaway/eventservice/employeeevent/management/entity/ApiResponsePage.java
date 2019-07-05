@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.employeeevent.boundary.dto;
+package com.takeaway.eventservice.employeeevent.management.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

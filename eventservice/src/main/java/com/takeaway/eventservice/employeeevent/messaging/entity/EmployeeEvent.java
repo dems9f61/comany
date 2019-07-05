@@ -1,7 +1,5 @@
-package com.takeaway.eventservice.messaging;
+package com.takeaway.eventservice.employeeevent.messaging.entity;
 
-import com.takeaway.eventservice.messaging.dto.Employee;
-import com.takeaway.eventservice.messaging.dto.EventType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -28,7 +26,7 @@ public class EmployeeEvent extends ApplicationEvent
 
     // ============================  Constructors  ===========================
 
-    EmployeeEvent(@NonNull Employee employee, @NonNull EventType eventType)
+    public EmployeeEvent(@NonNull Employee employee, @NonNull EventType eventType)
     {
         super(employee);
         this.employee = employee;

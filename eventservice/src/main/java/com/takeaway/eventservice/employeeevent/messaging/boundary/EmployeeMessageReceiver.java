@@ -1,5 +1,7 @@
-package com.takeaway.eventservice.messaging;
+package com.takeaway.eventservice.employeeevent.messaging.boundary;
 
+import com.takeaway.eventservice.employeeevent.messaging.entity.EmployeeEvent;
+import com.takeaway.eventservice.employeeevent.messaging.entity.EmployeeMessage;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
