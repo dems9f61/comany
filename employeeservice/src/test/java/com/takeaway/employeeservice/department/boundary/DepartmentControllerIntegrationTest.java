@@ -1,7 +1,7 @@
 package com.takeaway.employeeservice.department.boundary;
 
 import com.takeaway.employeeservice.IntegrationTestSuite;
-import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequest;
+import com.takeaway.employeeservice.department.entity.DepartmentRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

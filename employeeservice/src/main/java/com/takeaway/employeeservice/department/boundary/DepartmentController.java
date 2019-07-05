@@ -1,13 +1,13 @@
 package com.takeaway.employeeservice.department.boundary;
 
 import com.takeaway.employeeservice.ApiVersions;
-import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequest;
-import com.takeaway.employeeservice.department.boundary.dto.DepartmentResponse;
 import com.takeaway.employeeservice.department.control.DepartmentParameter;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.control.DepartmentServiceException;
 import com.takeaway.employeeservice.department.entity.Department;
-import com.takeaway.employeeservice.error.entity.BadRequestException;
+import com.takeaway.employeeservice.department.entity.DepartmentRequest;
+import com.takeaway.employeeservice.department.entity.DepartmentResponse;
+import com.takeaway.employeeservice.springintegationsupport.entity.BadRequestException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

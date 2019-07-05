@@ -1,7 +1,7 @@
 package com.takeaway.eventservice;
 
-import com.takeaway.eventservice.messaging.EmployeeEventTestFactory;
-import com.takeaway.eventservice.messaging.EmployeeMessageTestFactory;
+import com.takeaway.eventservice.employeeevent.messaging.EmployeeEventTestFactory;
+import com.takeaway.eventservice.employeeevent.messaging.EmployeeMessageTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

@@ -1,16 +1,16 @@
 package com.takeaway.employeeservice.employee.boundary;
 
 import com.takeaway.employeeservice.UnitTestSuite;
-import com.takeaway.employeeservice.employee.boundary.dto.CreateEmployeeRequest;
-import com.takeaway.employeeservice.employee.boundary.dto.EmployeeRequest;
-import com.takeaway.employeeservice.employee.boundary.dto.UpdateEmployeeRequest;
 import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceCapable;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceException;
+import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.Employee;
-import com.takeaway.employeeservice.error.entity.BadRequestException;
-import com.takeaway.employeeservice.error.entity.InternalServerErrorException;
-import com.takeaway.employeeservice.error.entity.ResourceNotFoundException;
+import com.takeaway.employeeservice.employee.entity.EmployeeRequest;
+import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
+import com.takeaway.employeeservice.springintegationsupport.entity.BadRequestException;
+import com.takeaway.employeeservice.springintegationsupport.entity.InternalServerErrorException;
+import com.takeaway.employeeservice.springintegationsupport.entity.ResourceNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

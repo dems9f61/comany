@@ -1,12 +1,12 @@
 package com.takeaway.employeeservice.resttest;
 
 import com.takeaway.employeeservice.department.boundary.DepartmentController;
-import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequest;
-import com.takeaway.employeeservice.department.boundary.dto.DepartmentResponse;
+import com.takeaway.employeeservice.department.entity.DepartmentRequest;
+import com.takeaway.employeeservice.department.entity.DepartmentResponse;
 import com.takeaway.employeeservice.employee.boundary.EmployeeController;
-import com.takeaway.employeeservice.employee.boundary.dto.CreateEmployeeRequest;
-import com.takeaway.employeeservice.employee.boundary.dto.EmployeeResponse;
-import com.takeaway.employeeservice.employee.boundary.dto.UpdateEmployeeRequest;
+import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
+import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
+import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

@@ -1,17 +1,17 @@
 package com.takeaway.employeeservice.employee.boundary;
 
 import com.takeaway.employeeservice.ApiVersions;
-import com.takeaway.employeeservice.employee.boundary.dto.CreateEmployeeRequest;
-import com.takeaway.employeeservice.employee.boundary.dto.EmployeeResponse;
-import com.takeaway.employeeservice.employee.boundary.dto.UpdateEmployeeRequest;
 import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceCapable;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceException;
+import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.Employee;
-import com.takeaway.employeeservice.error.entity.ApiException;
-import com.takeaway.employeeservice.error.entity.BadRequestException;
-import com.takeaway.employeeservice.error.entity.InternalServerErrorException;
-import com.takeaway.employeeservice.error.entity.ResourceNotFoundException;
+import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
+import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
+import com.takeaway.employeeservice.springintegationsupport.entity.ApiException;
+import com.takeaway.employeeservice.springintegationsupport.entity.BadRequestException;
+import com.takeaway.employeeservice.springintegationsupport.entity.InternalServerErrorException;
+import com.takeaway.employeeservice.springintegationsupport.entity.ResourceNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

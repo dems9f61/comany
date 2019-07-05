@@ -1,6 +1,7 @@
 package com.takeaway.employeeservice.employee.boundary.dto;
 
 import com.takeaway.employeeservice.AbstractTestFactory;
+import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 

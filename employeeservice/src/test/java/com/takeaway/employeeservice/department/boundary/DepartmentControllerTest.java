@@ -1,12 +1,12 @@
 package com.takeaway.employeeservice.department.boundary;
 
 import com.takeaway.employeeservice.UnitTestSuite;
-import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequest;
-import com.takeaway.employeeservice.department.boundary.dto.DepartmentResponse;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.control.DepartmentServiceException;
 import com.takeaway.employeeservice.department.entity.Department;
-import com.takeaway.employeeservice.error.entity.BadRequestException;
+import com.takeaway.employeeservice.department.entity.DepartmentRequest;
+import com.takeaway.employeeservice.department.entity.DepartmentResponse;
+import com.takeaway.employeeservice.springintegationsupport.entity.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
