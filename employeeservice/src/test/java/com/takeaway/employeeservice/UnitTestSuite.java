@@ -1,10 +1,10 @@
 package com.takeaway.employeeservice;
 
-import com.takeaway.employeeservice.department.boundary.dto.DepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.entity.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
 import com.takeaway.employeeservice.department.entity.DepartmentTestFactory;
-import com.takeaway.employeeservice.employee.boundary.dto.CreateEmployeeRequestTestFactory;
-import com.takeaway.employeeservice.employee.boundary.dto.UpdateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequestTestFactory;
 import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
 import com.takeaway.employeeservice.employee.entity.EmployeeTestFactory;
 import org.junit.jupiter.api.BeforeEach;

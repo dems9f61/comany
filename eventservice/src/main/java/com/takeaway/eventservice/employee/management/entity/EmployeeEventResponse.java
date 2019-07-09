@@ -1,65 +1,73 @@
-package com.takeaway.employeeservice.employee.entity;
+package com.takeaway.eventservice.employee.management.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.takeaway.eventservice.employee.messaging.entity.EventType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
  * User: StMinko
- * Date: 19.03.2019
- * Time: 23:31
+ * Date: 20.03.2019
+ * Time: 20:15
  * <p/>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @ToString
 @EqualsAndHashCode
-public class CreateEmployeeRequest implements EmployeeRequest
+@NoArgsConstructor
+public class EmployeeEventResponse
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
+    @ApiModelProperty(example = "EMPLOYEE_CREATED")
+    private EventType eventType;
+
+    @ApiModelProperty(example = "6a225af8-e783-4e60-a5d0-418830330eab")
+    private String uuid;
+
     @ApiModelProperty(example = "stephan.minko@nba.com")
-    private final String emailAddress;
+    private String emailAddress;
 
     @ApiModelProperty(example = "Stéphan")
-    private final String firstName;
+    private String firstName;
 
     @ApiModelProperty(example = "Minko")
-    private final String lastName;
+    private String lastName;
 
-    @ApiModelProperty(example = "1980-06-13")
+    @ApiModelProperty(example = "1980-03-23")
     @JsonDeserialize(using = JsonDateDeSerializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
-    private final Date birthday;
+    private Date birthday;
 
     @ApiModelProperty(example = "Java Development")
-    private final String departmentName;
+    private String departmentName;
 
+    @ApiModelProperty(example = "2019-05-09T12:27:05.549Z")
+    private Instant createdAt;
     // ============================  Constructors  ===========================
 
-    @JsonCreator
-    public CreateEmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
-                          @JsonProperty(value = "firstName") String firstName,
-                          @JsonProperty(value = "lastName") String lastName,
-                          @JsonProperty(value = "birthday") Date birthday,
-                          @JsonProperty(value = "departmentName", required = true) String departmentName)
+    public EmployeeEventResponse(PersistentEmployeeEvent employeeEvent)
     {
-        this.emailAddress = emailAddress;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthday = birthday;
-        this.departmentName = departmentName;
+        this.eventType = employeeEvent.getEventType();
+        this.uuid = employeeEvent.getUuid();
+        this.emailAddress = employeeEvent.getEmailAddress();
+        this.firstName = employeeEvent.getFirstName();
+        this.lastName = employeeEvent.getLastName();
+        this.birthday = employeeEvent.getBirthday();
+        this.departmentName = employeeEvent.getDepartmentName();
+        this.createdAt = employeeEvent.getCreatedAt();
     }
 
     // ===========================  public  Methods  =========================

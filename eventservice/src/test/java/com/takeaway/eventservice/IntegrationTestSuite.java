@@ -1,11 +1,11 @@
 package com.takeaway.eventservice;
 
-import com.takeaway.eventservice.employeeevent.messaging.EmployeeEventTestFactory;
-import com.takeaway.eventservice.employeeevent.messaging.EmployeeMessageTestFactory;
-import com.takeaway.eventservice.employeeevent.messaging.boundary.EmployeeMessageReceiver;
-import com.takeaway.eventservice.employeeevent.messaging.dto.EmployeeTestFactory;
-import com.takeaway.eventservice.employeeevent.messaging.entity.Employee;
-import com.takeaway.eventservice.employeeevent.messaging.entity.EmployeeMessage;
+import com.takeaway.eventservice.employee.messaging.EmployeeEventTestFactory;
+import com.takeaway.eventservice.employee.messaging.EmployeeMessageTestFactory;
+import com.takeaway.eventservice.employee.messaging.boundary.EmployeeMessageReceiver;
+import com.takeaway.eventservice.employee.messaging.dto.EmployeeTestFactory;
+import com.takeaway.eventservice.employee.messaging.entity.Employee;
+import com.takeaway.eventservice.employee.messaging.entity.EmployeeMessage;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;

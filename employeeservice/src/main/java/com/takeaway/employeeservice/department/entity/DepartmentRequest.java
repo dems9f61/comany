@@ -33,7 +33,7 @@ public class DepartmentRequest
     // ============================  Constructors  ===========================
 
     @JsonCreator
-    DepartmentRequest(@JsonProperty(value = "departmentName", required = true) String departmentName)
+    public DepartmentRequest(@JsonProperty(value = "departmentName", required = true) String departmentName)
     {
         this.departmentName = departmentName;
     }
