@@ -1,9 +1,9 @@
-package com.takeaway.eventservice.employee.management.boundary;
+package com.takeaway.eventservice.employee.crud_management.boundary;
 
 import com.takeaway.eventservice.ApiVersions;
-import com.takeaway.eventservice.employee.management.control.EmployeeEventService;
-import com.takeaway.eventservice.employee.management.entity.ApiResponsePage;
-import com.takeaway.eventservice.employee.management.entity.EmployeeEventResponse;
+import com.takeaway.eventservice.employee.crud_management.control.EmployeeEventService;
+import com.takeaway.eventservice.employee.crud_management.entity.ApiResponsePage;
+import com.takeaway.eventservice.employee.crud_management.entity.EmployeeEventResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

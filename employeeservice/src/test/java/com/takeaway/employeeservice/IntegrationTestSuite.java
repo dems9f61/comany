@@ -1,13 +1,13 @@
 package com.takeaway.employeeservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.takeaway.employeeservice.aop.DatabaseEntryTrackingAspect;
-import com.takeaway.employeeservice.department.entity.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
-import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequestTestFactory;
-import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.department.entity.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.employee.control.EmployeeEventPublisherCapable;
 import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
+import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.helper.DatabaseCleaner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +50,7 @@ public abstract class IntegrationTestSuite
     protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
 
     @Autowired
-    protected DatabaseEntryTrackingAspect databaseEntryTrackingAspect;
+    protected DatabaseCleaner databaseCleaner;
 
     @SpyBean
     protected EmployeeEventPublisherCapable employeeEventPublisher;
@@ -74,7 +74,7 @@ public abstract class IntegrationTestSuite
 
     @AfterEach
     void tearDown(){
-        databaseEntryTrackingAspect.cleanDatabase();
+        databaseCleaner.cleanDatabases();
     }
 
     // =================  protected/package local  Methods ===================

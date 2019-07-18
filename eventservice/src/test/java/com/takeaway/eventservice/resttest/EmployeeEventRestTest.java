@@ -1,9 +1,9 @@
 package com.takeaway.eventservice.resttest;
 
 import com.takeaway.eventservice.RestTestSuite;
-import com.takeaway.eventservice.employee.management.boundary.EmployeeEventController;
-import com.takeaway.eventservice.employee.management.entity.ApiResponsePage;
-import com.takeaway.eventservice.employee.management.entity.EmployeeEventResponse;
+import com.takeaway.eventservice.employee.crud_management.boundary.EmployeeEventController;
+import com.takeaway.eventservice.employee.crud_management.entity.ApiResponsePage;
+import com.takeaway.eventservice.employee.crud_management.entity.EmployeeEventResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

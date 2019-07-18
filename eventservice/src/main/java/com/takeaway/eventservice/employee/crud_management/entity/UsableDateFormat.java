@@ -1,10 +1,10 @@
-package com.takeaway.eventservice.employee.management.entity;
+package com.takeaway.eventservice.employee.crud_management.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import static com.takeaway.eventservice.employee.management.entity.UsableDateFormat.Constants.DEFAULT_DATE_FORMAT;
+import static com.takeaway.eventservice.employee.crud_management.entity.UsableDateFormat.Constants.DEFAULT_DATE_FORMAT;
 
 /**
  * User: StMinko

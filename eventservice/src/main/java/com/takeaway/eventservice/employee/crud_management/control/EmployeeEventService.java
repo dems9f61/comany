@@ -1,6 +1,6 @@
-package com.takeaway.eventservice.employee.management.control;
+package com.takeaway.eventservice.employee.crud_management.control;
 
-import com.takeaway.eventservice.employee.management.entity.PersistentEmployeeEvent;
+import com.takeaway.eventservice.employee.crud_management.entity.PersistentEmployeeEvent;
 import com.takeaway.eventservice.employee.messaging.entity.Employee;
 import com.takeaway.eventservice.employee.messaging.entity.EmployeeEvent;
 import lombok.NonNull;

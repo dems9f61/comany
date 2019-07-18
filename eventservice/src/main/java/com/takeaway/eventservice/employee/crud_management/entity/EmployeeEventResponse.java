@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.employee.management.entity;
+package com.takeaway.eventservice.employee.crud_management.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

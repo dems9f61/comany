@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.employee.management.boundary;
+package com.takeaway.eventservice.employee.crud_management.boundary;
 
 import com.takeaway.eventservice.IntegrationTestSuite;
 import org.apache.commons.lang3.RandomUtils;

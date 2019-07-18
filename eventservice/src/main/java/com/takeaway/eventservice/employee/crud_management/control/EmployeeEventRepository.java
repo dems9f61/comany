@@ -1,6 +1,6 @@
-package com.takeaway.eventservice.employee.management.control;
+package com.takeaway.eventservice.employee.crud_management.control;
 
-import com.takeaway.eventservice.employee.management.entity.PersistentEmployeeEvent;
+import com.takeaway.eventservice.employee.crud_management.entity.PersistentEmployeeEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

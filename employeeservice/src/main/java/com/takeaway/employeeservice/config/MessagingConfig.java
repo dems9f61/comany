@@ -53,7 +53,6 @@ public class MessagingConfig
     {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
         template.setRetryTemplate(retryTemplate());
-        template.setExchange(exchangeName);
         template.setMessageConverter(messageConverter);
         template.setBeforePublishPostProcessors(messagePostProcessor);
         return template;

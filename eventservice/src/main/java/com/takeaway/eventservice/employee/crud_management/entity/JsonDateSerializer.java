@@ -1,30 +1,31 @@
-package com.takeaway.employeeservice.aop;
+package com.takeaway.eventservice.employee.crud_management.entity;
 
-import org.aspectj.lang.annotation.Pointcut;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * User: StMinko
- * Date: 07.06.2019
- * Time: 11:55
+ * Date: 20.03.2019
+ * Time: 00:15
  * <p/>
  */
-final class DatabaseEntryJoinPointConfig
+public class JsonDateSerializer extends JsonSerializer<Date>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    @Pointcut("execution(* com.takeaway.employeeservice.employee.control.*.save(..))")
-    public void saveEmployeeExecution()
+    @Override
+    public void serialize(Date value, JsonGenerator jsonGenerator, SerializerProvider provider) throws IOException
     {
-        //Since it's only purpose is to serve to pointcut, there is no need for any implementation here
-    }
-
-    @Pointcut("execution(* com.takeaway.employeeservice.department.control.*.save(..))")
-    public void saveDepartmentExecution()
-    {
-        //Since it's only purpose is to serve to pointcut, there is no need for any implementation here
+        String string = new SimpleDateFormat(UsableDateFormat.DEFAULT.getDateFormat()).format(value);
+        jsonGenerator.writeString(string);
     }
 
     // =================  protected/package local  Methods ===================
