@@ -26,7 +26,7 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pwd
-      POSTGRES_DB: employeeservice
+      POSTGRES_DB: employee
     ports:
     - "5432:5432"
 
@@ -37,6 +37,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: user
       MONGO_INITDB_ROOT_PASSWORD: pwd
-      MONGO_INITDB_DATABASE: eventservice
+      MONGO_INITDB_DATABASE: employeeevent
     ports:
     - "27017:27017"
