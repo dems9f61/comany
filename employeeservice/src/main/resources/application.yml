@@ -1,26 +1,31 @@
+spring.profiles.active: ${mode:LOCAL}
+server.port: 8081
+
 spring:
-  application.name: employeeservice
+  banner:
+    location: classpath:/banner.txt
+  application.name: employee-service
   output.ansi.enabled: ALWAYS
   jpa:
+    open-in-view: false
     hibernate:
-      ddl-auto: update
-    show-sql: true
-    generate-ddl: true
+      ddl-auto: ${database.hibernate-mode:update}
+    show-sql: false
+    generate-ddl: false
     properties:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
   datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/employeeservice
-    username: user
-    password: pwd
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.dbname}
+    username: ${database.username}
+    password: ${database.password}
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: rabbitmq
-    password: rabbitmq
+    host: ${rabbitMQ.username}
+    port: ${rabbitMQ.port}
+    username: ${rabbitMQ.username}
+    password: ${rabbitMQ.password}
 
 logging:
   level:
@@ -29,9 +34,34 @@ logging:
     # Hibernat SQL Debug output on local profile - want to see the SQL
     #org.hibernate.sql: DEBUG
     #org.hibernate.SQL: DEBUG
-
-server.port: 8081
-
 amqp:
   exchange-name: employee.exchange
   routing-key: employee.message
+
+---
+spring.profiles: LOCAL
+database:
+  host: localhost
+  port: 5432
+  username: user
+  password: pwd
+  dbname: employee
+
+rabbitMQ:
+  host: localhost
+  port: 5672
+  username: rabbitmq
+  password: rabbitmq
+
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+    de.nexnet: DEBUG
+---
+spring.profiles: LOCAL_HIBERNATE
+spring.profiles.include: LOCAL
+
+database:
+  dbname: employee_hibernate
+  hibernate-mode: create #alternatively: create-drop
