@@ -22,13 +22,15 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"employees", "version"})
 @Entity
 @Table(name = "DEPARTMENTS")
+@SequenceGenerator(name = "department_sequence",
+        allocationSize = 1, sequenceName = "department_sequence")
 public class Department
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_sequence")
     private long id;
 
     @Column(name = "DEPARTMENT_NAME",
