@@ -3,7 +3,7 @@ server.port: 8081
 
 spring:
   liquibase:
-    changeLog: classpath:db/employee-master-changelog.xml
+    change-log: classpath:db/employee-master-changelog.xml
   banner:
     location: classpath:/banner.txt
   application.name: employee-service
@@ -68,7 +68,7 @@ spring.profiles: LOCAL_HIBERNATE
 spring.profiles.include: LOCAL
 spring:
   liquibase:
-#    enabled: false
+    enabled: false
 database:
   dbname: employee_hibernate
   hibernate-mode: create #alternatively: create-drop

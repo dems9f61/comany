@@ -1,0 +1,21 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="CreateEmployeeTable" author="Stéphan.Minko">
+        <sql>
+            create table data.employees
+            (
+            uuid varchar(255) not null constraint employees_pkey primary key,
+            birthday date,
+            email_address varchar(255) constraint uk_email_address unique,
+            first_name varchar(255),
+            last_name varchar(255),
+            version bigint not null,
+            department_id bigint not null constraint fk_department_id references data.departments
+            );
+            alter table data.employees owner to "user";
+        </sql>
+    </changeSet>
+</databaseChangeLog>
