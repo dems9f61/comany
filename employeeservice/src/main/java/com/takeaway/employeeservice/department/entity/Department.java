@@ -21,7 +21,7 @@ import java.util.Set;
 @ToString(exclude = "employees")
 @EqualsAndHashCode(exclude = {"employees", "version"})
 @Entity
-@Table(name = "DEPARTMENTS")
+@Table(name = "DEPARTMENTS", catalog = "data")
 @SequenceGenerator(name = "department_sequence",
         allocationSize = 1, sequenceName = "department_sequence")
 public class Department

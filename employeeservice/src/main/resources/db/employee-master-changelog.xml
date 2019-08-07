@@ -5,7 +5,7 @@
     <!-- Create the Data Schema -->
     <include file="changelog/01-create_schemas.xml" relativeToChangelogFile="true"/>
     <!-- Set the search path -->
-    <include file="changelog/02-set_search_path.xml" relativeToChangelogFile="true"/>
+<!--    <include file="changelog/02-set_search_path.xml" relativeToChangelogFile="true"/>-->
     <!-- Create the Department Table -->
     <include file="changelog/03-create_department_table.xml" relativeToChangelogFile="true"/>
     <!-- Create the Employee Table -->

@@ -19,7 +19,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode(exclude = {"version"})
 @Entity
-@Table(name = "EMPLOYEES")
+@Table(name = "EMPLOYEES", catalog = "data")
 public class Employee
 {
     // =========================== Class Variables ===========================
