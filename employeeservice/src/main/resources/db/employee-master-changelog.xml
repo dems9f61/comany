@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <!-- Create the Data Schema -->
-    <include file="changelog/01-create_schemas.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/01-create_schemas_and_extension.xml" relativeToChangelogFile="true"/>
     <!-- Create the Department Table -->
     <include file="changelog/02-create_department_table.xml" relativeToChangelogFile="true"/>
     <!-- Create the Employee Table -->
