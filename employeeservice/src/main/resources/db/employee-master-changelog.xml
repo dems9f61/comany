@@ -1,0 +1,13 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!-- Create the Data Schema -->
+    <include file="changelog/01-create_schemas.xml" relativeToChangelogFile="true"/>
+    <!-- Set the search path -->
+    <include file="changelog/02-set_search_path.xml" relativeToChangelogFile="true"/>
+    <!-- Create the Department Table -->
+    <include file="changelog/03-create_department_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the Employee Table -->
+    <include file="changelog/03-create_employee_table.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

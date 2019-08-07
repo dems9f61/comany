@@ -12,6 +12,7 @@ buildscript {
         swaggerUiVersion = '2.9.2'
         httpClientVesion = '4.5.8'
         postgreVersion = '42.2.5'
+        liquibaseVersion = '3.7.0'
 	}
 	repositories {
 		mavenCentral()
@@ -51,9 +52,11 @@ dependencies {
     
     implementation("org.projectlombok:lombok:${lombokVersion}")
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: "${httpClientVesion}"
-
+    implementation group: 'org.liquibase', name: 'liquibase-core', version: "${liquibaseVersion}"
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: "${swaggerUiVersion}"
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: "${springfoxVersion}"
+    
+  
 
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'

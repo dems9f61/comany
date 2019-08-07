@@ -2,6 +2,8 @@ spring.profiles.active: ${mode:LOCAL}
 server.port: 8081
 
 spring:
+  liquibase:
+    changeLog: classpath:db/employee-master-changelog.xml
   banner:
     location: classpath:/banner.txt
   application.name: employee-service
@@ -9,7 +11,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: ${database.hibernate-mode:update}
+      ddl-auto: ${database.hibernate-mode:validate}
     show-sql: false
     generate-ddl: false
     properties:
@@ -31,6 +33,7 @@ logging:
   level:
     root: INFO
     org.spring: DEBUG
+
     # Hibernat SQL Debug output on local profile - want to see the SQL
     #org.hibernate.sql: DEBUG
     #org.hibernate.SQL: DEBUG
@@ -53,6 +56,8 @@ rabbitMQ:
   username: rabbitmq
   password: rabbitmq
 
+
+
 logging:
   level:
     root: INFO
@@ -61,7 +66,9 @@ logging:
 ---
 spring.profiles: LOCAL_HIBERNATE
 spring.profiles.include: LOCAL
-
+spring:
+  liquibase:
+#    enabled: false
 database:
   dbname: employee_hibernate
   hibernate-mode: create #alternatively: create-drop
