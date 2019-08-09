@@ -1,7 +1,7 @@
 # PROJECT: Employee- & Event-Services
 
 # Goal
-The purpose of this project is the implementation of two microservices: ***empoyee-service*** and ***event-service***.
+The purpose of this project is the implementation of two microservices: ***employee-service*** and ***event-service***.
 
 ### *employee-service* 
 As its name suggests, this service is responsible for handling the employees of a company. The application must expose a REST API. It should contain endpoints to:
