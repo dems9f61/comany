@@ -4,10 +4,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet id="CreateDepartmentTable" author="Stéphan.Minko">
         <sql>
-            CREATE SEQUENCE department_sequence;
+            CREATE SEQUENCE data.department_sequence;
             create table data.departments
             (
-            id bigint not null DEFAULT NEXTVAL ('department_sequence') constraint departments_pkey primary key ,
+            id bigint not null DEFAULT NEXTVAL ('data.department_sequence') constraint departments_pkey primary key ,
             department_name varchar(50) not null constraint uk_department_name unique,
             version bigint not null
             );

@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="CreateEmployeeHistoryTable" author="Stéphan.Minko">
+        <sql>
+            create table if not exists history.employees_history
+            (
+            uuid varchar(255) not null,
+            rev bigint not null constraint fk_employee_history_to_audit_trail references history.audit_trail,
+            revtype smallint,
+            birthday date,
+            email_address varchar(255),
+            first_name varchar(255),
+            last_name varchar(255),
+            department_id bigint,
+            constraint employees_history_pkey primary key (uuid, rev)
+            );
+
+            alter table history.employees_history owner to "user";
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

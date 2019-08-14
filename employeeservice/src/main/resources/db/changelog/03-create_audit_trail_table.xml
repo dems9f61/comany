@@ -1,0 +1,17 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="CreateAuditTrailTable" author="Stéphan.Minko">
+        <sql>
+            CREATE SEQUENCE history.audit_trail_sequence;
+            create table if not exists history.audit_trail
+            (
+            	revision_number bigint not null DEFAULT NEXTVAL ('history.audit_trail_sequence') constraint audit_trail_pkey primary key,
+            	revision_timestamp bigint
+            );
+            alter table history.audit_trail owner to "user";
+        </sql>
+    </changeSet>
+</databaseChangeLog>

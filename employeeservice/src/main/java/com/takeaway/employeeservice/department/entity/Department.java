@@ -3,6 +3,7 @@ package com.takeaway.employeeservice.department.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.takeaway.employeeservice.employee.entity.Employee;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,15 +16,15 @@ import java.util.Set;
  * Time: 11:30
  * <p/>
  */
-
+@Audited
 @Getter
 @Setter
 @ToString(exclude = "employees")
 @EqualsAndHashCode(exclude = {"employees", "version"})
 @Entity
-@Table(name = "DEPARTMENTS", catalog = "data")
+@Table(name = "DEPARTMENTS", schema = "data")
 @SequenceGenerator(name = "department_sequence",
-        allocationSize = 1, sequenceName = "department_sequence")
+        allocationSize = 1, sequenceName = "department_sequence", schema = "data")
 public class Department
 {
     // =========================== Class Variables ===========================

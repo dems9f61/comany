@@ -3,6 +3,7 @@ package com.takeaway.employeeservice.employee.control;
 import com.takeaway.employeeservice.employee.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.LockModeType;
@@ -16,7 +17,7 @@ import java.util.Optional;
  * <p/>
  */
 @Repository
-interface EmployeeRepository extends JpaRepository<Employee, String>
+interface EmployeeRepository extends JpaRepository<Employee, String>, RevisionRepository<Employee, String, Long>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================

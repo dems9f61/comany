@@ -15,6 +15,12 @@ spring:
     show-sql: false
     generate-ddl: false
     properties:
+      org:
+        hibernate:
+          envers:
+            store_data_at_delete: true
+            default_schema: history
+            audit_table_suffix: _history
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
@@ -33,10 +39,9 @@ logging:
   level:
     root: INFO
     org.spring: DEBUG
-
-    # Hibernat SQL Debug output on local profile - want to see the SQL
-    #org.hibernate.sql: DEBUG
-    #org.hibernate.SQL: DEBUG
+#     Hibernat SQL Debug output on local profile - want to see the SQL
+    org.hibernate.sql: DEBUG
+    org.hibernate.SQL: DEBUG
 amqp:
   exchange-name: employee.exchange
   routing-key: employee.message
@@ -55,8 +60,6 @@ rabbitMQ:
   port: 5672
   username: rabbitmq
   password: rabbitmq
-
-
 
 logging:
   level:

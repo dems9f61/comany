@@ -3,6 +3,7 @@ package com.takeaway.employeeservice.employee.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.takeaway.employeeservice.department.entity.Department;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,12 +15,13 @@ import java.util.UUID;
  * Time: 00:37
  * <p/>
  */
+@Audited
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode(exclude = {"version"})
 @Entity
-@Table(name = "EMPLOYEES", catalog = "data")
+@Table(name = "EMPLOYEES", schema = "data")
 public class Employee
 {
     // =========================== Class Variables ===========================
