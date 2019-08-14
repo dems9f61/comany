@@ -7,7 +7,7 @@
         <sql>
             create table if not exists history.employees_history
             (
-            uuid varchar(255) not null,
+            id uuid not null,
             rev bigint not null constraint fk_employee_history_to_audit_trail references history.audit_trail,
             revtype smallint,
             birthday date,
@@ -15,7 +15,9 @@
             first_name varchar(255),
             last_name varchar(255),
             department_id bigint,
-            constraint employees_history_pkey primary key (uuid, rev)
+            created_at timestamp,
+            modified_at timestamp,
+            constraint employees_history_pkey primary key (id, rev)
             );
 
             alter table history.employees_history owner to "user";

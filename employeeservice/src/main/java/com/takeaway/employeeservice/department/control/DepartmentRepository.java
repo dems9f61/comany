@@ -2,11 +2,9 @@ package com.takeaway.employeeservice.department.control;
 
 import com.takeaway.employeeservice.department.entity.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.LockModeType;
 import java.util.List;
 
 /**
@@ -21,7 +19,6 @@ interface DepartmentRepository extends JpaRepository<Department, Long>, Revision
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
 
-    @Lock(value = LockModeType.PESSIMISTIC_READ)
     List<Department> findByDepartmentName(String departmentName);
 
     // ============================  Inner Classes  ==========================

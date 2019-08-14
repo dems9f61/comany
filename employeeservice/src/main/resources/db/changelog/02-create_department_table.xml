@@ -9,6 +9,8 @@
             (
             id bigint not null DEFAULT NEXTVAL ('data.department_sequence') constraint departments_pkey primary key ,
             department_name varchar(50) not null constraint uk_department_name unique,
+            created_at timestamp not null,
+            modified_at timestamp not null,
             version bigint not null
             );
 

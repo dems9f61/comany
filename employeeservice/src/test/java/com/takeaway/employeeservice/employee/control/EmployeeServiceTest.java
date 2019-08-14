@@ -53,10 +53,9 @@ class EmployeeServiceTest extends UnitTestSuite
         void givenUnknownUuid_whenDelete_thenReturnNothing()
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             doReturn(Optional.empty()).when(employeeRepository)
-                                      .findByUuid(any());
+                                      .findById(any());
 
             // Act / Assert
             assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.deleteByUuid(uuid));
@@ -67,11 +66,10 @@ class EmployeeServiceTest extends UnitTestSuite
         void givenValidUuid_whenDelete_thenSucceed() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             Employee employee = employeeTestFactory.createDefault();
             doReturn(Optional.of(employee)).when(employeeRepository)
-                                           .findByUuid(uuid);
+                                           .findById(uuid);
             doNothing().when(employeeRepository)
                        .deleteById(any());
             doNothing().when(employeeEventPublisher)
@@ -95,11 +93,10 @@ class EmployeeServiceTest extends UnitTestSuite
         void giveValidParameters_whenUpdate_thenSucceed() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             Employee employee = employeeTestFactory.createDefault();
             doReturn(Optional.of(employee)).when(employeeRepository)
-                                           .findByUuid(uuid);
+                                           .findById(uuid);
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
             Department department = departmentTestFactory.createDefault();
 
@@ -121,10 +118,9 @@ class EmployeeServiceTest extends UnitTestSuite
         void givenUnknownUuid_whenUpdate_thenThrowException()
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             doReturn(Optional.empty()).when(employeeRepository)
-                                      .findByUuid(uuid);
+                                      .findById(uuid);
 
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
 
@@ -137,11 +133,10 @@ class EmployeeServiceTest extends UnitTestSuite
         void givenUnknownDepartment_whenUpdate_thenThrowException() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             Employee employee = employeeTestFactory.createDefault();
             doReturn(Optional.of(employee)).when(employeeRepository)
-                                           .findByUuid(uuid);
+                                           .findById(uuid);
 
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
             doThrow(DepartmentServiceException.class).when(departmentService)
@@ -180,7 +175,6 @@ class EmployeeServiceTest extends UnitTestSuite
             // Assert
             verify(employeeRepository).save(assertArg(persisted -> {
                 assertThat(persisted.getBirthday()).isEqualTo(employeeParameter.getBirthday());
-                assertThat(persisted.getUuid()).isNotBlank();
                 assertThat(persisted.getDepartment()
                                     .getDepartmentName()).isEqualTo(department.getDepartmentName());
                 assertThat(persisted.getEmailAddress()).isEqualTo(employeeParameter.getEmailAddress());
@@ -224,7 +218,7 @@ class EmployeeServiceTest extends UnitTestSuite
     {
         return candidate -> {
             assertThat(candidate.getBirthday()).isEqualTo(employee.getBirthday());
-            assertThat(candidate.getUuid()).isEqualTo(employee.getUuid());
+            assertThat(candidate.getId()).isEqualTo(employee.getId());
             assertThat(candidate.getDepartment()
                                 .getId()).isEqualTo(employee.getDepartment()
                                                             .getId());

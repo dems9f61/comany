@@ -2,13 +2,11 @@ package com.takeaway.employeeservice.employee.control;
 
 import com.takeaway.employeeservice.employee.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.LockModeType;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 /**
  * User: StMinko
@@ -17,15 +15,11 @@ import java.util.Optional;
  * <p/>
  */
 @Repository
-interface EmployeeRepository extends JpaRepository<Employee, String>, RevisionRepository<Employee, String, Long>
+interface EmployeeRepository extends JpaRepository<Employee, UUID>, RevisionRepository<Employee, UUID, Long>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
-
-    @Lock(value = LockModeType.READ)
-    Optional<Employee> findByUuid(String uuid);
-
-    @Lock(value = LockModeType.READ)
+    
     List<Employee> findByEmailAddress(String emailAddress);
 
     // ============================  Inner Classes  ==========================

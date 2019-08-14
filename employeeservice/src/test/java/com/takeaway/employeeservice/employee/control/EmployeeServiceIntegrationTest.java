@@ -128,8 +128,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             }
 
             // Act
-            Optional<Employee> foundEmployee = employeeService.findByUuid(UUID.randomUUID()
-                                                                              .toString());
+            Optional<Employee> foundEmployee = employeeService.findByid(UUID.randomUUID());
             // Assert
             assertThat(foundEmployee).isEmpty();
         }
@@ -147,7 +146,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             Employee employee = employeeService.create(employeeParameter);
 
             // Act
-            Optional<Employee> foundEmployeeOpt = employeeService.findByUuid(employee.getUuid());
+            Optional<Employee> foundEmployeeOpt = employeeService.findByid(employee.getId());
 
             // Assert
             if (!foundEmployeeOpt.isPresent())
@@ -157,7 +156,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             else
             {
                 Employee foundEmployee = foundEmployeeOpt.get();
-                assertThat(foundEmployee.getUuid()).isEqualTo(employee.getUuid());
+                assertThat(foundEmployee.getId()).isEqualTo(employee.getId());
                 assertThat(foundEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
                 assertThat(foundEmployee.getFullName()).isEqualTo(employee.getFullName());
                 assertThat(foundEmployee.getDepartment()
@@ -191,8 +190,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             }
 
             // Act / Assert
-            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.deleteByUuid(UUID.randomUUID()
-                                                                                                                        .toString()));
+            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.deleteByUuid(UUID.randomUUID()));
         }
 
         @Test
@@ -206,14 +204,14 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                                                               .departmentName(departmentParameter.getDepartmentName())
                                                                               .create();
             Employee employee = employeeService.create(employeeParameter);
-            String uuid = employee.getUuid();
+            UUID uuid = employee.getId();
 
             // Act
             employeeService.deleteByUuid(uuid);
 
             // Assert
-            assertThat(employeeService.findByUuid(uuid)).isEmpty();
-            verify(employeeEventPublisher).employeeDeleted(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(uuid)));
+            assertThat(employeeService.findByid(uuid)).isEmpty();
+            verify(employeeEventPublisher).employeeDeleted(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(uuid)));
         }
     }
 
@@ -240,10 +238,10 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             departmentService.create(newDepartmentParameter);
 
             // Act
-            employeeService.update(employee.getUuid(), updateParameters);
+            employeeService.update(employee.getId(), updateParameters);
 
             // Assert
-            Optional<Employee> updated = employeeService.findByUuid(employee.getUuid());
+            Optional<Employee> updated = employeeService.findByid(employee.getId());
             if (!updated.isPresent())
             {
                 fail("Fail to retrieve the updated employee");
@@ -259,8 +257,8 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                 assertThat(updatedEmployee.getBirthday()).isEqualTo(updateParameters.getBirthday());
                 assertThat(updatedEmployee.getDepartment()
                                           .getDepartmentName()).isEqualTo(updateParameters.getDepartmentName());
-                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
-                        updatedEmployee.getUuid())));
+                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(
+                        updatedEmployee.getId())));
             }
         }
 
@@ -288,10 +286,10 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                                                              .create();
 
             // Act
-            employeeService.update(employee.getUuid(), updateParameters);
+            employeeService.update(employee.getId(), updateParameters);
 
             // Assert
-            Optional<Employee> updated = employeeService.findByUuid(employee.getUuid());
+            Optional<Employee> updated = employeeService.findByid(employee.getId());
             if (!updated.isPresent())
             {
                 fail("Fail to retrieve the updated employee");
@@ -307,8 +305,8 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                 assertThat(updatedEmployee.getDepartment()
                                           .getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
                 assertThat(updatedEmployee.getBirthday()).isEqualTo(newBirthDay);
-                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
-                        updatedEmployee.getUuid())));
+                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(
+                        updatedEmployee.getId())));
             }
         }
 
@@ -336,10 +334,10 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                                                              .create();
 
             // Act
-            employeeService.update(employee.getUuid(), updateParameters);
+            employeeService.update(employee.getId(), updateParameters);
 
             // Assert
-            Optional<Employee> updated = employeeService.findByUuid(employee.getUuid());
+            Optional<Employee> updated = employeeService.findByid(employee.getId());
             if (!updated.isPresent())
             {
                 fail("Fail to retrieve the updated employee");
@@ -356,8 +354,8 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                           .getDepartmentName()).isEqualTo(employee.getDepartment()
                                                                                   .getDepartmentName());
                 assertThat(updatedEmployee.getBirthday()).isEqualTo(employee.getBirthday());
-                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
-                        updatedEmployee.getUuid())));
+                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(
+                        updatedEmployee.getId())));
             }
         }
 
@@ -384,10 +382,10 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                                                              .create();
 
             // Act
-            employeeService.update(employee.getUuid(), updateParameters);
+            employeeService.update(employee.getId(), updateParameters);
 
             // Assert
-            Optional<Employee> updated = employeeService.findByUuid(employee.getUuid());
+            Optional<Employee> updated = employeeService.findByid(employee.getId());
             if (!updated.isPresent())
             {
                 fail("Fail to retrieve the updated employee");
@@ -404,8 +402,8 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                           .getDepartmentName()).isEqualTo(employee.getDepartment()
                                                                                   .getDepartmentName());
                 assertThat(updatedEmployee.getBirthday()).isEqualTo(employee.getBirthday());
-                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getUuid()).isEqualTo(
-                        updatedEmployee.getUuid())));
+                verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(
+                        updatedEmployee.getId())));
             }
         }
 
@@ -417,8 +415,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
 
             // Act / Assert
-            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(UUID.randomUUID()
-                                                                                                                  .toString(), employeeParameter));
+            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(UUID.randomUUID(), employeeParameter));
         }
 
         @Test
@@ -435,7 +432,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             EmployeeParameter updateParameters = employeeParameterTestFactory.createDefault();
 
             // Act / Assert
-            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(employee.getUuid(), updateParameters));
+            assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(employee.getId(), updateParameters));
         }
     }
 }

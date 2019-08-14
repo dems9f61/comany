@@ -53,7 +53,7 @@ class EmployeeRestTest extends RestTestSuite
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
             EmployeeResponse employeeResponse = responseEntity.getBody();
             assertThat(employeeResponse).isNotNull();
-            assertThat(employeeResponse.getUuid()).isNotBlank();
+            assertThat(employeeResponse.getUuid()).isNotNull();
             assertThat(employeeResponse.getDepartmentName()).isEqualTo(createEmployeeRequest.getDepartmentName());
             assertThat(employeeResponse.getEmailAddress()).isEqualTo(createEmployeeRequest.getEmailAddress());
             assertThat(employeeResponse.getFirstName()).isEqualTo(createEmployeeRequest.getFirstName());
@@ -86,7 +86,7 @@ class EmployeeRestTest extends RestTestSuite
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
             EmployeeResponse employeeResponse = responseEntity.getBody();
             assertThat(employeeResponse).isNotNull();
-            assertThat(employeeResponse.getUuid()).isNotBlank();
+            assertThat(employeeResponse.getUuid()).isNotNull();
             assertThat(employeeResponse.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
             assertThat(employeeResponse.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
             assertThat(employeeResponse.getFirstName()).isEqualTo(employeeRequest.getFirstName());
@@ -189,8 +189,7 @@ class EmployeeRestTest extends RestTestSuite
         void givenUnknownUuid_whenFindEmployeeByUuid_thenStatus404()
         {
             // Arrange
-            String wrongUuid = UUID.randomUUID()
-                                   .toString();
+            UUID wrongUuid = UUID.randomUUID();
 
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, wrongUuid),
@@ -213,7 +212,7 @@ class EmployeeRestTest extends RestTestSuite
                                                                                           .departmentName(departmentName)
                                                                                           .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(createEmployeeRequest);
-            String uuidToFind = persistedEmployee.getUuid();
+            UUID uuidToFind = persistedEmployee.getUuid();
 
             // Act
             ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
@@ -244,8 +243,7 @@ class EmployeeRestTest extends RestTestSuite
                                                                                           .departmentName(departmentName)
                                                                                           .create();
             HttpHeaders headers = defaultHttpHeaders();
-            String wrongUuid = UUID.randomUUID()
-                                   .toString();
+            UUID wrongUuid = UUID.randomUUID();
 
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, wrongUuid),
@@ -269,7 +267,7 @@ class EmployeeRestTest extends RestTestSuite
                                                                                     .departmentName(departmentName)
                                                                                     .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
-            String uuidToUpdate = persistedEmployee.getUuid();
+            UUID uuidToUpdate = persistedEmployee.getUuid();
             String unknownDepartmentName = RandomStringUtils.randomAlphabetic(32);
             UpdateEmployeeRequest updateRequest = updateEmployeeRequestTestFactory.builder()
                                                                                   .departmentName(unknownDepartmentName)
@@ -298,7 +296,7 @@ class EmployeeRestTest extends RestTestSuite
                                                                                     .departmentName(firstDepartmentName)
                                                                                     .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
-            String uuidToUpdate = persistedEmployee.getUuid();
+            UUID uuidToUpdate = persistedEmployee.getUuid();
 
             String secondDepartmentName = RandomStringUtils.randomAlphabetic(23);
             createAndPersistDepartment(secondDepartmentName);
@@ -339,7 +337,7 @@ class EmployeeRestTest extends RestTestSuite
                                                                                     .departmentName(departmentName)
                                                                                     .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
-            String uuidToUpdate = persistedEmployee.getUuid();
+            UUID uuidToUpdate = persistedEmployee.getUuid();
 
             LocalDate localDate = employeeParameterTestFactory.builder()
                                                               .generateRandomDate();
@@ -382,8 +380,7 @@ class EmployeeRestTest extends RestTestSuite
         void givenUnknownUuid_whenDeleteEmployeeByUuid_thenStatus404()
         {
             //Arrange
-            String wrongUuid = UUID.randomUUID()
-                                   .toString();
+            UUID wrongUuid = UUID.randomUUID();
 
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, wrongUuid),
@@ -406,7 +403,7 @@ class EmployeeRestTest extends RestTestSuite
                                                                                     .departmentName(departmentName)
                                                                                     .create();
             EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
-            String uuidToDelete = persistedEmployee.getUuid();
+            UUID uuidToDelete = persistedEmployee.getUuid();
 
             // Act
             ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
@@ -447,7 +444,7 @@ class EmployeeRestTest extends RestTestSuite
                                .getBody();
     }
 
-    private EmployeeResponse findPersistedEmployee(String uuidToFind)
+    private EmployeeResponse findPersistedEmployee(UUID uuidToFind)
     {
         ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, uuidToFind),
                                                                                     HttpMethod.GET,

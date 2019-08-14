@@ -11,6 +11,8 @@
 				rev bigint not null constraint fk_department_history_to_audit_trail references history.audit_trail,
 				revtype smallint,
 				department_name varchar(50),
+			    created_at timestamp,
+				modified_at timestamp,
 				constraint departments_history_pkey primary key (id, rev)
 			);
 

@@ -39,7 +39,7 @@ logging:
   level:
     root: INFO
     org.spring: DEBUG
-#     Hibernat SQL Debug output on local profile - want to see the SQL
+#     Hibernate SQL Debug output on local profile - want to see the SQL
     org.hibernate.sql: DEBUG
     org.hibernate.SQL: DEBUG
 amqp:

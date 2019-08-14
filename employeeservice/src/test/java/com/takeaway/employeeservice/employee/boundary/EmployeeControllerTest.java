@@ -53,8 +53,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnknownUuid_whenDelete_thenThrowNotFoundException() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             doThrow(new EmployeeServiceException(NOT_FOUND, "bla bla")).when(employeeService)
                                                                        .deleteByUuid(any());
 
@@ -67,8 +66,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnknownException_whenDelete_thenThrowInternalException() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             doThrow(new EmployeeServiceException(new Exception())).when(employeeService)
                                                                   .deleteByUuid(any());
 
@@ -81,8 +79,8 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenValidUuid_whenDelete_thenSucceed() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
+
             doNothing().when(employeeService)
                        .deleteByUuid(any());
 
@@ -103,10 +101,9 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnknownUuid_whenFindByUuid_thenThrowNotFoundException()
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             doReturn(Optional.empty()).when(employeeService)
-                                      .findByUuid(uuid);
+                                      .findByid(uuid);
 
             // Act / Assert
             assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(uuid));
@@ -117,17 +114,16 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenValidUuid_whenFindByUuid_thenSucceed()
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             Employee employee = employeeTestFactory.createDefault();
             doReturn(Optional.of(employee)).when(employeeService)
-                                           .findByUuid(any());
+                                           .findByid(any());
 
             // Act
             employeeController.findEmployee(uuid);
 
             // Assert
-            verify(employeeService).findByUuid(uuid);
+            verify(employeeService).findByid(uuid);
         }
     }
 
@@ -140,8 +136,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenValidRequest_whenUpdate_thenSucceed() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
             doNothing().when(employeeService)
                        .update(any(), any());
@@ -158,8 +153,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnderlyingNotFound_whenCreate_thenThrowNotFoundException() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(NOT_FOUND, "")).when(employeeService)
                                                                 .update(uuid, employeeRequest.toEmployerParameter());
@@ -173,8 +167,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnderlyingInvalidRequest_whenCreate_thenThrowBadRequestException() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(INVALID_REQUEST, "")).when(employeeService)
                                                                       .update(uuid, employeeRequest.toEmployerParameter());
@@ -188,8 +181,7 @@ class EmployeeControllerTest extends UnitTestSuite
         void givenUnderlyingInvalidGenericException_whenUpdate_thenThrowInternalServerErrorException() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
             doThrow(new EmployeeServiceException(new Exception())).when(employeeService)
                                                                   .update(uuid, employeeRequest.toEmployerParameter());

@@ -23,9 +23,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.HttpURLConnection;
+import java.util.UUID;
 
 /**
  * User: StMinko
@@ -68,7 +68,7 @@ public class EmployeeController
         try
         {
             Employee employee = employeeService.create(employeeParameter);
-            return new EmployeeResponse(employee.getUuid(),
+            return new EmployeeResponse(employee.getId(),
                                         employee.getEmailAddress(),
                                         employee.getFullName()
                                                 .getFirstName(),
@@ -90,13 +90,13 @@ public class EmployeeController
             @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,
                     message = "Could not find employee by the specified uuid!") })
     @ResponseStatus(HttpStatus.OK)
-    EmployeeResponse findEmployee(@NotBlank @PathVariable("uuid") String uuid)
+    EmployeeResponse findEmployee(@NotNull @PathVariable("uuid") UUID uuid)
     {
         LOGGER.info("Retrieving an employee by the uuid {}", uuid);
-        return employeeService.findByUuid(uuid)
+        return employeeService.findByid(uuid)
                               .map(employee -> {
                                   Employee.FullName fullName = employee.getFullName();
-                                  return new EmployeeResponse(employee.getUuid(),
+                                  return new EmployeeResponse(employee.getId(),
                                                               employee.getEmailAddress(),
                                                               fullName != null ? fullName.getFirstName() : null,
                                                               fullName != null ? fullName.getLastName() : null,
@@ -115,7 +115,7 @@ public class EmployeeController
                     message = "") })
     @PatchMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void updateEmployee(@NotBlank @PathVariable("uuid") String uuid, @Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
+    void updateEmployee(@NotNull @PathVariable("uuid") UUID uuid, @Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
     {
         LOGGER.info("Updating an employee by the uuid {} and {}", uuid, updateEmployeeRequest);
         try
@@ -134,7 +134,7 @@ public class EmployeeController
                     message = "Could not delete employee by the specified uuid!") })
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteEmployee(@NotBlank @PathVariable("uuid") String uuid)
+    void deleteEmployee(@NotNull @PathVariable("uuid") UUID uuid)
     {
         LOGGER.info("Deleting an employee by the uuid {}", uuid);
         try

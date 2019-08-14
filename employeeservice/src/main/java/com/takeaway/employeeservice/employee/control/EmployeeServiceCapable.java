@@ -4,6 +4,7 @@ import com.takeaway.employeeservice.employee.entity.Employee;
 import lombok.NonNull;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * User: StMinko
@@ -18,11 +19,11 @@ public interface EmployeeServiceCapable
 
     Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException;
 
-    void update(@NonNull String uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException;
+    void update(@NonNull UUID uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException;
 
-    Optional<Employee> findByUuid(@NonNull String uuid);
+    Optional<Employee> findByid(@NonNull UUID id);
 
-    void deleteByUuid(@NonNull String uuid) throws EmployeeServiceException;
+    void deleteByUuid(@NonNull UUID uuid) throws EmployeeServiceException;
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

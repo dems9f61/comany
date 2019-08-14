@@ -80,10 +80,10 @@ class EmployeeService implements EmployeeServiceCapable
     }
 
     @Transactional
-    public void update(@NonNull String uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
+    public void update(@NonNull UUID uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
     {
         LOGGER.info("Updating an employeeToUpdate {} with {} ", uuid, updateParameter);
-        Optional<Employee> optionalEmployee = findByUuid(uuid);
+        Optional<Employee> optionalEmployee = findByid(uuid);
         if (!optionalEmployee.isPresent())
         {
             throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid '%s' could not be found!", uuid));
@@ -101,17 +101,17 @@ class EmployeeService implements EmployeeServiceCapable
         }
     }
 
-    public Optional<Employee> findByUuid(@NonNull String uuid)
+    public Optional<Employee> findByid(@NonNull UUID uuid)
     {
         LOGGER.info("Finding an employee with {} ", uuid);
-        return employeeRepository.findByUuid(uuid);
+        return employeeRepository.findById(uuid);
     }
 
     @Transactional
-    public void deleteByUuid(@NonNull String uuid) throws EmployeeServiceException
+    public void deleteByUuid(@NonNull UUID uuid) throws EmployeeServiceException
     {
         LOGGER.info("Deleting an employee with {} ", uuid);
-        Optional<Employee> found = findByUuid(uuid);
+        Optional<Employee> found = findByid(uuid);
         if (found.isPresent())
         {
             Employee employee = found.get();

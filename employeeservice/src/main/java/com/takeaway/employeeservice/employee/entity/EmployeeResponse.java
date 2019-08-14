@@ -10,6 +10,7 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * User: StMinko
@@ -26,7 +27,7 @@ public class EmployeeResponse
     // =============================  Variables  =============================
 
     @ApiModelProperty(example = "6a225af8-e783-4e60-a5d0-418830330eab")
-    private final String uuid;
+    private final UUID uuid;
 
     @ApiModelProperty(example = "stephan.minko@nba.com")
     private final String emailAddress;
@@ -48,7 +49,7 @@ public class EmployeeResponse
 
     // ============================  Constructors  ===========================
 
-    public EmployeeResponse(@JsonProperty(value = "uuid", required = true) String uuid,
+    public EmployeeResponse(@JsonProperty(value = "uuid", required = true) UUID uuid,
                             @JsonProperty(value = "emailAddress") String emailAddress,
                             @JsonProperty(value = "firstName") String firstName,
                             @JsonProperty(value = "lastName") String lastName,

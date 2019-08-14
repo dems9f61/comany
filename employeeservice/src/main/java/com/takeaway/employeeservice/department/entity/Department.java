@@ -2,7 +2,12 @@ package com.takeaway.employeeservice.department.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.takeaway.employeeservice.employee.entity.Employee;
-import lombok.*;
+import com.takeaway.employeeservice.springintegationsupport.entity.AbstractEntity;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -17,22 +22,24 @@ import java.util.Set;
  * <p/>
  */
 @Audited
+@AuditOverride(forClass = AbstractEntity.class)
 @Getter
 @Setter
 @ToString(exclude = "employees")
-@EqualsAndHashCode(exclude = {"employees", "version"})
+@EqualsAndHashCode(exclude = {"employees"})
 @Entity
 @Table(name = "DEPARTMENTS", schema = "data")
 @SequenceGenerator(name = "department_sequence",
         allocationSize = 1, sequenceName = "department_sequence", schema = "data")
-public class Department
+public class Department extends AbstractEntity<Long>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
+    @Getter(onMethod = @__(@Override))
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_sequence")
-    private long id;
+    private Long id;
 
     @Column(name = "DEPARTMENT_NAME",
             length = 50,
@@ -45,11 +52,6 @@ public class Department
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Set<Employee> employees = new HashSet<>();
-
-    @Setter(value = AccessLevel.PRIVATE)
-    @Column(nullable = false)
-    @Version
-    private long version;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
