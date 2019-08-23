@@ -32,7 +32,7 @@ class DepartmentRestTest extends RestTestSuite
     {
         @Test
         @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is already used")
-        void givenAlreadyUsedName_whenCreateUser_thenStatus400()
+        void givenAlreadyUsedName_whenCreatDepartment_thenStatus400()
         {
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
@@ -53,7 +53,7 @@ class DepartmentRestTest extends RestTestSuite
 
         @Test
         @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is blank")
-        void givenBlankDepartmentName_whenCreateUser_thenStatus400()
+        void givenBlankDepartmentName_whenCreateDepartment_thenStatus400()
         {
             // Arrange
             DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
@@ -73,7 +73,7 @@ class DepartmentRestTest extends RestTestSuite
 
         @Test
         @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is null")
-        void givenNullDepartmentName_whenCreateUser_thenStatus400()
+        void givenNullDepartmentName_whenCreateDepartment_thenStatus400()
         {
             // Arrange
             DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
@@ -92,7 +92,7 @@ class DepartmentRestTest extends RestTestSuite
 
         @Test
         @DisplayName("POST: 'http://.../departments' returns CREATED if the specified name is valid")
-        void givenValidDepartmentName_whenCreateUser_thenStatus201()
+        void givenValidDepartmentName_whenCreateDepartment_thenStatus201()
         {
             // Arrange
             DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.createDefault();
