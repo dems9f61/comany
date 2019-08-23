@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * User: StMinko
@@ -21,7 +22,7 @@ public class Employee implements Serializable
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    private String uuid;
+    private UUID id;
 
     private String emailAddress;
 

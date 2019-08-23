@@ -61,7 +61,7 @@ class EmployeeEventServiceTest extends UnitTestSuite
                                                                                      .getFirstName());
                 assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName()
                                                                                     .getLastName());
-                assertThat(persistentEmployeeEvent.getUuid()).isEqualTo(employee.getUuid());
+                assertThat(persistentEmployeeEvent.getUuid()).isEqualTo(employee.getId());
                 assertThat(persistentEmployeeEvent.getEmailAddress()).isEqualTo(employee.getEmailAddress());
                 assertThat(persistentEmployeeEvent.getEventType()).isEqualTo(employeeEvent.getEventType());
                 assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(employee.getBirthday());
@@ -78,8 +78,7 @@ class EmployeeEventServiceTest extends UnitTestSuite
         void givenEmployeeVents_whenFindByUuid_thenInvokeRelyOnRepository()
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             Pageable mockPageable = mock(Pageable.class);
             int expectedPageNumber = RandomUtils.nextInt(0, 23);
             doReturn(expectedPageNumber).when(mockPageable).getPageNumber();

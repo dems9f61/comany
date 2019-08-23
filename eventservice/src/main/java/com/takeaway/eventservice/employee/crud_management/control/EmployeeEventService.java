@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
  * User: StMinko
  * Date: 20.03.2019
@@ -53,13 +55,13 @@ public class EmployeeEventService
             persistentEmployeeEvent.setFirstName(fullName.getFirstName());
             persistentEmployeeEvent.setLastName(fullName.getLastName());
         }
-        persistentEmployeeEvent.setUuid(employee.getUuid());
+        persistentEmployeeEvent.setUuid(employee.getId());
         persistentEmployeeEvent.setDepartmentName(employee.getDepartment()
                                                           .getDepartmentName());
         employeeEventRepository.save(persistentEmployeeEvent);
     }
 
-    public Page<PersistentEmployeeEvent> findByUuidOrderByCreatedAtAsc(@NonNull String uuid, Pageable pageable)
+    public Page<PersistentEmployeeEvent> findByUuidOrderByCreatedAtAsc(@NonNull UUID uuid, Pageable pageable)
     {
         PageRequest createdAtPageRequest = PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE, CREATED_AT_WITH_ASC_SORT);
         return employeeEventRepository.findByUuid(uuid, createdAtPageRequest);

@@ -48,7 +48,7 @@ public class EmployeeTestFactory
 
     public static class Builder
     {
-        private String uuid;
+        private UUID uuid;
 
         private String emailAddress;
 
@@ -62,7 +62,7 @@ public class EmployeeTestFactory
 
         Builder()
         {
-            this.uuid = UUID.randomUUID().toString();
+            this.uuid = UUID.randomUUID();
             this.emailAddress = generateRandomEmail();
             this.department = departmentTestFactory.createDefault();
             this.birthday = java.sql.Date.valueOf(generateRandomDate());
@@ -122,7 +122,7 @@ public class EmployeeTestFactory
         {
             Employee employee = new Employee();
             return employee.setBirthday(birthday)
-                           .setUuid(uuid)
+                           .setId(uuid)
                            .setDepartment(department)
                            .setEmailAddress(emailAddress)
                            .setFullName(fullName);

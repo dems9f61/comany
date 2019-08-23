@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * User: StMinko
@@ -34,7 +35,7 @@ public class EmployeeEventResponse
     private EventType eventType;
 
     @ApiModelProperty(example = "6a225af8-e783-4e60-a5d0-418830330eab")
-    private String uuid;
+    private UUID uuid;
 
     @ApiModelProperty(example = "stephan.minko@nba.com")
     private String emailAddress;

@@ -43,7 +43,7 @@ public final class ErrorInfo
         this.errorMessage = apiException.getLocalizedMessage();
         this.time = Instant.now();
         Throwable cause = apiException.getCause();
-        if (ConstraintViolationException.class.isAssignableFrom(cause.getClass()))
+        if (cause != null && ConstraintViolationException.class.isAssignableFrom(cause.getClass()))
         {
             ConstraintViolationException e = (ConstraintViolationException) cause;
             e.getConstraintViolations()

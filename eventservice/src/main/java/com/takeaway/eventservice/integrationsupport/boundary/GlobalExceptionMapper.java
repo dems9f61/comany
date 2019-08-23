@@ -1,9 +1,6 @@
 package com.takeaway.eventservice.integrationsupport.boundary;
 
-import com.takeaway.eventservice.integrationsupport.entity.ApiException;
-import com.takeaway.eventservice.integrationsupport.entity.BadRequestException;
-import com.takeaway.eventservice.integrationsupport.entity.ErrorInfo;
-import com.takeaway.eventservice.integrationsupport.entity.InternalServerErrorException;
+import com.takeaway.eventservice.integrationsupport.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +33,12 @@ public class GlobalExceptionMapper
         return handleApiException(httpServletRequest, new BadRequestException(exception));
     }
 
+    @Order(2)
+    @ExceptionHandler({ ResourceNotFoundException.class })
+    public ResponseEntity<ErrorInfo> handleResourceNotFoundException(HttpServletRequest httpServletRequest, ResourceNotFoundException resourceNotFoundException)
+    {
+        return handleApiException(httpServletRequest, resourceNotFoundException);
+    }
 
     @Order(1999)
     @ExceptionHandler(value = { Exception.class })

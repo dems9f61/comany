@@ -7,7 +7,6 @@ import com.takeaway.eventservice.employee.messaging.dto.EmployeeTestFactory;
 import com.takeaway.eventservice.employee.messaging.entity.Employee;
 import com.takeaway.eventservice.employee.messaging.entity.EmployeeMessage;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +14,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -47,7 +47,7 @@ public abstract class IntegrationTestSuite
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    public void receiveRandomMessageFor(String uuid)
+    public void receiveRandomMessageFor(UUID uuid)
     {
         receiveRandomMessageFor(uuid, 0);
     }
@@ -57,14 +57,11 @@ public abstract class IntegrationTestSuite
         receiveRandomMessageFor(null, 0);
     }
 
-    public void receiveRandomMessageFor(String uuid, int count)
+    public void receiveRandomMessageFor(UUID uuid, int count)
     {
         List<Employee> employees = employeeTestFactory.createManyDefault(count <= 0 ? RandomUtils.nextInt(30, 100) : count);
         employees.forEach(employee -> {
-            if (!StringUtils.isBlank(uuid))
-            {
-                employee.setUuid(uuid);
-            }
+            employee.setId(uuid);
             EmployeeMessage employeeMessage = employeeMessageTestFactory.builder()
                                                                         .employee(employee)
                                                                         .create();

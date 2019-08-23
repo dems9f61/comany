@@ -37,8 +37,7 @@ class EmployeeEventRestTest extends RestTestSuite
         void givenEmployeeVents_whenFindByUuid_thenStatus200AndAscSortedList()
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             receiveRandomMessageFor(uuid);
 
             // Act

@@ -4,6 +4,7 @@ import com.takeaway.eventservice.ApiVersions;
 import com.takeaway.eventservice.employee.crud_management.control.EmployeeEventService;
 import com.takeaway.eventservice.employee.crud_management.entity.ApiResponsePage;
 import com.takeaway.eventservice.employee.crud_management.entity.EmployeeEventResponse;
+import com.takeaway.eventservice.integrationsupport.entity.ResourceNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 /**
  * User: StMinko
@@ -28,7 +30,7 @@ import javax.validation.constraints.NotBlank;
 @RestController
 @Api(value = "Employee event service: Operations related to employee event service interface")
 @RequestMapping(value = EmployeeEventController.BASE_URI,
-                produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 @RequiredArgsConstructor
 public class EmployeeEventController
 {
@@ -46,11 +48,18 @@ public class EmployeeEventController
     @ApiOperation(value = "Retrieves all events related to an employee in ascending order")
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotBlank @PathVariable("uuid") String uuid, Pageable pageable)
+    ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("uuid") UUID uuid, Pageable pageable)
     {
         Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, pageable)
                                                                                  .map(EmployeeEventResponse::new);
-        return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
+        if (employeeEventResponses.isEmpty())
+        {
+            throw new ResourceNotFoundException(String.format("Could not find employee events by the specified uuid '%s'", uuid));
+        }
+        else
+        {
+            return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
+        }
     }
 
     // =================  protected/package local  Methods ===================

@@ -2,9 +2,8 @@ package com.takeaway.employeeservice.employee.control;
 
 import com.takeaway.employeeservice.config.MessagingConfig;
 import com.takeaway.employeeservice.employee.entity.Employee;
-import lombok.Data;
+import com.takeaway.employeeservice.employee.entity.EmployeeMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
@@ -21,15 +20,6 @@ import org.springframework.stereotype.Component;
 class EmployeeEventPublisher implements EmployeeEventPublisherCapable
 {
     // =========================== Class Variables ===========================
-    enum EventType
-    {
-        EMPLOYEE_CREATED,
-
-        EMPLOYEE_UPDATED,
-
-        EMPLOYEE_DELETED
-    }
-
     // =============================  Variables  =============================
 
     private final RabbitTemplate template;
@@ -43,7 +33,7 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
     {
         LOGGER.info("Sending creation message {}", createdEmployee);
         EmployeeMessage createdEmployeeMessage = new EmployeeMessage();
-        createdEmployeeMessage.setEventType(EventType.EMPLOYEE_CREATED);
+        createdEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_CREATED);
         createdEmployeeMessage.setEmployee(createdEmployee);
         template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), createdEmployeeMessage);
     }
@@ -53,7 +43,7 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
         LOGGER.info("Sending deletion message {}", deletedEmployee);
         EmployeeMessage deletedEmployeeMessage = new EmployeeMessage();
         deletedEmployeeMessage.setEmployee(deletedEmployee);
-        deletedEmployeeMessage.setEventType(EventType.EMPLOYEE_DELETED);
+        deletedEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_DELETED);
         template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), deletedEmployeeMessage);
     }
 
@@ -61,7 +51,7 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
     {
         LOGGER.info("Sending update message {}", updatedEmployee);
         EmployeeMessage updatedEmployeeMessage = new EmployeeMessage();
-        updatedEmployeeMessage.setEventType(EventType.EMPLOYEE_UPDATED);
+        updatedEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_UPDATED);
         updatedEmployeeMessage.setEmployee(updatedEmployee);
         template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), updatedEmployeeMessage);
     }
@@ -69,15 +59,6 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
-
-    @ToString
-    @Data
-    private static class EmployeeMessage
-    {
-        private EventType eventType;
-
-        private Employee  employee;
-    }
 
     // ============================  End of class  ===========================
 }

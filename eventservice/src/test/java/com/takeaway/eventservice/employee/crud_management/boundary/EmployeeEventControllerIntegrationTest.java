@@ -48,8 +48,7 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
         void givenEmployeeVents_whenFindByUuid_thenStatus200AndContent() throws Exception
         {
             // Arrange
-            String uuid = UUID.randomUUID()
-                              .toString();
+            UUID uuid = UUID.randomUUID();
             int expectedEventCount = RandomUtils.nextInt(10, 20);
             receiveRandomMessageFor(uuid, expectedEventCount);
 
@@ -64,21 +63,19 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
         }
 
         @Test
-        @DisplayName("GET: 'http://.../events/{uuid}' returns 400 for blank uuid ")
-        void givenBlankUuid_whenFindByUuid_thenStatus400() throws Exception
+        @DisplayName("GET: 'http://.../events/{uuid}' returns 404 for unknown uuid ")
+        void givenWrongUuid_whenFindByUuid_thenStatus404() throws Exception
         {
             // Arrange
-            String blankUuid = " ";
+            UUID wrongUuid = UUID.randomUUID();
             String uri = String.format("%s/{uuid}", EmployeeEventController.BASE_URI);
 
             // Act / Assert
-            mockMvc.perform(get(uri, blankUuid))
-                   .andExpect(status().isBadRequest())
-                   .andExpect(jsonPath("$.errorMessage", containsString("must not be blank")))
-                   .andExpect(jsonPath("$.time", notNullValue()))
-                   .andExpect(jsonPath("$.constraintViolations", notNullValue()))
-                   .andExpect(jsonPath("$.constraintViolations", hasSize(1)))
-                   .andExpect(jsonPath("$.httpStatus", is(400)));
+            mockMvc.perform(get(uri, wrongUuid))
+                   .andExpect(status().isNotFound())
+                   .andExpect(jsonPath("$.errorMessage",
+                                       containsString(String.format("Could not find employee events by the specified uuid '%s'", wrongUuid))))
+                   .andExpect(jsonPath("$.httpStatus", is(404)));
         }
     }
 

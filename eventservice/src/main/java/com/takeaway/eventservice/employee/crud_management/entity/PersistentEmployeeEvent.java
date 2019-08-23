@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * User: StMinko
@@ -33,7 +34,7 @@ public class PersistentEmployeeEvent
 
     private EventType eventType;
 
-    private String uuid;
+    private UUID uuid;
 
     private String emailAddress;
 

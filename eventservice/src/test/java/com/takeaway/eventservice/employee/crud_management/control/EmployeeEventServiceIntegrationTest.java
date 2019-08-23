@@ -37,8 +37,7 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
     void givenPublishedEmployeeEventsForAnyEmployee_whenFindAll_thenReturnDescendingOrderedList()
     {
         // Arrange
-        String uuid = UUID.randomUUID()
-                          .toString();
+        UUID uuid = UUID.randomUUID();
         int eventCount = RandomUtils.nextInt(50, 60);
         receiveRandomMessageFor(uuid, eventCount);
         PageRequest pageRequest = PageRequest.of(0, 10, null);
@@ -65,8 +64,7 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
         // Arrange
         int eventCount = RandomUtils.nextInt(10, 20);
         receiveRandomMessageFor(eventCount);
-        String unknownUuid = UUID.randomUUID()
-                                 .toString();
+        UUID unknownUuid = UUID.randomUUID();
         PageRequest pageRequest = PageRequest.of(0, eventCount, null);
 
         // Act
@@ -105,7 +103,7 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
         assertThat(persistentEmployeeEvent.getEmailAddress()).isEqualTo(employee.getEmailAddress());
         assertThat(persistentEmployeeEvent.getEventType()).isNotNull()
                                                           .isEqualTo(employeeEvent.getEventType());
-        assertThat(persistentEmployeeEvent.getUuid()).isEqualTo(employee.getUuid());
+        assertThat(persistentEmployeeEvent.getUuid()).isEqualTo(employee.getId());
         assertThat(persistentEmployeeEvent.getFirstName()).isEqualTo(employee.getFullName()
                                                                              .getFirstName());
         assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName()

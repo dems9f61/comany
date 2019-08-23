@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 /**
  * User: StMinko
  * Date: 20.03.2019
@@ -18,7 +20,7 @@ interface EmployeeEventRepository extends MongoRepository<PersistentEmployeeEven
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
 
-    Page<PersistentEmployeeEvent> findByUuid(String uuid, Pageable pageable);
+    Page<PersistentEmployeeEvent> findByUuid(UUID uuid, Pageable pageable);
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================
