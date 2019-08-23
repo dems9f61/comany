@@ -25,9 +25,9 @@ logging:
 server.port: 8083
 
 amqp:
-  exchange-name: employee.exchange
+  exchange-name: employee
   routing-key: employee.message
-  queue-name: employee.queue
+  queue-name: employee
   concurrent-consumers: 2
   max-concurrent-consumers: 20
 

@@ -120,7 +120,7 @@ public class MessagingConfig
     @Bean
     public Exchange exchange()
     {
-        DirectExchange deadLetterExchange = new DirectExchange(exchangeName, true, false);
+        TopicExchange deadLetterExchange = new TopicExchange(exchangeName, true, false);
         deadLetterExchange.setAdminsThatShouldDeclare(admin());
         return deadLetterExchange;
     }
