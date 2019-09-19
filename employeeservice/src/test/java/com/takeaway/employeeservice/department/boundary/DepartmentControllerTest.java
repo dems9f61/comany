@@ -6,7 +6,7 @@ import com.takeaway.employeeservice.department.control.DepartmentServiceExceptio
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.department.entity.DepartmentRequest;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
-import com.takeaway.employeeservice.springintegationsupport.entity.BadRequestException;
+import com.takeaway.employeeservice.integationsupport.entity.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

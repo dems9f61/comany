@@ -7,7 +7,7 @@ import com.takeaway.employeeservice.department.control.DepartmentServiceExceptio
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.department.entity.DepartmentRequest;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
-import com.takeaway.employeeservice.springintegationsupport.entity.BadRequestException;
+import com.takeaway.employeeservice.integationsupport.entity.BadRequestException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -51,6 +51,7 @@ public class DepartmentController
     @ResponseStatus(HttpStatus.CREATED)
     DepartmentResponse createDepartment(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
     {
+        LOGGER.info("Creating a department by the request [{}]", departmentRequest);
         DepartmentParameter createDepartmentParameter = departmentRequest.toDepartmentParameter();
         try
         {

@@ -1,4 +1,4 @@
-package com.takeaway.employeeservice.springintegationsupport.entity;
+package com.takeaway.employeeservice.integationsupport.entity;
 
 import lombok.AccessLevel;
 import lombok.Setter;

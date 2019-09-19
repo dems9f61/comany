@@ -31,7 +31,7 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
 
     public void employeeCreated(Employee createdEmployee)
     {
-        LOGGER.info("Sending creation message {}", createdEmployee);
+        LOGGER.info("Sending creation message [{}]", createdEmployee);
         EmployeeMessage createdEmployeeMessage = new EmployeeMessage();
         createdEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_CREATED);
         createdEmployeeMessage.setEmployee(createdEmployee);
@@ -49,7 +49,7 @@ class EmployeeEventPublisher implements EmployeeEventPublisherCapable
 
     public void employeeUpdated(Employee updatedEmployee)
     {
-        LOGGER.info("Sending update message {}", updatedEmployee);
+        LOGGER.info("Sending update message [{}]", updatedEmployee);
         EmployeeMessage updatedEmployeeMessage = new EmployeeMessage();
         updatedEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_UPDATED);
         updatedEmployeeMessage.setEmployee(updatedEmployee);

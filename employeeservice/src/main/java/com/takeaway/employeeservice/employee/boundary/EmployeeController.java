@@ -8,10 +8,10 @@ import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.Employee;
 import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
 import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
-import com.takeaway.employeeservice.springintegationsupport.entity.ApiException;
-import com.takeaway.employeeservice.springintegationsupport.entity.BadRequestException;
-import com.takeaway.employeeservice.springintegationsupport.entity.InternalServerErrorException;
-import com.takeaway.employeeservice.springintegationsupport.entity.ResourceNotFoundException;
+import com.takeaway.employeeservice.integationsupport.entity.ApiException;
+import com.takeaway.employeeservice.integationsupport.entity.BadRequestException;
+import com.takeaway.employeeservice.integationsupport.entity.InternalServerErrorException;
+import com.takeaway.employeeservice.integationsupport.entity.ResourceNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -63,7 +63,7 @@ public class EmployeeController
     @ResponseStatus(HttpStatus.CREATED)
     EmployeeResponse createEmployee(@RequestBody @NotNull @Valid CreateEmployeeRequest createEmployeeRequest)
     {
-        LOGGER.info("Creating an employee by the request {}", createEmployeeRequest);
+        LOGGER.info("Creating an employee by the request [{}]", createEmployeeRequest);
         EmployeeParameter employeeParameter = createEmployeeRequest.toEmployerParameter();
         try
         {
@@ -92,7 +92,7 @@ public class EmployeeController
     @ResponseStatus(HttpStatus.OK)
     EmployeeResponse findEmployee(@NotNull @PathVariable("uuid") UUID uuid)
     {
-        LOGGER.info("Retrieving an employee by the uuid {}", uuid);
+        LOGGER.info("Retrieving an employee by the uuid [{}]", uuid);
         return employeeService.findByid(uuid)
                               .map(employee -> {
                                   Employee.FullName fullName = employee.getFullName();
@@ -117,7 +117,7 @@ public class EmployeeController
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void updateEmployee(@NotNull @PathVariable("uuid") UUID uuid, @Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
     {
-        LOGGER.info("Updating an employee by the uuid {} and {}", uuid, updateEmployeeRequest);
+        LOGGER.info("Updating an employee by the uuid [{}] and request [{}]", uuid, updateEmployeeRequest);
         try
         {
             employeeService.update(uuid, updateEmployeeRequest.toEmployerParameter());
@@ -136,7 +136,7 @@ public class EmployeeController
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteEmployee(@NotNull @PathVariable("uuid") UUID uuid)
     {
-        LOGGER.info("Deleting an employee by the uuid {}", uuid);
+        LOGGER.info("Deleting an employee by the uuid [{}]", uuid);
         try
         {
             employeeService.deleteByUuid(uuid);

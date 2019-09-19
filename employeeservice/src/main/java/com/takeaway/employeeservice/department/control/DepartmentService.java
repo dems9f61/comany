@@ -33,7 +33,7 @@ class DepartmentService implements DepartmentServiceCapable
 
     public Optional<Department> findByDepartmentName(@NonNull String departmentName) throws DepartmentServiceException
     {
-        LOGGER.info("Finding by department name {}", departmentName);
+        LOGGER.info("Finding by department name [{}]", departmentName);
         List<Department> departments = departmentRepository.findByDepartmentName(departmentName);
         if (departments.size() > 1)
         {
@@ -52,7 +52,7 @@ class DepartmentService implements DepartmentServiceCapable
     @Transactional
     public Department create(@NonNull DepartmentParameter departmentParameter) throws DepartmentServiceException
     {
-        LOGGER.info("Creating a department with {} ", departmentParameter);
+        LOGGER.info("Creating a department with [{}] ", departmentParameter);
         String departmentName = departmentParameter.getDepartmentName();
 
         if (StringUtils.isBlank(departmentName))

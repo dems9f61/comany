@@ -40,8 +40,8 @@ logging:
     root: INFO
     org.spring: DEBUG
 #     Hibernate SQL Debug output on local profile - want to see the SQL
-    org.hibernate.sql: DEBUG
-    org.hibernate.SQL: DEBUG
+#    org.hibernate.sql: DEBUG
+#    org.hibernate.SQL: DEBUG
 amqp:
   exchange-name: employee
   routing-key: employee.message

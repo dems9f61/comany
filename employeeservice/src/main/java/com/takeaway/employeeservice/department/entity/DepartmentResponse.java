@@ -1,5 +1,6 @@
 package com.takeaway.employeeservice.department.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
@@ -20,13 +21,14 @@ public class DepartmentResponse
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
     @ApiModelProperty(example = "245")
-    private final long   id;
+    private final Long   id;
 
     @ApiModelProperty(example = "Human Resources (HR)")
     private final String departmentName;
 
     // ============================  Constructors  ===========================
 
+    @JsonCreator
     public DepartmentResponse(@JsonProperty(value = "id", required = true) long id,
                               @JsonProperty(value = "departmentName", required = true) String departmentName)
     {

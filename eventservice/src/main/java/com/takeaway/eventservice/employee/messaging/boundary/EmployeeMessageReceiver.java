@@ -31,7 +31,7 @@ public class EmployeeMessageReceiver
     @RabbitListener(queues = "${amqp.queue-name}")
     public void receiveEmployeeMessage(@NonNull EmployeeMessage employeeMessage)
     {
-        LOGGER.info("###### Received Message on employee ##### {}", employeeMessage);
+        LOGGER.info("###### Received Message on employee ##### [{}]", employeeMessage);
         eventPublisher.publishEvent(new EmployeeEvent(employeeMessage.getEmployee(), employeeMessage.getEventType()));
     }
 

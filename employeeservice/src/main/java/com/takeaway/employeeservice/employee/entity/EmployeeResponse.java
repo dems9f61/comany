@@ -1,5 +1,6 @@
 package com.takeaway.employeeservice.employee.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -49,6 +50,7 @@ public class EmployeeResponse
 
     // ============================  Constructors  ===========================
 
+    @JsonCreator
     public EmployeeResponse(@JsonProperty(value = "uuid", required = true) UUID uuid,
                             @JsonProperty(value = "emailAddress") String emailAddress,
                             @JsonProperty(value = "firstName") String firstName,

@@ -1,15 +1,16 @@
-package com.takeaway.employeeservice.springintegationsupport.boundary;
+package com.takeaway.employeeservice.integationsupport.boundary;
 
-import com.takeaway.employeeservice.springintegationsupport.entity.ApiException;
-import com.takeaway.employeeservice.springintegationsupport.entity.BadRequestException;
-import com.takeaway.employeeservice.springintegationsupport.entity.InternalServerErrorException;
-import com.takeaway.employeeservice.springintegationsupport.entity.ResourceNotFoundException;
+import com.takeaway.employeeservice.integationsupport.entity.ApiException;
+import com.takeaway.employeeservice.integationsupport.entity.BadRequestException;
+import com.takeaway.employeeservice.integationsupport.entity.InternalServerErrorException;
+import com.takeaway.employeeservice.integationsupport.entity.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -164,11 +165,20 @@ public class GlobalExceptionMapper
         return handleException(exception);
     }
 
-    private ResponseEntity<String> handleApiException(ApiException exception)
+    private ResponseEntity<String> handleApiException(ApiException apiException)
     {
-        LOGGER.error("Unhandled exception occurred", exception);
-        return ResponseEntity.status(exception.getHttpStatus())
-                             .body(exception.getMessage());
+        HttpStatus httpStatus = apiException.getHttpStatus();
+        if (httpStatus.is4xxClientError())
+        {
+            LOGGER.debug("API Error occurred: [{}]", apiException.getLocalizedMessage(), apiException);
+            LOGGER.info("API Error occurred: [{}]", apiException.getLocalizedMessage());
+        }
+        else
+        {
+            LOGGER.error("Unhandled exception occurred: [{}]", apiException.getLocalizedMessage(), apiException);
+        }
+        return ResponseEntity.status(httpStatus)
+                             .body(apiException.getMessage());
     }
 
     // ============================  Inner Classes  ==========================

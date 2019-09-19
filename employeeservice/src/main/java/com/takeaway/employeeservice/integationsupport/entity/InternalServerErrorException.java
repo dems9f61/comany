@@ -1,32 +1,22 @@
-package com.takeaway.employeeservice.springintegationsupport.entity;
+package com.takeaway.employeeservice.integationsupport.entity;
 
 import org.springframework.http.HttpStatus;
 
 /**
  * User: StMinko
  * Date: 18.03.2019
- * Time: 11:22
+ * Time: 17:19
  * <p/>
  */
-public class BadRequestException extends ApiException
+public class InternalServerErrorException extends ApiException
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
 
-    public BadRequestException(Throwable cause)
+    public InternalServerErrorException(String message)
     {
-        super(cause, HttpStatus.BAD_REQUEST);
-    }
-
-    public BadRequestException(String message)
-    {
-        super(message, HttpStatus.BAD_REQUEST);
-    }
-
-    public BadRequestException(String message, Throwable cause)
-    {
-        super(message, HttpStatus.BAD_REQUEST, cause);
+        super(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // ===========================  public  Methods  =========================

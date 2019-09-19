@@ -46,7 +46,7 @@ class EmployeeService implements EmployeeServiceCapable
     @Transactional
     public Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException
     {
-        LOGGER.info("Creating an employee with {} ", creationParameter);
+        LOGGER.info("Creating an employee with [{}] ", creationParameter);
         String emailAddress = StringUtils.trim(creationParameter.getEmailAddress());
         validateUniquenessOfEmail(emailAddress);
 
@@ -82,7 +82,7 @@ class EmployeeService implements EmployeeServiceCapable
     @Transactional
     public void update(@NonNull UUID uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
     {
-        LOGGER.info("Updating an employeeToUpdate {} with {} ", uuid, updateParameter);
+        LOGGER.info("Updating an employeeToUpdate [{}] with [{}] ", uuid, updateParameter);
         Optional<Employee> optionalEmployee = findByid(uuid);
         if (!optionalEmployee.isPresent())
         {
@@ -103,14 +103,14 @@ class EmployeeService implements EmployeeServiceCapable
 
     public Optional<Employee> findByid(@NonNull UUID uuid)
     {
-        LOGGER.info("Finding an employee with {} ", uuid);
+        LOGGER.info("Finding an employee with [{}] ", uuid);
         return employeeRepository.findById(uuid);
     }
 
     @Transactional
     public void deleteByUuid(@NonNull UUID uuid) throws EmployeeServiceException
     {
-        LOGGER.info("Deleting an employee with {} ", uuid);
+        LOGGER.info("Deleting an employee with [{}] ", uuid);
         Optional<Employee> found = findByid(uuid);
         if (found.isPresent())
         {
