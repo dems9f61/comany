@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,9 @@ import java.util.UUID;
 @Validated
 @RestController
 @Api(value = "Employee service: Operations pertaining to the employee service interface")
-@RequestMapping(EmployeeController.BASE_URI)
+@RequestMapping(value = EmployeeController.BASE_URI,
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
+        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 @RequiredArgsConstructor
 public class EmployeeController
 {

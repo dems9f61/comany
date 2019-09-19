@@ -4,6 +4,7 @@ import com.takeaway.employeeservice.IntegrationTestSuite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 /**
  * User: StMinko
@@ -23,9 +24,12 @@ public abstract class RestTestSuite extends IntegrationTestSuite
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
 
-    protected HttpHeaders defaultHttpHeaders()
+
+    HttpHeaders defaultHttpHeaders()
     {
-        return new HttpHeaders();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        return httpHeaders;
     }
 
     // ===========================  private  Methods  ========================

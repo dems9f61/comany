@@ -50,11 +50,19 @@ public class GlobalExceptionMapper
 
     // ===========================  private  Methods  ========================
 
-    private ResponseEntity<ErrorInfo> handleApiException(HttpServletRequest httpServletRequest, ApiException exception)
+    private ResponseEntity<ErrorInfo> handleApiException(HttpServletRequest httpServletRequest, ApiException apiException)
     {
-        LOGGER.error("Unhandled exception occurred", exception);
-        ErrorInfo errorInfo = new ErrorInfo(httpServletRequest.getRequestURI(), exception);
-        return ResponseEntity.status(exception.getHttpStatus())
+        if (apiException.getHttpStatus().is4xxClientError())
+        {
+            LOGGER.debug("API Error occurred: [{}]", apiException.getLocalizedMessage(), apiException);
+            LOGGER.info("API Error occurred: [{}]", apiException.getLocalizedMessage());
+        }
+        else
+        {
+            LOGGER.error("Unhandled exception occurred: [{}]", apiException.getLocalizedMessage(), apiException);
+        }
+        ErrorInfo errorInfo = new ErrorInfo(httpServletRequest.getRequestURI(), apiException);
+        return ResponseEntity.status(apiException.getHttpStatus())
                              .body(errorInfo);
     }
 

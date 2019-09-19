@@ -15,6 +15,8 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,15 +30,18 @@ import java.net.HttpURLConnection;
  * <p/>
  */
 @Slf4j
+@Validated
 @RestController
 @Api(value = "Department service: Operations pertaining to department service interface")
-@RequestMapping(DepartmentController.BASE_URI)
+@RequestMapping(value = DepartmentController.BASE_URI,
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
+        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 @RequiredArgsConstructor
 public class DepartmentController
 {
     // =========================== Class Variables ===========================
 
-    public static final String BASE_URI = ApiVersions.V1+ "/departments";
+    public static final String BASE_URI = ApiVersions.V1 + "/departments";
 
     // =============================  Variables  =============================
 
@@ -46,7 +51,9 @@ public class DepartmentController
     // ===========================  public  Methods  =========================
 
     @ApiOperation(value = "Creates a Department with the request values")
-    @ApiResponses({ @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "") })
+    @ApiResponses({
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,
+                    message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     DepartmentResponse createDepartment(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)

@@ -29,7 +29,7 @@ public class DepartmentResponse
     // ============================  Constructors  ===========================
 
     @JsonCreator
-    public DepartmentResponse(@JsonProperty(value = "id", required = true) long id,
+    public DepartmentResponse(@JsonProperty(value = "id", required = true) Long id,
                               @JsonProperty(value = "departmentName", required = true) String departmentName)
     {
         this.id = id;
