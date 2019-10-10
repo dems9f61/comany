@@ -9,6 +9,7 @@ import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequestTestFac
 import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequestTestFactory;
 import com.takeaway.employeeservice.helper.DatabaseCleaner;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.TimeZone;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -63,6 +66,12 @@ public abstract class IntegrationTestSuite
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
+    @BeforeAll
+    static void setUpForAll()
+    {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
+
     @BeforeEach
     void setUp()
     {
@@ -75,7 +84,8 @@ public abstract class IntegrationTestSuite
     }
 
     @AfterEach
-    void tearDown(){
+    void tearDown()
+    {
         databaseCleaner.cleanDatabases();
     }
 
