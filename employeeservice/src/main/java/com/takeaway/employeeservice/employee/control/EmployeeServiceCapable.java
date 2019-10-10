@@ -2,6 +2,8 @@ package com.takeaway.employeeservice.employee.control;
 
 import com.takeaway.employeeservice.employee.entity.Employee;
 import lombok.NonNull;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +14,7 @@ import java.util.UUID;
  * Time: 09:52
  * <p/>
  */
+@Transactional(propagation = Propagation.REQUIRED)
 public interface EmployeeServiceCapable
 {
     // =========================== Class Variables ===========================
@@ -21,6 +24,7 @@ public interface EmployeeServiceCapable
 
     void update(@NonNull UUID uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException;
 
+    @Transactional(propagation = Propagation.SUPPORTS)
     Optional<Employee> findByid(@NonNull UUID id);
 
     void deleteByUuid(@NonNull UUID uuid) throws EmployeeServiceException;

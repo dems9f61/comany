@@ -54,7 +54,7 @@ public class EmployeeEventController
                                                                                  .map(EmployeeEventResponse::new);
         if (employeeEventResponses.isEmpty())
         {
-            throw new ResourceNotFoundException(String.format("Could not find employee events by the specified uuid '%s'", uuid));
+            throw new ResourceNotFoundException(String.format("Could not find employee events by the specified uuid [%s]", uuid));
         }
         else
         {

@@ -74,7 +74,7 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
             mockMvc.perform(get(uri, wrongUuid))
                    .andExpect(status().isNotFound())
                    .andExpect(jsonPath("$.errorMessage",
-                                       containsString(String.format("Could not find employee events by the specified uuid '%s'", wrongUuid))))
+                                       containsString(String.format("Could not find employee events by the specified uuid [%s]", wrongUuid))))
                    .andExpect(jsonPath("$.httpStatus", is(404)));
         }
     }

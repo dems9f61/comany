@@ -19,7 +19,6 @@ import java.util.Optional;
  */
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 @Service
 class DepartmentService implements DepartmentServiceCapable
 {
@@ -37,7 +36,7 @@ class DepartmentService implements DepartmentServiceCapable
         List<Department> departments = departmentRepository.findByDepartmentName(departmentName);
         if (departments.size() > 1)
         {
-            String errorMessage = String.format("There are multiple departments by the name '%s' already exists!", departmentName);
+            String errorMessage = String.format("There are multiple departments by the name [%s] already exists!", departmentName);
             throw new DepartmentServiceException(errorMessage);
         }
         return departments.isEmpty() ? Optional.empty() : Optional.of(departments.get(0));
@@ -63,7 +62,7 @@ class DepartmentService implements DepartmentServiceCapable
         List<Department> foundDepartment = departmentRepository.findByDepartmentName(departmentName);
         if (!foundDepartment.isEmpty())
         {
-            String errorMessage = String.format("Department name '%s' already exists!", departmentName);
+            String errorMessage = String.format("Department name [%s] already exists!", departmentName);
             throw new DepartmentServiceException(errorMessage);
         }
         Department department = new Department();

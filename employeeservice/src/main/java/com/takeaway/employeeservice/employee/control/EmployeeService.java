@@ -75,7 +75,7 @@ class EmployeeService implements EmployeeServiceCapable
             return savedEmployee;
         })
                                  .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND,
-                                                                                 String.format("Department name '%s' could not be found!",
+                                                                                 String.format("Department name [%s] could not be found!",
                                                                                                departmentName)));
     }
 
@@ -86,7 +86,7 @@ class EmployeeService implements EmployeeServiceCapable
         Optional<Employee> optionalEmployee = findByid(uuid);
         if (!optionalEmployee.isPresent())
         {
-            throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid '%s' could not be found!", uuid));
+            throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid [%s] could not be found!", uuid));
         }
 
         Employee employee = optionalEmployee.get();
@@ -120,7 +120,7 @@ class EmployeeService implements EmployeeServiceCapable
         }
         else
         {
-            throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid '%s' could not be found!", uuid));
+            throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid [%s] could not be found!", uuid));
         }
     }
 
@@ -153,7 +153,7 @@ class EmployeeService implements EmployeeServiceCapable
                 employeeRepository.findByEmailAddress(emailAddress);
         if (!employeesWithSameEmail.isEmpty())
         {
-            throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email '%s' is already used", emailAddress));
+            throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email [%s] is already used", emailAddress));
         }
     }
 
@@ -229,7 +229,7 @@ class EmployeeService implements EmployeeServiceCapable
                 Department department = departmentService.findByDepartmentName(newDepartmentName)
                                                          .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND,
                                                                                                          String.format(
-                                                                                                                 "A department with name '%s' could not be found!",
+                                                                                                                 "A department with name [%s] could not be found!",
                                                                                                                  newDepartmentName)));
                 employee.setDepartment(department);
             }
