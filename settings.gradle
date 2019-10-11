@@ -5,3 +5,4 @@ pluginManagement {
 }
 rootProject.name = 'company'
 include 'employeeservice', 'eventservice'
+
