@@ -1,37 +1,38 @@
-package com.takeaway.employeeservice.employee.control;
+package com.takeaway.authentication.integrationsupport.entity;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import javax.persistence.MappedSuperclass;
+import java.util.UUID;
 
 /**
  * User: StMinko
- * Date: 07.06.2019
- * Time: 13:15
+ * Date: 14.10.2019
+ * Time: 10:08
  * <p/>
  */
-@Component
-@RequiredArgsConstructor
-@Transactional
-@Slf4j
-public class EmployeeRepositoryTestHelper
+@MappedSuperclass
+public abstract class AuditedUUIDEntity extends AuditedEntity<UUID>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
-
-    private final EmployeeRepository employeeRepository;
-
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    public void cleanDatabase()
+    @Override
+    public String toString()
     {
-        LOGGER.info("Cleaning the employee repository");
-        employeeRepository.deleteAll();
+        return "AuditedUUIDEntity{" + super.toString() + '}';
     }
 
     // =================  protected/package local  Methods ===================
+
+    protected void onPrePersist()
+    {
+        if (isNew())
+        {
+            setId(UUID.randomUUID());
+        }
+    }
+
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

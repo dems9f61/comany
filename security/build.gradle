@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group 'com.takeaway'
+version '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-data-rest:${project.springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:${project.springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-validation:${project.springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-web:${project.springBootVersion}")
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${project.apacheCommonsLang3Version}"
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: "${project.apacheCommonsCollections}"
+    implementation group: 'org.postgresql', name: 'postgresql', version: "${project.postgreVersion}"
+    implementation("org.projectlombok:lombok:${project.lombokVersion}")
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: "${project.httpClientVesion}"
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: "${project.swaggerUiVersion}"
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: "${project.springfoxVersion}"
+//    implementation group: 'org.liquibase', name: 'liquibase-core', version: "${project.liquibaseVersion}"
+    implementation group: 'org.springframework.data', name: 'spring-data-envers', version: "${project.enversVersion}"
+    
+    annotationProcessor ("org.projectlombok:lombok:${project.lombokVersion}")
+    compileOnly ("org.projectlombok:lombok:${project.lombokVersion}")
+
+    testImplementation ("org.springframework.boot:spring-boot-starter-test:${project.springBootVersion}")
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${project.junitJupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${project.junitJupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${project.junitJupiterVersion}"
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: "${project.junitJupiterVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${project.mockitoJunitJupiterVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: "${project.mockitoJunitJupiterVersion}"
+    testImplementation group: 'info.solidsoft.mockito', name: 'mockito-java8', version: "${project.mockitoJava8Version}"
+}

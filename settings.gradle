@@ -4,5 +4,5 @@ pluginManagement {
     }
 }
 rootProject.name = 'company'
-include 'employeeservice', 'eventservice'
+include 'employeeservice', 'eventservice', 'security'
 

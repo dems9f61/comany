@@ -7,7 +7,6 @@ import com.takeaway.employeeservice.employee.control.EmployeeEventPublisherCapab
 import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
 import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequestTestFactory;
 import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequestTestFactory;
-import com.takeaway.employeeservice.helper.DatabaseCleaner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

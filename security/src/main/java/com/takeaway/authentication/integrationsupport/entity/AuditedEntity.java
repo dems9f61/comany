@@ -1,36 +1,26 @@
-package com.takeaway.employeeservice.employee.control;
+package com.takeaway.authentication.integrationsupport.entity;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * User: StMinko
- * Date: 07.06.2019
- * Time: 13:15
+ * Date: 11.10.2019
+ * Time: 17:10
  * <p/>
  */
-@Component
-@RequiredArgsConstructor
-@Transactional
-@Slf4j
-public class EmployeeRepositoryTestHelper
+@Audited
+@AuditOverride(forClass = AbstractEntity.class)
+@MappedSuperclass
+public  abstract class AuditedEntity <ID extends Serializable> extends AbstractEntity<ID>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
-
-    private final EmployeeRepository employeeRepository;
-
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
-
-    public void cleanDatabase()
-    {
-        LOGGER.info("Cleaning the employee repository");
-        employeeRepository.deleteAll();
-    }
-
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================

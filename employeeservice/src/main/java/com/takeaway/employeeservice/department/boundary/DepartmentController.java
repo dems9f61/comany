@@ -49,8 +49,9 @@ public class DepartmentController
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
-    @ApiOperation(value = "Creates a Department with the request values")
+    @ApiOperation(value = "Creates a department with the request values")
     @ApiResponses({
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,
                     message = "") })
@@ -71,7 +72,6 @@ public class DepartmentController
         }
     }
 
-    // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

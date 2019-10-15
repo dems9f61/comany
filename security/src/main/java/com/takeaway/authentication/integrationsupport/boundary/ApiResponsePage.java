@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.employee.crud_management.entity;
+package com.takeaway.authentication.integrationsupport.boundary;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

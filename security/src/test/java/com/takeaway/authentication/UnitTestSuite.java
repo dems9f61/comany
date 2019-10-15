@@ -1,36 +1,21 @@
-package com.takeaway.employeeservice.employee.control;
+package com.takeaway.authentication;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * User: StMinko
- * Date: 07.06.2019
- * Time: 13:15
+ * Date: 14.10.2019
+ * Time: 15:07
  * <p/>
  */
-@Component
-@RequiredArgsConstructor
-@Transactional
-@Slf4j
-public class EmployeeRepositoryTestHelper
+@ExtendWith(MockitoExtension.class)
+public class UnitTestSuite
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
-
-    private final EmployeeRepository employeeRepository;
-
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
-
-    public void cleanDatabase()
-    {
-        LOGGER.info("Cleaning the employee repository");
-        employeeRepository.deleteAll();
-    }
-
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================

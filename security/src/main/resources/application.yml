@@ -1,0 +1,55 @@
+spring.profiles.active: ${mode:LOCAL}
+server.port: 8084
+
+spring:
+  #  liquibase:
+  #    change-log: classpath:db/security-master-changelog.xml
+  banner:
+    location: classpath:/banner.txt
+  application.name: security-service
+  output.ansi.enabled: ALWAYS
+  jpa:
+    open-in-view: false
+    hibernate:
+      #      ddl-auto: ${database.hibernate-mode:validate}
+      ddl-auto: ${database.hibernate-mode:update}
+    show-sql: false
+    generate-ddl: false
+    properties:
+      org:
+        hibernate:
+          envers:
+            store_data_at_delete: true
+            default_schema: history
+            audit_table_suffix: _history
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+  datasource:
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.dbname}
+    username: ${database.username}
+    password: ${database.password}
+
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+#     Hibernate SQL Debug output on local profile - want to see the SQL
+#    org.hibernate.sql: DEBUG
+#    org.hibernate.SQL: DEBUG
+
+---
+spring.profiles: LOCAL
+database:
+  host: localhost
+  port: 5433
+  username: user
+  password: pwd
+  dbname: security
+
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+    de.nexnet: DEBUG
+

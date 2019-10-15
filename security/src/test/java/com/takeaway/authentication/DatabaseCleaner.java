@@ -1,7 +1,6 @@
-package com.takeaway.employeeservice.helper;
+package com.takeaway.authentication;
 
-import com.takeaway.employeeservice.department.control.DepartmentRepositoryTestHelper;
-import com.takeaway.employeeservice.employee.control.EmployeeRepositoryTestHelper;
+import com.takeaway.authentication.role.control.RoleRepositoryTestHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,9 +19,7 @@ public class DatabaseCleaner
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    private final DepartmentRepositoryTestHelper departmentRepositoryTestHelper;
-
-    private final EmployeeRepositoryTestHelper employeeRepositoryTestHelper;
+    private final RoleRepositoryTestHelper roleRepositoryTestHelper;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
@@ -30,8 +27,7 @@ public class DatabaseCleaner
     public void cleanDatabases()
     {
         LOGGER.info("Cleaning up the test database");
-        employeeRepositoryTestHelper.cleanDatabase();
-        departmentRepositoryTestHelper.cleanDatabase();
+        roleRepositoryTestHelper.cleanDatabase();
     }
 
     // =================  protected/package local  Methods ===================

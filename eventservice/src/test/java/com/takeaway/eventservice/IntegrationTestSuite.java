@@ -7,6 +7,7 @@ import com.takeaway.eventservice.employee.messaging.dto.EmployeeTestFactory;
 import com.takeaway.eventservice.employee.messaging.entity.Employee;
 import com.takeaway.eventservice.employee.messaging.entity.EmployeeMessage;
 import org.apache.commons.lang3.RandomUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +26,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * <p/>
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = { EventServiceApplication.class })
+@SpringBootTest(webEnvironment = RANDOM_PORT,
+        classes = { EventServiceApplication.class })
 @TestPropertySource(properties = { "config.asyncEnabled=false" })
 public abstract class IntegrationTestSuite
 {
@@ -40,6 +42,9 @@ public abstract class IntegrationTestSuite
 
     @Autowired
     protected EmployeeMessageTestFactory employeeMessageTestFactory;
+
+    @Autowired
+    protected DatabaseCleaner databaseCleaner;
 
     @Autowired
     private EmployeeMessageReceiver employeeMessageReceiver;
@@ -69,6 +74,13 @@ public abstract class IntegrationTestSuite
         });
     }
     // =================  protected/package local  Methods ===================
+
+    @AfterEach
+    void tearDown()
+    {
+        databaseCleaner.cleanDatabases();
+    }
+
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

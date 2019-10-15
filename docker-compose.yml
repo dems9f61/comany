@@ -30,6 +30,17 @@ services:
     ports:
     - "5432:5432"
 
+  security_service_db:
+    image: postgres:alpine
+    container_name: security_service_postgredb
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: security
+    ports:
+      - "5433:5432"
+
   event_service_db:
     image: mongo:latest
     container_name: event_service_mongodb
