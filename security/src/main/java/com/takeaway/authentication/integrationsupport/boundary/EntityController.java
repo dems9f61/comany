@@ -41,12 +41,16 @@ public interface EntityController<ENTITY extends AbstractEntity<ID>, ID extends 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     @JsonView(DataView.GET.class)
-    ENTITY doFullUpdate(@PathVariable ID id, @RequestBody @JsonView(DataView.PUT.class) ENTITY update);
+    ENTITY doFullUpdate(@PathVariable @NotNull ID id, @RequestBody @JsonView(DataView.PUT.class) ENTITY update);
 
     @PatchMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     @JsonView(DataView.GET.class)
-    ENTITY doPartialUpdate(@PathVariable ID id, @RequestBody @JsonView(DataView.PATCH.class) ENTITY update);
+    ENTITY doPartialUpdate(@PathVariable @NotNull ID id, @RequestBody @JsonView(DataView.PATCH.class) ENTITY update);
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    void delete(@PathVariable @NotNull ID id);
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

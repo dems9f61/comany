@@ -50,7 +50,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         void givenSourceSystems_whenFindAll_thenStatus200AndReturnFullList() throws Exception
         {
             // Arrange
-            List<Role> expectedRoles = persistRandomRoles(4);
+            List<Role> expectedRoles = saveRandomRoles(4);
             String uri = String.format("%s", RoleController.BASE_URI);
 
             // Act / Assert
@@ -86,7 +86,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         void givenRole_whenFindById_thenStatus200AndReturnRole() throws Exception
         {
             // Arrange
-            Role persistedRole = persistRandomRoles(1).get(0);
+            Role persistedRole = saveRandomRoles(1).get(0);
             String uri = String.format("%s/{id}", RoleController.BASE_URI);
 
             // Act / Assert
@@ -140,6 +140,40 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         }
 
         @Test
+        @DisplayName("POST: 'http://.../roles' returns CREATED if the creation request without description")
+        void givenCreateRequestWithoutDesc_whenCreateRole_thenStatus201AndReturnNewRole() throws Exception
+        {
+            // Arrange
+            Role toPersist = roleTestFactory.builder()
+                                            .description(null)
+                                            .create();
+            String requestAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
+
+            String uri = String.format("%s", RoleController.BASE_URI);
+
+            // Act / Assert
+            MvcResult mvcResult = mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                                                           .content(requestAsJson))
+                                         .andExpect(status().isCreated())
+                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                         .andExpect(jsonPath("$", notNullValue()))
+                                         .andExpect(header().string(HttpHeaders.LOCATION, containsString(RoleController.BASE_URI)))
+                                         .andReturn();
+
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Role created = objectMapper.readValue(contentAsString, Role.class);
+            assertThat(created).isNotNull();
+            assertThat(created.getId()).isNotNull();
+            assertThat(created.getName()).isEqualTo(toPersist.getName());
+            assertThat(created.getDescription()).isNull();
+            assertThat(created.getCreatedAt()).isNotNull();
+            assertThat(created.getLastUpdatedAt()).isNotNull();
+            assertThat(created.getCreatedBy()).isNotNull();
+            assertThat(created.getLastUpdatedBy()).isNotNull();
+        }
+
+        @Test
         @DisplayName("POST: 'http://.../roles' returns BAD_REQUEST on blank identifier")
         void givenBlankName_whenCreateRole_thenStatus400() throws Exception
         {
@@ -163,18 +197,18 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
     class WhenUpdate
     {
         @Test
-        @DisplayName("PUT: 'http://.../roles/{id}' returns OK on valid request")
-        void givenValidRequest_whenDoFullUpdate_thenStatus200AndReturnUpdated() throws Exception
+        @DisplayName("PUT: 'http://.../roles/{id}' returns OK on valid full request")
+        void givenValidFullRequest_whenDoFullUpdate_thenStatus200AndReturnUpdated() throws Exception
         {
             // Arrange
-            Role loaded = persistRandomRoles(1).get(0);
+            Role initial = saveRandomRoles(1).get(0);
             Role update = roleTestFactory.createDefault();
             String uri = String.format("%s/{id}", RoleController.BASE_URI);
             String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
             // Act / Assert
-            MvcResult mvcResult = mockMvc.perform(put(uri, loaded.getId()).contentType(APPLICATION_JSON_UTF8)
-                                                                          .content(requestAsJson))
+            MvcResult mvcResult = mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                           .content(requestAsJson))
                                          .andExpect(status().isOk())
                                          .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                                          .andExpect(jsonPath("$", notNullValue()))
@@ -183,7 +217,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                                               .getContentAsString();
             Role updated = objectMapper.readValue(contentAsString, Role.class);
             assertThat(updated).isNotNull();
-            assertThat(updated.getId()).isEqualTo(loaded.getId());
+            assertThat(updated.getId()).isEqualTo(initial.getId());
             assertThat(updated.getName()).isEqualTo(update.getName());
             assertThat(updated.getDescription()).isEqualTo(update.getDescription());
         }
@@ -193,7 +227,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         void givenNullName_whenDoFullUpdate_thenStatus400() throws Exception
         {
             // Arrange
-            Role loaded = persistRandomRoles(1).get(0);
+            Role initial = saveRandomRoles(1).get(0);
             Role update = roleTestFactory.builder()
                                          .name(null)
                                          .create();
@@ -201,8 +235,27 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
             String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
             // Act / Assert
-            mockMvc.perform(put(uri, loaded.getId()).contentType(APPLICATION_JSON_UTF8)
-                                                    .content(requestAsJson))
+            mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PUT: 'http://.../roles/{id}' returns BAD REQUEST on empty name")
+        void givenBlankName_whenDoFullUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Role initial = saveRandomRoles(1).get(0);
+            Role update = roleTestFactory.builder()
+                                         .name("   ")
+                                         .create();
+            String uri = String.format("%s/{id}", RoleController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
                    .andExpect(status().isBadRequest())
                    .andExpect(jsonPath("$", notNullValue()));
         }
@@ -212,7 +265,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         void givenNullDescription_whenDoFullUpdate_thenStatus400() throws Exception
         {
             // Arrange
-            Role loaded = persistRandomRoles(1).get(0);
+            Role initial = saveRandomRoles(1).get(0);
             Role update = roleTestFactory.builder()
                                          .description(null)
                                          .create();
@@ -220,14 +273,160 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
             String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
             // Act / Assert
-            mockMvc.perform(put(uri, loaded.getId()).contentType(APPLICATION_JSON_UTF8)
-                                                    .content(requestAsJson))
+            mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../roles/{id}' returns OK on valid request with only name")
+        void givenValidRequestWithOnlyName_whenDoPartialUpdate_thenStatus200AndReturnUpdated() throws Exception
+        {
+            // Arrange
+            Role initial = saveRandomRoles(1).get(0);
+            Role update = roleTestFactory.builder()
+                                         .description(null)
+                                         .create();
+            String uri = String.format("%s/{id}", RoleController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                             .content(requestAsJson))
+                                         .andExpect(status().isOk())
+                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                         .andExpect(jsonPath("$", notNullValue()))
+                                         .andReturn();
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Role updated = objectMapper.readValue(contentAsString, Role.class);
+            assertThat(updated).isNotNull();
+            assertThat(updated.getId()).isEqualTo(initial.getId());
+            assertThat(updated.getName()).isEqualTo(update.getName());
+            assertThat(updated.getDescription()).isEqualTo(initial.getDescription());
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../roles/{id}' returns OK on valid request with only description")
+        void givenValidRequestWithOnlyDesc_whenDoPartialUpdate_thenStatus200AndReturnUpdated() throws Exception
+        {
+            // Arrange
+            Role initial = saveRandomRoles(1).get(0);
+            Role update = roleTestFactory.builder()
+                                         .name(null)
+                                         .create();
+            String uri = String.format("%s/{id}", RoleController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                             .content(requestAsJson))
+                                         .andExpect(status().isOk())
+                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                         .andExpect(jsonPath("$", notNullValue()))
+                                         .andReturn();
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Role updated = objectMapper.readValue(contentAsString, Role.class);
+            assertThat(updated).isNotNull();
+            assertThat(updated.getId()).isEqualTo(initial.getId());
+            assertThat(updated.getName()).isEqualTo(initial.getName());
+            assertThat(updated.getDescription()).isEqualTo(update.getDescription());
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../roles/{id}' returns BAD REQUEST on empty description request")
+        void givenEmptyDescription_whenDoFullUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Role initial = saveRandomRoles(1).get(0);
+            Role update = roleTestFactory.builder()
+                                         .description(" ")
+                                         .create();
+            String uri = String.format("%s/{id}", RoleController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../roles/{id}' returns BAD REQUEST on empty name request")
+        void givenEmptyName_whenDoPartialUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Role initial = saveRandomRoles(1).get(0);
+            Role update = roleTestFactory.builder()
+                                         .name(" ")
+                                         .create();
+            String uri = String.format("%s/{id}", RoleController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                       .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../roles/{id}' returns BAD REQUEST on empty description request")
+        void givenEmptyDescription_whenDoPartialUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Role initial = saveRandomRoles(1).get(0);
+            Role update = roleTestFactory.builder()
+                                         .description(" ")
+                                         .create();
+            String uri = String.format("%s/{id}", RoleController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                       .content(requestAsJson))
                    .andExpect(status().isBadRequest())
                    .andExpect(jsonPath("$", notNullValue()));
         }
     }
 
-    private List<Role> persistRandomRoles(int count) throws Exception
+    @Nested
+    @DisplayName("when delete")
+    class WhenDelete
+    {
+        @Test
+        @DisplayName("DELETE: 'http://.../roles/{id}' returns NOT FOUND if the specified id doesn't exist")
+        void givenUnknownUuid_whenDeleteById_thenStatus404() throws Exception
+        {
+            // Arrange
+            UUID unknownId = UUID.randomUUID();
+            String uri = String.format("%s/{id}", RoleController.BASE_URI);
+
+            // Act/ Assert
+            mockMvc.perform(delete(uri, unknownId).contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isNotFound())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", containsString(String.format("Could not find an entity by the specified id [%s]!", unknownId))));
+        }
+
+        @Test
+        @DisplayName("DELETE: 'http://.../roles/{id}' returns NO CONTENT if the specified id exists")
+        void givenRole_whenDeleteById_thenStatus204() throws Exception
+        {
+            // Arrange
+            Role toDelete = saveRandomRoles(1).get(0);
+            String uri = String.format("%s/{id}", RoleController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(delete(uri, toDelete.getId()).contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isNoContent());
+        }
+    }
+
+    private List<Role> saveRandomRoles(int count) throws Exception
     {
         int normalizedCount = count <= 0 ? 1 : count;
         List<Role> result = new ArrayList<>(count);

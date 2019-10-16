@@ -86,9 +86,8 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
                     update);
         validateEntity(update, validationGroup);
         ENTITY loaded = findById(id).orElseThrow(() -> new ServiceException(ServiceException.Reason.RESOURCE_NOT_FOUND,
-                                                                            String.format("Could not find entity by the specified id [%s]!", id)));
+                                                                            String.format("Could not find an entity by the specified id [%s]!", id)));
         BeanTool.copyNonNullProperties(onBeforeUpdate(loaded, update), loaded, "id", "createdAt", "createdBy", "lastUpdatedAt", "lastUpdatedBy");
-        validateEntity(loaded, DataView.PUT.class);
         return onAfterUpdate(doUpdate(loaded));
     }
 
@@ -100,7 +99,7 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
                         .getSimpleName(),
                     id);
         ENTITY loaded = findById(id).orElseThrow(() -> new ServiceException(ServiceException.Reason.RESOURCE_NOT_FOUND,
-                                                                            String.format("Could not find entity by the specified id [%s]!", id)));
+                                                                            String.format("Could not find an entity by the specified id [%s]!", id)));
         repository.delete(onBeforeDelete(id, loaded));
         onAfterDelete(id, loaded);
     }

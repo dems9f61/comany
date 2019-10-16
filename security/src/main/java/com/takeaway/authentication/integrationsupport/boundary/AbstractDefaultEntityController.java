@@ -41,7 +41,7 @@ public abstract class AbstractDefaultEntityController<SERVICE extends EntityServ
     }
 
     @Override
-    public ENTITY findById(@NotNull ID id)
+    public final ENTITY findById(@NotNull ID id)
     {
         LOGGER.info("Calling {}.findById( {} )",
                     this.getClass()
@@ -59,10 +59,9 @@ public abstract class AbstractDefaultEntityController<SERVICE extends EntityServ
                         .getSimpleName(),
                     create);
         create = onBeforeCreate(create);
-        ENTITY created = null;
         try
         {
-            created = getService().create(create);
+            ENTITY created = getService().create(create);
             HttpHeaders headers = new HttpHeaders();
             created = onAfterCreate(created, headers);
             headers.add(HttpHeaders.LOCATION,
@@ -82,7 +81,7 @@ public abstract class AbstractDefaultEntityController<SERVICE extends EntityServ
     }
 
     @Override
-    public ENTITY doFullUpdate(ID id, ENTITY update)
+    public final ENTITY doFullUpdate(ID id, ENTITY update)
     {
         LOGGER.info("{}.doFullUpdate ( {}, {} )",
                     this.getClass()
@@ -93,7 +92,7 @@ public abstract class AbstractDefaultEntityController<SERVICE extends EntityServ
     }
 
     @Override
-    public ENTITY doPartialUpdate(ID id, ENTITY update)
+    public final ENTITY doPartialUpdate(ID id, ENTITY update)
     {
         LOGGER.info("{}.doPartialUpdate ( {}, {} )",
                     this.getClass()
@@ -101,6 +100,24 @@ public abstract class AbstractDefaultEntityController<SERVICE extends EntityServ
                     id,
                     update);
         return update(id, update, DataView.PATCH.class);
+    }
+
+    public final void delete(ID id)
+    {
+        LOGGER.info("{}.delete ( {} )",
+                    this.getClass()
+                        .getSimpleName(),
+                    id);
+        try
+        {
+            getService().delete(onBeforeDelete(id));
+            onAfterDelete(id);
+        }
+        catch (ServiceException caught)
+        {
+            throw translateIntoApiException(caught);
+        }
+        onAfterDelete(id);
     }
 
     // =================  protected/package local  Methods ===================
@@ -175,6 +192,30 @@ public abstract class AbstractDefaultEntityController<SERVICE extends EntityServ
     protected ENTITY onAfterUpdate(ID id, ENTITY updated)
     {
         return updated;
+    }
+
+    /**
+     * Extension Point for before delete actions. Modify id if necessary. Default implementation returns the input
+     * parameter od.
+     *
+     * @param id The ID typed id of the Entity to perform an update on
+     * @return The before delete actions modified ID typed id that an Entity should be deleted for. Default
+     * implementation returns the input parameter id.
+     */
+    protected ID onBeforeDelete(ID id)
+    {
+        return id;
+    }
+
+    /**
+     * Extension Point for before delete actions. Modify id if necessary. Default implementation returns the input
+     * parameter id. Only called if an Entity could be found for id.
+     *
+     * @param id The ID typed id of the Entity that was deleted
+     */
+    protected void onAfterDelete(ID id)
+    {
+
     }
 
     // ============================  Inner Classes  ==========================

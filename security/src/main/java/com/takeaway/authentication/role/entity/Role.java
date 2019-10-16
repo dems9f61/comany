@@ -3,6 +3,7 @@ package com.takeaway.authentication.role.entity;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.authentication.integrationsupport.boundary.DataView;
 import com.takeaway.authentication.integrationsupport.entity.AuditedUUIDEntity;
+import com.takeaway.authentication.integrationsupport.entity.NullOrNotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +39,7 @@ public class Role extends AuditedUUIDEntity
     // =============================  Variables  =============================
 
     @NotBlank(groups = { Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class })
+    @NullOrNotBlank(groups = { DataView.PATCH.class })
     @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class })
     @Size(min = 1,
             max = 255,
@@ -45,6 +47,7 @@ public class Role extends AuditedUUIDEntity
     private String name;
 
     @NotBlank(groups = { DataView.PUT.class })
+    @NullOrNotBlank(groups = { DataView.PATCH.class, DataView.POST.class })
     @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class })
     private String description;
 
