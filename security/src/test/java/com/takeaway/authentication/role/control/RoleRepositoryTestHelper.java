@@ -21,7 +21,7 @@ public class RoleRepositoryTestHelper
 
     public void cleanDatabase()
     {
-        LOGGER.info("Cleaning the employee repository");
+        LOGGER.info("Cleaning the Role repository");
         roleRepository.deleteAll();
     }
 }

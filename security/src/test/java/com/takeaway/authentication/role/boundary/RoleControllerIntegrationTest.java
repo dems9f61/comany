@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -426,14 +425,55 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         }
     }
 
+    @Nested
+    @DisplayName("when revise")
+    class WhenRevise
+    {
+        @Test
+        @DisplayName("GET: 'http://.../roles/{id}/changes' returns OK and Revisions")
+        void givenIdWithHistory_whenFindHistory_thenStatus200() throws Exception
+        {
+            // Arrange
+            Role initial = roleTestFactory.createDefault();
+            String requestAsJson = transformRequestToJSON(initial, DataView.POST.class);
+            String uri = String.format("%s", RoleController.BASE_URI);
+
+            // 1-Action: CREATE
+            MvcResult mvcCreationResult = mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                                                                   .content(requestAsJson))
+                                                 .andReturn();
+            String contentAsString = mvcCreationResult.getResponse()
+                                                      .getContentAsString();
+            Role created = objectMapper.readValue(contentAsString, Role.class);
+            Role update = roleTestFactory.createDefault();
+            uri = String.format("%s/{id}", RoleController.BASE_URI);
+            requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // 2-Action: MODIFY
+            mockMvc.perform(put(uri, created.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson));
+
+            // 3-Action: DELETE
+            mockMvc.perform(delete(uri, created.getId()).contentType(APPLICATION_JSON_UTF8));
+
+            uri = String.format("%s/{id}/changes", RoleController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(get(uri, created.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$.numberOfElements", is(3)))
+                   .andExpect(jsonPath("$.totalElements", is(3)));
+        }
+    }
+
     private List<Role> saveRandomRoles(int count) throws Exception
     {
         int normalizedCount = count <= 0 ? 1 : count;
         List<Role> result = new ArrayList<>(count);
         for (int i = 0; i < normalizedCount; i++)
         {
-            Role aDefault = roleTestFactory.createDefault();
-            result.add(roleService.create(aDefault));
+            result.add(roleService.create(roleTestFactory.createDefault()));
         }
 
         return result;

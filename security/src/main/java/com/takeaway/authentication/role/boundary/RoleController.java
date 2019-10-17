@@ -1,7 +1,7 @@
 package com.takeaway.authentication.role.boundary;
 
-import com.takeaway.authentication.integrationsupport.boundary.AbstractDefaultEntityController;
 import com.takeaway.authentication.integrationsupport.boundary.ApiVersions;
+import com.takeaway.authentication.integrationsupport.control.AbstractDefaultAuditedEntityController;
 import com.takeaway.authentication.role.control.RoleService;
 import com.takeaway.authentication.role.entity.Role;
 import io.swagger.annotations.Api;
@@ -29,7 +29,7 @@ import java.util.UUID;
 @RequestMapping(value = RoleController.BASE_URI,
         produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
         consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
-public class RoleController extends AbstractDefaultEntityController<RoleService, Role, UUID>
+public class RoleController extends AbstractDefaultAuditedEntityController<RoleService, Role, UUID>
 {
     // =========================== Class Variables ===========================
 

@@ -30,7 +30,8 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: "${project.swaggerUiVersion}"
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: "${project.springfoxVersion}"
     implementation group: 'org.liquibase', name: 'liquibase-core', version: "${project.liquibaseVersion}"
-    implementation group: 'org.springframework.data', name: 'spring-data-envers', version: "${project.enversVersion}"
+    implementation group: 'org.hibernate', name: 'hibernate-envers', version: "${project.enversVersion}"
+    implementation group: 'org.springframework.data', name: 'spring-data-envers', version: "${project.springEnversVersion}"
     
     annotationProcessor ("org.projectlombok:lombok:${project.lombokVersion}")
     compileOnly ("org.projectlombok:lombok:${project.lombokVersion}")

@@ -1,6 +1,6 @@
 package com.takeaway.authentication.role.control;
 
-import com.takeaway.authentication.integrationsupport.control.JpaSpecificationRepository;
+import com.takeaway.authentication.integrationsupport.control.JpaAuditedSpecificationRepository;
 import com.takeaway.authentication.role.entity.Role;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
  * <p/>
  */
 @Repository
-interface RoleRepository extends JpaSpecificationRepository<Role, UUID>
+interface RoleRepository extends JpaAuditedSpecificationRepository<Role, UUID>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================

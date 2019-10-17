@@ -20,8 +20,8 @@ spring:
         hibernate:
           envers:
             store_data_at_delete: true
-            default_schema: history
-            audit_table_suffix: _history
+#            default_schema: history
+#            audit_table_suffix: _history
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false

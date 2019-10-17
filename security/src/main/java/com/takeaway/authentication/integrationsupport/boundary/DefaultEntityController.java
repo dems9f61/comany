@@ -19,7 +19,7 @@ import java.io.Serializable;
  * <p/>
  */
 @Validated
-public interface EntityController<ENTITY extends AbstractEntity<ID>, ID extends Serializable>
+public interface DefaultEntityController<ENTITY extends AbstractEntity<ID>, ID extends Serializable>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================

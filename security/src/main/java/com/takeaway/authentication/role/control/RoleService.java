@@ -1,6 +1,6 @@
 package com.takeaway.authentication.role.control;
 
-import com.takeaway.authentication.integrationsupport.control.AbstractDefaultEntityService;
+import com.takeaway.authentication.integrationsupport.control.AbstractDefaultAuditedEntityService;
 import com.takeaway.authentication.role.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 
 @Service
-public class RoleService extends AbstractDefaultEntityService<RoleRepository, Role, UUID>
+public class RoleService extends AbstractDefaultAuditedEntityService<RoleRepository, Role, UUID>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================

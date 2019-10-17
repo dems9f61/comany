@@ -4,6 +4,7 @@ import com.takeaway.authentication.integrationsupport.boundary.ApiResponsePage;
 import com.takeaway.authentication.integrationsupport.boundary.DataView;
 import com.takeaway.authentication.integrationsupport.entity.AbstractEntity;
 import com.takeaway.authentication.integrationsupport.entity.ServiceException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,7 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
+    @Getter
     private final REPOSITORY repository;
 
     private final Validator validator;

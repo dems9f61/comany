@@ -1,11 +1,10 @@
 package com.takeaway.authentication.integrationsupport.entity;
 
+import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * User: StMinko
@@ -13,14 +12,13 @@ import javax.persistence.Id;
  * Time: 17:13
  * <p/>
  */
-//@Entity
-//@Table(name = "audit_trail",
-//        schema = "history")
-//@RevisionEntity
-//@SequenceGenerator(name = "audit_trail_sequence",
+@Entity
+@Table(name = "audit_trail" /*, schema = "history"*/)
+@RevisionEntity
+@SequenceGenerator(name = "audit_trail_sequence",
 //        schema = "history",
-//        initialValue = 1,
-//        allocationSize = 1)
+        initialValue = 1,
+        allocationSize = 1)
 public class CustomRevisionEntity
 {
     // =========================== Class Variables ===========================

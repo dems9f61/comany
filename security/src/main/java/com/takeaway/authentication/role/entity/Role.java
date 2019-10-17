@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.Index;
@@ -23,6 +24,7 @@ import javax.validation.groups.Default;
  * Time: 11:00
  * <p/>
  */
+@Audited
 @Setter
 @Getter
 @Entity

@@ -24,7 +24,7 @@ import java.io.Serializable;
  */
 @Slf4j
 public abstract class AbstractDefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, ENTITY extends AbstractEntity<ID>, ID extends Serializable>
-        implements EntityController<ENTITY, ID>, ServiceExceptionTranslator
+        implements DefaultEntityController<ENTITY, ID>, ServiceExceptionTranslator
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
