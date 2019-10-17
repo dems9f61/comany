@@ -2,6 +2,7 @@ package com.takeaway.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.takeaway.authentication.permission.entity.PermissionTestFactory;
 import com.takeaway.authentication.role.entity.RoleTestFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -38,6 +39,9 @@ public abstract class IntegrationTestSuite
 
     @Autowired
     protected RoleTestFactory roleTestFactory;
+
+    @Autowired
+    protected PermissionTestFactory permissionTestFactory;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;

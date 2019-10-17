@@ -3,9 +3,7 @@ package com.takeaway.authentication.integrationsupport.control;
 import com.takeaway.authentication.integrationsupport.entity.AuditedEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.history.Revision;
 import org.springframework.validation.annotation.Validated;
 
@@ -38,7 +36,6 @@ public class AbstractDefaultAuditedEntityService<REPOSITORY extends JpaAuditedSp
     @Override
     public Page<Revision<Long, ENTITY>> findHistory(@NotNull ID id, @NotNull Pageable pageable)
     {
-        PageRequest createdAtPageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), new Sort("revisionNumber"));
         LOGGER.info("{}.findHistory ( {} , {} )",
                     this.getClass()
                         .getSimpleName(),

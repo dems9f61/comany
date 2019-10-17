@@ -46,10 +46,10 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
     {
         @Test
         @DisplayName("GET: 'http://.../roles' returns OK and an list of all roles ")
-        void givenSourceSystems_whenFindAll_thenStatus200AndReturnFullList() throws Exception
+        void givenRoles_whenFindAll_thenStatus200AndReturnFullList() throws Exception
         {
             // Arrange
-            List<Role> expectedRoles = saveRandomRoles(4);
+            List<Role> savedRoles = saveRandomRoles(4);
             String uri = String.format("%s", RoleController.BASE_URI);
 
             // Act / Assert
@@ -62,7 +62,11 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                                               .getContentAsString();
             ApiResponsePage<Role> apiResponsePage = objectMapper.readValue(contentAsString, new TypeReference<ApiResponsePage<Role>>() {});
             assertThat(apiResponsePage).isNotNull();
-            assertThat(apiResponsePage.getTotalElements()).isEqualTo(expectedRoles.size());
+            assertThat(apiResponsePage.getTotalElements()).isEqualTo(savedRoles.size());
+            assertThat(savedRoles.stream()
+                                 .allMatch(savedRole -> apiResponsePage.stream()
+                                                                       .anyMatch(role -> role.getId() != null && role.getId()
+                                                                                                                     .equals(savedRole.getId())))).isTrue();
         }
 
         @Test
@@ -81,7 +85,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         }
 
         @Test
-        @DisplayName("GET: 'http://.../roles/{id}' returns OK and the requested source system")
+        @DisplayName("GET: 'http://.../roles/{id}' returns OK and the requested permission")
         void givenRole_whenFindById_thenStatus200AndReturnRole() throws Exception
         {
             // Arrange
@@ -154,9 +158,9 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
             MvcResult mvcResult = mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
                                                            .content(requestAsJson))
                                          .andExpect(status().isCreated())
+                                         .andExpect(header().string(HttpHeaders.LOCATION, containsString(RoleController.BASE_URI)))
                                          .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                                          .andExpect(jsonPath("$", notNullValue()))
-                                         .andExpect(header().string(HttpHeaders.LOCATION, containsString(RoleController.BASE_URI)))
                                          .andReturn();
 
             String contentAsString = mvcResult.getResponse()
@@ -179,6 +183,24 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
             // Arrange
             Role toPersist = roleTestFactory.builder()
                                             .name("")
+                                            .create();
+            String requestAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
+            String uri = String.format("%s", RoleController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                                     .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../roles' returns BAD_REQUEST on blank description")
+        void givenBlankDescription_whenCreateRole_thenStatus400() throws Exception
+        {
+            // Arrange
+            Role toPersist = roleTestFactory.builder()
+                                            .description("")
                                             .create();
             String requestAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
             String uri = String.format("%s", RoleController.BASE_URI);

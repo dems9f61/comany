@@ -1,5 +1,6 @@
 package com.takeaway.authentication;
 
+import com.takeaway.authentication.permission.control.PermissionRepositoryTestHelper;
 import com.takeaway.authentication.role.control.RoleRepositoryTestHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +20,16 @@ public class DatabaseCleaner
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    private final RoleRepositoryTestHelper roleRepositoryTestHelper;
+    private final RoleRepositoryTestHelper       roleRepositoryTestHelper;
+    private final PermissionRepositoryTestHelper permissionRepositoryTestHelper;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    public void cleanDatabases()
+    void cleanDatabases()
     {
         LOGGER.info("Cleaning up the test database");
+        permissionRepositoryTestHelper.cleanDatabase();
         roleRepositoryTestHelper.cleanDatabase();
     }
 
