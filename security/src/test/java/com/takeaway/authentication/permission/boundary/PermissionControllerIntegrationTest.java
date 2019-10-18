@@ -141,6 +141,7 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
                    .andExpect(jsonPath("$.createdAt", notNullValue()))
                    .andExpect(jsonPath("$.createdBy", notNullValue()))
                    .andExpect(jsonPath("$.lastUpdatedAt", notNullValue()))
+                   .andExpect(jsonPath("$.version", is(0)))
                    .andExpect(jsonPath("$.lastUpdatedBy", notNullValue()));
         }
 
@@ -169,7 +170,8 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
                    .andExpect(jsonPath("$.createdAt", notNullValue()))
                    .andExpect(jsonPath("$.createdBy", notNullValue()))
                    .andExpect(jsonPath("$.lastUpdatedAt", notNullValue()))
-                   .andExpect(jsonPath("$.lastUpdatedBy", notNullValue()));
+                   .andExpect(jsonPath("$.lastUpdatedBy", notNullValue()))
+                   .andExpect(jsonPath("$.version", is(0)));
         }
 
         @Test
@@ -285,7 +287,7 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
 
         @Test
         @DisplayName("GET: 'http://.../permissions/{id}/auditTrails' returns OK and Revisions")
-        void givenIdWithHistory_whenFindRevisions_thenStatus200AndRet() throws Exception
+        void givenIdWithHistory_whenFindAuditTrails_thenStatus200() throws Exception
         {
             // Arrange
             Permission initial = permissionTestFactory.createDefault();
@@ -324,7 +326,7 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
             String revisionResultAsString = revisionResult.getResponse()
                                                           .getContentAsString();
             ApiResponsePage<AuditTrail<UUID, Permission>> apiResponsePage = objectMapper.readValue(revisionResultAsString,
-                                                                                 new TypeReference<ApiResponsePage<AuditTrail<UUID, Permission>>>() {});
+                                                                                                   new TypeReference<ApiResponsePage<AuditTrail<UUID, Permission>>>() {});
             assertThat(apiResponsePage).isNotNull()
                                        .hasSize(3);
 
@@ -342,6 +344,7 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
                         assertThat(entity.getLastUpdatedBy()).isEqualTo(created.getLastUpdatedBy());
                         assertThat(entity.getCreatedAt()).isNull(); //NOT AUDITED
                         assertThat(entity.getCreatedBy()).isNull();  //NOT AUDITED
+                        assertThat(entity.getVersion()).isEqualTo(created.getVersion());
                         break;
                     }
                     case MOD:
@@ -354,6 +357,7 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
                         assertThat(entity.getLastUpdatedBy()).isEqualTo(updated.getLastUpdatedBy());
                         assertThat(entity.getCreatedAt()).isNull(); //NOT AUDITED
                         assertThat(entity.getCreatedBy()).isNull();  //NOT AUDITED
+                        assertThat(entity.getVersion()).isEqualTo(updated.getVersion());
                         break;
                     }
                     default:
@@ -362,6 +366,38 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
                     }
                 }
             });
+        }
+    }
+
+    @Nested
+    @DisplayName("when update")
+    class WhenUpdate
+    {
+        @Test
+        @DisplayName("PUT: 'http://.../permissions/{id}' returns OK on valid full request")
+        void givenValidFullRequest_whenDoFullUpdate_thenStatus200AndReturnUpdated() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.createDefault();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            MvcResult mvcResult = mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                           .content(requestAsJson))
+                                         .andExpect(status().isOk())
+                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                         .andExpect(jsonPath("$", notNullValue()))
+                                         .andReturn();
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Permission updated = objectMapper.readValue(contentAsString, Permission.class);
+            assertThat(updated).isNotNull();
+            assertThat(updated.getId()).isEqualTo(initial.getId());
+            assertThat(updated.getName()).isEqualTo(update.getName());
+            assertThat(updated.getDescription()).isEqualTo(update.getDescription());
+            assertThat(updated.getVersion()).isEqualTo(1);
         }
     }
 

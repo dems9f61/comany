@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.authentication.integrationsupport.boundary.DataView;
 import com.takeaway.authentication.integrationsupport.control.EntitySecurityHolder;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "createdAt", "createdBy", "lastUpdatedAt", "lastUpdatedBy" })
+@EqualsAndHashCode(exclude = { "createdAt", "createdBy", "lastUpdatedAt", "lastUpdatedBy", "version" })
 @MappedSuperclass
 public abstract class AbstractEntity<ID extends Serializable> implements Persistable<ID>
 {
@@ -54,6 +55,12 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
     @NotNull(groups = { Default.class, DataView.GET.class })
     @JsonView(DataView.GET.class)
     private UUID lastUpdatedBy;
+
+    @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class })
+    @Setter(value = AccessLevel.PRIVATE)
+    @Column(nullable = false)
+    @Version
+    private Long version;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

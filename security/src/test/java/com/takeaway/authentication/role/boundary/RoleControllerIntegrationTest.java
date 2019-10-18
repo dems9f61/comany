@@ -456,7 +456,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
     {
         @Test
         @DisplayName("GET: 'http://.../roles/{id}/changes' returns OK and Revisions")
-        void givenIdWithHistory_whenFindHistory_thenStatus200() throws Exception
+        void givenIdWithHistory_whenFindRevisions_thenStatus200() throws Exception
         {
             // Arrange
             Role initial = roleTestFactory.createDefault();
@@ -493,7 +493,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
 
         @Test
         @DisplayName("GET: 'http://.../roles/{id}/auditTrails' returns OK and Revisions")
-        void givenIdWithHistory_whenFindRevisions_thenStatus200AndRet() throws Exception
+        void givenIdWithHistory_whenFindAuditTrails_thenStatus200AndRet() throws Exception
         {
             // Arrange
             Role initial = roleTestFactory.createDefault();
@@ -550,6 +550,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                         assertThat(entity.getLastUpdatedBy()).isEqualTo(created.getLastUpdatedBy());
                         assertThat(entity.getCreatedAt()).isNull(); //NOT AUDITED
                         assertThat(entity.getCreatedBy()).isNull();  //NOT AUDITED
+                        assertThat(entity.getVersion()).isEqualTo(created.getVersion());
                         break;
                     }
                     case MOD:
@@ -562,6 +563,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                         assertThat(entity.getLastUpdatedBy()).isEqualTo(updated.getLastUpdatedBy());
                         assertThat(entity.getCreatedAt()).isNull(); //NOT AUDITED
                         assertThat(entity.getCreatedBy()).isNull();  //NOT AUDITED
+                        assertThat(entity.getVersion()).isEqualTo(updated.getVersion());
                         break;
                     }
                     default:

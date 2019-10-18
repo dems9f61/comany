@@ -20,6 +20,7 @@ spring:
         hibernate:
           envers:
             store_data_at_delete: true
+            do_not_audit_optimistic_locking_field: false
 #            default_schema: history
 #            audit_table_suffix: _history
       hibernate:
