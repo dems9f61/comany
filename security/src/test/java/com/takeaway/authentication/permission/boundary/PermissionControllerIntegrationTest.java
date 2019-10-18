@@ -284,7 +284,7 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
         }
 
         @Test
-        @DisplayName("GET: 'http://.../permissions/{id}/revisions' returns OK and Revisions")
+        @DisplayName("GET: 'http://.../permissions/{id}/auditTrails' returns OK and Revisions")
         void givenIdWithHistory_whenFindRevisions_thenStatus200AndRet() throws Exception
         {
             // Arrange

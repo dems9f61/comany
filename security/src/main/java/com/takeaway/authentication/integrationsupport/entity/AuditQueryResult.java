@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.envers.RevisionType;
 
+import java.io.Serializable;
+
 /**
  * User: StMinko
  * Date: 17.10.2019
@@ -12,7 +14,7 @@ import org.hibernate.envers.RevisionType;
  */
 @Getter
 @RequiredArgsConstructor
-public class AuditQueryResult<ENTITY>
+public class AuditQueryResult<ID extends Serializable, ENTITY extends AuditedEntity<ID>>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================

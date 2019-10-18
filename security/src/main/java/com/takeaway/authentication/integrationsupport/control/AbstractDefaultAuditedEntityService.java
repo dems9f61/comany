@@ -62,6 +62,11 @@ public abstract class AbstractDefaultAuditedEntityService<REPOSITORY extends Jpa
     @Transactional(readOnly = true)
     public List<AuditTrail<ID, ENTITY>> findAuditTrails(ID entityId, Class<? extends ENTITY> entityClass)
     {
+        LOGGER.info("{}.findAuditTrails ( {} , {} )",
+                    this.getClass()
+                        .getSimpleName(),
+                    entityId,
+                    entityClass);
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
 
         AuditQuery auditQuery = auditReader.createQuery()

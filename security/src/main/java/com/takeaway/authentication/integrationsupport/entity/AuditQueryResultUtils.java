@@ -2,6 +2,8 @@ package com.takeaway.authentication.integrationsupport.entity;
 
 import org.hibernate.envers.RevisionType;
 
+import java.io.Serializable;
+
 /**
  * User: StMinko
  * Date: 17.10.2019
@@ -14,13 +16,14 @@ class AuditQueryResultUtils
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
 
-    private AuditQueryResultUtils() {}
+    private AuditQueryResultUtils() {
+        throw new AssertionError("Not meant to be instantiated");
+    }
 
     // ===========================  public  Methods  =========================
 
-    static <TTargetType> AuditQueryResult<TTargetType> getAuditQueryResult(Object[] item, Class<TTargetType> type)
+    static <ID extends Serializable, ENTITY extends AuditedEntity<ID>> AuditQueryResult<ID, ENTITY> getAuditQueryResult(Object[] item, Class<ENTITY> type)
     {
-
         // Early exit, if no item given:
         if (item == null)
         {
@@ -34,7 +37,7 @@ class AuditQueryResultUtils
         }
 
         // Cast item[0] to the Entity:
-        TTargetType entity = null;
+        ENTITY entity = null;
         if (type.isInstance(item[0]))
         {
             entity = type.cast(item[0]);
@@ -55,7 +58,7 @@ class AuditQueryResultUtils
         }
 
         // Build the Query Result:
-        return new AuditQueryResult<TTargetType>(entity, revision, revisionType);
+        return new AuditQueryResult<>(entity, revision, revisionType);
     }
 
     // =================  protected/package local  Methods ===================

@@ -2,6 +2,7 @@ package com.takeaway.authentication.integrationsupport.entity;
 
 import org.hibernate.envers.query.AuditQuery;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,9 +24,8 @@ public final class AuditQueryUtils
     }
     // ===========================  public  Methods  =========================
 
-    public static <TTargetType> List<AuditQueryResult<TTargetType>> getAuditQueryResults(AuditQuery query, Class<TTargetType> targetType)
+    public static <ID extends Serializable, ENTITY extends AuditedEntity<ID>> List<AuditQueryResult<ID, ENTITY>> getAuditQueryResults(AuditQuery query, Class<ENTITY> targetType)
     {
-
         List<?> results = query.getResultList();
 
         if (results == null)
