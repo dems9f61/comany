@@ -3,6 +3,7 @@ package com.takeaway.authentication.integrationsupport.control;
 import com.takeaway.authentication.integrationsupport.boundary.AbstractDefaultEntityController;
 import com.takeaway.authentication.integrationsupport.boundary.ApiResponsePage;
 import com.takeaway.authentication.integrationsupport.boundary.DefaultAuditedEntityController;
+import com.takeaway.authentication.integrationsupport.entity.AuditTrail;
 import com.takeaway.authentication.integrationsupport.entity.AuditedEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: StMinko
@@ -34,7 +36,18 @@ public abstract class AbstractDefaultAuditedEntityController<SERVICE extends Aud
         return new ApiResponsePage<>(history.getContent(), pageable, history.getTotalElements());
     }
 
+    @Override
+    public ApiResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable)
+    {
+        List<AuditTrail<ID, ENTITY>> auditTrails = getService().findAuditTrails(id, getEntityClass());
+        return new ApiResponsePage<>(auditTrails, pageable, auditTrails.size());
+    }
+
+
     // =================  protected/package local  Methods ===================
+
+    protected abstract Class<? extends ENTITY> getEntityClass();
+
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

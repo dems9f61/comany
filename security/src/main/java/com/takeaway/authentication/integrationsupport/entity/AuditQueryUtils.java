@@ -12,13 +12,14 @@ import java.util.stream.Collectors;
  * Time: 16:31
  * <p/>
  */
-public class AuditQueryUtils
+public final class AuditQueryUtils
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
     // ============================  Constructors  ===========================
     private AuditQueryUtils()
     {
+        throw new AssertionError("Not meant to be instantiated!");
     }
     // ===========================  public  Methods  =========================
 

@@ -1,5 +1,6 @@
 package com.takeaway.authentication.integrationsupport.control;
 
+import com.takeaway.authentication.integrationsupport.entity.AuditTrail;
 import com.takeaway.authentication.integrationsupport.entity.AuditedEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: StMinko
@@ -25,6 +27,9 @@ public interface AuditedEntityService<ENTITY extends AuditedEntity<ID>, ID exten
     // ==============================  Methods  ==============================
 
     Page<Revision<Long, ENTITY>> findHistory(@NotNull ID id, @NotNull Pageable pageable);
+
+    @Transactional(readOnly = true)
+    List<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID entityId, @NotNull Class<? extends ENTITY> entityClass);
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

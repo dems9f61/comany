@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.takeaway.authentication.IntegrationTestSuite;
 import com.takeaway.authentication.integrationsupport.boundary.ApiResponsePage;
 import com.takeaway.authentication.integrationsupport.boundary.DataView;
+import com.takeaway.authentication.integrationsupport.entity.AuditTrail;
 import com.takeaway.authentication.permission.control.PermissionService;
 import com.takeaway.authentication.permission.entity.Permission;
-import com.takeaway.authentication.permission.entity.PermissionHistory;
 import org.apache.commons.lang3.RandomUtils;
 import org.hibernate.envers.RevisionType;
 import org.junit.jupiter.api.DisplayName;
@@ -314,7 +314,7 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
             // 3-Action: DELETE
             mockMvc.perform(delete(uri, created.getId()).contentType(APPLICATION_JSON_UTF8));
 
-            uri = String.format("%s/{id}/revisions", PermissionController.BASE_URI);
+            uri = String.format("%s/{id}/auditTrails", PermissionController.BASE_URI);
 
             // Act / Assert
             MvcResult revisionResult = mockMvc.perform(get(uri, created.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -323,8 +323,8 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
                                               .andReturn();
             String revisionResultAsString = revisionResult.getResponse()
                                                           .getContentAsString();
-            ApiResponsePage<PermissionHistory> apiResponsePage = objectMapper.readValue(revisionResultAsString,
-                                                                                        new TypeReference<ApiResponsePage<PermissionHistory>>() {});
+            ApiResponsePage<AuditTrail<UUID, Permission>> apiResponsePage = objectMapper.readValue(revisionResultAsString,
+                                                                                 new TypeReference<ApiResponsePage<AuditTrail<UUID, Permission>>>() {});
             assertThat(apiResponsePage).isNotNull()
                                        .hasSize(3);
 

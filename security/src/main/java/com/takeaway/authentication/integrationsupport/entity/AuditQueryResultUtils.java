@@ -18,7 +18,7 @@ class AuditQueryResultUtils
 
     // ===========================  public  Methods  =========================
 
-    public static <TTargetType> AuditQueryResult<TTargetType> getAuditQueryResult(Object[] item, Class<TTargetType> type)
+    static <TTargetType> AuditQueryResult<TTargetType> getAuditQueryResult(Object[] item, Class<TTargetType> type)
     {
 
         // Early exit, if no item given:
