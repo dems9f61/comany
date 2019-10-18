@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.takeaway.authentication.IntegrationTestSuite;
 import com.takeaway.authentication.integrationsupport.boundary.ApiResponsePage;
 import com.takeaway.authentication.integrationsupport.boundary.DataView;
+import com.takeaway.authentication.integrationsupport.entity.AuditTrail;
 import com.takeaway.authentication.role.control.RoleService;
 import com.takeaway.authentication.role.entity.Role;
+import org.hibernate.envers.RevisionType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -486,6 +489,87 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                    .andExpect(jsonPath("$", notNullValue()))
                    .andExpect(jsonPath("$.numberOfElements", is(3)))
                    .andExpect(jsonPath("$.totalElements", is(3)));
+        }
+
+        @Test
+        @DisplayName("GET: 'http://.../roles/{id}/auditTrails' returns OK and Revisions")
+        void givenIdWithHistory_whenFindRevisions_thenStatus200AndRet() throws Exception
+        {
+            // Arrange
+            Role initial = roleTestFactory.createDefault();
+            String requestAsJson = transformRequestToJSON(initial, DataView.POST.class);
+            String uri = String.format("%s", RoleController.BASE_URI);
+
+            // 1-Action: CREATE
+            MvcResult mvcCreationResult = mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                                                                   .content(requestAsJson))
+                                                 .andReturn();
+            String createdContentAsString = mvcCreationResult.getResponse()
+                                                             .getContentAsString();
+            Role created = objectMapper.readValue(createdContentAsString, Role.class);
+            Role update = roleTestFactory.createDefault();
+            uri = String.format("%s/{id}", RoleController.BASE_URI);
+            requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // 2-Action: MODIFY
+            MvcResult mvcResult = mockMvc.perform(put(uri, created.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                           .content(requestAsJson))
+                                         .andReturn();
+            String updatedContentAsString = mvcResult.getResponse()
+                                                     .getContentAsString();
+            Role updated = objectMapper.readValue(updatedContentAsString, Role.class);
+
+            // 3-Action: DELETE
+            mockMvc.perform(delete(uri, created.getId()).contentType(APPLICATION_JSON_UTF8));
+
+            uri = String.format("%s/{id}/auditTrails", RoleController.BASE_URI);
+
+            // Act / Assert
+            MvcResult revisionResult = mockMvc.perform(get(uri, created.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
+                                              .andExpect(status().isOk())
+                                              .andExpect(jsonPath("$", notNullValue()))
+                                              .andReturn();
+            String revisionResultAsString = revisionResult.getResponse()
+                                                          .getContentAsString();
+            ApiResponsePage<AuditTrail<UUID, Role>> apiResponsePage = objectMapper.readValue(revisionResultAsString,
+                                                                                                   new TypeReference<ApiResponsePage<AuditTrail<UUID, Role>>>() {});
+            assertThat(apiResponsePage).isNotNull()
+                                       .hasSize(3);
+
+            apiResponsePage.forEach(page -> {
+                RevisionType revisionType = page.getRevisionType();
+                Role entity = page.getEntity();
+                switch (revisionType)
+                {
+                    case ADD:
+                    {
+                        assertThat(entity.getId()).isEqualTo(created.getId());
+                        assertThat(entity.getName()).isEqualTo(created.getName());
+                        assertThat(entity.getDescription()).isEqualTo(created.getDescription());
+                        assertThat(entity.getLastUpdatedAt()).isEqualTo(created.getLastUpdatedAt());
+                        assertThat(entity.getLastUpdatedBy()).isEqualTo(created.getLastUpdatedBy());
+                        assertThat(entity.getCreatedAt()).isNull(); //NOT AUDITED
+                        assertThat(entity.getCreatedBy()).isNull();  //NOT AUDITED
+                        break;
+                    }
+                    case MOD:
+                    case DEL:
+                    {
+                        assertThat(entity.getId()).isEqualTo(updated.getId());
+                        assertThat(entity.getName()).isEqualTo(updated.getName());
+                        assertThat(entity.getDescription()).isEqualTo(updated.getDescription());
+                        assertThat(entity.getLastUpdatedAt()).isEqualTo(updated.getLastUpdatedAt());
+                        assertThat(entity.getLastUpdatedBy()).isEqualTo(updated.getLastUpdatedBy());
+                        assertThat(entity.getCreatedAt()).isNull(); //NOT AUDITED
+                        assertThat(entity.getCreatedBy()).isNull();  //NOT AUDITED
+                        break;
+                    }
+                    default:
+                    {
+                        fail(String.format("Should not happen: Unexpected revision type [%s]!", revisionType));
+                    }
+                }
+            });
         }
     }
 
