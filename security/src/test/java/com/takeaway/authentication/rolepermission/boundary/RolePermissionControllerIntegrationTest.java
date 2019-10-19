@@ -25,9 +25,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -126,6 +126,90 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
             assertThat(response.getCreatedBy()).isEqualTo(savedPermission.getCreatedBy());
             assertThat(response.getLastUpdatedBy()).isEqualTo(savedPermission.getLastUpdatedBy());
             assertThat(response.getVersion()).isEqualTo(savedPermission.getVersion());
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../roles/{roleId}/permissions/{permissionId}' returns BAD REQUEST on unknown permission ")
+        void givenUnknownPermission_whenAssign_thenStatus404() throws Exception
+        {
+            // Arrange
+            Role savedRole = saveRole(roleTestFactory.createDefault());
+            UUID unknownPermissionId = UUID.randomUUID();
+            String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(post(uri, savedRole.getId(), unknownPermissionId).contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", is(String.format("Could not find a permission by the specified id [%s]!", unknownPermissionId))));
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../roles/{roleId}/permissions/{permissionId}' returns BAD REQUEST on unknown role ")
+        void givenUnknownRole_whenAssign_thenStatus404() throws Exception
+        {
+            // Arrange
+            UUID unknownRoleId = UUID.randomUUID();
+            Permission savedPermission = savePermission(permissionTestFactory.createDefault());
+            String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(post(uri, unknownRoleId, savedPermission.getId()).contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", is(String.format("Could not find a role by the specified id [%s]!", unknownRoleId))));
+        }
+    }
+
+    @Nested
+    @DisplayName("when unassign")
+    class WhenUnassign
+    {
+
+        @Test
+        @DisplayName("POST: 'http://.../roles/{roleId}/permissions/{permissionId}' returns NO CONTENT and the assigned permission ")
+        void givenRoleAndPermission_whenUnassign_thenStatus204() throws Exception
+        {
+            // Arrange
+            Role savedRole = saveRole(roleTestFactory.createDefault());
+            Permission savedPermission = savePermission(permissionTestFactory.createDefault());
+            String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(delete(uri, savedRole.getId(), savedPermission.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
+                                         .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @DisplayName("DELETE: 'http://.../roles/{roleId}/permissions/{permissionId}' returns BAD REQUEST on unknown permission ")
+        void givenUnknownPermission_whenUnassign_thenStatus404() throws Exception
+        {
+            // Arrange
+            Role savedRole = saveRole(roleTestFactory.createDefault());
+            UUID unknownPermissionId = UUID.randomUUID();
+            String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(delete(uri, savedRole.getId(), unknownPermissionId).contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", is(String.format("Could not find a permission by the specified id [%s]!", unknownPermissionId))));
+        }
+
+        @Test
+        @DisplayName("DELETE: 'http://.../roles/{roleId}/permissions/{permissionId}' returns BAD REQUEST on unknown role ")
+        void givenUnknownRole_whenUnassign_thenStatus404() throws Exception
+        {
+            // Arrange
+            UUID unknownRoleId = UUID.randomUUID();
+            Permission savedPermission = savePermission(permissionTestFactory.createDefault());
+            String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(delete(uri, unknownRoleId, savedPermission.getId()).contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", is(String.format("Could not find a role by the specified id [%s]!", unknownRoleId))));
         }
     }
 

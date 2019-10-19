@@ -48,10 +48,10 @@ public class RolePermissionService
     public Permission assign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
     {
         Role role = roleService.findById(roleId)
-                               .orElseThrow(() -> new ServiceException(ServiceException.Reason.RESOURCE_NOT_FOUND,
+                               .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
                                                                        String.format("Could not find a role by the specified id [%s]!", roleId)));
         Permission permission = permissionService.findById(permissionId)
-                                                 .orElseThrow(() -> new ServiceException(ServiceException.Reason.RESOURCE_NOT_FOUND,
+                                                 .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
                                                                                          String.format(
                                                                                                  "Could not find a permission by the specified id [%s]!",
                                                                                                  permissionId)));
@@ -68,10 +68,10 @@ public class RolePermissionService
     public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
     {
         roleService.findById(roleId)
-                               .orElseThrow(() -> new ServiceException(ServiceException.Reason.RESOURCE_NOT_FOUND,
+                               .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
                                                                        String.format("Could not find a role by the specified id [%s]!", roleId)));
         permissionService.findById(permissionId)
-                                                 .orElseThrow(() -> new ServiceException(ServiceException.Reason.RESOURCE_NOT_FOUND,
+                                                 .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
                                                                                          String.format(
                                                                                                  "Could not find a permission by the specified id [%s]!",
                                                                                                  permissionId)));
