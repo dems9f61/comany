@@ -30,7 +30,7 @@ public abstract class AbstractDefaultAuditedEntityController<SERVICE extends Aud
     // ===========================  public  Methods  =========================
 
     @Override
-    public ApiResponsePage<Revision<Long, ENTITY>> findHistory(@PathVariable @NotNull ID id, @NotNull @PageableDefault(50) Pageable pageable)
+    public ApiResponsePage<Revision<Long, ENTITY>> findRevisions(@PathVariable @NotNull ID id, @NotNull @PageableDefault(50) Pageable pageable)
     {
         Page<Revision<Long, ENTITY>> history = getService().findHistory(id, pageable);
         return new ApiResponsePage<>(history.getContent(), pageable, history.getTotalElements());

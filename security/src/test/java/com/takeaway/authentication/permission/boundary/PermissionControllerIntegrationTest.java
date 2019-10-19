@@ -249,8 +249,8 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
     class WhenRevise
     {
         @Test
-        @DisplayName("GET: 'http://.../permissions/{id}/changes' returns OK and Revisions")
-        void givenIdWithHistory_whenFindHistory_thenStatus200() throws Exception
+        @DisplayName("GET: 'http://.../permissions/{id}/revisions' returns OK and Revisions")
+        void givenIdWithHistory_whenFindRevisions_thenStatus200() throws Exception
         {
             // Arrange
             Permission initial = permissionTestFactory.createDefault();
@@ -275,7 +275,7 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
             // 3-Action: DELETE
             mockMvc.perform(delete(uri, created.getId()).contentType(APPLICATION_JSON_UTF8));
 
-            uri = String.format("%s/{id}/changes", PermissionController.BASE_URI);
+            uri = String.format("%s/{id}/revisions", PermissionController.BASE_URI);
 
             // Act / Assert
             mockMvc.perform(get(uri, created.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))

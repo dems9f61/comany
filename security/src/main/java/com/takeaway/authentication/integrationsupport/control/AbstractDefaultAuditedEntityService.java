@@ -51,7 +51,7 @@ public abstract class AbstractDefaultAuditedEntityService<REPOSITORY extends Jpa
     @Override
     public Page<Revision<Long, ENTITY>> findHistory(@NotNull ID id, @NotNull Pageable pageable)
     {
-        LOGGER.info("{}.findHistory ( {} , {} )",
+        LOGGER.info("{}.findRevisions ( {} , {} )",
                     this.getClass()
                         .getSimpleName(),
                     id,

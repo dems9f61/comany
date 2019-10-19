@@ -25,9 +25,9 @@ public interface DefaultAuditedEntityController<ENTITY extends AuditedEntity<ID>
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
 
-    @GetMapping("/{id}/changes")
+    @GetMapping("/{id}/revisions")
     @ResponseStatus(HttpStatus.OK)
-    Page<Revision<Long, ENTITY>> findHistory(@PathVariable @NotNull ID id, @NotNull @PageableDefault(50) Pageable pageable);
+    Page<Revision<Long, ENTITY>> findRevisions(@PathVariable @NotNull ID id, @NotNull @PageableDefault(50) Pageable pageable);
 
     @GetMapping("/{id}/auditTrails")
     @ResponseStatus(HttpStatus.OK)

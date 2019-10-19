@@ -455,7 +455,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
     class WhenRevise
     {
         @Test
-        @DisplayName("GET: 'http://.../roles/{id}/changes' returns OK and Revisions")
+        @DisplayName("GET: 'http://.../roles/{id}/revisions' returns OK and Revisions")
         void givenIdWithHistory_whenFindRevisions_thenStatus200() throws Exception
         {
             // Arrange
@@ -481,7 +481,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
             // 3-Action: DELETE
             mockMvc.perform(delete(uri, created.getId()).contentType(APPLICATION_JSON_UTF8));
 
-            uri = String.format("%s/{id}/changes", RoleController.BASE_URI);
+            uri = String.format("%s/{id}/revisions", RoleController.BASE_URI);
 
             // Act / Assert
             mockMvc.perform(get(uri, created.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
