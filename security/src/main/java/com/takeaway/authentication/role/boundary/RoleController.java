@@ -33,7 +33,7 @@ public class RoleController extends AbstractDefaultAuditedEntityController<RoleS
 {
     // =========================== Class Variables ===========================
 
-    static final String BASE_URI = ApiVersions.V1 + "/roles";
+    public static final String BASE_URI = ApiVersions.V1 + "/roles";
 
     // =============================  Variables  =============================
 

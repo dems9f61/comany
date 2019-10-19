@@ -2,6 +2,7 @@ package com.takeaway.authentication;
 
 import com.takeaway.authentication.permission.control.PermissionRepositoryTestHelper;
 import com.takeaway.authentication.role.control.RoleRepositoryTestHelper;
+import com.takeaway.authentication.rolepermission.control.RolePermissionRepositoryTestHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class DatabaseCleaner
 
     private final RoleRepositoryTestHelper       roleRepositoryTestHelper;
     private final PermissionRepositoryTestHelper permissionRepositoryTestHelper;
+    private final RolePermissionRepositoryTestHelper rolePermissionRepositoryTestHelper;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
@@ -29,6 +31,7 @@ public class DatabaseCleaner
     void cleanDatabases()
     {
         LOGGER.info("Cleaning up the test database");
+        rolePermissionRepositoryTestHelper.cleanDatabase();
         permissionRepositoryTestHelper.cleanDatabase();
         roleRepositoryTestHelper.cleanDatabase();
     }
