@@ -399,6 +399,176 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
             assertThat(updated.getDescription()).isEqualTo(update.getDescription());
             assertThat(updated.getVersion()).isEqualTo(1);
         }
+
+        @Test
+        @DisplayName("PUT: 'http://.../permissions/{id}' returns BAD REQUEST on null name")
+        void givenNullName_whenDoFullUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.builder()
+                                                     .name(null)
+                                                     .create();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PUT: 'http://.../permissions/{id}' returns BAD REQUEST on empty name")
+        void givenBlankName_whenDoFullUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.builder()
+                                                     .name("   ")
+                                                     .create();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PUT: 'http://.../permissions/{id}' returns BAD REQUEST on null description request")
+        void givenNullDescription_whenDoFullUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.builder()
+                                                     .description(null)
+                                                     .create();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../permissions/{id}' returns OK on valid request with only name")
+        void givenValidRequestWithOnlyName_whenDoPartialUpdate_thenStatus200AndReturnUpdated() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.builder()
+                                                     .description(null)
+                                                     .create();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                             .content(requestAsJson))
+                                         .andExpect(status().isOk())
+                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                         .andExpect(jsonPath("$", notNullValue()))
+                                         .andReturn();
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Permission updated = objectMapper.readValue(contentAsString, Permission.class);
+            assertThat(updated).isNotNull();
+            assertThat(updated.getId()).isEqualTo(initial.getId());
+            assertThat(updated.getName()).isEqualTo(update.getName());
+            assertThat(updated.getDescription()).isEqualTo(initial.getDescription());
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../permissions/{id}' returns OK on valid request with only description")
+        void givenValidRequestWithOnlyDesc_whenDoPartialUpdate_thenStatus200AndReturnUpdated() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.builder()
+                                                     .name(null)
+                                                     .create();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                             .content(requestAsJson))
+                                         .andExpect(status().isOk())
+                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                         .andExpect(jsonPath("$", notNullValue()))
+                                         .andReturn();
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Permission updated = objectMapper.readValue(contentAsString, Permission.class);
+            assertThat(updated).isNotNull();
+            assertThat(updated.getId()).isEqualTo(initial.getId());
+            assertThat(updated.getName()).isEqualTo(initial.getName());
+            assertThat(updated.getDescription()).isEqualTo(update.getDescription());
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../permissions/{id}' returns BAD REQUEST on empty description request")
+        void givenEmptyDescription_whenDoFullUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.builder()
+                                                     .description(" ")
+                                                     .create();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../permissions/{id}' returns BAD REQUEST on empty description request")
+        void givenEmptyDescription_whenDoPartialUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.builder()
+                                         .description(" ")
+                                         .create();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                       .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
+
+        @Test
+        @DisplayName("PATCH: 'http://.../permissions/{id}' returns BAD REQUEST on empty name request")
+        void givenEmptyName_whenDoPartialUpdate_thenStatus400() throws Exception
+        {
+            // Arrange
+            Permission initial = saveRandomPermissions(1).get(0);
+            Permission update = permissionTestFactory.builder()
+                                                     .name(" ")
+                                                     .create();
+            String uri = String.format("%s/{id}", PermissionController.BASE_URI);
+            String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+            // Act / Assert
+            mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                       .content(requestAsJson))
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()));
+        }
     }
 
     private List<Permission> saveRandomPermissions(int count) throws Exception
