@@ -1,10 +1,9 @@
-package com.takeaway.authentication.permission.boundary;
+package com.takeaway.authentication.user.boundary;
 
 import com.takeaway.authentication.integrationsupport.boundary.AbstractDefaultAuditedEntityController;
 import com.takeaway.authentication.integrationsupport.boundary.ApiVersions;
-import com.takeaway.authentication.permission.control.PermissionService;
-import com.takeaway.authentication.permission.entity.Permission;
-import io.swagger.annotations.Api;
+import com.takeaway.authentication.user.control.UserService;
+import com.takeaway.authentication.user.entity.User;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,37 +17,36 @@ import java.util.UUID;
 
 /**
  * User: StMinko
- * Date: 17.10.2019
- * Time: 11:55
+ * Date: 21.10.2019
+ * Time: 11:48
  * <p/>
  */
 @Slf4j
 @Validated
 @RestController
-@Api(value = "User permission service: Operations pertaining to the user permission service interface")
-@RequestMapping(value = PermissionController.BASE_URI,
+@RequestMapping(value = UserController.BASE_URI,
         produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
         consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
-public class PermissionController extends AbstractDefaultAuditedEntityController<PermissionService, Permission, UUID>
+public class UserController extends AbstractDefaultAuditedEntityController<UserService, User, UUID>
 {
     // =========================== Class Variables ===========================
 
-    static final String BASE_URI = ApiVersions.V1 + "/permissions";
+    static final String BASE_URI = ApiVersions.V1 + "/users";
 
     // =============================  Variables  =============================
 
     @Getter
-    private final PermissionService service;
+    private final UserService service;
 
     @Getter
-    private final Class<? extends Permission> entityClass = Permission.class;
+    private final Class<? extends User> entityClass = User.class;
 
     // ============================  Constructors  ===========================
 
     @Autowired
-    public PermissionController(@NotNull PermissionService permissionService)
+    public UserController(@NotNull UserService userService)
     {
-        this.service = permissionService;
+        this.service = userService;
     }
 
     // ===========================  public  Methods  =========================

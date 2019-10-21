@@ -21,7 +21,7 @@ public class ServiceException extends Exception
     {
         SUB_RESOURCE_NOT_FOUND,
         RESOURCE_NOT_FOUND,
-        INVALID_REQUEST,
+        INVALID_PARAMETER,
         GENERIC
     }
 

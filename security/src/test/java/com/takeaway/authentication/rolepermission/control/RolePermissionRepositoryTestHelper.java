@@ -19,9 +19,9 @@ public class RolePermissionRepositoryTestHelper
 {
     private final RolePermissionRepository rolePermissionRepository;
 
-        public void cleanDatabase()
-        {
-            LOGGER.info("Cleaning the Role Permission repository");
-            rolePermissionRepository.deleteAll();
-        }
+    public void cleanDatabase()
+    {
+        LOGGER.info("Cleaning the Role Permission repository");
+        rolePermissionRepository.deleteAll();
+    }
 }

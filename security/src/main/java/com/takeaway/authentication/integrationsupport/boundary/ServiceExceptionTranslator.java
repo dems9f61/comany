@@ -22,7 +22,7 @@ public interface ServiceExceptionTranslator
                 return new BadRequestException(caught.getMessage());
             case RESOURCE_NOT_FOUND:
                 return new ResourceNotFoundException(caught.getMessage());
-            case INVALID_REQUEST:
+            case INVALID_PARAMETER:
                 return new BadRequestException(caught.getMessage(), caught.getCause());
             default:
                 return new InternalServerErrorException(caught.getMessage());

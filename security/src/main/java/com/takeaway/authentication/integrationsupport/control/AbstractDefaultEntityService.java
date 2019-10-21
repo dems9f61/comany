@@ -123,7 +123,7 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
      * @return The before create actions modified Entity to create. Default implementation returns the input parameter
      * create.
      */
-    protected ENTITY onBeforeCreate(ENTITY create)
+    protected ENTITY onBeforeCreate(ENTITY create) throws ServiceException
     {
         return create;
     }
@@ -155,7 +155,7 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
      * @return The before update actions modified Entity to update. Default implementation returns the input parameter
      * update.
      */
-    protected ENTITY onBeforeUpdate(ENTITY existing, ENTITY update)
+    protected ENTITY onBeforeUpdate(ENTITY existing, ENTITY update) throws ServiceException
     {
         return update;
     }

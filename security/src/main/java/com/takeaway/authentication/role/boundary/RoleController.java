@@ -1,7 +1,7 @@
 package com.takeaway.authentication.role.boundary;
 
+import com.takeaway.authentication.integrationsupport.boundary.AbstractDefaultAuditedEntityController;
 import com.takeaway.authentication.integrationsupport.boundary.ApiVersions;
-import com.takeaway.authentication.integrationsupport.control.AbstractDefaultAuditedEntityController;
 import com.takeaway.authentication.role.control.RoleService;
 import com.takeaway.authentication.role.entity.Role;
 import io.swagger.annotations.Api;

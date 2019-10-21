@@ -1,8 +1,6 @@
-package com.takeaway.authentication.integrationsupport.control;
+package com.takeaway.authentication.integrationsupport.boundary;
 
-import com.takeaway.authentication.integrationsupport.boundary.AbstractDefaultEntityController;
-import com.takeaway.authentication.integrationsupport.boundary.ApiResponsePage;
-import com.takeaway.authentication.integrationsupport.boundary.DefaultAuditedEntityController;
+import com.takeaway.authentication.integrationsupport.control.AuditedEntityService;
 import com.takeaway.authentication.integrationsupport.entity.AuditTrail;
 import com.takeaway.authentication.integrationsupport.entity.AuditedEntity;
 import org.springframework.data.domain.Page;
