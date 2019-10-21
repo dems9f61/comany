@@ -12,15 +12,15 @@ import java.util.Date;
  */
 public interface EmployeeRequest
 {
-   String getEmailAddress();
+    String getEmailAddress();
 
-   String getFirstName();
+    String getFirstName();
 
-   String getLastName();
+    String getLastName();
 
-   Date getBirthday();
+    Date getBirthday();
 
-   String getDepartmentName();
+    String getDepartmentName();
 
     default EmployeeParameter toEmployerParameter()
     {

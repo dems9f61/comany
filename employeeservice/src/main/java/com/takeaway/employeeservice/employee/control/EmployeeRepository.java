@@ -19,7 +19,7 @@ interface EmployeeRepository extends JpaRepository<Employee, UUID>, RevisionRepo
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================
-    
+
     List<Employee> findByEmailAddress(String emailAddress);
 
     // ============================  Inner Classes  ==========================

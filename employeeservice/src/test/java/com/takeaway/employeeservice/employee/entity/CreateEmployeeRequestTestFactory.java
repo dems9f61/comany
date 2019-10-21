@@ -73,10 +73,7 @@ public class CreateEmployeeRequestTestFactory extends AbstractTestFactory<Create
 
         public CreateEmployeeRequest create()
         {
-            return new CreateEmployeeRequest(emailAddress,
-                                             firstName,
-                                             lastName, birthday,
-                                             departmentName);
+            return new CreateEmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
         }
     }
 }

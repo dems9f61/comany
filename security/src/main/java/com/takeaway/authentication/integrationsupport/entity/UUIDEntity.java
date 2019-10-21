@@ -21,7 +21,6 @@ public abstract class UUIDEntity extends AbstractEntity<UUID>
     public String toString()
     {
         return "UUIDEntity{" + super.toString() + "}";
-
     }
 
     // =================  protected/package local  Methods ===================
@@ -29,7 +28,8 @@ public abstract class UUIDEntity extends AbstractEntity<UUID>
     @Override
     protected void onPrePersist()
     {
-        if(isNew()){
+        if (isNew())
+        {
             setId(UUID.randomUUID());
         }
     }

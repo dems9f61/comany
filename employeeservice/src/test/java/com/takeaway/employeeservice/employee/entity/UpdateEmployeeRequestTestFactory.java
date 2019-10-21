@@ -21,9 +21,9 @@ public class UpdateEmployeeRequestTestFactory extends AbstractTestFactory<Update
     // ===========================  public  Methods  =========================
 
     public UpdateEmployeeRequestTestFactory.Builder builder()
-        {
-            return new UpdateEmployeeRequestTestFactory.Builder();
-        }
+    {
+        return new UpdateEmployeeRequestTestFactory.Builder();
+    }
 
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================

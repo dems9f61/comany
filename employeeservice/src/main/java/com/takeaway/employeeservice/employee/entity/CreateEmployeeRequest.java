@@ -50,10 +50,11 @@ public class CreateEmployeeRequest implements EmployeeRequest
 
     @JsonCreator
     public CreateEmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
-                          @JsonProperty(value = "firstName") String firstName,
-                          @JsonProperty(value = "lastName") String lastName,
-                          @JsonProperty(value = "birthday") Date birthday,
-                          @JsonProperty(value = "departmentName", required = true) String departmentName)
+                                 @JsonProperty(value = "firstName") String firstName,
+                                 @JsonProperty(value = "lastName") String lastName,
+                                 @JsonProperty(value = "birthday") Date birthday,
+                                 @JsonProperty(value = "departmentName",
+                                         required = true) String departmentName)
     {
         this.emailAddress = emailAddress;
         this.firstName = firstName;

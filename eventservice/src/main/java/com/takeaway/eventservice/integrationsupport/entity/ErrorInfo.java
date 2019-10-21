@@ -32,14 +32,15 @@ public final class ErrorInfo
 
     private final String errorMessage;
 
-    private  final List<ConstraintViolationError> constraintViolations = new LinkedList<>();
+    private final List<ConstraintViolationError> constraintViolations = new LinkedList<>();
 
     // ============================  Constructors  ===========================
 
     public ErrorInfo(@NonNull String uri, @NonNull ApiException apiException)
     {
         this.uri = uri;
-        this.httpStatus = apiException.getHttpStatus().value();
+        this.httpStatus = apiException.getHttpStatus()
+                                      .value();
         this.errorMessage = apiException.getLocalizedMessage();
         this.time = Instant.now();
         Throwable cause = apiException.getCause();

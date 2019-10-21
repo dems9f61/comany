@@ -13,10 +13,11 @@ import javax.persistence.*;
  * <p/>
  */
 @Entity
-@Table(name = "audit_trail" /*, schema = "history"*/)
+@Table(name = "audit_trail"
+        /*, schema = "history"*/)
 @RevisionEntity
 @SequenceGenerator(name = "audit_trail_sequence",
-//        schema = "history",
+        //        schema = "history",
         initialValue = 1,
         allocationSize = 1)
 public class CustomRevisionEntity

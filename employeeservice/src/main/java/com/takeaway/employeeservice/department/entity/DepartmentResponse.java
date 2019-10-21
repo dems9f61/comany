@@ -21,7 +21,7 @@ public class DepartmentResponse
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
     @ApiModelProperty(example = "245")
-    private final Long   id;
+    private final Long id;
 
     @ApiModelProperty(example = "Human Resources (HR)")
     private final String departmentName;
@@ -29,8 +29,10 @@ public class DepartmentResponse
     // ============================  Constructors  ===========================
 
     @JsonCreator
-    public DepartmentResponse(@JsonProperty(value = "id", required = true) Long id,
-                              @JsonProperty(value = "departmentName", required = true) String departmentName)
+    public DepartmentResponse(@JsonProperty(value = "id",
+            required = true) Long id,
+                              @JsonProperty(value = "departmentName",
+                                      required = true) String departmentName)
     {
         this.id = id;
         this.departmentName = departmentName;

@@ -24,7 +24,6 @@ public class BadRequestException extends ApiException
         super(HttpStatus.BAD_REQUEST, cause);
     }
 
-
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
     // ===========================  private  Methods  ========================

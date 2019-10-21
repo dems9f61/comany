@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Audited
 @AuditOverride(forClass = AbstractEntity.class)
 @MappedSuperclass
-public abstract class AuditedEntity <ID extends Serializable> extends AbstractEntity<ID>
+public abstract class AuditedEntity<ID extends Serializable> extends AbstractEntity<ID>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================

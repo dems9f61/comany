@@ -22,13 +22,13 @@ public class DatabaseCleaner
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    private final RoleRepositoryTestHelper           roleRepositoryTestHelper;
+    private final RoleRepositoryTestHelper roleRepositoryTestHelper;
 
-    private final PermissionRepositoryTestHelper     permissionRepositoryTestHelper;
+    private final PermissionRepositoryTestHelper permissionRepositoryTestHelper;
 
     private final RolePermissionRepositoryTestHelper rolePermissionRepositoryTestHelper;
 
-    private final UserRepositoryTestHelper           userRepositoryTestHelper;
+    private final UserRepositoryTestHelper userRepositoryTestHelper;
 
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================

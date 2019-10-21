@@ -24,7 +24,8 @@ public final class AuditQueryUtils
     }
     // ===========================  public  Methods  =========================
 
-    public static <ID extends Serializable, ENTITY extends AuditedEntity<ID>> List<AuditQueryResult<ID, ENTITY>> getAuditQueryResults(AuditQuery query, Class<ENTITY> targetType)
+    public static <ID extends Serializable, ENTITY extends AuditedEntity<ID>> List<AuditQueryResult<ID, ENTITY>> getAuditQueryResults(AuditQuery query,
+                                                                                                                                      Class<ENTITY> targetType)
     {
         List<?> results = query.getResultList();
 

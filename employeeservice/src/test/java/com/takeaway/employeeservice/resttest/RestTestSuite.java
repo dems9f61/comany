@@ -24,7 +24,6 @@ public abstract class RestTestSuite extends IntegrationTestSuite
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
 
-
     HttpHeaders defaultHttpHeaders()
     {
         HttpHeaders httpHeaders = new HttpHeaders();

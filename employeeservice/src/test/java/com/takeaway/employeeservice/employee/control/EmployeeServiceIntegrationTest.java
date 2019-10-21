@@ -163,7 +163,6 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                         .getId()).isEqualTo(employee.getDepartment()
                                                                     .getId());
             }
-
         }
     }
 
@@ -299,11 +298,14 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                 Employee updatedEmployee = updated.get();
                 assertThat(updatedEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
                 assertThat(updatedEmployee.getFullName()
-                                          .getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+                                          .getFirstName()).isEqualTo(employee.getFullName()
+                                                                             .getFirstName());
                 assertThat(updatedEmployee.getFullName()
-                                          .getLastName()).isEqualTo(employee.getFullName().getLastName());
+                                          .getLastName()).isEqualTo(employee.getFullName()
+                                                                            .getLastName());
                 assertThat(updatedEmployee.getDepartment()
-                                          .getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
+                                          .getDepartmentName()).isEqualTo(employee.getDepartment()
+                                                                                  .getDepartmentName());
                 assertThat(updatedEmployee.getBirthday()).isEqualTo(newBirthDay);
                 verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(
                         updatedEmployee.getId())));
@@ -371,7 +373,8 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                                                                               .create();
             Employee employee = employeeService.create(employeeParameter);
 
-            String expectedEmail =employeeParameterTestFactory.builder().generateRandomEmail();
+            String expectedEmail = employeeParameterTestFactory.builder()
+                                                               .generateRandomEmail();
 
             EmployeeParameter updateParameters = employeeParameterTestFactory.builder()
                                                                              .emailAddress(expectedEmail)
@@ -395,9 +398,11 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
                 Employee updatedEmployee = updated.get();
                 assertThat(updatedEmployee.getEmailAddress()).isEqualTo(expectedEmail);
                 assertThat(updatedEmployee.getFullName()
-                                          .getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+                                          .getFirstName()).isEqualTo(employee.getFullName()
+                                                                             .getFirstName());
                 assertThat(updatedEmployee.getFullName()
-                                          .getLastName()).isEqualTo(employee.getFullName().getLastName());
+                                          .getLastName()).isEqualTo(employee.getFullName()
+                                                                            .getLastName());
                 assertThat(updatedEmployee.getDepartment()
                                           .getDepartmentName()).isEqualTo(employee.getDepartment()
                                                                                   .getDepartmentName());

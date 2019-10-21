@@ -539,8 +539,8 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
             // Arrange
             Permission initial = saveRandomPermissions(1).get(0);
             Permission update = permissionTestFactory.builder()
-                                         .description(" ")
-                                         .create();
+                                                     .description(" ")
+                                                     .create();
             String uri = String.format("%s/{id}", PermissionController.BASE_URI);
             String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 

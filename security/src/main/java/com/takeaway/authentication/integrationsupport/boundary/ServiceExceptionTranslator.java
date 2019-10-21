@@ -29,7 +29,6 @@ public interface ServiceExceptionTranslator
         }
     }
 
-
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================
 }

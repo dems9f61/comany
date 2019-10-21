@@ -14,7 +14,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-
 /**
  * User: StMinko
  * Date: 18.03.2019
@@ -26,11 +25,14 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString(exclude = "employees")
-@EqualsAndHashCode(exclude = {"employees"})
+@EqualsAndHashCode(exclude = { "employees" })
 @Entity
-@Table(name = "DEPARTMENTS", schema = "data")
+@Table(name = "DEPARTMENTS",
+        schema = "data")
 @SequenceGenerator(name = "department_sequence",
-        allocationSize = 1, sequenceName = "department_sequence", schema = "data")
+        allocationSize = 1,
+        sequenceName = "department_sequence",
+        schema = "data")
 public class Department extends AbstractEntity<Long>
 {
     // =========================== Class Variables ===========================
@@ -38,7 +40,8 @@ public class Department extends AbstractEntity<Long>
 
     @Getter(onMethod = @__(@Override))
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "department_sequence")
     private Long id;
 
     @Column(name = "DEPARTMENT_NAME",

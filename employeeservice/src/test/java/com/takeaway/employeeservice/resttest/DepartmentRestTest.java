@@ -40,7 +40,10 @@ class DepartmentRestTest extends RestTestSuite
                                                                                     .departmentName(departmentName)
                                                                                     .create();
             HttpHeaders headers = defaultHttpHeaders();
-            testRestTemplate.exchange( DepartmentController.BASE_URI, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
+            testRestTemplate.exchange(DepartmentController.BASE_URI,
+                                      HttpMethod.POST,
+                                      new HttpEntity<>(createDepartmentRequest, headers),
+                                      DepartmentResponse.class);
 
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
@@ -85,7 +88,8 @@ class DepartmentRestTest extends RestTestSuite
             // Act
             ResponseEntity<String> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
                                                                               HttpMethod.POST,
-                                                                              new HttpEntity<>(createDepartmentRequest, headers), String.class);
+                                                                              new HttpEntity<>(createDepartmentRequest, headers),
+                                                                              String.class);
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }

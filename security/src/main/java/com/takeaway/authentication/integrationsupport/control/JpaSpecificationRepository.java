@@ -11,7 +11,7 @@ import org.springframework.data.repository.NoRepositoryBean;
  * <p/>
  */
 @NoRepositoryBean
-public interface JpaSpecificationRepository <ENTITY, TYPE> extends JpaRepository<ENTITY, TYPE>, JpaSpecificationExecutor<ENTITY>
+public interface JpaSpecificationRepository<ENTITY, TYPE> extends JpaRepository<ENTITY, TYPE>, JpaSpecificationExecutor<ENTITY>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================

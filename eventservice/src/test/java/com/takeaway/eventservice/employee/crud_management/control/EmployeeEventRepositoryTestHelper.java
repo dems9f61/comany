@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmployeeEventRepositoryTestHelper
 {
-    private final  EmployeeEventRepository employeeEventRepository;
+    private final EmployeeEventRepository employeeEventRepository;
 
     public void cleanDatabase()
     {

@@ -19,7 +19,7 @@ public abstract class UnitTestSuite
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    protected EmployeeEventTestFactory   employeeEventTestFactory;
+    protected EmployeeEventTestFactory employeeEventTestFactory;
 
     protected EmployeeMessageTestFactory employeeMessageTestFactory;
 

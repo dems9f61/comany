@@ -81,10 +81,12 @@ class EmployeeEventServiceTest extends UnitTestSuite
             UUID uuid = UUID.randomUUID();
             Pageable mockPageable = mock(Pageable.class);
             int expectedPageNumber = RandomUtils.nextInt(0, 23);
-            doReturn(expectedPageNumber).when(mockPageable).getPageNumber();
+            doReturn(expectedPageNumber).when(mockPageable)
+                                        .getPageNumber();
 
             Page<PersistentEmployeeEvent> mockPageableResult = (Page<PersistentEmployeeEvent>) mock(Page.class);
-            doReturn(mockPageableResult).when(employeeEventRepository).findByUuid(eq(uuid), any(Pageable.class));
+            doReturn(mockPageableResult).when(employeeEventRepository)
+                                        .findByUuid(eq(uuid), any(Pageable.class));
 
             // Act
             employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, mockPageable);

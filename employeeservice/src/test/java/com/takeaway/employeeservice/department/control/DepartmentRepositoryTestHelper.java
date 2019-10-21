@@ -25,7 +25,8 @@ public class DepartmentRepositoryTestHelper
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    public void cleanDatabase(){
+    public void cleanDatabase()
+    {
         LOGGER.info("Cleaning the department repository");
         departmentRepository.deleteAll();
     }

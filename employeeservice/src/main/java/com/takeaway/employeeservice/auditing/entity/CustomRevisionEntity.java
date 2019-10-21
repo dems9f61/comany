@@ -9,11 +9,13 @@ import org.hibernate.envers.RevisionTimestamp;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "audit_trail", schema = "history")
+@Table(name = "audit_trail",
+        schema = "history")
 @RevisionEntity
 @SequenceGenerator(name = "audit_trail_sequence",
         allocationSize = 1,
-        sequenceName = "audit_trail_sequence", schema = "history")
+        sequenceName = "audit_trail_sequence",
+        schema = "history")
 public class CustomRevisionEntity
 {
     @Setter

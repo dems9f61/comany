@@ -50,7 +50,8 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
         for (PersistentEmployeeEvent event : allDescOrderedByCreatedAt)
         {
             Instant current = event.getCreatedAt();
-            if(previous != null){
+            if (previous != null)
+            {
                 assertThat(previous).isBefore(current);
             }
             previous = current;

@@ -5,18 +5,18 @@
 
     <changeSet id="CreateDepartmentHistoryTable" author="Stéphan.Minko">
         <sql>
-			create table if not exists history.departments_history
-			(
-				id bigint not null,
-				rev bigint not null constraint fk_department_history_to_audit_trail references history.audit_trail,
-				revtype smallint,
-				department_name varchar(50),
-			    created_at timestamp,
-				modified_at timestamp,
-				constraint departments_history_pkey primary key (id, rev)
-			);
+            create table if not exists history.departments_history
+            (
+            id bigint not null,
+            rev bigint not null constraint fk_department_history_to_audit_trail references history.audit_trail,
+            revtype smallint,
+            department_name varchar(50),
+            created_at timestamp,
+            modified_at timestamp,
+            constraint departments_history_pkey primary key (id, rev)
+            );
 
-			alter table history.departments_history owner to "user";
+            alter table history.departments_history owner to "user";
         </sql>
     </changeSet>
 </databaseChangeLog>

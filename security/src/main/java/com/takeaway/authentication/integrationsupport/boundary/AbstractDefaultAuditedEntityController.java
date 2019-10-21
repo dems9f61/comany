@@ -41,7 +41,6 @@ public abstract class AbstractDefaultAuditedEntityController<SERVICE extends Aud
         return new ApiResponsePage<>(auditTrails, pageable, auditTrails.size());
     }
 
-
     // =================  protected/package local  Methods ===================
 
     protected abstract Class<? extends ENTITY> getEntityClass();

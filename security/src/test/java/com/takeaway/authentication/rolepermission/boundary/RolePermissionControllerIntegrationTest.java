@@ -177,7 +177,7 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
 
             // Act / Assert
             mockMvc.perform(delete(uri, savedRole.getId(), savedPermission.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
-                                         .andExpect(status().isNoContent());
+                   .andExpect(status().isNoContent());
         }
 
         @Test

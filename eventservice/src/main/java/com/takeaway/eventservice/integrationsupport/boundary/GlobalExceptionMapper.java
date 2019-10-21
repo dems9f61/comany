@@ -35,7 +35,8 @@ public class GlobalExceptionMapper
 
     @Order(2)
     @ExceptionHandler({ ResourceNotFoundException.class })
-    public ResponseEntity<ErrorInfo> handleResourceNotFoundException(HttpServletRequest httpServletRequest, ResourceNotFoundException resourceNotFoundException)
+    public ResponseEntity<ErrorInfo> handleResourceNotFoundException(HttpServletRequest httpServletRequest,
+                                                                     ResourceNotFoundException resourceNotFoundException)
     {
         return handleApiException(httpServletRequest, resourceNotFoundException);
     }
@@ -52,7 +53,8 @@ public class GlobalExceptionMapper
 
     private ResponseEntity<ErrorInfo> handleApiException(HttpServletRequest httpServletRequest, ApiException apiException)
     {
-        if (apiException.getHttpStatus().is4xxClientError())
+        if (apiException.getHttpStatus()
+                        .is4xxClientError())
         {
             LOGGER.debug("API Error occurred: [{}]", apiException.getLocalizedMessage(), apiException);
             LOGGER.info("API Error occurred: [{}]", apiException.getLocalizedMessage());
@@ -65,7 +67,6 @@ public class GlobalExceptionMapper
         return ResponseEntity.status(apiException.getHttpStatus())
                              .body(errorInfo);
     }
-
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

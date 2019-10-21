@@ -51,12 +51,14 @@ public class EmployeeResponse
     // ============================  Constructors  ===========================
 
     @JsonCreator
-    public EmployeeResponse(@JsonProperty(value = "uuid", required = true) UUID uuid,
+    public EmployeeResponse(@JsonProperty(value = "uuid",
+            required = true) UUID uuid,
                             @JsonProperty(value = "emailAddress") String emailAddress,
                             @JsonProperty(value = "firstName") String firstName,
                             @JsonProperty(value = "lastName") String lastName,
                             @JsonProperty(value = "birthday") Date birthday,
-                            @JsonProperty(value = "departmentName", required = true) String departmentName)
+                            @JsonProperty(value = "departmentName",
+                                    required = true) String departmentName)
     {
         this.uuid = uuid;
         this.emailAddress = emailAddress;

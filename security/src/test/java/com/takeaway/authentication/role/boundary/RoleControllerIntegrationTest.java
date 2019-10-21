@@ -492,8 +492,8 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         }
 
         @Test
-        @DisplayName("GET: 'http://.../roles/{id}/auditTrails' returns OK and Revisions")
-        void givenIdWithHistory_whenFindAuditTrails_thenStatus200AndRet() throws Exception
+        @DisplayName("GET: 'http://.../roles/{id}/auditTrails' returns OK and audit trails")
+        void givenIdWithHistory_whenFindAuditTrails_thenStatus200() throws Exception
         {
             // Arrange
             Role initial = roleTestFactory.createDefault();
@@ -532,7 +532,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
             String revisionResultAsString = revisionResult.getResponse()
                                                           .getContentAsString();
             ApiResponsePage<AuditTrail<UUID, Role>> apiResponsePage = objectMapper.readValue(revisionResultAsString,
-                                                                                                   new TypeReference<ApiResponsePage<AuditTrail<UUID, Role>>>() {});
+                                                                                             new TypeReference<ApiResponsePage<AuditTrail<UUID, Role>>>() {});
             assertThat(apiResponsePage).isNotNull()
                                        .hasSize(3);
 

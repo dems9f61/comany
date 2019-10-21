@@ -19,9 +19,9 @@ public class UserRepositoryTestHelper
 {
     private final UserRepository userRepository;
 
-     public void cleanDatabase()
-     {
-         LOGGER.info("Cleaning the User repository");
-         userRepository.deleteAll();
-     }
+    public void cleanDatabase()
+    {
+        LOGGER.info("Cleaning the User repository");
+        userRepository.deleteAll();
+    }
 }

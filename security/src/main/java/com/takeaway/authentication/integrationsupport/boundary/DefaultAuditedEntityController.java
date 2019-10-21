@@ -31,8 +31,7 @@ public interface DefaultAuditedEntityController<ENTITY extends AuditedEntity<ID>
 
     @GetMapping("/{id}/auditTrails")
     @ResponseStatus(HttpStatus.OK)
-    ApiResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@PathVariable @NotNull ID id,
-                                                            @PageableDefault(50) @NotNull Pageable pageable);
+    ApiResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@PathVariable @NotNull ID id, @PageableDefault(50) @NotNull Pageable pageable);
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================
