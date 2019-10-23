@@ -40,9 +40,6 @@ public class RoleController extends AbstractDefaultAuditedEntityController<RoleS
     @Getter
     private final RoleService service;
 
-    @Getter
-    private final Class<? extends Role> entityClass = Role.class;
-
     // ============================  Constructors  ===========================
 
     @Autowired

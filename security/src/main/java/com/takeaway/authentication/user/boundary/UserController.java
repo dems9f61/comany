@@ -37,10 +37,7 @@ public class UserController extends AbstractDefaultAuditedEntityController<UserS
 
     @Getter
     private final UserService service;
-
-    @Getter
-    private final Class<? extends User> entityClass = User.class;
-
+    
     // ============================  Constructors  ===========================
 
     @Autowired

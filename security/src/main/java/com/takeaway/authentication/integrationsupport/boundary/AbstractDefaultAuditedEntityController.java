@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
@@ -37,14 +38,12 @@ public abstract class AbstractDefaultAuditedEntityController<SERVICE extends Aud
     @Override
     public ApiResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable)
     {
-        List<AuditTrail<ID, ENTITY>> auditTrails = getService().findAuditTrails(id, getEntityClass());
+        Class<? extends ENTITY> entityClass = (Class<? extends ENTITY>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        List<AuditTrail<ID, ENTITY>> auditTrails = getService().findAuditTrails(id, entityClass);
         return new ApiResponsePage<>(auditTrails, pageable, auditTrails.size());
     }
 
     // =================  protected/package local  Methods ===================
-
-    protected abstract Class<? extends ENTITY> getEntityClass();
-
     // ===========================  private  Methods  ========================
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

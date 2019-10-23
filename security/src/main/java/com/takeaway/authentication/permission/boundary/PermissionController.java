@@ -40,9 +40,6 @@ public class PermissionController extends AbstractDefaultAuditedEntityController
     @Getter
     private final PermissionService service;
 
-    @Getter
-    private final Class<? extends Permission> entityClass = Permission.class;
-
     // ============================  Constructors  ===========================
 
     @Autowired
