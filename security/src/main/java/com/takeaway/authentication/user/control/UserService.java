@@ -63,6 +63,12 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
   protected User onBeforeCreate(User create) throws ServiceException
   {
     super.onBeforeCreate(create);
+    String userName = create.getUserName();
+    if (userName != null && getRepository().findByUserName(userName)
+                                           .isPresent())
+    {
+      throw new ServiceException(INVALID_PARAMETER, "The specified username exists already");
+    }
     if (create.getNewPassword() == null || create.getConfirmPassword() == null)
     {
       throw new ServiceException(INVALID_PARAMETER, "Password creation requires a new password and a confirm password matching each other");
@@ -86,6 +92,12 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
   protected User onBeforeUpdate(User existing, User update) throws ServiceException
   {
     super.onBeforeUpdate(existing, update);
+    String userName = update.getUserName();
+    if (userName != null && getRepository().findByUserName(userName)
+                                           .isPresent())
+    {
+      throw new ServiceException(INVALID_PARAMETER, "The specified username exists already");
+    }
     if (update.getOldPassword() != null)
     {
       if (!passwordEncoder.encode(update.getOldPassword()).equals(existing.getPasswordHash()))

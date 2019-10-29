@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserTestFactory extends AbstractTestFactory<User, UserTestFactory.Builder>
 {
+  public static final String PWD = "DEFAULT_PASSWORD";
+
   public Builder builder()
   {
     return new Builder();
@@ -30,7 +32,8 @@ public class UserTestFactory extends AbstractTestFactory<User, UserTestFactory.B
     Builder()
     {
       this.userName = RandomStringUtils.randomAlphabetic(10);
-      this.newPassword = RandomStringUtils.randomAlphabetic(10);
+      this.oldPassword = PWD;
+      this.newPassword = oldPassword;
       this.confirmPassword = newPassword;
     }
 

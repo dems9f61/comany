@@ -34,7 +34,7 @@ public class CustomPasswordEncoder implements PasswordEncoder
     try
     {
       MessageDigest digest = MessageDigest.getInstance("SHA-256");
-      byte[] toDigest = new String(SALT + rawPassword).getBytes(StandardCharsets.UTF_8);
+        byte[] toDigest = (SALT + rawPassword).getBytes(StandardCharsets.UTF_8);
       for (int i = 0; i < ITERATIONS; i++)
       {
         toDigest = digest.digest(toDigest);
