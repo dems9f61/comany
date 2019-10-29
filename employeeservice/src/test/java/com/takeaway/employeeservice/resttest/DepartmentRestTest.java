@@ -12,112 +12,102 @@ import org.springframework.http.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * User: StMinko
- * Date: 18.03.2019
- * Time: 22:50
- * <p/>
+ * User: StMinko Date: 18.03.2019 Time: 22:50
+ *
+ * <p>
  */
 @DisplayName("Rest tests for the department service")
 class DepartmentRestTest extends RestTestSuite
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
 
-    @Nested
-    @DisplayName("when create")
-    class WhenCreate
+  @Nested
+  @DisplayName("when create")
+  class WhenCreate
+  {
+    @Test
+    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is already used")
+    void givenAlreadyUsedName_whenCreatDepartment_thenStatus400()
     {
-        @Test
-        @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is already used")
-        void givenAlreadyUsedName_whenCreatDepartment_thenStatus400()
-        {
-            // Arrange
-            String departmentName = RandomStringUtils.randomAlphabetic(23);
-            DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
-                                                                                    .departmentName(departmentName)
-                                                                                    .create();
-            HttpHeaders headers = defaultHttpHeaders();
-            testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                      HttpMethod.POST,
-                                      new HttpEntity<>(createDepartmentRequest, headers),
-                                      DepartmentResponse.class);
+      // Arrange
+      String departmentName = RandomStringUtils.randomAlphabetic(23);
+      DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder().departmentName(departmentName).create();
+      HttpHeaders headers = defaultHttpHeaders();
+      testRestTemplate.exchange(DepartmentController.BASE_URI, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
 
-            // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                                                            HttpMethod.POST,
-                                                                            new HttpEntity<>(createDepartmentRequest, headers),
-                                                                            Void.class);
-            // Assert
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        }
-
-        @Test
-        @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is blank")
-        void givenBlankDepartmentName_whenCreateDepartment_thenStatus400()
-        {
-            // Arrange
-            DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
-                                                                                    .departmentName("  ")
-                                                                                    .create();
-
-            HttpHeaders headers = defaultHttpHeaders();
-
-            // Act
-            ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                                                            HttpMethod.POST,
-                                                                            new HttpEntity<>(createDepartmentRequest, headers),
-                                                                            Void.class);
-            // Assert
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        }
-
-        @Test
-        @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is null")
-        void givenNullDepartmentName_whenCreateDepartment_thenStatus400()
-        {
-            // Arrange
-            DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder()
-                                                                                    .departmentName(null)
-                                                                                    .create();
-
-            HttpHeaders headers = defaultHttpHeaders();
-
-            // Act
-            ResponseEntity<String> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                                                              HttpMethod.POST,
-                                                                              new HttpEntity<>(createDepartmentRequest, headers),
-                                                                              String.class);
-            // Assert
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        }
-
-        @Test
-        @DisplayName("POST: 'http://.../departments' returns CREATED if the specified name is valid")
-        void givenValidDepartmentName_whenCreateDepartment_thenStatus201()
-        {
-            // Arrange
-            DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.createDefault();
-            HttpHeaders headers = defaultHttpHeaders();
-
-            // Act
-            ResponseEntity<DepartmentResponse> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                                                                          HttpMethod.POST,
-                                                                                          new HttpEntity<>(createDepartmentRequest, headers),
-                                                                                          DepartmentResponse.class);
-
-            // Assert
-            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-            DepartmentResponse departmentResponse = responseEntity.getBody();
-            assertThat(departmentResponse).isNotNull();
-            assertThat(departmentResponse.getId()).isGreaterThan(0);
-            assertThat(departmentResponse.getDepartmentName()).isEqualTo(createDepartmentRequest.getDepartmentName());
-        }
+      // Act
+      ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
+              HttpMethod.POST,
+              new HttpEntity<>(createDepartmentRequest, headers),
+              Void.class);
+      // Assert
+      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+    @Test
+    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is blank")
+    void givenBlankDepartmentName_whenCreateDepartment_thenStatus400()
+    {
+      // Arrange
+      DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder().departmentName("  ").create();
+
+      HttpHeaders headers = defaultHttpHeaders();
+
+      // Act
+      ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
+              HttpMethod.POST,
+              new HttpEntity<>(createDepartmentRequest, headers),
+              Void.class);
+      // Assert
+      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST if the specified name is null")
+    void givenNullDepartmentName_whenCreateDepartment_thenStatus400()
+    {
+      // Arrange
+      DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder().departmentName(null).create();
+
+      HttpHeaders headers = defaultHttpHeaders();
+
+      // Act
+      ResponseEntity<String> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
+              HttpMethod.POST,
+              new HttpEntity<>(createDepartmentRequest, headers),
+              String.class);
+      // Assert
+      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("POST: 'http://.../departments' returns CREATED if the specified name is valid")
+    void givenValidDepartmentName_whenCreateDepartment_thenStatus201()
+    {
+      // Arrange
+      DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.createDefault();
+      HttpHeaders headers = defaultHttpHeaders();
+
+      // Act
+      ResponseEntity<DepartmentResponse> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
+              HttpMethod.POST,
+              new HttpEntity<>(createDepartmentRequest, headers),
+              DepartmentResponse.class);
+
+      // Assert
+      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+      DepartmentResponse departmentResponse = responseEntity.getBody();
+      assertThat(departmentResponse).isNotNull();
+      assertThat(departmentResponse.getId()).isGreaterThan(0);
+      assertThat(departmentResponse.getDepartmentName()).isEqualTo(createDepartmentRequest.getDepartmentName());
+    }
+  }
+
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

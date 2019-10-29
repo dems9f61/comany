@@ -13,10 +13,9 @@ import org.springframework.validation.annotation.Validated;
 import java.util.concurrent.Executor;
 
 /**
- * User: StMinko
- * Date: 20.03.2019
- * Time: 18:24
- * <p/>
+ * User: StMinko Date: 20.03.2019 Time: 18:24
+ *
+ * <p>
  */
 @Data
 @NoArgsConstructor
@@ -26,31 +25,31 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfig extends AsyncConfigurerSupport
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    private boolean asyncEnabled = true;
+  private boolean asyncEnabled = true;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    @Override
-    public Executor getAsyncExecutor()
+  @Override
+  public Executor getAsyncExecutor()
+  {
+    if (asyncEnabled)
     {
-        if (asyncEnabled)
-        {
-            ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-            executor.initialize();
-            return executor;
-        }
-        else
-        {
-            return new SyncTaskExecutor();
-        }
+      ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+      executor.initialize();
+      return executor;
     }
+    else
+    {
+      return new SyncTaskExecutor();
+    }
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

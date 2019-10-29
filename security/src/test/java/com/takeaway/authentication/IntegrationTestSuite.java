@@ -20,62 +20,56 @@ import java.util.TimeZone;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
- * User: StMinko
- * Date: 14.10.2019
- * Time: 15:07
- * <p/>
+ * User: StMinko Date: 14.10.2019 Time: 15:07
+ *
+ * <p>
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT,
-        classes = { AuthenticationServiceApplication.class })
+    classes = {AuthenticationServiceApplication.class})
 @ActiveProfiles("LOCAL")
 public abstract class IntegrationTestSuite
 {
-    public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
-                                                                        MediaType.APPLICATION_JSON.getSubtype(),
-                                                                        Charset.forName("utf8"));
+  public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
-    @Autowired
-    protected ObjectMapper objectMapper;
+  @Autowired
+  protected ObjectMapper objectMapper;
 
-    @Autowired
-    protected RoleTestFactory roleTestFactory;
+  @Autowired
+  protected RoleTestFactory roleTestFactory;
 
-    @Autowired
-    protected PermissionTestFactory permissionTestFactory;
+  @Autowired
+  protected PermissionTestFactory permissionTestFactory;
 
-    @Autowired
-    protected UserTestFactory userTestFactory;
+  @Autowired
+  protected UserTestFactory userTestFactory;
 
-    @Autowired
-    private DatabaseCleaner databaseCleaner;
+  @Autowired
+  private DatabaseCleaner databaseCleaner;
 
-    protected String transformRequestToJSON(Object object, Class<?> serializationView) throws Exception
-    {
-        ObjectWriter objectWriter = objectMapper.writerWithView(serializationView)
-                                                .withDefaultPrettyPrinter();
-        String result = objectWriter.writeValueAsString(object);
-        objectMapper.writer()
-                    .withDefaultPrettyPrinter();
-        return result;
-    }
+  protected String transformRequestToJSON(Object object, Class<?> serializationView) throws Exception
+  {
+    ObjectWriter objectWriter = objectMapper.writerWithView(serializationView).withDefaultPrettyPrinter();
+    String result = objectWriter.writeValueAsString(object);
+    objectMapper.writer().withDefaultPrettyPrinter();
+    return result;
+  }
 
-    protected String transformRequestToJSON(Object object) throws Exception
-    {
-        ObjectWriter objectWriter = objectMapper.writer()
-                                                .withDefaultPrettyPrinter();
-        return objectWriter.writeValueAsString(object);
-    }
+  protected String transformRequestToJSON(Object object) throws Exception
+  {
+    ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
+    return objectWriter.writeValueAsString(object);
+  }
 
-    @BeforeAll
-    static void setUpForAll()
-    {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    }
+  @BeforeAll
+  static void setUpForAll()
+  {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+  }
 
-    @AfterEach
-    void tearDown()
-    {
-        databaseCleaner.cleanDatabases();
-    }
+  @AfterEach
+  void tearDown()
+  {
+    databaseCleaner.cleanDatabases();
+  }
 }

@@ -24,72 +24,68 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
- * User: StMinko
- * Date: 18.03.2019
- * Time: 12:57
- * <p/>
+ * User: StMinko Date: 18.03.2019 Time: 12:57
+ *
+ * <p>
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT,
-        classes = { EmployeeServiceApplication.class })
+    classes = {EmployeeServiceApplication.class})
 @ActiveProfiles("LOCAL")
 public abstract class IntegrationTestSuite
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    @Autowired
-    protected DepartmentParameterTestFactory departmentParameterTestFactory;
+  @Autowired
+  protected DepartmentParameterTestFactory departmentParameterTestFactory;
 
-    @Autowired
-    protected EmployeeParameterTestFactory employeeParameterTestFactory;
+  @Autowired
+  protected EmployeeParameterTestFactory employeeParameterTestFactory;
 
-    @Autowired
-    protected DepartmentRequestTestFactory departmentRequestTestFactory;
+  @Autowired
+  protected DepartmentRequestTestFactory departmentRequestTestFactory;
 
-    @Autowired
-    protected CreateEmployeeRequestTestFactory createEmployeeRequestTestFactory;
+  @Autowired
+  protected CreateEmployeeRequestTestFactory createEmployeeRequestTestFactory;
 
-    @Autowired
-    protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
+  @Autowired
+  protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
 
-    @Autowired
-    protected DatabaseCleaner databaseCleaner;
+  @Autowired
+  protected DatabaseCleaner databaseCleaner;
 
-    @SpyBean
-    protected EmployeeEventPublisherCapable employeeEventPublisher;
+  @SpyBean
+  protected EmployeeEventPublisherCapable employeeEventPublisher;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
+  @Autowired
+  protected ObjectMapper objectMapper;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    @BeforeAll
-    static void setUpForAll()
-    {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    }
+  @BeforeAll
+  static void setUpForAll()
+  {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+  }
 
-    @BeforeEach
-    void setUp()
-    {
-        doNothing().when(employeeEventPublisher)
-                   .employeeCreated(any());
-        doNothing().when(employeeEventPublisher)
-                   .employeeDeleted(any());
-        doNothing().when(employeeEventPublisher)
-                   .employeeUpdated(any());
-    }
+  @BeforeEach
+  void setUp()
+  {
+    doNothing().when(employeeEventPublisher).employeeCreated(any());
+    doNothing().when(employeeEventPublisher).employeeDeleted(any());
+    doNothing().when(employeeEventPublisher).employeeUpdated(any());
+  }
 
-    @AfterEach
-    void tearDown()
-    {
-        databaseCleaner.cleanDatabases();
-    }
+  @AfterEach
+  void tearDown()
+  {
+    databaseCleaner.cleanDatabases();
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

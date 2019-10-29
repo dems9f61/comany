@@ -7,35 +7,34 @@ import lombok.ToString;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * User: StMinko
- * Date: 20.03.2019
- * Time: 17:47
- * <p/>
+ * User: StMinko Date: 20.03.2019 Time: 17:47
+ *
+ * <p>
  */
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class EmployeeEvent extends ApplicationEvent
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    private final Employee employee;
+  private final Employee employee;
 
-    private final EventType eventType;
+  private final EventType eventType;
 
-    // ============================  Constructors  ===========================
+  // ============================  Constructors  ===========================
 
-    public EmployeeEvent(@NonNull Employee employee, @NonNull EventType eventType)
-    {
-        super(employee);
-        this.employee = employee;
-        this.eventType = eventType;
-    }
+  public EmployeeEvent(@NonNull Employee employee, @NonNull EventType eventType)
+  {
+    super(employee);
+    this.employee = employee;
+    this.eventType = eventType;
+  }
 
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

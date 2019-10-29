@@ -7,34 +7,32 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * User: StMinko
- * Date: 21.03.2019
- * Time: 09:41
- * <p/>
+ * User: StMinko Date: 21.03.2019 Time: 09:41
+ *
+ * <p>
  */
-
 @ExtendWith(MockitoExtension.class)
 public abstract class UnitTestSuite
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    protected EmployeeEventTestFactory employeeEventTestFactory;
+  protected EmployeeEventTestFactory employeeEventTestFactory;
 
-    protected EmployeeMessageTestFactory employeeMessageTestFactory;
+  protected EmployeeMessageTestFactory employeeMessageTestFactory;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    @BeforeEach
-    public void initFactories()
-    {
-        employeeEventTestFactory = new EmployeeEventTestFactory();
-        employeeMessageTestFactory = new EmployeeMessageTestFactory();
-    }
+  @BeforeEach
+  public void initFactories()
+  {
+    employeeEventTestFactory = new EmployeeEventTestFactory();
+    employeeMessageTestFactory = new EmployeeMessageTestFactory();
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -8,19 +8,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 21.10.2019
- * Time: 10:46
- * <p/>
+ * User: StMinko Date: 21.10.2019 Time: 10:46
+ *
+ * <p>
  */
 @Repository
 interface UserRepository extends JpaAuditedSpecificationRepository<User, UUID>
 {
-    // =========================== Class Variables ===========================
-    // ==============================  Methods  ==============================
+  // =========================== Class Variables ===========================
+  // ==============================  Methods  ==============================
 
-    Optional<User> findByUserName(String userName);
+  Optional<User> findByUserName(String userName);
 
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

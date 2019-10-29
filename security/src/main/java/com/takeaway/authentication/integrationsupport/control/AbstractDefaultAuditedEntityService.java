@@ -23,71 +23,56 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * User: StMinko
- * Date: 16.10.2019
- * Time: 14:16
- * <p/>
+ * User: StMinko Date: 16.10.2019 Time: 14:16
+ *
+ * <p>
  */
 @Validated
 @Slf4j
-public abstract class AbstractDefaultAuditedEntityService<REPOSITORY extends JpaAuditedSpecificationRepository<ENTITY, ID>, ENTITY extends AuditedEntity<ID>, ID extends Serializable>
-        extends AbstractDefaultEntityService<REPOSITORY, ENTITY, ID> implements AuditedEntityService<ENTITY, ID>
+public abstract class AbstractDefaultAuditedEntityService<
+        REPOSITORY extends JpaAuditedSpecificationRepository<ENTITY, ID>, ENTITY extends AuditedEntity<ID>, ID extends Serializable>
+    extends AbstractDefaultEntityService<REPOSITORY, ENTITY, ID> implements AuditedEntityService<ENTITY, ID>
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    @PersistenceContext
-    private EntityManager entityManager;
+  @PersistenceContext
+  private EntityManager entityManager;
 
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
+  // =============================  Variables  =============================
+  // ============================  Constructors  ===========================
 
-    public AbstractDefaultAuditedEntityService(REPOSITORY repository, Validator validator)
-    {
-        super(repository, validator);
-    }
+  public AbstractDefaultAuditedEntityService(REPOSITORY repository, Validator validator)
+  {
+    super(repository, validator);
+  }
 
-    // ===========================  public  Methods  =========================
+  // ===========================  public  Methods  =========================
 
-    @Override
-    public Page<Revision<Long, ENTITY>> findHistory(@NotNull ID id, @NotNull Pageable pageable)
-    {
-        LOGGER.info("{}.findRevisions ( {} , {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id,
-                    pageable);
-        return getRepository().findRevisions(id, pageable);
-    }
+  @Override
+  public Page<Revision<Long, ENTITY>> findHistory(@NotNull ID id, @NotNull Pageable pageable)
+  {
+    LOGGER.info("{}.findRevisions ( {} , {} )", this.getClass().getSimpleName(), id, pageable);
+    return getRepository().findRevisions(id, pageable);
+  }
 
-    @Transactional(readOnly = true)
-    public List<AuditTrail<ID, ENTITY>> findAuditTrails(ID entityId, Class<? extends ENTITY> entityClass)
-    {
-        LOGGER.info("{}.findAuditTrails ( {} , {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    entityId,
-                    entityClass);
-        AuditReader auditReader = AuditReaderFactory.get(entityManager);
+  @Transactional(readOnly = true)
+  public List<AuditTrail<ID, ENTITY>> findAuditTrails(ID entityId, Class<? extends ENTITY> entityClass)
+  {
+    LOGGER.info("{}.findAuditTrails ( {} , {} )", this.getClass().getSimpleName(), entityId, entityClass);
+    AuditReader auditReader = AuditReaderFactory.get(entityManager);
 
-        AuditQuery auditQuery = auditReader.createQuery()
-                                           .forRevisionsOfEntity(entityClass, false, true)
-                                           .add(AuditEntity.id()
-                                                           .eq(entityId));
-        return AuditQueryUtils.getAuditQueryResults(auditQuery, entityClass)
-                              .stream()
-                              .map(auditQueryResult -> {
-                                  ENTITY entity = auditQueryResult.getEntity();
-                                  return new AuditTrail<>(entity,
-                                                          auditQueryResult.getRevision()
-                                                                          .getRevisionNumber(),
-                                                          auditQueryResult.getType());
-                              })
-                              // And collect the Results:
-                              .collect(Collectors.toList());
-    }
+    AuditQuery auditQuery = auditReader.createQuery().forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.id().eq(entityId));
+    return AuditQueryUtils.getAuditQueryResults(auditQuery, entityClass).stream()
+          .map(auditQueryResult -> {
+              ENTITY entity = auditQueryResult.getEntity();
+              return new AuditTrail<>(entity, auditQueryResult.getRevision().getRevisionNumber(), auditQueryResult.getType());
+            })
+        // And collect the Results:
+        .collect(Collectors.toList());
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -9,19 +9,18 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 20.03.2019
- * Time: 18:41
- * <p/>
+ * User: StMinko Date: 20.03.2019 Time: 18:41
+ *
+ * <p>
  */
 @Repository
 interface EmployeeEventRepository extends MongoRepository<PersistentEmployeeEvent, String>
 {
-    // =========================== Class Variables ===========================
-    // ==============================  Methods  ==============================
+  // =========================== Class Variables ===========================
+  // ==============================  Methods  ==============================
 
-    Page<PersistentEmployeeEvent> findByUuid(UUID uuid, Pageable pageable);
+  Page<PersistentEmployeeEvent> findByUuid(UUID uuid, Pageable pageable);
 
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

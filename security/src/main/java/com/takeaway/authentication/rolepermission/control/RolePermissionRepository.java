@@ -13,23 +13,22 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 19.10.2019
- * Time: 16:35
- * <p/>
+ * User: StMinko Date: 19.10.2019 Time: 16:35
+ *
+ * <p>
  */
 @Repository
 interface RolePermissionRepository extends JpaRepository<RolePermission, UUID>
 {
-    // =========================== Class Variables ===========================
-    // ==============================  Methods  ==============================
+  // =========================== Class Variables ===========================
+  // ==============================  Methods  ==============================
 
-    @Query("SELECT rp FROM RolePermission rp WHERE rp.role.id = :roleId AND rp.permission.id = :permissionId")
-    Optional<RolePermission> findByRoleAndPermission(@Param("roleId") UUID roleId, @Param("permissionId") UUID permissionId);
+  @Query("SELECT rp FROM RolePermission rp WHERE rp.role.id = :roleId AND rp.permission.id = :permissionId")
+  Optional<RolePermission> findByRoleAndPermission(@Param("roleId") UUID roleId, @Param("permissionId") UUID permissionId);
 
-    @Query("SELECT rp.permission FROM RolePermission rp WHERE rp.role.id = :roleId")
-    Page<Permission> findAllByRole(@Param("roleId") UUID roleId, Pageable pageable);
+  @Query("SELECT rp.permission FROM RolePermission rp WHERE rp.role.id = :roleId")
+  Page<Permission> findAllByRole(@Param("roleId") UUID roleId, Pageable pageable);
 
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -16,39 +16,38 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 21.10.2019
- * Time: 11:48
- * <p/>
+ * User: StMinko Date: 21.10.2019 Time: 11:48
+ *
+ * <p>
  */
 @Slf4j
 @Validated
 @RestController
 @RequestMapping(value = UserController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class UserController extends AbstractDefaultAuditedEntityController<UserService, User, UUID>
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    static final String BASE_URI = ApiVersions.V1 + "/users";
+  static final String BASE_URI = ApiVersions.V1 + "/users";
 
-    // =============================  Variables  =============================
+  // =============================  Variables  =============================
 
-    @Getter
-    private final UserService service;
-    
-    // ============================  Constructors  ===========================
+  @Getter
+  private final UserService service;
 
-    @Autowired
-    public UserController(@NotNull UserService userService)
-    {
-        this.service = userService;
-    }
+  // ============================  Constructors  ===========================
 
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  @Autowired
+  public UserController(@NotNull UserService userService)
+  {
+    this.service = userService;
+  }
+
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

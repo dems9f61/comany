@@ -20,50 +20,48 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 20.03.2019
- * Time: 20:08
- * <p/>
+ * User: StMinko Date: 20.03.2019 Time: 20:08
+ *
+ * <p>
  */
 @Slf4j
 @Validated
 @RestController
 @Api(value = "Employee event service: Operations related to employee event service interface")
 @RequestMapping(value = EmployeeEventController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class EmployeeEventController
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    public static final String BASE_URI = ApiVersions.V1 + "/events";
+  public static final String BASE_URI = ApiVersions.V1 + "/events";
 
-    // =============================  Variables  =============================
+  // =============================  Variables  =============================
 
-    private final EmployeeEventService employeeEventService;
+  private final EmployeeEventService employeeEventService;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    @ApiOperation(value = "Retrieves all events related to an employee in ascending order")
-    @GetMapping("/{uuid}")
-    @ResponseStatus(HttpStatus.OK)
-    ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("uuid") UUID uuid, Pageable pageable)
+  @ApiOperation(value = "Retrieves all events related to an employee in ascending order")
+  @GetMapping("/{uuid}")
+  @ResponseStatus(HttpStatus.OK)
+  ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("uuid") UUID uuid, Pageable pageable)
+  {
+    Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, pageable).map(EmployeeEventResponse::new);
+    if (employeeEventResponses.isEmpty())
     {
-        Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, pageable)
-                                                                                 .map(EmployeeEventResponse::new);
-        if (employeeEventResponses.isEmpty())
-        {
-            throw new ResourceNotFoundException(String.format("Could not find employee events by the specified uuid [%s]", uuid));
-        }
-        else
-        {
-            return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
-        }
+      throw new ResourceNotFoundException(String.format("Could not find employee events by the specified uuid [%s]", uuid));
     }
+    else
+    {
+      return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
+    }
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -18,10 +18,9 @@ import java.util.UUID;
 import static com.takeaway.authentication.integrationsupport.entity.ServiceException.Reason.INVALID_PARAMETER;
 
 /**
- * User: StMinko
- * Date: 21.10.2019
- * Time: 10:49
- * <p/>
+ * User: StMinko Date: 21.10.2019 Time: 10:49
+ *
+ * <p>
  */
 @Slf4j
 @Transactional
@@ -29,87 +28,84 @@ import static com.takeaway.authentication.integrationsupport.entity.ServiceExcep
 @Service
 public class UserService extends AbstractDefaultAuditedEntityService<UserRepository, User, UUID>
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    private final PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
 
-    // ============================  Constructors  ===========================
+  // ============================  Constructors  ===========================
 
-    @Autowired
-    public UserService(UserRepository repository, Validator validator, PasswordEncoder passwordEncoder)
+  @Autowired
+  public UserService(UserRepository repository, Validator validator, PasswordEncoder passwordEncoder)
+  {
+    super(repository, validator);
+    this.passwordEncoder = passwordEncoder;
+  }
+
+  // ===========================  public  Methods  =========================
+
+  @Transactional(propagation = Propagation.SUPPORTS)
+  public Optional<User> findByUserName(String username)
+  {
+    return getRepository().findByUserName(username);
+  }
+
+  // =================  protected/package local  Methods ===================
+
+  /**
+   * Set encoded password hash becore create of User
+   *
+   * @param create The {@link User} to create
+   * @return The created {@link User} on success
+   * @throws RuntimeException on failure
+   */
+  @Override
+  protected User onBeforeCreate(User create) throws ServiceException
+  {
+    super.onBeforeCreate(create);
+    if (create.getNewPassword() == null || create.getConfirmPassword() == null)
     {
-        super(repository, validator);
-        this.passwordEncoder = passwordEncoder;
+      throw new ServiceException(INVALID_PARAMETER, "Password creation requires a new password and a confirm password matching each other");
     }
-
-    // ===========================  public  Methods  =========================
-
-    @Transactional(propagation = Propagation.SUPPORTS)
-    public Optional<User> findByUserName(String username)
+    if (!create.getNewPassword().equals(create.getConfirmPassword()))
     {
-        return getRepository().findByUserName(username);
+      throw new ServiceException(INVALID_PARAMETER, "New Password and Confirm Password do not match");
     }
+    create.setPasswordHash(passwordEncoder.encode(create.getNewPassword()));
+    return create;
+  }
 
-    // =================  protected/package local  Methods ===================
-
-    /**
-     * Set encoded password hash becore create of User
-     *
-     * @param create The {@link User} to create
-     * @return The created {@link User} on success
-     * @throws RuntimeException on failure
-     */
-    @Override
-    protected User onBeforeCreate(User create) throws ServiceException
+  /**
+   * Set encoded password hash becore update of User
+   *
+   * @param update The {@link User} data to update
+   * @return The updated {@link User} on success
+   * @throws RuntimeException on failure
+   */
+  @Override
+  protected User onBeforeUpdate(User existing, User update) throws ServiceException
+  {
+    super.onBeforeUpdate(existing, update);
+    if (update.getOldPassword() != null)
     {
-        super.onBeforeCreate(create);
-        if (create.getNewPassword() == null || create.getConfirmPassword() == null)
-        {
-            throw new ServiceException(INVALID_PARAMETER, "Password creation requires a new password and a confirm password matching each other");
-        }
-        if (!create.getNewPassword()
-                   .equals(create.getConfirmPassword()))
-        {
-            throw new ServiceException(INVALID_PARAMETER, "New Password and Confirm Password do not match");
-        }
-        create.setPasswordHash(passwordEncoder.encode(create.getNewPassword()));
-        return create;
+      if (!passwordEncoder.encode(update.getOldPassword()).equals(existing.getPasswordHash()))
+      {
+        throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
+      }
+      if (update.getNewPassword() == null || update.getConfirmPassword() == null)
+      {
+        throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
+      }
+      if (!update.getNewPassword().equals(update.getConfirmPassword()))
+      {
+        throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
+      }
+      update.setPasswordHash(passwordEncoder.encode(update.getNewPassword()));
     }
+    return update;
+  }
 
-    /**
-     * Set encoded password hash becore update of User
-     *
-     * @param update The {@link User} data to update
-     * @return The updated {@link User} on success
-     * @throws RuntimeException on failure
-     */
-    @Override
-    protected User onBeforeUpdate(User existing, User update) throws ServiceException
-    {
-        super.onBeforeUpdate(existing, update);
-        if (update.getOldPassword() != null)
-        {
-            if (!passwordEncoder.encode(update.getOldPassword())
-                                .equals(existing.getPasswordHash()))
-            {
-                throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
-            }
-            if (update.getNewPassword() == null || update.getConfirmPassword() == null)
-            {
-                throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
-            }
-            if (!update.getNewPassword()
-                       .equals(update.getConfirmPassword()))
-            {
-                throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
-            }
-            update.setPasswordHash(passwordEncoder.encode(update.getNewPassword()));
-        }
-        return update;
-    }
-
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

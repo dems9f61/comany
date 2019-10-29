@@ -17,40 +17,39 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 17.10.2019
- * Time: 11:55
- * <p/>
+ * User: StMinko Date: 17.10.2019 Time: 11:55
+ *
+ * <p>
  */
 @Slf4j
 @Validated
 @RestController
 @Api(value = "User permission service: Operations pertaining to the user permission service interface")
 @RequestMapping(value = PermissionController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class PermissionController extends AbstractDefaultAuditedEntityController<PermissionService, Permission, UUID>
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    static final String BASE_URI = ApiVersions.V1 + "/permissions";
+  static final String BASE_URI = ApiVersions.V1 + "/permissions";
 
-    // =============================  Variables  =============================
+  // =============================  Variables  =============================
 
-    @Getter
-    private final PermissionService service;
+  @Getter
+  private final PermissionService service;
 
-    // ============================  Constructors  ===========================
+  // ============================  Constructors  ===========================
 
-    @Autowired
-    public PermissionController(@NotNull PermissionService permissionService)
-    {
-        this.service = permissionService;
-    }
+  @Autowired
+  public PermissionController(@NotNull PermissionService permissionService)
+  {
+    this.service = permissionService;
+  }
 
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -14,10 +14,9 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 20.03.2019
- * Time: 18:33
- * <p/>
+ * User: StMinko Date: 20.03.2019 Time: 18:33
+ *
+ * <p>
  */
 @Getter
 @Setter
@@ -26,33 +25,33 @@ import java.util.UUID;
 @Document(collection = "employeeenvents")
 public class PersistentEmployeeEvent
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    @Id
-    private String id;
+  @Id
+  private String id;
 
-    private EventType eventType;
+  private EventType eventType;
 
-    private UUID uuid;
+  private UUID uuid;
 
-    private String emailAddress;
+  private String emailAddress;
 
-    private String firstName;
+  private String firstName;
 
-    private String lastName;
+  private String lastName;
 
-    private Date birthday;
+  private Date birthday;
 
-    private String departmentName;
+  private String departmentName;
 
-    @CreatedDate
-    private Instant createdAt;
+  @CreatedDate
+  private Instant createdAt;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -9,44 +9,43 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 20.03.2019
- * Time: 14:09
- * <p/>
+ * User: StMinko Date: 20.03.2019 Time: 14:09
+ *
+ * <p>
  */
 @Data
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Employee implements Serializable
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    private UUID id;
+  private UUID id;
 
-    private String emailAddress;
+  private String emailAddress;
 
-    private FullName fullName = new FullName();
+  private FullName fullName = new FullName();
 
-    private Date birthday;
+  private Date birthday;
 
-    private Department department;
+  private Department department;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
 
-    @Data
-    @ToString
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class FullName implements Serializable
-    {
-        private String firstName;
+  @Data
+  @ToString
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class FullName implements Serializable
+  {
+    private String firstName;
 
-        private String lastName;
-    }
+    private String lastName;
+  }
 
-    // ============================  End of class  ===========================
+  // ============================  End of class  ===========================
 }

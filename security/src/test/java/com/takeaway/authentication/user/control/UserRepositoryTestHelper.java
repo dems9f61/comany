@@ -1,27 +1,23 @@
 package com.takeaway.authentication.user.control;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.takeaway.authentication.AbstractRepositoryTestHelper;
+import com.takeaway.authentication.user.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 21.10.2019
- * Time: 11:53
- * <p/>
+ * User: StMinko Date: 21.10.2019 Time: 11:53
+ *
+ * <p>
  */
 @Component
-@RequiredArgsConstructor
-@Transactional
-@Slf4j
-public class UserRepositoryTestHelper
+public class UserRepositoryTestHelper extends AbstractRepositoryTestHelper<User, UUID, UserRepository>
 {
-    private final UserRepository userRepository;
-
-    public void cleanDatabase()
-    {
-        LOGGER.info("Cleaning the User repository");
-        userRepository.deleteAll();
-    }
+  @Autowired
+  public UserRepositoryTestHelper(UserRepository repository)
+  {
+    super(repository);
+  }
 }

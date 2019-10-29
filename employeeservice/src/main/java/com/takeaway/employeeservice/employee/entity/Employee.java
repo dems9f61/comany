@@ -15,10 +15,9 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 19.03.2019
- * Time: 00:37
- * <p/>
+ * User: StMinko Date: 19.03.2019 Time: 00:37
+ *
+ * <p>
  */
 @Audited
 @AuditOverride(forClass = AbstractEntity.class)
@@ -27,66 +26,63 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode
 @Entity
-@Table(name = "EMPLOYEES",
-        schema = "data")
+@Table(name = "EMPLOYEES",schema = "data")
 public class Employee extends AbstractEntity<UUID>
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
-    @Getter(onMethod = @__(@Override))
-    @Id
-    private UUID id;
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
+  @Getter(onMethod =
+          @__(
+              @Override
+              ))
+  @Id
+  private UUID id;
 
-    @Column(name = "EMAIL_ADDRESS",
-            unique = true)
-    private String emailAddress;
+  @Column(name = "EMAIL_ADDRESS",unique = true)
+  private String emailAddress;
 
-    @Embedded
-    @AttributeOverrides(value = {
-            @AttributeOverride(name = "firstName",
-                    column = @Column(name = "FIRST_NAME")),
-            @AttributeOverride(name = "lastName",
-                    column = @Column(name = "LAST_NAME")) })
-    private FullName fullName = new FullName();
+  @Embedded
+  @AttributeOverrides(value = {
+        @AttributeOverride(name = "firstName",column = @Column(name = "FIRST_NAME")),
+        @AttributeOverride(name = "lastName",column = @Column(name = "LAST_NAME"))
+      })
+  private FullName fullName = new FullName();
 
-    @Column(length = 7,
-            name = "BIRTHDAY")
-    @Temporal(TemporalType.DATE)
-    private Date birthday;
+  @Column(length = 7,name = "BIRTHDAY")
+  @Temporal(TemporalType.DATE)
+  private Date birthday;
 
-    @JsonManagedReference
-    @ManyToOne(optional = false,
-            cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "DEPARTMENT_ID",
-            nullable = false)
-    private Department department;
+  @JsonManagedReference
+  @ManyToOne(optional = false,cascade = CascadeType.REFRESH)
+  @JoinColumn(name = "DEPARTMENT_ID",nullable = false)
+  private Department department;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
 
-    @Override
-    protected void onPrePersist()
+  @Override
+  protected void onPrePersist()
+  {
+    if (isNew())
     {
-        if (isNew())
-        {
-            setId(UUID.randomUUID());
-        }
+      setId(UUID.randomUUID());
     }
+  }
 
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
 
-    @Setter
-    @Getter
-    @Embeddable
-    @ToString
-    @EqualsAndHashCode
-    public static class FullName
-    {
-        private String firstName;
+  @Setter
+  @Getter
+  @Embeddable
+  @ToString
+  @EqualsAndHashCode
+  public static class FullName
+  {
+    private String firstName;
 
-        private String lastName;
-    }
-    // ============================  End of class  ===========================
+    private String lastName;
+  }
+  // ============================  End of class  ===========================
 }

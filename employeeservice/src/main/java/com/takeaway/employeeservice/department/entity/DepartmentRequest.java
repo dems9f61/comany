@@ -12,10 +12,9 @@ import lombok.ToString;
 import javax.validation.constraints.NotBlank;
 
 /**
- * User: StMinko
- * Date: 18.03.2019
- * Time: 17:43
- * <p/>
+ * User: StMinko Date: 18.03.2019 Time: 17:43
+ *
+ * <p>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
@@ -23,30 +22,29 @@ import javax.validation.constraints.NotBlank;
 @EqualsAndHashCode
 public class DepartmentRequest
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    @ApiModelProperty(example = "Human Resources (HR)")
-    @NotBlank(message = "The department name must not be blank")
-    private final String departmentName;
+  @ApiModelProperty(example = "Human Resources (HR)")
+  @NotBlank(message = "The department name must not be blank")
+  private final String departmentName;
 
-    // ============================  Constructors  ===========================
+  // ============================  Constructors  ===========================
 
-    @JsonCreator
-    public DepartmentRequest(@JsonProperty(value = "departmentName",
-            required = true) String departmentName)
-    {
-        this.departmentName = departmentName;
-    }
+  @JsonCreator
+  public DepartmentRequest(@JsonProperty(value = "departmentName",required = true) String departmentName)
+  {
+    this.departmentName = departmentName;
+  }
 
-    public DepartmentParameter toDepartmentParameter()
-    {
-        return new DepartmentParameter(departmentName);
-    }
+  public DepartmentParameter toDepartmentParameter()
+  {
+    return new DepartmentParameter(departmentName);
+  }
 
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -10,33 +10,32 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * User: StMinko
- * Date: 20.03.2019
- * Time: 00:05
- * <p/>
+ * User: StMinko Date: 20.03.2019 Time: 00:05
+ *
+ * <p>
  */
 public class JsonDateDeSerializer extends JsonDeserializer<Date>
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    @Override
-    public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException
+  @Override
+  public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException
+  {
+    try
     {
-        try
-        {
-            return new SimpleDateFormat(UsableDateFormat.DEFAULT.getDateFormat()).parse(jsonParser.getValueAsString());
-        }
-        catch (ParseException caught)
-        {
-            throw new IOException(caught.getLocalizedMessage());
-        }
+      return new SimpleDateFormat(UsableDateFormat.DEFAULT.getDateFormat()).parse(jsonParser.getValueAsString());
     }
+    catch (ParseException caught)
+    {
+      throw new IOException(caught.getLocalizedMessage());
+    }
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

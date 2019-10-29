@@ -1,24 +1,32 @@
-package com.takeaway.authentication.integrationsupport.entity;
+package com.takeaway.authentication;
 
-import org.hibernate.envers.AuditOverride;
-import org.hibernate.envers.Audited;
-
-import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * User: StMinko Date: 11.10.2019 Time: 17:10
+ * User: StMinko Date: 29.10.2019 Time: 12:50
  *
  * <p>
  */
-@Audited
-@AuditOverride(forClass = AbstractEntity.class)
-@MappedSuperclass
-public abstract class AuditedEntity<ID extends Serializable> extends AbstractEntity<ID> {
+@Slf4j
+@RequiredArgsConstructor
+public abstract class AbstractRepositoryTestHelper<ENTITY, ID, REPOSITORY extends JpaRepository<ENTITY, ID>>
+{
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
+
+  private final REPOSITORY repository;
+
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================
+
+  public final void cleanDatabase()
+  {
+    LOGGER.info("{}.cleanDatabase ()", this.getClass().getSimpleName());
+    repository.deleteAll();
+  }
+
   // =================  protected/package local  Methods ===================
   // ===========================  private  Methods  ========================
   // ============================  Inner Classes  ==========================

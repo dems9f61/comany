@@ -9,25 +9,24 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * User: StMinko
- * Date: 18.03.2019
- * Time: 16:16
- * <p/>
+ * User: StMinko Date: 18.03.2019 Time: 16:16
+ *
+ * <p>
  */
 @Transactional(propagation = Propagation.REQUIRED)
 public interface DepartmentServiceCapable
 {
-    // =========================== Class Variables ===========================
-    // ==============================  Methods  ==============================
+  // =========================== Class Variables ===========================
+  // ==============================  Methods  ==============================
 
-    Department create(@NonNull DepartmentParameter departmentParameter) throws DepartmentServiceException;
+  Department create(@NonNull DepartmentParameter departmentParameter) throws DepartmentServiceException;
 
-    @Transactional(propagation = Propagation.SUPPORTS)
-    Optional<Department> findByDepartmentName(@NonNull String departmentName) throws DepartmentServiceException;
+  @Transactional(propagation = Propagation.SUPPORTS)
+  Optional<Department> findByDepartmentName(@NonNull String departmentName) throws DepartmentServiceException;
 
-    @Transactional(propagation = Propagation.SUPPORTS)
-    List<Department> findAll();
+  @Transactional(propagation = Propagation.SUPPORTS)
+  List<Department> findAll();
 
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

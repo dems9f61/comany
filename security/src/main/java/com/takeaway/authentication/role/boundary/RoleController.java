@@ -17,40 +17,39 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 14.10.2019
- * Time: 16:28
- * <p/>
+ * User: StMinko Date: 14.10.2019 Time: 16:28
+ *
+ * <p>
  */
 @Slf4j
 @Validated
 @RestController
 @Api(value = "User role service: Operations pertaining to the user role service interface")
 @RequestMapping(value = RoleController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class RoleController extends AbstractDefaultAuditedEntityController<RoleService, Role, UUID>
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    public static final String BASE_URI = ApiVersions.V1 + "/roles";
+  public static final String BASE_URI = ApiVersions.V1 + "/roles";
 
-    // =============================  Variables  =============================
+  // =============================  Variables  =============================
 
-    @Getter
-    private final RoleService service;
+  @Getter
+  private final RoleService service;
 
-    // ============================  Constructors  ===========================
+  // ============================  Constructors  ===========================
 
-    @Autowired
-    public RoleController(@NotNull RoleService roleService)
-    {
-        this.service = roleService;
-    }
+  @Autowired
+  public RoleController(@NotNull RoleService roleService)
+  {
+    this.service = roleService;
+  }
 
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

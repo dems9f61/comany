@@ -7,84 +7,83 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * User: StMinko
- * Date: 10.04.2019
- * Time: 23:00
- * <p/>
+ * User: StMinko Date: 10.04.2019 Time: 23:00
+ *
+ * <p>
  */
 @Component
 public class UpdateEmployeeRequestTestFactory extends AbstractTestFactory<UpdateEmployeeRequest, UpdateEmployeeRequestTestFactory.Builder>
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    public UpdateEmployeeRequestTestFactory.Builder builder()
+  public UpdateEmployeeRequestTestFactory.Builder builder()
+  {
+    return new UpdateEmployeeRequestTestFactory.Builder();
+  }
+
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+
+  public static class Builder implements AbstractTestFactory.Builder<UpdateEmployeeRequest>
+  {
+    private String emailAddress;
+
+    private String firstName;
+
+    private String lastName;
+
+    private Date birthday;
+
+    private String departmentName;
+
+    Builder()
     {
-        return new UpdateEmployeeRequestTestFactory.Builder();
+      this.emailAddress = generateRandomEmail();
+      this.birthday = java.sql.Date.valueOf(generateRandomDate());
+      this.firstName = RandomStringUtils.randomAlphabetic(20);
+      this.lastName = RandomStringUtils.randomAlphabetic(10);
+      this.departmentName = RandomStringUtils.randomAlphabetic(10);
     }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-
-    public static class Builder implements AbstractTestFactory.Builder<UpdateEmployeeRequest>
+    public UpdateEmployeeRequestTestFactory.Builder emailAddress(String emailAddress)
     {
-        private String emailAddress;
-
-        private String firstName;
-
-        private String lastName;
-
-        private Date birthday;
-
-        private String departmentName;
-
-        Builder()
-        {
-            this.emailAddress = generateRandomEmail();
-            this.birthday = java.sql.Date.valueOf(generateRandomDate());
-            this.firstName = RandomStringUtils.randomAlphabetic(20);
-            this.lastName = RandomStringUtils.randomAlphabetic(10);
-            this.departmentName = RandomStringUtils.randomAlphabetic(10);
-        }
-
-        public UpdateEmployeeRequestTestFactory.Builder emailAddress(String emailAddress)
-        {
-            this.emailAddress = emailAddress;
-            return this;
-        }
-
-        public UpdateEmployeeRequestTestFactory.Builder firstName(String firstName)
-        {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public UpdateEmployeeRequestTestFactory.Builder lastName(String lastName)
-        {
-            this.lastName = lastName;
-            return this;
-        }
-
-        public UpdateEmployeeRequestTestFactory.Builder birthday(Date birthday)
-        {
-            this.birthday = birthday;
-            return this;
-        }
-
-        public UpdateEmployeeRequestTestFactory.Builder departmentName(String departmentName)
-        {
-            this.departmentName = departmentName;
-            return this;
-        }
-
-        public UpdateEmployeeRequest create()
-        {
-            return new UpdateEmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
-        }
+      this.emailAddress = emailAddress;
+      return this;
     }
 
-    // ============================  End of class  ===========================
+    public UpdateEmployeeRequestTestFactory.Builder firstName(String firstName)
+    {
+      this.firstName = firstName;
+      return this;
+    }
+
+    public UpdateEmployeeRequestTestFactory.Builder lastName(String lastName)
+    {
+      this.lastName = lastName;
+      return this;
+    }
+
+    public UpdateEmployeeRequestTestFactory.Builder birthday(Date birthday)
+    {
+      this.birthday = birthday;
+      return this;
+    }
+
+    public UpdateEmployeeRequestTestFactory.Builder departmentName(String departmentName)
+    {
+      this.departmentName = departmentName;
+      return this;
+    }
+
+    public UpdateEmployeeRequest create()
+    {
+      return new UpdateEmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
+    }
+  }
+
+  // ============================  End of class  ===========================
 }

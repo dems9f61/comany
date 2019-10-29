@@ -16,81 +16,81 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * User: StMinko
- * Date: 18.03.2019
- * Time: 23:48
- * <p/>
+ * User: StMinko Date: 18.03.2019 Time: 23:48
+ *
+ * <p>
  */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    private static final String SOURCE_PACKAGE = "com.takeaway";
+  private static final String SOURCE_PACKAGE = "com.takeaway";
 
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // =============================  Variables  =============================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    @Bean
-    public Docket api()
-    {
-        return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(true)
-                                                      .enableUrlTemplating(true)
-                                                      .select()
-                                                      .apis(RequestHandlerSelectors.basePackage(SOURCE_PACKAGE))
-                                                      .paths(PathSelectors.any())
-                                                      .build()
-                                                      .apiInfo(apiInfo());
-    }
+  @Bean
+  public Docket api()
+  {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .useDefaultResponseMessages(true)
+        .enableUrlTemplating(true)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage(SOURCE_PACKAGE))
+        .paths(PathSelectors.any())
+        .build()
+        .apiInfo(apiInfo());
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
 
-    private ApiInfo apiInfo()
-    {
-        List<VendorExtension> vendorExtensions = new LinkedList<>();
-        vendorExtensions.add(new VendorExtension()
+  private ApiInfo apiInfo()
+  {
+    List<VendorExtension> vendorExtensions = new LinkedList<>();
+    vendorExtensions.add(new VendorExtension()
         {
-            @Override
-            public String getName()
-            {
-                return "Minko";
-            }
+          @Override
+          public String getName()
+          {
+            return "Minko";
+          }
 
-            @Override
-            public Object getValue()
-            {
-                return "https://www.lieferando.de";
-            }
+          @Override
+          public Object getValue()
+          {
+            return "https://www.lieferando.de";
+          }
         });
 
-        return new ApiInfo("REST API of " + applicationName(),
-                           description(),
-                           version(),
-                           "Terms of service",
-                           new Contact("Stéphan Minko", "https://www.lieferando.de", "stephan.minko@lieferando.com"),
-                           null,
-                           null,
-                           vendorExtensions);
-    }
+    return new ApiInfo("REST API of " + applicationName(),
+        description(),
+        version(),
+        "Terms of service",
+        new Contact("Stéphan Minko", "https://www.lieferando.de", "stephan.minko@lieferando.com"),
+        null,
+        null,
+        vendorExtensions);
+  }
 
-    private String applicationName()
-    {
-        return "employee-service";
-    }
+  private String applicationName()
+  {
+    return "employee-service";
+  }
 
-    private String description()
-    {
-        return "Swagger API documentation of this micro service.";
-    }
+  private String description()
+  {
+    return "Swagger API documentation of this micro service.";
+  }
 
-    private String version()
-    {
-        return ApiVersions.V1;
-    }
+  private String version()
+  {
+    return ApiVersions.V1;
+  }
 
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

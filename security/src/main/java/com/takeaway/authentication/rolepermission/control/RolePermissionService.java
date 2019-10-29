@@ -17,10 +17,9 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 19.10.2019
- * Time: 16:49
- * <p/>
+ * User: StMinko Date: 19.10.2019 Time: 16:49
+ *
+ * <p>
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -28,58 +27,57 @@ import java.util.UUID;
 @Service
 public class RolePermissionService
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    private final RolePermissionRepository rolePermissionRepository;
+  private final RolePermissionRepository rolePermissionRepository;
 
-    private final RoleService roleService;
+  private final RoleService roleService;
 
-    private final PermissionService permissionService;
+  private final PermissionService permissionService;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    public Page<Permission> findAllByRole(@NotNull UUID roleId, @NotNull Pageable pageable)
-    {
-        return rolePermissionRepository.findAllByRole(roleId, pageable);
-    }
+  public Page<Permission> findAllByRole(@NotNull UUID roleId, @NotNull Pageable pageable)
+  {
+    return rolePermissionRepository.findAllByRole(roleId, pageable);
+  }
 
-    public Permission assign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
-    {
-        Role role = roleService.findById(roleId)
-                               .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
-                                                                       String.format("Could not find a role by the specified id [%s]!", roleId)));
-        Permission permission = permissionService.findById(permissionId)
-                                                 .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
-                                                                                         String.format(
-                                                                                                 "Could not find a permission by the specified id [%s]!",
-                                                                                                 permissionId)));
-        return rolePermissionRepository.findByRoleAndPermission(roleId, permissionId)
-                                       .orElseGet(() -> {
-                                           RolePermission rolePermission = new RolePermission();
-                                           rolePermission.setPermission(permission);
-                                           rolePermission.setRole(role);
-                                           return rolePermissionRepository.save(rolePermission);
-                                       })
-                                       .getPermission();
-    }
+  public Permission assign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
+  {
+    Role role = roleService
+            .findById(roleId)
+            .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND, String.format("Could not find a role by the specified id [%s]!", roleId)));
+    Permission permission = permissionService
+            .findById(permissionId)
+            .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
+                    String.format("Could not find a permission by the specified id [%s]!", permissionId)));
+    return rolePermissionRepository
+        .findByRoleAndPermission(roleId, permissionId)
+        .orElseGet(() -> {
+              RolePermission rolePermission = new RolePermission();
+              rolePermission.setPermission(permission);
+              rolePermission.setRole(role);
+              return rolePermissionRepository.save(rolePermission);
+            })
+        .getPermission();
+  }
 
-    public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
-    {
-        roleService.findById(roleId)
-                   .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
-                                                           String.format("Could not find a role by the specified id [%s]!", roleId)));
-        permissionService.findById(permissionId)
-                         .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
-                                                                 String.format("Could not find a permission by the specified id [%s]!",
-                                                                               permissionId)));
-        rolePermissionRepository.findByRoleAndPermission(roleId, permissionId)
-                                .ifPresent(rolePermissionRepository::delete);
-    }
+  public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
+  {
+    roleService
+        .findById(roleId)
+        .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND, String.format("Could not find a role by the specified id [%s]!", roleId)));
+    permissionService
+        .findById(permissionId)
+        .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
+                String.format("Could not find a permission by the specified id [%s]!", permissionId)));
+    rolePermissionRepository.findByRoleAndPermission(roleId, permissionId).ifPresent(rolePermissionRepository::delete);
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

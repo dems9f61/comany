@@ -9,17 +9,16 @@ import javax.validation.Validator;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 17.10.2019
- * Time: 11:49
- * <p/>
+ * User: StMinko Date: 17.10.2019 Time: 11:49
+ *
+ * <p>
  */
 @Service
 public class PermissionService extends AbstractDefaultAuditedEntityService<PermissionRepository, Permission, UUID>
 {
-    @Autowired
-    public PermissionService(PermissionRepository repository, Validator validator)
-    {
-        super(repository, validator);
-    }
+  @Autowired
+  public PermissionService(PermissionRepository repository, Validator validator)
+  {
+    super(repository, validator);
+  }
 }

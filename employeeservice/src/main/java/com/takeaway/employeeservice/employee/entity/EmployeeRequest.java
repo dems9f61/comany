@@ -5,31 +5,30 @@ import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 import java.util.Date;
 
 /**
- * User: StMinko
- * Date: 10.04.2019
- * Time: 23:09
- * <p/>
+ * User: StMinko Date: 10.04.2019 Time: 23:09
+ *
+ * <p>
  */
 public interface EmployeeRequest
 {
-    String getEmailAddress();
+  String getEmailAddress();
 
-    String getFirstName();
+  String getFirstName();
 
-    String getLastName();
+  String getLastName();
 
-    Date getBirthday();
+  Date getBirthday();
 
-    String getDepartmentName();
+  String getDepartmentName();
 
-    default EmployeeParameter toEmployerParameter()
-    {
-        return EmployeeParameter.builder()
-                                .emailAddress(getEmailAddress())
-                                .birthday(getBirthday())
-                                .firstName(getFirstName())
-                                .lastName(getLastName())
-                                .departmentName(getDepartmentName())
-                                .build();
-    }
+  default EmployeeParameter toEmployerParameter()
+  {
+    return EmployeeParameter.builder()
+          .emailAddress(getEmailAddress())
+          .birthday(getBirthday())
+          .firstName(getFirstName())
+          .lastName(getLastName())
+          .departmentName(getDepartmentName())
+          .build();
+  }
 }

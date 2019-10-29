@@ -9,55 +9,54 @@ import org.springframework.stereotype.Component;
 import java.util.Random;
 
 /**
- * User: StMinko
- * Date: 21.03.2019
- * Time: 12:20
- * <p/>
+ * User: StMinko Date: 21.03.2019 Time: 12:20
+ *
+ * <p>
  */
 @Component
 public class EmployeeMessageTestFactory
 {
-    public EmployeeMessage createDefault()
+  public EmployeeMessage createDefault()
+  {
+    return builder().create();
+  }
+
+  public Builder builder()
+  {
+    return new EmployeeMessageTestFactory.Builder();
+  }
+
+  public static class Builder
+  {
+    private EmployeeTestFactory employeeTestFactory = new EmployeeTestFactory();
+
+    private Employee employee;
+
+    private EventType eventType;
+
+    Builder()
     {
-        return builder().create();
+      employee = employeeTestFactory.createDefault();
+      EventType[] values = EventType.values();
+      Random random = new Random();
+      eventType = values[random.nextInt(values.length)];
     }
 
-    public Builder builder()
+    public EmployeeMessageTestFactory.Builder employee(Employee employee)
     {
-        return new EmployeeMessageTestFactory.Builder();
+      this.employee = employee;
+      return this;
     }
 
-    public static class Builder
+    public EmployeeMessageTestFactory.Builder eventType(EventType eventType)
     {
-        private EmployeeTestFactory employeeTestFactory = new EmployeeTestFactory();
-
-        private Employee employee;
-
-        private EventType eventType;
-
-        Builder()
-        {
-            employee = employeeTestFactory.createDefault();
-            EventType[] values = EventType.values();
-            Random random = new Random();
-            eventType = values[random.nextInt(values.length)];
-        }
-
-        public EmployeeMessageTestFactory.Builder employee(Employee employee)
-        {
-            this.employee = employee;
-            return this;
-        }
-
-        public EmployeeMessageTestFactory.Builder eventType(EventType eventType)
-        {
-            this.eventType = eventType;
-            return this;
-        }
-
-        public EmployeeMessage create()
-        {
-            return new EmployeeMessage(eventType, employee);
-        }
+      this.eventType = eventType;
+      return this;
     }
+
+    public EmployeeMessage create()
+    {
+      return new EmployeeMessage(eventType, employee);
+    }
+  }
 }

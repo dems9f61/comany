@@ -6,10 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
- * User: StMinko
- * Date: 18.03.2019
- * Time: 11:53
- * <p/>
+ * User: StMinko Date: 18.03.2019 Time: 11:53
+ *
+ * <p>
  */
 @RequiredArgsConstructor
 @EqualsAndHashCode
@@ -17,15 +16,15 @@ import lombok.ToString;
 @Getter
 public class DepartmentParameter
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    private final String departmentName;
+  private final String departmentName;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

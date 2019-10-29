@@ -11,63 +11,57 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * User: StMinko
- * Date: 18.03.2019
- * Time: 16:43
- * <p/>
+ * User: StMinko Date: 18.03.2019 Time: 16:43
+ *
+ * <p>
  */
 public abstract class AbstractTestFactory<TYPE, BUILDER_TYPE extends AbstractTestFactory.Builder<TYPE>>
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    public abstract BUILDER_TYPE builder();
+  public abstract BUILDER_TYPE builder();
 
-    public TYPE createDefault()
+  public TYPE createDefault()
+  {
+    return builder().create();
+  }
+
+  public List<TYPE> createManyDefault(int count)
+  {
+    return manyBuilders(count).map(Builder::create).collect(Collectors.toList());
+  }
+
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+
+  private Stream<Builder<TYPE>> manyBuilders(int count)
+  {
+    return IntStream.range(0, count).mapToObj(i -> builder());
+  }
+
+  // ============================  Inner Classes  ==========================
+
+  public interface Builder<TYPE>
+  {
+    TYPE create();
+
+    default LocalDate generateRandomDate()
     {
-        return builder().create();
+      long minDay = LocalDate.of(1900, 1, 1).toEpochDay();
+      long maxDay = LocalDate.now().toEpochDay();
+      long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+
+      return LocalDate.ofEpochDay(randomDay);
     }
 
-    public List<TYPE> createManyDefault(int count)
+    default String generateRandomEmail()
     {
-        return manyBuilders(count).map(Builder::create)
-                                  .collect(Collectors.toList());
+      return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
     }
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-
-    private Stream<Builder<TYPE>> manyBuilders(int count)
-    {
-        return IntStream.range(0, count)
-                        .mapToObj(i -> builder());
-    }
-
-    // ============================  Inner Classes  ==========================
-
-    public interface Builder<TYPE>
-    {
-        TYPE create();
-
-        default LocalDate generateRandomDate()
-        {
-            long minDay = LocalDate.of(1900, 1, 1)
-                                   .toEpochDay();
-            long maxDay = LocalDate.now()
-                                   .toEpochDay();
-            long randomDay = ThreadLocalRandom.current()
-                                              .nextLong(minDay, maxDay);
-
-            return LocalDate.ofEpochDay(randomDay);
-        }
-
-        default String generateRandomEmail()
-        {
-            return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
-        }
-    }
-
-    // ============================  End of class  ===========================
+  // ============================  End of class  ===========================
 }

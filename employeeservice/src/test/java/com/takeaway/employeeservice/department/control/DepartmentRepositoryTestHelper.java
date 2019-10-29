@@ -6,10 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * User: StMinko
- * Date: 07.06.2019
- * Time: 13:09
- * <p/>
+ * User: StMinko Date: 07.06.2019 Time: 13:09
+ *
+ * <p>
  */
 @Component
 @RequiredArgsConstructor
@@ -17,22 +16,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DepartmentRepositoryTestHelper
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    private final DepartmentRepository departmentRepository;
+  private final DepartmentRepository departmentRepository;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    public void cleanDatabase()
-    {
-        LOGGER.info("Cleaning the department repository");
-        departmentRepository.deleteAll();
-    }
+  public void cleanDatabase()
+  {
+    LOGGER.info("Cleaning the department repository");
+    departmentRepository.deleteAll();
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

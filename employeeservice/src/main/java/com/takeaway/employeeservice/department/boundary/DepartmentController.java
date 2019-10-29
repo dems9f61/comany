@@ -24,55 +24,52 @@ import javax.validation.constraints.NotNull;
 import java.net.HttpURLConnection;
 
 /**
- * User: StMinko
- * Date: 18.03.2019
- * Time: 17:23
- * <p/>
+ * User: StMinko Date: 18.03.2019 Time: 17:23
+ *
+ * <p>
  */
 @Slf4j
 @Validated
 @RestController
 @Api(value = "Department service: Operations pertaining to department service interface")
 @RequestMapping(value = DepartmentController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class DepartmentController
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    public static final String BASE_URI = ApiVersions.V1 + "/departments";
+  public static final String BASE_URI = ApiVersions.V1 + "/departments";
 
-    // =============================  Variables  =============================
+  // =============================  Variables  =============================
 
-    private final DepartmentServiceCapable departmentService;
+  private final DepartmentServiceCapable departmentService;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
 
-    @ApiOperation(value = "Creates a department with the request values")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,
-                    message = "") })
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    DepartmentResponse createDepartment(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
+  @ApiOperation(value = "Creates a department with the request values")
+  @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = "")})
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  DepartmentResponse createDepartment(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
+  {
+    LOGGER.info("Creating a department by the request [{}]", departmentRequest);
+    DepartmentParameter createDepartmentParameter = departmentRequest.toDepartmentParameter();
+    try
     {
-        LOGGER.info("Creating a department by the request [{}]", departmentRequest);
-        DepartmentParameter createDepartmentParameter = departmentRequest.toDepartmentParameter();
-        try
-        {
-            Department department = departmentService.create(createDepartmentParameter);
-            return new DepartmentResponse(department.getId(), department.getDepartmentName());
-        }
-        catch (DepartmentServiceException caught)
-        {
-            throw new BadRequestException(caught.getMessage(), caught.getCause());
-        }
+      Department department = departmentService.create(createDepartmentParameter);
+      return new DepartmentResponse(department.getId(), department.getDepartmentName());
     }
+    catch (DepartmentServiceException caught)
+    {
+      throw new BadRequestException(caught.getMessage(), caught.getCause());
+    }
+  }
 
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -22,70 +22,69 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 19.10.2019
- * Time: 17:17
- * <p/>
+ * User: StMinko Date: 19.10.2019 Time: 17:17
+ *
+ * <p>
  */
 @Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = RolePermissionController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class RolePermissionController implements ServiceExceptionTranslator
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    static final String BASE_URI = RoleController.BASE_URI + "/{roleId}/permissions";
+  static final String BASE_URI = RoleController.BASE_URI + "/{roleId}/permissions";
 
-    // =============================  Variables  =============================
+  // =============================  Variables  =============================
 
-    private final RolePermissionService rolePermissionService;
+  private final RolePermissionService rolePermissionService;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    Page<Permission> findAll(@NotNull @PathVariable UUID roleId, @NotNull @PageableDefault(50) Pageable pageable)
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  Page<Permission> findAll(@NotNull @PathVariable UUID roleId, @NotNull @PageableDefault(50) Pageable pageable)
+  {
+    Page<Permission> permissions = rolePermissionService.findAllByRole(roleId, pageable);
+    return new ApiResponsePage<>(permissions.getContent(), pageable, permissions.getTotalElements());
+  }
+
+  @PostMapping(value = "/{permissionId}")
+  @ResponseStatus(HttpStatus.CREATED)
+  @JsonView(DataView.GET.class)
+  Permission assign(@NotNull @PathVariable UUID roleId, @NotNull @PathVariable UUID permissionId)
+  {
+    try
     {
-        Page<Permission> permissions = rolePermissionService.findAllByRole(roleId, pageable);
-        return new ApiResponsePage<>(permissions.getContent(), pageable, permissions.getTotalElements());
+      return rolePermissionService.assign(roleId, permissionId);
     }
-
-    @PostMapping(value = "/{permissionId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    @JsonView(DataView.GET.class)
-    Permission assign(@NotNull @PathVariable UUID roleId, @NotNull @PathVariable UUID permissionId)
+    catch (ServiceException caught)
     {
-        try
-        {
-            return rolePermissionService.assign(roleId, permissionId);
-        }
-        catch (ServiceException caught)
-        {
-            throw translateIntoApiException(caught);
-        }
+      throw translateIntoApiException(caught);
     }
+  }
 
-    @DeleteMapping(value = "/{permissionId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void unassign(@NotNull @PathVariable UUID roleId, @NotNull @PathVariable UUID permissionId)
+  @DeleteMapping(value = "/{permissionId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  void unassign(@NotNull @PathVariable UUID roleId, @NotNull @PathVariable UUID permissionId)
+  {
+    try
     {
-        try
-        {
-            rolePermissionService.unassign(roleId, permissionId);
-        }
-        catch (ServiceException caught)
-        {
-            throw translateIntoApiException(caught);
-        }
+      rolePermissionService.unassign(roleId, permissionId);
     }
+    catch (ServiceException caught)
+    {
+      throw translateIntoApiException(caught);
+    }
+  }
 
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

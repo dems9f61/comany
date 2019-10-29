@@ -15,24 +15,23 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * User: StMinko
- * Date: 16.10.2019
- * Time: 14:31
- * <p/>
+ * User: StMinko Date: 16.10.2019 Time: 14:31
+ *
+ * <p>
  */
 public interface DefaultAuditedEntityController<ENTITY extends AuditedEntity<ID>, ID extends Serializable> extends DefaultEntityController<ENTITY, ID>
 {
-    // =========================== Class Variables ===========================
-    // ==============================  Methods  ==============================
+  // =========================== Class Variables ===========================
+  // ==============================  Methods  ==============================
 
-    @GetMapping("/{id}/revisions")
-    @ResponseStatus(HttpStatus.OK)
-    Page<Revision<Long, ENTITY>> findRevisions(@PathVariable @NotNull ID id, @NotNull @PageableDefault(50) Pageable pageable);
+  @GetMapping("/{id}/revisions")
+  @ResponseStatus(HttpStatus.OK)
+  Page<Revision<Long, ENTITY>> findRevisions(@PathVariable @NotNull ID id, @NotNull @PageableDefault(50) Pageable pageable);
 
-    @GetMapping("/{id}/auditTrails")
-    @ResponseStatus(HttpStatus.OK)
-    ApiResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@PathVariable @NotNull ID id, @PageableDefault(50) @NotNull Pageable pageable);
+  @GetMapping("/{id}/auditTrails")
+  @ResponseStatus(HttpStatus.OK)
+  ApiResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@PathVariable @NotNull ID id, @PageableDefault(50) @NotNull Pageable pageable);
 
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

@@ -10,33 +10,32 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 /**
- * User: StMinko
- * Date: 20.03.2019
- * Time: 14:26
- * <p/>
+ * User: StMinko Date: 20.03.2019 Time: 14:26
+ *
+ * <p>
  */
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class EmployeeMessageReceiver
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
 
-    private final ApplicationEventPublisher eventPublisher;
+  private final ApplicationEventPublisher eventPublisher;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    @RabbitListener(queues = "${amqp.queue-name}")
-    public void receiveEmployeeMessage(@NonNull EmployeeMessage employeeMessage)
-    {
-        LOGGER.info("###### Received Message on employee ##### [{}]", employeeMessage);
-        eventPublisher.publishEvent(new EmployeeEvent(employeeMessage.getEmployee(), employeeMessage.getEventType()));
-    }
+  @RabbitListener(queues = "${amqp.queue-name}")
+  public void receiveEmployeeMessage(@NonNull EmployeeMessage employeeMessage)
+  {
+    LOGGER.info("###### Received Message on employee ##### [{}]", employeeMessage);
+    eventPublisher.publishEvent(new EmployeeEvent(employeeMessage.getEmployee(), employeeMessage.getEventType()));
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

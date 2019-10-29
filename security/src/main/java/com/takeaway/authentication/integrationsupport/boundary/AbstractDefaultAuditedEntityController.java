@@ -15,36 +15,35 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
- * User: StMinko
- * Date: 16.10.2019
- * Time: 14:35
- * <p/>
+ * User: StMinko Date: 16.10.2019 Time: 14:35
+ *
+ * <p>
  */
 public abstract class AbstractDefaultAuditedEntityController<SERVICE extends AuditedEntityService<ENTITY, ID>, ENTITY extends AuditedEntity<ID>, ID extends Serializable>
-        extends AbstractDefaultEntityController<SERVICE, ENTITY, ID> implements DefaultAuditedEntityController<ENTITY, ID>
+    extends AbstractDefaultEntityController<SERVICE, ENTITY, ID> implements DefaultAuditedEntityController<ENTITY, ID>
 {
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
+  // =========================== Class Variables ===========================
+  // =============================  Variables  =============================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
 
-    @Override
-    public ApiResponsePage<Revision<Long, ENTITY>> findRevisions(@PathVariable @NotNull ID id, @NotNull @PageableDefault(50) Pageable pageable)
-    {
-        Page<Revision<Long, ENTITY>> history = getService().findHistory(id, pageable);
-        return new ApiResponsePage<>(history.getContent(), pageable, history.getTotalElements());
-    }
+  @Override
+  public ApiResponsePage<Revision<Long, ENTITY>> findRevisions(@PathVariable @NotNull ID id, @NotNull @PageableDefault(50) Pageable pageable)
+  {
+    Page<Revision<Long, ENTITY>> history = getService().findHistory(id, pageable);
+    return new ApiResponsePage<>(history.getContent(), pageable, history.getTotalElements());
+  }
 
-    @Override
-    public ApiResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable)
-    {
-        Class<? extends ENTITY> entityClass = (Class<? extends ENTITY>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-        List<AuditTrail<ID, ENTITY>> auditTrails = getService().findAuditTrails(id, entityClass);
-        return new ApiResponsePage<>(auditTrails, pageable, auditTrails.size());
-    }
+  @Override
+  public ApiResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable)
+  {
+    Class<? extends ENTITY> entityClass = (Class<? extends ENTITY>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+    List<AuditTrail<ID, ENTITY>> auditTrails = getService().findAuditTrails(id, entityClass);
+    return new ApiResponsePage<>(auditTrails, pageable, auditTrails.size());
+  }
 
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  // =================  protected/package local  Methods ===================
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }
