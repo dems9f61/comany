@@ -4,8 +4,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.takeaway.authentication.IntegrationTestSuite;
 import com.takeaway.authentication.integrationsupport.boundary.ApiResponsePage;
 import com.takeaway.authentication.integrationsupport.boundary.DataView;
+import com.takeaway.authentication.permission.control.PermissionService;
+import com.takeaway.authentication.permission.entity.Permission;
+import com.takeaway.authentication.role.control.RoleService;
+import com.takeaway.authentication.role.entity.Role;
+import com.takeaway.authentication.rolepermission.control.RolePermissionService;
 import com.takeaway.authentication.user.control.UserService;
 import com.takeaway.authentication.user.entity.User;
+import com.takeaway.authentication.user.entity.UserTestFactory;
+import com.takeaway.authentication.userrole.control.UserRoleService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,8 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -37,6 +43,18 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
 {
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private RoleService roleService;
+
+  @Autowired
+  private PermissionService permissionService;
+
+  @Autowired
+  private RolePermissionService rolePermissionService;
+
+  @Autowired
+  private UserRoleService userRoleService;
 
   @Nested
   @DisplayName("when access")
@@ -83,7 +101,7 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
     }
 
     @Test
-    @DisplayName("GET: 'http://.../users/{id}' returns OK and the requested permission")
+    @DisplayName("GET: 'http://.../users/{id}' returns OK and the requested user")
     void givenUser_whenFindById_thenStatus200AndReturnRole() throws Exception
     {
       // Arrange
@@ -101,6 +119,36 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       assertThat(user).isNotNull();
       assertThat(user.getId()).isEqualTo(persistedUser.getId());
       assertThat(user.getUserName()).isEqualTo(persistedUser.getUserName());
+    }
+
+    @Test
+    @DisplayName("GET: 'http://.../users/{id}/permissions' returns OK and all requested permissions")
+    void givePermissions_whenFindByUIserId_thenStatus200AndReturnPermissions() throws Exception
+    {
+      // Arrange
+      User persistedUser = saveRandomUsers(1).get(0);
+      List<Role> persistedRoles = saveRandomRoles(2);
+      Role firstPersistedRole = persistedRoles.get(0);
+      List<Permission> expectedPermissionsForFirstRole = saveRandomPermissions(10);
+      for (Permission expectedPermission : expectedPermissionsForFirstRole)
+      {
+        rolePermissionService.assign(firstPersistedRole.getId(), expectedPermission.getId());
+      }
+      Role secondPersistedRole = persistedRoles.get(1);
+      List<Permission> expectedPermissionsForSecondRole = saveRandomPermissions(10);
+      for (Permission expectedPermission : expectedPermissionsForSecondRole)
+      {
+        rolePermissionService.assign(secondPersistedRole.getId(), expectedPermission.getId());
+      }
+      userRoleService.assign(persistedUser.getId(), firstPersistedRole.getId());
+      userRoleService.assign(persistedUser.getId(), secondPersistedRole.getId());
+      String uri = String.format("%s/{id}/permissions", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(get(uri, persistedUser.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
+             .andExpect(status().isOk())
+             .andExpect(jsonPath("$", notNullValue()))
+             .andExpect(jsonPath("$.numberOfElements", is(expectedPermissionsForFirstRole.size() + expectedPermissionsForSecondRole.size())));
     }
   }
 
@@ -246,6 +294,92 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
     }
+
+    @Test
+    @DisplayName("PATCH: 'http://.../users/{id}' returns OK on new user name")
+    void givenNewUseName_whenDoPartialUpdate_thenStatus200() throws Exception
+    {
+      // Arrange
+      User initial = saveRandomUsers(1).get(0);
+      User update = userTestFactory.builder()
+                                   .userName(RandomStringUtils.randomAlphabetic(8))
+                                   .oldPassword(null)
+                                   .newPassword(null)
+                                   .confirmPassword(null)
+                                   .create();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(update, DataView.PATCH.class);
+
+      // Act / Assert
+      MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                       .content(requestAsJson))
+                                   .andExpect(status().isOk())
+                                   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                   .andExpect(jsonPath("$", notNullValue()))
+                                   .andReturn();
+      String contentAsString = mvcResult.getResponse()
+                                        .getContentAsString();
+      User updated = objectMapper.readValue(contentAsString, User.class);
+      assertThat(updated).isNotNull();
+      assertThat(updated.getId()).isEqualTo(initial.getId());
+      assertThat(updated.getUserName()).isEqualTo(update.getUserName());
+    }
+
+    @Test
+    @DisplayName("PATCH: 'http://.../users/{id}' returns BAD_REQUEST on already existing new user name")
+    void givenAlreadyExistingNewUseName_whenDoPartialUpdate_thenStatus400() throws Exception
+    {
+      // Arrange
+      List<User> persistedUsers = saveRandomUsers(2);
+      User first = persistedUsers.get(0);
+      User second = persistedUsers.get(1);
+
+      User secondUpdate = userTestFactory.builder()
+                                         .userName(first.getUserName())
+                                         .oldPassword(null)
+                                         .newPassword(null)
+                                         .confirmPassword(null)
+                                         .create();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(secondUpdate, DataView.PATCH.class);
+
+      // Act / Assert
+      mockMvc.perform(put(uri, second.getId()).contentType(APPLICATION_JSON_UTF8)
+                                              .content(requestAsJson))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()));
+    }
+
+    @Test
+    @DisplayName("PATCH: 'http://.../users/{id}' returns OK on new password")
+    void givenNewPassword_whenDoPartialUpdate_thenStatus200() throws Exception
+    {
+      // Arrange
+      User initial = saveRandomUsers(1).get(0);
+      String newPassword = RandomStringUtils.randomAlphabetic(8);
+      User update = userTestFactory.builder()
+                                   .oldPassword(UserTestFactory.PWD)
+                                   .newPassword(newPassword)
+                                   .confirmPassword(newPassword)
+                                   .userName(null)
+                                   .create();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(update, DataView.PATCH.class);
+
+      // Act / Assert
+      MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                                       .content(requestAsJson))
+                                   .andExpect(status().isOk())
+                                   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                   .andExpect(jsonPath("$", notNullValue()))
+                                   .andReturn();
+      String contentAsString = mvcResult.getResponse()
+                                        .getContentAsString();
+      User updated = objectMapper.readValue(contentAsString, User.class);
+      assertThat(updated).isNotNull();
+      assertThat(updated.getId()).isEqualTo(initial.getId());
+      assertThat(updated.getUserName()).isEqualTo(initial.getUserName());
+    }
   }
 
   @Nested
@@ -344,7 +478,7 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
 
     @Test
     @DisplayName("POST: 'http://.../users' returns BAD_REQUEST if the given user name already exists")
-    void giveAlreadyExistingUserName_whenCreate_thenStatus400() throws Exception
+    void givenAlreadyExistingUserName_whenCreate_thenStatus400() throws Exception
     {
       // Arrange
       User persistedUser = saveRandomUsers(1).get(0);
@@ -404,6 +538,30 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
     for (int i = 0; i < normalizedCount; i++)
     {
       result.add(userService.create(userTestFactory.createDefault()));
+    }
+
+    return result;
+  }
+
+  private List<Role> saveRandomRoles(int count) throws Exception
+  {
+    int normalizedCount = count <= 0 ? 1 : count;
+    List<Role> result = new ArrayList<>(count);
+    for (int i = 0; i < normalizedCount; i++)
+    {
+      result.add(roleService.create(roleTestFactory.createDefault()));
+    }
+
+    return result;
+  }
+
+  private List<Permission> saveRandomPermissions(int count) throws Exception
+  {
+    int normalizedCount = count <= 0 ? 1 : count;
+    List<Permission> result = new ArrayList<>(count);
+    for (int i = 0; i < normalizedCount; i++)
+    {
+      result.add(permissionService.create(permissionTestFactory.createDefault()));
     }
 
     return result;

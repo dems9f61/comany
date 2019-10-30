@@ -8,13 +8,13 @@ import com.takeaway.authentication.role.entity.Role;
 import com.takeaway.authentication.rolepermission.entity.RolePermission;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
+
+import static com.takeaway.authentication.integrationsupport.entity.ServiceException.Reason.SUB_RESOURCE_NOT_FOUND;
 
 /**
  * User: StMinko Date: 19.10.2019 Time: 16:49
@@ -39,20 +39,16 @@ public class RolePermissionService
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================
 
-  public Page<Permission> findAllByRole(@NotNull UUID roleId, @NotNull Pageable pageable)
-  {
-    return rolePermissionRepository.findAllByRole(roleId, pageable);
-  }
-
   public Permission assign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
   {
     Role role = roleService
             .findById(roleId)
-            .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND, String.format("Could not find a role by the specified id [%s]!", roleId)));
+            .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
+                                                    String.format("Could not find a role by the specified id [%s]!", roleId)));
     Permission permission = permissionService
             .findById(permissionId)
-            .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
-                    String.format("Could not find a permission by the specified id [%s]!", permissionId)));
+            .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
+                                                    String.format("Could not find a permission by the specified id [%s]!", permissionId)));
     return rolePermissionRepository
         .findByRoleAndPermission(roleId, permissionId)
         .orElseGet(() -> {
@@ -67,12 +63,13 @@ public class RolePermissionService
   public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
   {
     roleService
-        .findById(roleId)
-        .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND, String.format("Could not find a role by the specified id [%s]!", roleId)));
+            .findById(roleId)
+            .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
+                                                    String.format("Could not find a role by the specified id [%s]!", roleId)));
     permissionService
-        .findById(permissionId)
-        .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
-                String.format("Could not find a permission by the specified id [%s]!", permissionId)));
+            .findById(permissionId)
+            .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
+                                                    String.format("Could not find a permission by the specified id [%s]!", permissionId)));
     rolePermissionRepository.findByRoleAndPermission(roleId, permissionId).ifPresent(rolePermissionRepository::delete);
   }
 

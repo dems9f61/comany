@@ -1,7 +1,6 @@
 package com.takeaway.authentication.rolepermission.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.takeaway.authentication.integrationsupport.boundary.ApiResponsePage;
 import com.takeaway.authentication.integrationsupport.boundary.DataView;
 import com.takeaway.authentication.integrationsupport.boundary.ServiceExceptionTranslator;
 import com.takeaway.authentication.integrationsupport.entity.ServiceException;
@@ -10,9 +9,6 @@ import com.takeaway.authentication.role.boundary.RoleController;
 import com.takeaway.authentication.rolepermission.control.RolePermissionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -47,13 +43,6 @@ public class RolePermissionController implements ServiceExceptionTranslator
   // ===========================  public  Methods  =========================
   // =================  protected/package local  Methods ===================
 
-  @GetMapping
-  @ResponseStatus(HttpStatus.OK)
-  Page<Permission> findAll(@NotNull @PathVariable UUID roleId, @NotNull @PageableDefault(50) Pageable pageable)
-  {
-    Page<Permission> permissions = rolePermissionService.findAllByRole(roleId, pageable);
-    return new ApiResponsePage<>(permissions.getContent(), pageable, permissions.getTotalElements());
-  }
 
   @PostMapping(value = "/{permissionId}")
   @ResponseStatus(HttpStatus.CREATED)

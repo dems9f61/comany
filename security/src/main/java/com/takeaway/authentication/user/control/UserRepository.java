@@ -1,7 +1,12 @@
 package com.takeaway.authentication.user.control;
 
 import com.takeaway.authentication.integrationsupport.control.JpaAuditedSpecificationRepository;
+import com.takeaway.authentication.permission.entity.Permission;
 import com.takeaway.authentication.user.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -19,6 +24,10 @@ interface UserRepository extends JpaAuditedSpecificationRepository<User, UUID>
   // ==============================  Methods  ==============================
 
   Optional<User> findByUserName(String userName);
+
+  @Query("SELECT DISTINCT rp.permission FROM User u " + "           JOIN UserRole ur ON ur.user = u "
+          + "           JOIN RolePermission rp ON ur.role = rp.role " + "           WHERE u.id = :userId")
+  Page<Permission> findAllPermissionsByUser(@Param("userId") UUID userId, Pageable pageable);
 
   // ============================  Inner Classes  ==========================
   // ============================  End of class  ===========================

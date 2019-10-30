@@ -2,9 +2,12 @@ package com.takeaway.authentication.user.control;
 
 import com.takeaway.authentication.integrationsupport.control.AbstractDefaultAuditedEntityService;
 import com.takeaway.authentication.integrationsupport.entity.ServiceException;
+import com.takeaway.authentication.permission.entity.Permission;
 import com.takeaway.authentication.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,10 +49,16 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
   // ===========================  public  Methods  =========================
 
   @Transactional(propagation = Propagation.SUPPORTS)
-  public Optional<User> findByUserName(String username)
+  public Optional<User> findByUserName(@NotNull String username)
   {
     return getRepository().findByUserName(username);
   }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public Page<Permission> findAllPermissionByUser(@NotNull UUID id, @NotNull Pageable pageable)
+    {
+        return getRepository().findAllPermissionsByUser(id, pageable);
+    }
 
   // =================  protected/package local  Methods ===================
 
@@ -64,8 +74,7 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
   {
     super.onBeforeCreate(create);
     String userName = create.getUserName();
-    if (userName != null && getRepository().findByUserName(userName)
-                                           .isPresent())
+      if (userName != null && findByUserName(userName).isPresent())
     {
       throw new ServiceException(INVALID_PARAMETER, "The specified username exists already");
     }
@@ -93,8 +102,7 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
   {
     super.onBeforeUpdate(existing, update);
     String userName = update.getUserName();
-    if (userName != null && getRepository().findByUserName(userName)
-                                           .isPresent())
+      if (userName != null && findByUserName(userName).isPresent())
     {
       throw new ServiceException(INVALID_PARAMETER, "The specified username exists already");
     }
@@ -116,7 +124,6 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
     }
     return update;
   }
-
   // ===========================  private  Methods  ========================
   // ============================  Inner Classes  ==========================
   // ============================  End of class  ===========================

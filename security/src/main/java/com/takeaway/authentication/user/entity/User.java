@@ -35,7 +35,7 @@ public class User extends AuditedUUIDEntity
 
   @NotBlank(groups = { Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class })
   @NullOrNotBlank(groups = { DataView.PATCH.class })
-  @JsonView({DataView.GET.class, DataView.POST.class, DataView.PUT.class})
+  @JsonView({ DataView.GET.class, DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
   private String userName;
 
   @NotNull(groups = {Default.class, DataView.GET.class})

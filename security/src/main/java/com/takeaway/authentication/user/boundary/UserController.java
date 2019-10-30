@@ -1,16 +1,21 @@
 package com.takeaway.authentication.user.boundary;
 
 import com.takeaway.authentication.integrationsupport.boundary.AbstractDefaultAuditedEntityController;
+import com.takeaway.authentication.integrationsupport.boundary.ApiResponsePage;
 import com.takeaway.authentication.integrationsupport.boundary.ApiVersions;
+import com.takeaway.authentication.permission.entity.Permission;
 import com.takeaway.authentication.user.control.UserService;
 import com.takeaway.authentication.user.entity.User;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
@@ -30,7 +35,7 @@ public class UserController extends AbstractDefaultAuditedEntityController<UserS
 {
   // =========================== Class Variables ===========================
 
-  static final String BASE_URI = ApiVersions.V1 + "/users";
+  public static final String BASE_URI = ApiVersions.V1 + "/users";
 
   // =============================  Variables  =============================
 
@@ -47,6 +52,15 @@ public class UserController extends AbstractDefaultAuditedEntityController<UserS
 
   // ===========================  public  Methods  =========================
   // =================  protected/package local  Methods ===================
+
+  @GetMapping("/{id}/permissions")
+  @ResponseStatus(HttpStatus.OK)
+  Page<Permission> findAllPermissionByUser(@NotNull @PathVariable UUID id, @NotNull @PageableDefault(50) Pageable pageable)
+  {
+    Page<Permission> permissions = service.findAllPermissionByUser(id, pageable);
+    return new ApiResponsePage<>(permissions.getContent(), pageable, permissions.getTotalElements());
+  }
+
   // ===========================  private  Methods  ========================
   // ============================  Inner Classes  ==========================
   // ============================  End of class  ===========================
