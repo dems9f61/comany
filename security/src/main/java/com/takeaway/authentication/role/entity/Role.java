@@ -27,7 +27,12 @@ import javax.validation.groups.Default;
 @Setter
 @Getter
 @Entity
-@Table(name = "roles",uniqueConstraints = @UniqueConstraint(name = "uk_roles_name",columnNames = "name"),indexes = @Index(name = "idx_roles_name",columnList = "name"))
+@Table(name = "roles",
+        schema = "data",
+        uniqueConstraints = @UniqueConstraint(name = "uk_roles_name",
+                columnNames = "name"),
+        indexes = @Index(name = "idx_roles_name",
+                columnList = "name"))
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class Role extends AuditedUUIDEntity

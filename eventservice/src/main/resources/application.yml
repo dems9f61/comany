@@ -1,3 +1,5 @@
+spring.profiles.active: ${mode:LOCAL}
+server.port: 8083
 spring:
   application.name: eventservice
   output.ansi.enabled: ALWAYS
@@ -10,11 +12,11 @@ spring:
 
   data:
     mongodb:
-      port: 27017
-      host: localhost
-      username: user
-      password: pwd
-      database: eventservice
+      port: ${database.port}
+      host: ${database.host}
+      username: ${database.username}
+      password: ${database.password}
+      database: ${database.dbname}
       authentication-database: admin
 
 logging:
@@ -22,7 +24,6 @@ logging:
     root: INFO
     org.spring: DEBUG
 
-server.port: 8083
 
 amqp:
   exchange-name: employee
@@ -33,4 +34,37 @@ amqp:
 
 config:
   async-enabled: true
+
+---
+spring.profiles: LOCAL
+database:
+  host: localhost
+  port: 27017
+  username: user
+  password: pwd
+  dbname: eventservice
+
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+    com.takeaway: DEBUG
+---
+spring.profiles: INTEGRATION
+database:
+  host: localhost
+  port: 27018
+  username: user_int
+  password: pwd_int
+  dbname: employeeevent_Int
+
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+    com.takeaway: DEBUG
+
+
+
+
 

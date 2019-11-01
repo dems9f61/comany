@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,13 +21,15 @@ import javax.validation.groups.Default;
  *
  * <p>
  */
+@Audited
 @ToString(callSuper = true)
 @Setter
 @Getter
 @Entity
 @Table(name = "users",
-    uniqueConstraints = {@UniqueConstraint(name = "uk_users_username",columnNames = "userName")},
-    indexes = @Index(name = "idx_users_username",columnList = "userName"))
+        schema = "data",
+        uniqueConstraints = {@UniqueConstraint(name = "uk_users_username",columnNames = "userName")},
+        indexes = @Index(name = "idx_users_username",columnList = "userName"))
 @EqualsAndHashCode(callSuper = true)
 public class User extends AuditedUUIDEntity
 {

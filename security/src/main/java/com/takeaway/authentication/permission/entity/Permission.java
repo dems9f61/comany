@@ -28,6 +28,7 @@ import javax.validation.groups.Default;
 @Getter
 @Entity
 @Table(name = "permissions",
+        schema = "data",
       uniqueConstraints = @UniqueConstraint(name = "uk_permissions_name",columnNames = "name"),
       indexes = @Index(name = "idx_permissions_name",columnList = "name"))
 @EqualsAndHashCode(callSuper = true)

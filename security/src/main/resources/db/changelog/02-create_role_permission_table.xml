@@ -1,0 +1,21 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="CreateRolePermissionTable" author="Stéphan.Minko">
+        <sql>
+            create table data.role_permissions
+            (
+            id uuid not null constraint role_permissions_pkey primary key,
+            created_at timestamp not null,
+            created_by uuid not null,
+            last_updated_at timestamp not null,
+            last_updated_by uuid not null,
+            version bigint not null,
+            permission_id uuid not null constraint fk_permissions references data.permissions,
+            role_id uuid not null constraint fk_role references data.roles,
+            constraint uk_role_permissions_role_id_permission_id unique (role_id, permission_id)
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

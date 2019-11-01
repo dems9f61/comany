@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * User: StMinko Date: 30.10.2019 Time: 11:35
+ *
  * <p>
  */
 @Getter
@@ -21,6 +22,7 @@ import javax.validation.constraints.NotNull;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "user_roles",
+        schema = "data",
         uniqueConstraints = @UniqueConstraint(name = "uk_user_roles_user_id_permission_id",
                 columnNames = { "user_id", "role_id" }))
 public class UserRole extends UUIDEntity

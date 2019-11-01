@@ -32,18 +32,20 @@ class EmployeeEventRestTest extends RestTestSuite
   class WhenAccess
   {
     @Test
-    @DisplayName("GET: 'http://.../events/{uuid}' returns OK and an asc sorted list ")
+    @DisplayName("GET: 'http://.../events/{id}' returns OK and an asc sorted list ")
     void givenEmployeeVents_whenFindByUuid_thenStatus200AndAscSortedList()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
-      receiveRandomMessageFor(uuid);
+        UUID id = UUID.randomUUID();
+        receiveRandomMessageFor(id);
 
       // Act
-      ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeEventController.BASE_URI, uuid),
-              HttpMethod.GET,
-              new HttpEntity<>(defaultHttpHeaders()),
-              new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
+        ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
+                                                                                                                        EmployeeEventController.BASE_URI,
+                                                                                                                        id),
+                                                                                                          HttpMethod.GET,
+                                                                                                          new HttpEntity<>(defaultHttpHeaders()),
+                                                                                                          new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
 
       // Assert
       assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -60,5 +62,20 @@ class EmployeeEventRestTest extends RestTestSuite
         previous = current;
       }
     }
+
+      @Test
+      @DisplayName("GET: 'http://.../events/{id}' returns NOT FOUND for unknown id ")
+      void givenUnknownId_whenFindByUuid_thenStatus404()
+      {
+          // Arrange
+          UUID unknownId = UUID.randomUUID();
+
+          ResponseEntity<String> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeEventController.BASE_URI, unknownId),
+                                                                            HttpMethod.GET,
+                                                                            new HttpEntity<>(defaultHttpHeaders()),
+                                                                            String.class);
+          assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+          assertThat(responseEntity.getBody()).contains(String.format("Could not find employee events by the specified id [%s]", unknownId));
+      }
   }
 }

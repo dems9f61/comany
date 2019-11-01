@@ -6,11 +6,12 @@
     <changeSet id="CreateAuditTrailTable" author="Stéphan.Minko">
         <sql>
             CREATE SEQUENCE history.audit_trail_sequence;
-            create table if not exists history.audit_trail
+            create table history.audit_trail
             (
             revision_number bigint not null DEFAULT NEXTVAL ('history.audit_trail_sequence') constraint audit_trail_pkey primary key,
             revision_timestamp bigint
             );
+
         </sql>
     </changeSet>
 </databaseChangeLog>

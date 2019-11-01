@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "role_permissions",
+        schema = "data",
       uniqueConstraints =
         @UniqueConstraint(name = "uk_role_permissions_role_id_permission_id",
             columnNames = {"role_id", "permission_id"}))

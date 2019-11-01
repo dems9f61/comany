@@ -2,8 +2,8 @@ spring.profiles.active: ${mode:LOCAL}
 server.port: 8084
 
 spring:
-  #  liquibase:
-  #    change-log: classpath:db/security-master-changelog.xml
+  liquibase:
+    change-log: classpath:db/security-master-changelog.xml
   banner:
     location: classpath:/banner.txt
   application.name: security-service
@@ -11,8 +11,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      #      ddl-auto: ${database.hibernate-mode:validate}
-      ddl-auto: ${database.hibernate-mode:update}
+      ddl-auto: ${database.hibernate-mode:validate}
     show-sql: false
     generate-ddl: false
     properties:
@@ -21,8 +20,8 @@ spring:
           envers:
             store_data_at_delete: true
             do_not_audit_optimistic_locking_field: false
-      #            default_schema: history
-      #            audit_table_suffix: _history
+            default_schema: history
+            audit_table_suffix: _history
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
@@ -52,5 +51,20 @@ logging:
   level:
     root: INFO
     org.spring: DEBUG
-    de.nexnet: DEBUG
+    com.takeaway: DEBUG
+
+---
+spring.profiles: INTEGRATION
+database:
+  host: localhost
+  port: 5435
+  username: user_int
+  password: pwd_int
+  dbname: security_int
+
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+    com.takeaway: DEBUG
 

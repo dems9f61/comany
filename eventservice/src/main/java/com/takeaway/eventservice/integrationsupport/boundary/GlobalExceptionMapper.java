@@ -1,6 +1,8 @@
 package com.takeaway.eventservice.integrationsupport.boundary;
 
-import com.takeaway.eventservice.integrationsupport.entity.*;
+import com.takeaway.eventservice.integrationsupport.entity.ApiException;
+import com.takeaway.eventservice.integrationsupport.entity.InternalServerErrorException;
+import com.takeaway.eventservice.integrationsupport.entity.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
+import java.time.Instant;
 
 /**
  * User: StMinko Date: 18.03.2019 Time: 17:17
@@ -26,22 +28,16 @@ public class GlobalExceptionMapper
   // =================  protected/package local  Methods ===================
 
   @Order(1)
-  @ExceptionHandler({ConstraintViolationException.class})
-  public ResponseEntity<ErrorInfo> handleConstraintViolationException(HttpServletRequest httpServletRequest, ConstraintViolationException exception)
-  {
-    return handleApiException(httpServletRequest, new BadRequestException(exception));
-  }
-
-  @Order(2)
   @ExceptionHandler({ResourceNotFoundException.class})
-  public ResponseEntity<ErrorInfo> handleResourceNotFoundException(HttpServletRequest httpServletRequest, ResourceNotFoundException resourceNotFoundException)
+  public ResponseEntity<String> handleResourceNotFoundException(HttpServletRequest httpServletRequest,
+                                                                ResourceNotFoundException resourceNotFoundException)
   {
     return handleApiException(httpServletRequest, resourceNotFoundException);
   }
 
   @Order(1999)
   @ExceptionHandler(value = {Exception.class})
-  protected ResponseEntity<ErrorInfo> handleException(HttpServletRequest httpServletRequest, Exception exception)
+  protected ResponseEntity<String> handleException(HttpServletRequest httpServletRequest, Exception exception)
   {
     InternalServerErrorException internalServerErrorException = new InternalServerErrorException(exception);
     return handleApiException(httpServletRequest, internalServerErrorException);
@@ -49,19 +45,23 @@ public class GlobalExceptionMapper
 
   // ===========================  private  Methods  ========================
 
-  private ResponseEntity<ErrorInfo> handleApiException(HttpServletRequest httpServletRequest, ApiException apiException)
-  {
+    private ResponseEntity<String> handleApiException(HttpServletRequest httpServletRequest, ApiException apiException)
+    {
+        String localizedMessage = apiException.getLocalizedMessage();
     if (apiException.getHttpStatus().is4xxClientError())
     {
-      LOGGER.debug("API Error occurred: [{}]", apiException.getLocalizedMessage(), apiException);
-      LOGGER.info("API Error occurred: [{}]", apiException.getLocalizedMessage());
+        LOGGER.info("API Error occurred: [{}]", localizedMessage);
     }
     else
     {
-      LOGGER.error("Unhandled exception occurred: [{}]", apiException.getLocalizedMessage(), apiException);
+        LOGGER.error("Unhandled exception occurred: [{}]", localizedMessage, apiException);
     }
-    ErrorInfo errorInfo = new ErrorInfo(httpServletRequest.getRequestURI(), apiException);
-    return ResponseEntity.status(apiException.getHttpStatus()).body(errorInfo);
+        Instant time = Instant.now();
+        String requestURI = httpServletRequest.getRequestURI();
+
+        String sb = "Time: " + time + "\n" + "Requested URI: " + requestURI + "\n" + "Error message: " + localizedMessage;
+        return ResponseEntity.status(apiException.getHttpStatus())
+                             .body(sb);
   }
 
   // ============================  Inner Classes  ==========================

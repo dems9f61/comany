@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!-- Create the Data Schema -->
+    <include file="changelog/01-create_schemas_and_extension.xml" relativeToChangelogFile="true"/>
+    <!-- Create the role Table -->
+    <include file="changelog/02-create_role_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the permission Table -->
+    <include file="changelog/02-create_permission_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the role-permission Table -->
+    <include file="changelog/02-create_role_permission_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the user Table -->
+    <include file="changelog/02-create_user_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the user role Table -->
+    <include file="changelog/02-create_user_role_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the audit Trail Table -->
+    <include file="changelog/03-create_audit_trail_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the permission Audit Trail Table -->
+    <include file="changelog/04-create_permission_history_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the role Audit Trail Table -->
+    <include file="changelog/04-create_role_history_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the user Audit Trail Table -->
+    <include file="changelog/04-create_user_history_table.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

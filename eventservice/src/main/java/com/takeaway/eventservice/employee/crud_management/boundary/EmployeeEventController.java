@@ -45,14 +45,15 @@ public class EmployeeEventController
   // ===========================  public  Methods  =========================
 
   @ApiOperation(value = "Retrieves all events related to an employee in ascending order")
-  @GetMapping("/{uuid}")
+  @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("uuid") UUID uuid, Pageable pageable)
+  ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("id") UUID id, Pageable pageable)
   {
-    Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, pageable).map(EmployeeEventResponse::new);
+      Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(id, pageable)
+                                                                               .map(EmployeeEventResponse::new);
     if (employeeEventResponses.isEmpty())
     {
-      throw new ResourceNotFoundException(String.format("Could not find employee events by the specified uuid [%s]", uuid));
+        throw new ResourceNotFoundException(String.format("Could not find employee events by the specified id [%s]", id));
     }
     else
     {

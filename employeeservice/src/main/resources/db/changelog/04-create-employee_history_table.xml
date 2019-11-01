@@ -20,8 +20,6 @@
             constraint employees_history_pkey primary key (id, rev)
             );
 
-            alter table history.employees_history owner to "user";
-
         </sql>
     </changeSet>
 </databaseChangeLog>

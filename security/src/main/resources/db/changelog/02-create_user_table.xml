@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="CreateUserTable" author="Stéphan.Minko">
+        <sql>
+            create table data.users
+            (
+            id uuid not null constraint users_pkey primary key,
+            created_at timestamp not null,
+            created_by uuid not null,
+            last_updated_at timestamp not null,
+            last_updated_by uuid not null,
+            version bigint not null,
+            password_hash varchar(255) not null,
+            user_name varchar(255) constraint uk_users_username unique
+            );
+
+            create index idx_users_username on data.users (user_name);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

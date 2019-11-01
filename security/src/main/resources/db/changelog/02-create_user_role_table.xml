@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="CreateUserTable" author="Stéphan.Minko">
+        <sql>
+            create table data.user_roles
+            (
+            id uuid not null constraint user_roles_pkey primary key,
+            created_at timestamp not null,
+            created_by uuid not null,
+            last_updated_at timestamp not null,
+            last_updated_by uuid not null,
+            version bigint not null,
+            role_id uuid not null constraint fk_roles references data.roles,
+            user_id uuid not null constraint fk_users references data.users,
+            constraint uk_user_roles_user_id_permission_id unique (user_id, role_id)
+            );
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -23,7 +23,7 @@ dependencies {
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: "${project.httpClientVesion}"
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: "${project.swaggerUiVersion}"
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: "${project.springfoxVersion}"
-//    implementation group: 'org.liquibase', name: 'liquibase-core', version: "${project.liquibaseVersion}"
+    implementation group: 'org.liquibase', name: 'liquibase-core', version: "${project.liquibaseVersion}"
     implementation group: 'org.hibernate', name: 'hibernate-envers', version: "${project.enversVersion}"
     implementation group: 'org.springframework.data', name: 'spring-data-envers', version: "${project.springEnversVersion}"
 

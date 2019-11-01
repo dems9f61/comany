@@ -31,7 +31,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT,
     classes = {EmployeeServiceApplication.class})
-@ActiveProfiles("LOCAL")
+@ActiveProfiles("INTEGRATION")
 public abstract class IntegrationTestSuite
 {
   // =========================== Class Variables ===========================

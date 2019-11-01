@@ -8,8 +8,8 @@ services:
     container_name: rabbitmq
     restart: always
     ports:
-    - "5672:5672"
-    - "15672:15672"
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: "rabbitmq"
       RABBITMQ_DEFAULT_PASS: "rabbitmq"
@@ -28,7 +28,18 @@ services:
       POSTGRES_PASSWORD: pwd
       POSTGRES_DB: employee
     ports:
-    - "5432:5432"
+      - "5432:5432"
+
+  employee_service_db_Int:
+    image: postgres:alpine
+    container_name: employee_service_postgredb_Int
+    restart: always
+    environment:
+      POSTGRES_USER: user_int
+      POSTGRES_PASSWORD: pwd_int
+      POSTGRES_DB: employee_int
+    ports:
+      - "5434:5432"
 
   security_service_db:
     image: postgres:alpine
@@ -41,6 +52,17 @@ services:
     ports:
       - "5433:5432"
 
+  security_service_db_Int:
+    image: postgres:alpine
+    container_name: security_service_postgredb_Int
+    restart: always
+    environment:
+      POSTGRES_USER: user_int
+      POSTGRES_PASSWORD: pwd_int
+      POSTGRES_DB: security_int
+    ports:
+      - "5435:5432"
+
   event_service_db:
     image: mongo:latest
     container_name: event_service_mongodb
@@ -50,4 +72,15 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: pwd
       MONGO_INITDB_DATABASE: employeeevent
     ports:
-    - "27017:27017"
+      - "27017:27017"
+
+  event_service_db_int:
+    image: mongo:latest
+    container_name: event_service_mongodb_int
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user_int
+      MONGO_INITDB_ROOT_PASSWORD: pwd_int
+      MONGO_INITDB_DATABASE: employeeevent_Int
+    ports:
+      - "27018:27017"

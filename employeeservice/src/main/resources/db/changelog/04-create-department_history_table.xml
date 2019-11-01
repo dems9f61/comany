@@ -16,7 +16,6 @@
             constraint departments_history_pkey primary key (id, rev)
             );
 
-            alter table history.departments_history owner to "user";
         </sql>
     </changeSet>
 </databaseChangeLog>

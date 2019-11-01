@@ -17,7 +17,6 @@
             version bigint not null,
             department_id bigint not null constraint fk_department_to_employee references data.departments
             );
-            alter table data.employees owner to "user";
         </sql>
     </changeSet>
 </databaseChangeLog>

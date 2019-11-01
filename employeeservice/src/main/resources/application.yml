@@ -46,6 +46,12 @@ amqp:
   exchange-name: employee
   routing-key: employee.message
 
+rabbitMQ:
+  host: localhost
+  port: 5672
+  username: rabbitmq
+  password: rabbitmq
+
 ---
 spring.profiles: LOCAL
 database:
@@ -55,23 +61,22 @@ database:
   password: pwd
   dbname: employee
 
-rabbitMQ:
+logging:
+  level:
+    root: INFO
+    org.spring: DEBUG
+    com.takeaway: DEBUG
+---
+spring.profiles: INTEGRATION
+database:
   host: localhost
-  port: 5672
-  username: rabbitmq
-  password: rabbitmq
+  port: 5434
+  username: user_int
+  password: pwd_int
+  dbname: employee_int
 
 logging:
   level:
     root: INFO
     org.spring: DEBUG
-    de.nexnet: DEBUG
----
-spring.profiles: LOCAL_HIBERNATE
-spring.profiles.include: LOCAL
-spring:
-  liquibase:
-    enabled: false
-database:
-  dbname: employee_hibernate
-  hibernate-mode: create #alternatively: create-drop
+    com.takeaway: DEBUG
