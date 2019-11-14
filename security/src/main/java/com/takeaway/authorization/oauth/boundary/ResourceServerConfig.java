@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 17:22
+ *
  * <p>
  */
 @Configuration

@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * User: StMinko Date: 10.11.2019 Time: 12:48
+ *
  * <p>
  */
 class OauthAuthorizationServerIntegrationTest extends IntegrationTestSuite

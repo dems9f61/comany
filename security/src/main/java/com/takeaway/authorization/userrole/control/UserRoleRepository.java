@@ -11,6 +11,7 @@ import java.util.UUID;
 
 /**
  * User: StMinko Date: 30.10.2019 Time: 11:39
+ *
  * <p>
  */
 @Repository

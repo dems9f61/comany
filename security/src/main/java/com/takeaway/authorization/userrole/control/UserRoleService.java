@@ -18,6 +18,7 @@ import static com.takeaway.authorization.errorhandling.entity.ServiceException.R
 
 /**
  * User: StMinko Date: 30.10.2019 Time: 11:45
+ *
  * <p>
  */
 @Slf4j

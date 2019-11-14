@@ -55,8 +55,10 @@ public class EmployeeResponse
   public EmployeeResponse(@JsonProperty(value = "id") UUID id,
                           @JsonProperty(value = "emailAddress") String emailAddress,
                           @JsonProperty(value = "firstName") String firstName,
-                          @JsonProperty(value = "lastName") String lastName, @JsonProperty(value = "birthday") ZonedDateTime birthday,
-                          @JsonProperty(value = "departmentName",required = true) String departmentName)
+                          @JsonProperty(value = "lastName") String lastName,
+                          @JsonProperty(value = "birthday") ZonedDateTime birthday,
+                          @JsonProperty(value = "departmentName",
+                                  required = true) String departmentName)
   {
     this.id = id;
     this.emailAddress = emailAddress;

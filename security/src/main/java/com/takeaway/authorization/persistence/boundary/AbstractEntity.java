@@ -76,8 +76,8 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
   private void patchAuditData()
   {
     this.lastUpdatedAt = ZonedDateTime.now();
-    this.lastUpdatedBy = EntitySecurityHolder.get()
-                                             .getActingUser();
+      this.lastUpdatedBy = EntitySecurityHolder.get()
+                                               .getActingUser();
     if (this.createdAt == null)
     {
       this.createdAt = this.lastUpdatedAt;

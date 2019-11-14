@@ -8,10 +8,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 06.11.2019
- * Time: 11:13
- * <p/>
+ * User: StMinko Date: 06.11.2019 Time: 11:13
+ *
+ * <p>
  */
 @Repository
 interface OauthClientRepository extends JpaAuditedSpecificationRepository<OauthClient, UUID>

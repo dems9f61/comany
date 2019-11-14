@@ -49,11 +49,11 @@ public class EmployeeEventController
   @ResponseStatus(HttpStatus.OK)
   ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("id") UUID id, Pageable pageable)
   {
-      Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(id, pageable)
-                                                                               .map(EmployeeEventResponse::new);
+    Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(id, pageable)
+                                                                             .map(EmployeeEventResponse::new);
     if (employeeEventResponses.isEmpty())
     {
-        throw new ResourceNotFoundException(String.format("Could not find employee events by the specified id [%s]", id));
+      throw new ResourceNotFoundException(String.format("Could not find employee events by the specified id [%s]", id));
     }
     else
     {

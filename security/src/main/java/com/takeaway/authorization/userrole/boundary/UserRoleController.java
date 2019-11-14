@@ -20,6 +20,7 @@ import java.util.UUID;
 
 /**
  * User: StMinko Date: 30.10.2019 Time: 12:01
+ *
  * <p>
  */
 @Slf4j
@@ -31,50 +32,50 @@ import java.util.UUID;
         consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 public class UserRoleController implements ServiceExceptionTranslator
 {
-    // =========================== Class Variables ===========================
+  // =========================== Class Variables ===========================
 
-    static final String BASE_URI = UserController.BASE_URI + "/{userId}/roles";
+  static final String BASE_URI = UserController.BASE_URI + "/{userId}/roles";
 
-    // =============================  Variables  =============================
+  // =============================  Variables  =============================
 
-    private final UserRoleService userRoleService;
+  private final UserRoleService userRoleService;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
+  // ============================  Constructors  ===========================
+  // ===========================  public  Methods  =========================
+  // =================  protected/package local  Methods ===================
 
-    @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
-    @PostMapping(value = "/{roleId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    @JsonView(DataView.GET.class)
-    Role assign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
+  @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
+  @PostMapping(value = "/{roleId}")
+  @ResponseStatus(HttpStatus.CREATED)
+  @JsonView(DataView.GET.class)
+  Role assign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
+  {
+    try
     {
-        try
-        {
-            return userRoleService.assign(userId, roleId);
-        }
-        catch (ServiceException caught)
-        {
-            throw translateIntoApiException(caught);
-        }
+      return userRoleService.assign(userId, roleId);
     }
-
-    @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
-    @DeleteMapping(value = "/{roleId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void unassign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
+    catch (ServiceException caught)
     {
-        try
-        {
-            userRoleService.unassign(userId, roleId);
-        }
-        catch (ServiceException caught)
-        {
-            throw translateIntoApiException(caught);
-        }
+      throw translateIntoApiException(caught);
     }
+  }
 
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
+  @DeleteMapping(value = "/{roleId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  void unassign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
+  {
+    try
+    {
+      userRoleService.unassign(userId, roleId);
+    }
+    catch (ServiceException caught)
+    {
+      throw translateIntoApiException(caught);
+    }
+  }
+
+  // ===========================  private  Methods  ========================
+  // ============================  Inner Classes  ==========================
+  // ============================  End of class  ===========================
 }

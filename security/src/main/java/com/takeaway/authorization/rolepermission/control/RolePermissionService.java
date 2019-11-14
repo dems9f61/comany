@@ -62,14 +62,12 @@ public class RolePermissionService
 
   public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
   {
-    roleService
-            .findById(roleId)
-            .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                    String.format("Could not find a role by the specified id [%s]!", roleId)));
-    permissionService
-            .findById(permissionId)
-            .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                    String.format("Could not find a permission by the specified id [%s]!", permissionId)));
+      roleService.findById(roleId)
+                 .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
+                                                         String.format("Could not find a role by the specified id [%s]!", roleId)));
+    permissionService.findById(permissionId)
+                     .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
+                                                             String.format("Could not find a permission by the specified id [%s]!", permissionId)));
     rolePermissionRepository.findByRoleAndPermission(roleId, permissionId).ifPresent(rolePermissionRepository::delete);
   }
 

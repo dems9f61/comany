@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 15:49
+ *
  * <p>
  */
 @Data

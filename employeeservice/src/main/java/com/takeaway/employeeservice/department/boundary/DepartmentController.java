@@ -56,8 +56,8 @@ public class DepartmentController
   @ResponseStatus(HttpStatus.CREATED)
   DepartmentResponse createDepartment(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
   {
-      LOGGER.info("Creating a department by the request [{}]", createDepartmentRequest);
-      DepartmentParameter createDepartmentParameter = createDepartmentRequest.toDepartmentParameter();
+    LOGGER.info("Creating a department by the request [{}]", createDepartmentRequest);
+    DepartmentParameter createDepartmentParameter = createDepartmentRequest.toDepartmentParameter();
     try
     {
       Department department = departmentService.create(createDepartmentParameter);

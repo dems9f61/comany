@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * User: StMinko Date: 15.11.2019 Time: 00:03
+ *
  * <p>
  */
 @DisplayName("Context loading integration test")

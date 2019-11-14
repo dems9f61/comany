@@ -3,10 +3,9 @@ package com.takeaway.authorization.errorhandling.entity;
 import org.springframework.http.HttpStatus;
 
 /**
- * User: StMinko
- * Date: 08.11.2019
- * Time: 17:10
- * <p/>
+ * User: StMinko Date: 08.11.2019 Time: 17:10
+ *
+ * <p>
  */
 public class NotAuthorizedException extends ApiException
 {

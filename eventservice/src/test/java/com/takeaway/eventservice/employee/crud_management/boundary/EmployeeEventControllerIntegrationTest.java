@@ -69,10 +69,9 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
         String uri = String.format("%s/{id}", EmployeeEventController.BASE_URI);
 
       // Act / Assert
-      mockMvc
-              .perform(get(uri, wrongUuid))
-              .andExpect(status().isNotFound())
-              .andExpect(jsonPath("$", containsString(String.format("Could not find employee events by the specified id [%s]", wrongUuid))));
+      mockMvc.perform(get(uri, wrongUuid))
+             .andExpect(status().isNotFound())
+             .andExpect(jsonPath("$", containsString(String.format("Could not find employee events by the specified id [%s]", wrongUuid))));
     }
   }
 

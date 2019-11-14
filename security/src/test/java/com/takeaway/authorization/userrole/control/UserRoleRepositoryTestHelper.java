@@ -9,10 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * User: StMinko
- * Date: 30.10.2019
- * Time: 15:49
- * <p/>
+ * User: StMinko Date: 30.10.2019 Time: 15:49
+ *
+ * <p>
  */
 @Component
 @Transactional

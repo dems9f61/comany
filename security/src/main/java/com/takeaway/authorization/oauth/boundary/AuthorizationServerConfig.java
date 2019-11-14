@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 16:42
+ *
  * <p>
  */
 @Configuration

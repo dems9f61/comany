@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * User: StMinko Date: 30.10.2019 Time: 17:22
+ *
  * <p>
  */
 @Profile("!INTEGRATION")

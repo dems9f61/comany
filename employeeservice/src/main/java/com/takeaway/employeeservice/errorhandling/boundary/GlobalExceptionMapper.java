@@ -160,8 +160,8 @@ public class GlobalExceptionMapper
     HttpStatus httpStatus = apiException.getHttpStatus();
     if (httpStatus.is4xxClientError())
     {
-        LOGGER.debug("Client error occurred: [{}]", apiException.getLocalizedMessage(), apiException);
-        LOGGER.info("Client error occurred: [{}]", apiException.getLocalizedMessage());
+      LOGGER.debug("Client error occurred: [{}]", apiException.getLocalizedMessage(), apiException);
+      LOGGER.info("Client error occurred: [{}]", apiException.getLocalizedMessage());
     }
     else
     {

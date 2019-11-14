@@ -34,8 +34,8 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
 
-    @Getter
-    protected final SERVICE service;
+  @Getter
+  protected final SERVICE service;
 
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================

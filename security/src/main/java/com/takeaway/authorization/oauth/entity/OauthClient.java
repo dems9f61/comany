@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 10:07
+ *
  * <p>
  */
 @Audited
