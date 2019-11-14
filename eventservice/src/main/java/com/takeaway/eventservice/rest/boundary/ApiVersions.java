@@ -1,21 +1,22 @@
-package com.takeaway.eventservice.integrationsupport.entity;
-
-import org.springframework.http.HttpStatus;
+package com.takeaway.eventservice.rest.boundary;
 
 /**
- * User: StMinko Date: 18.03.2019 Time: 11:26
+ * User: StMinko Date: 18.03.2019 Time: 17:24
  *
  * <p>
  */
-public class ResourceNotFoundException extends ApiException
+public final class ApiVersions
 {
   // =========================== Class Variables ===========================
+
+  public static final String V1 = "/api/v1";
+
   // =============================  Variables  =============================
   // ============================  Constructors  ===========================
 
-  public ResourceNotFoundException(String message)
+  private ApiVersions()
   {
-    super(HttpStatus.NOT_FOUND, message);
+    throw new AssertionError("This is not meant to be instantiated");
   }
 
   // ===========================  public  Methods  =========================

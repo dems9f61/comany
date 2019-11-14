@@ -1,21 +1,39 @@
-package com.takeaway.eventservice.integrationsupport.entity;
+package com.takeaway.eventservice.errorhandling.entity;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
- * User: StMinko Date: 18.03.2019 Time: 17:19
+ * User: StMinko Date: 18.03.2019 Time: 11:17
  *
  * <p>
  */
-public class InternalServerErrorException extends ApiException
+public class ApiException extends RuntimeException
 {
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
+
+  @Getter
+  private final HttpStatus httpStatus;
+
   // ============================  Constructors  ===========================
 
-  public InternalServerErrorException(Throwable cause)
+  public ApiException(HttpStatus httpStatus, String message)
   {
-    super(HttpStatus.INTERNAL_SERVER_ERROR, cause);
+    super(message);
+    this.httpStatus = httpStatus;
+  }
+
+  public ApiException(HttpStatus httpStatus, Throwable cause)
+  {
+    super(cause);
+    this.httpStatus = httpStatus;
+  }
+
+  public ApiException(HttpStatus httpStatus, Throwable cause, String message)
+  {
+    super(message, cause);
+    this.httpStatus = httpStatus;
   }
 
   // ===========================  public  Methods  =========================

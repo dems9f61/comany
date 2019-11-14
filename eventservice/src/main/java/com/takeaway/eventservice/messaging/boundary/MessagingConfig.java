@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.config;
+package com.takeaway.eventservice.messaging.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;

@@ -1,8 +1,8 @@
-package com.takeaway.eventservice.integrationsupport.boundary;
+package com.takeaway.eventservice.errorhandling.boundary;
 
-import com.takeaway.eventservice.integrationsupport.entity.ApiException;
-import com.takeaway.eventservice.integrationsupport.entity.InternalServerErrorException;
-import com.takeaway.eventservice.integrationsupport.entity.ResourceNotFoundException;
+import com.takeaway.eventservice.errorhandling.entity.ApiException;
+import com.takeaway.eventservice.errorhandling.entity.InternalServerErrorException;
+import com.takeaway.eventservice.errorhandling.entity.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;

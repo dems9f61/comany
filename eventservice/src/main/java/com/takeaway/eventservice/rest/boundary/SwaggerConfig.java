@@ -1,6 +1,5 @@
-package com.takeaway.eventservice.config;
+package com.takeaway.eventservice.rest.boundary;
 
-import com.takeaway.eventservice.ApiVersions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;

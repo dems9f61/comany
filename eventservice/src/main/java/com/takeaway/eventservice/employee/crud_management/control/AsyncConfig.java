@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.config;
+package com.takeaway.eventservice.employee.crud_management.control;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
