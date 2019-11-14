@@ -10,7 +10,7 @@
             id uuid not null,
             rev bigint not null constraint fk_employee_history_to_audit_trail references history.audit_trail,
             revtype smallint,
-            birthday date,
+            birthday timestamp,
             email_address varchar(255),
             first_name varchar(255),
             last_name varchar(255),

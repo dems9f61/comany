@@ -11,7 +11,7 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 /**
@@ -44,7 +44,7 @@ public class EmployeeResponse
   @JsonDeserialize(using = JsonDateDeSerializer.class)
   @JsonSerialize(using = JsonDateSerializer.class)
   @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
-  private final Date birthday;
+  private final ZonedDateTime birthday;
 
   @ApiModelProperty(example = "Java Development")
   private final String departmentName;
@@ -55,8 +55,7 @@ public class EmployeeResponse
   public EmployeeResponse(@JsonProperty(value = "id") UUID id,
                           @JsonProperty(value = "emailAddress") String emailAddress,
                           @JsonProperty(value = "firstName") String firstName,
-                          @JsonProperty(value = "lastName") String lastName,
-                          @JsonProperty(value = "birthday") Date birthday,
+                          @JsonProperty(value = "lastName") String lastName, @JsonProperty(value = "birthday") ZonedDateTime birthday,
                           @JsonProperty(value = "departmentName",required = true) String departmentName)
   {
     this.id = id;

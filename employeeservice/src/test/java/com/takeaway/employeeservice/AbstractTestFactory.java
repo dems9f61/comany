@@ -4,6 +4,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -60,6 +62,24 @@ public abstract class AbstractTestFactory<TYPE, BUILDER_TYPE extends AbstractTes
     default String generateRandomEmail()
     {
       return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
+    }
+
+    default ZonedDateTime createRandomBirthday()
+    {
+      return createRandomDate(1900, 2010).atStartOfDay(ZoneOffset.UTC);
+    }
+
+    default LocalDate createRandomDate(int startYear, int endYear)
+    {
+      int day = createRandomIntBetween(1, 28);
+      int month = createRandomIntBetween(1, 12);
+      int year = createRandomIntBetween(startYear, endYear);
+      return LocalDate.of(year, month, day);
+    }
+
+    default int createRandomIntBetween(int start, int end)
+    {
+      return start + (int) Math.round(Math.random() * (end - start));
     }
   }
 

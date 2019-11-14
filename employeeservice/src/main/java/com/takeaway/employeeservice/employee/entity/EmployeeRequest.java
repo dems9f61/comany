@@ -2,7 +2,7 @@ package com.takeaway.employeeservice.employee.entity;
 
 import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * User: StMinko Date: 10.04.2019 Time: 23:09
@@ -17,7 +17,7 @@ public interface EmployeeRequest
 
   String getLastName();
 
-  Date getBirthday();
+  ZonedDateTime getBirthday();
 
   String getDepartmentName();
 

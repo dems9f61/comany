@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static com.takeaway.employeeservice.employee.control.EmployeeServiceException.Reason.INVALID_REQUEST;
@@ -199,8 +200,8 @@ class EmployeeService implements EmployeeServiceCapable
   private boolean hasBirthDayChangedAfterUpdate(EmployeeParameter updateParameter, Employee employee)
   {
     boolean hasUpdated = false;
-    Date newBirthDay = updateParameter.getBirthday();
-    Date oldBirthDay = employee.getBirthday();
+    ZonedDateTime newBirthDay = updateParameter.getBirthday();
+    ZonedDateTime oldBirthDay = employee.getBirthday();
     if (Objects.nonNull(newBirthDay) && ObjectUtils.notEqual(oldBirthDay, newBirthDay))
     {
       employee.setBirthday(newBirthDay);

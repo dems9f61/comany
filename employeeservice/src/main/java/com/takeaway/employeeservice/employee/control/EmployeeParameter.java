@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * User: StMinko Date: 19.03.2019 Time: 09:41
@@ -27,7 +27,7 @@ public class EmployeeParameter
 
   private final String lastName;
 
-  private final Date birthday;
+    private final ZonedDateTime birthday;
 
   private final String departmentName;
 

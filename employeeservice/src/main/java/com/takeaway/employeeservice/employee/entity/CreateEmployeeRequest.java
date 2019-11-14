@@ -14,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * User: StMinko Date: 19.03.2019 Time: 23:31
@@ -47,7 +47,7 @@ public class CreateEmployeeRequest implements EmployeeRequest
   @JsonDeserialize(using = JsonDateDeSerializer.class)
   @JsonSerialize(using = JsonDateSerializer.class)
   @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
-  private final Date birthday;
+  private final ZonedDateTime birthday;
 
   @NotBlank
   @ApiModelProperty(example = "Java Development")
@@ -59,7 +59,8 @@ public class CreateEmployeeRequest implements EmployeeRequest
   public CreateEmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
                                @JsonProperty(value = "firstName") String firstName,
                                @JsonProperty(value = "lastName") String lastName,
-                               @JsonProperty(value = "birthday") Date birthday, @JsonProperty(value = "departmentName") String departmentName)
+                               @JsonProperty(value = "birthday") ZonedDateTime birthday,
+                               @JsonProperty(value = "departmentName") String departmentName)
   {
     this.emailAddress = emailAddress;
     this.firstName = firstName;

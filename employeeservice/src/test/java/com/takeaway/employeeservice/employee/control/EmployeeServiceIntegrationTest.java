@@ -5,6 +5,7 @@ import com.takeaway.employeeservice.department.control.DepartmentParameter;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.employee.entity.Employee;
+import com.takeaway.employeeservice.employee.entity.UsableDateFormat;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
@@ -59,7 +66,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       Department department = employee.getDepartment();
       assertThat(department).isNotNull();
       assertThat(department.getDepartmentName()).isEqualTo(employeeParameter.getDepartmentName());
-      Date birthday = employee.getBirthday();
+        ZonedDateTime birthday = employee.getBirthday();
       assertThat(birthday).isNotNull().isEqualTo(employeeParameter.getBirthday());
       verify(employeeEventPublisher).employeeCreated(employee);
     }
@@ -243,8 +250,9 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
       Employee employee = employeeService.create(employeeParameter);
 
-      LocalDate localDate = employeeParameterTestFactory.builder().generateRandomDate();
-      java.sql.Date newBirthDay = java.sql.Date.valueOf(localDate);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(UsableDateFormat.DEFAULT.getDateFormat());
+        LocalDate localDate = LocalDate.parse("1979-12-03", dateFormatter);
+        ZonedDateTime newBirthDay = localDate.atStartOfDay(ZoneOffset.UTC);
       EmployeeParameter updateParameters = employeeParameterTestFactory
               .builder()
               .emailAddress(null)

@@ -19,7 +19,7 @@ public enum UsableDateFormat {
 
   private final String dateFormat;
 
-  static class Constants
+  public static class Constants
   {
     static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 

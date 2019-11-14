@@ -8,7 +8,7 @@
             create table data.employees
             (
             id uuid not null constraint employees_pkey primary key,
-            birthday date,
+            birthday timestamp,
             email_address varchar(255) constraint uk_email_address unique,
             first_name varchar(255),
             last_name varchar(255),

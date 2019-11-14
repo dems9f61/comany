@@ -4,7 +4,7 @@ import com.takeaway.employeeservice.AbstractTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * User: StMinko Date: 10.04.2019 Time: 23:00
@@ -36,14 +36,14 @@ public class UpdateEmployeeRequestTestFactory extends AbstractTestFactory<Update
 
     private String lastName;
 
-    private Date birthday;
+      private ZonedDateTime birthday;
 
     private String departmentName;
 
     Builder()
     {
       this.emailAddress = generateRandomEmail();
-      this.birthday = java.sql.Date.valueOf(generateRandomDate());
+        this.birthday = createRandomBirthday();
       this.firstName = RandomStringUtils.randomAlphabetic(20);
       this.lastName = RandomStringUtils.randomAlphabetic(10);
       this.departmentName = RandomStringUtils.randomAlphabetic(10);
@@ -67,7 +67,7 @@ public class UpdateEmployeeRequestTestFactory extends AbstractTestFactory<Update
       return this;
     }
 
-    public UpdateEmployeeRequestTestFactory.Builder birthday(Date birthday)
+      public UpdateEmployeeRequestTestFactory.Builder birthday(ZonedDateTime birthday)
     {
       this.birthday = birthday;
       return this;

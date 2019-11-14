@@ -7,6 +7,7 @@ import com.takeaway.employeeservice.employee.boundary.EmployeeController;
 import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
 import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
+import com.takeaway.employeeservice.employee.entity.UsableDateFormat;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -313,8 +317,9 @@ class EmployeeRestTest extends RestTestSuite
       EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
       UUID uuidToUpdate = persistedEmployee.getId();
 
-      LocalDate localDate = employeeParameterTestFactory.builder().generateRandomDate();
-      java.sql.Date newBirthDay = java.sql.Date.valueOf(localDate);
+      DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(UsableDateFormat.DEFAULT.getDateFormat());
+      LocalDate localDate = LocalDate.parse("1979-12-03", dateFormatter);
+      ZonedDateTime newBirthDay = localDate.atStartOfDay(ZoneOffset.UTC);
       UpdateEmployeeRequest updateRequest = updateEmployeeRequestTestFactory
               .builder()
               .departmentName(null)

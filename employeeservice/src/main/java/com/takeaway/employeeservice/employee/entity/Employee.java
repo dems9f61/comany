@@ -11,7 +11,7 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 /**
@@ -48,9 +48,7 @@ public class Employee extends AbstractEntity<UUID>
       })
   private FullName fullName = new FullName();
 
-  @Column(length = 7,name = "BIRTHDAY")
-  @Temporal(TemporalType.DATE)
-  private Date birthday;
+    private ZonedDateTime birthday;
 
   @JsonManagedReference
   @ManyToOne(optional = false,cascade = CascadeType.REFRESH)

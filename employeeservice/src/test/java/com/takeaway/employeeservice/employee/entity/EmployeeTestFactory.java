@@ -5,7 +5,7 @@ import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.department.entity.DepartmentTestFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * User: StMinko Date: 19.03.2019 Time: 19:04
@@ -25,7 +25,7 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
 
     private Employee.FullName fullName;
 
-    private Date birthday;
+      private ZonedDateTime birthday;
 
     private Department department;
 
@@ -35,7 +35,7 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
     {
       this.emailAddress = generateRandomEmail();
       this.department = departmentTestFactory.createDefault();
-      this.birthday = java.sql.Date.valueOf(generateRandomDate());
+        this.birthday = createRandomBirthday();
       this.fullName = new Employee.FullName();
       this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
       this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
@@ -53,7 +53,7 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
       return this;
     }
 
-    public Builder birthday(Date birthday)
+      public Builder birthday(ZonedDateTime birthday)
     {
       this.birthday = birthday;
       return this;
