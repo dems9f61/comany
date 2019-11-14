@@ -2,8 +2,8 @@ package com.takeaway.authorization.persistence.boundary;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.oauth.control.EntitySecurityHolder;
-import com.takeaway.authorization.view.boundary.DataView;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

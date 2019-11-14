@@ -1,4 +1,4 @@
-package com.takeaway.authorization.view.boundary;
+package com.takeaway.authorization.json.boundary;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

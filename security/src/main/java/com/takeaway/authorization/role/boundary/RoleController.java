@@ -2,12 +2,12 @@ package com.takeaway.authorization.role.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.authorization.auditing.entity.AuditTrail;
+import com.takeaway.authorization.json.boundary.DataView;
+import com.takeaway.authorization.json.boundary.ResponsePage;
 import com.takeaway.authorization.rest.boundary.ApiVersions;
 import com.takeaway.authorization.rest.boundary.DefaultAuditedEntityController;
 import com.takeaway.authorization.role.control.RoleService;
 import com.takeaway.authorization.role.entity.Role;
-import com.takeaway.authorization.view.boundary.DataView;
-import com.takeaway.authorization.view.boundary.ResponsePage;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

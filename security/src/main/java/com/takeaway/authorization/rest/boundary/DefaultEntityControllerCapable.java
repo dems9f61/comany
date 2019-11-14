@@ -1,8 +1,8 @@
 package com.takeaway.authorization.rest.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.persistence.boundary.AbstractEntity;
-import com.takeaway.authorization.view.boundary.DataView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

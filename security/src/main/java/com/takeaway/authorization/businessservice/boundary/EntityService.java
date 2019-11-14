@@ -1,8 +1,8 @@
 package com.takeaway.authorization.businessservice.boundary;
 
 import com.takeaway.authorization.errorhandling.entity.ServiceException;
-import com.takeaway.authorization.view.boundary.DataView;
-import com.takeaway.authorization.view.boundary.ResponsePage;
+import com.takeaway.authorization.json.boundary.DataView;
+import com.takeaway.authorization.json.boundary.ResponsePage;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,8 +2,8 @@ package com.takeaway.authorization.rest.boundary;
 
 import com.takeaway.authorization.auditing.boundary.AuditedEntityService;
 import com.takeaway.authorization.auditing.entity.AuditTrail;
+import com.takeaway.authorization.json.boundary.ResponsePage;
 import com.takeaway.authorization.persistence.boundary.AuditedEntity;
-import com.takeaway.authorization.view.boundary.ResponsePage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.history.Revision;

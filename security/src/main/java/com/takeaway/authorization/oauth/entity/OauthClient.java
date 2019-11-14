@@ -2,8 +2,8 @@ package com.takeaway.authorization.oauth.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Sets;
+import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.persistence.boundary.AuditedUUIDEntity;
-import com.takeaway.authorization.view.boundary.DataView;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

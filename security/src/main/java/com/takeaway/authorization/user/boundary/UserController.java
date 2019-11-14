@@ -2,13 +2,13 @@ package com.takeaway.authorization.user.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.authorization.auditing.entity.AuditTrail;
+import com.takeaway.authorization.json.boundary.DataView;
+import com.takeaway.authorization.json.boundary.ResponsePage;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.rest.boundary.ApiVersions;
 import com.takeaway.authorization.rest.boundary.DefaultAuditedEntityController;
 import com.takeaway.authorization.user.control.UserService;
 import com.takeaway.authorization.user.entity.User;
-import com.takeaway.authorization.view.boundary.DataView;
-import com.takeaway.authorization.view.boundary.ResponsePage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,7 +52,6 @@ public class UserController
   public UserController(@NotNull UserService userService)
   {
       this.controllerDelegator = new DefaultAuditedEntityController<>(userService);
-
   }
 
   // ===========================  public  Methods  =========================

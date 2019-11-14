@@ -2,11 +2,11 @@ package com.takeaway.authorization.oauth.boundary;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.takeaway.authorization.IntegrationTestSuite;
+import com.takeaway.authorization.json.boundary.DataView;
+import com.takeaway.authorization.json.boundary.ResponsePage;
 import com.takeaway.authorization.oauth.control.OauthClientService;
 import com.takeaway.authorization.oauth.entity.OauthClient;
 import com.takeaway.authorization.user.entity.User;
-import com.takeaway.authorization.view.boundary.DataView;
-import com.takeaway.authorization.view.boundary.ResponsePage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

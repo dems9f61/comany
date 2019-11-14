@@ -2,12 +2,12 @@ package com.takeaway.authorization.oauth.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.authorization.auditing.entity.AuditTrail;
+import com.takeaway.authorization.json.boundary.DataView;
+import com.takeaway.authorization.json.boundary.ResponsePage;
 import com.takeaway.authorization.oauth.control.OauthClientService;
 import com.takeaway.authorization.oauth.entity.OauthClient;
 import com.takeaway.authorization.rest.boundary.ApiVersions;
 import com.takeaway.authorization.rest.boundary.DefaultAuditedEntityController;
-import com.takeaway.authorization.view.boundary.DataView;
-import com.takeaway.authorization.view.boundary.ResponsePage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.takeaway.authorization.view.boundary;
+package com.takeaway.authorization.json.boundary;
 
 /**
  * User: StMinko Date: 11.10.2019 Time: 16:20
