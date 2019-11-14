@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.takeaway.employeeservice.validation.boundary.NullOrNotBlank;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,13 +29,16 @@ public class UpdateEmployeeRequest implements EmployeeRequest
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
 
-    @Email
-    @ApiModelProperty(example = "hugues.minko@nba.com")
-    private final String emailAddress;
+  @NullOrNotBlank
+  @Email
+  @ApiModelProperty(example = "hugues.minko@nba.com")
+  private final String emailAddress;
 
+  @NullOrNotBlank
   @ApiModelProperty(example = "Hugues")
   private final String firstName;
 
+  @NullOrNotBlank
   @ApiModelProperty(example = "Minko")
   private final String lastName;
 
@@ -44,6 +48,7 @@ public class UpdateEmployeeRequest implements EmployeeRequest
   @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
   private final Date birthday;
 
+  @NullOrNotBlank
   @ApiModelProperty(example = "Java Development")
   private final String departmentName;
 

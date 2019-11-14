@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.takeaway.employeeservice.validation.boundary.NullOrNotBlank;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,15 +30,18 @@ public class CreateEmployeeRequest implements EmployeeRequest
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
 
-  @ApiModelProperty(example = "stephan.minko@nba.com")
-  @Email
-  private final String emailAddress;
+    @NullOrNotBlank
+    @ApiModelProperty(example = "stephan.minko@nba.com")
+    @Email
+    private final String emailAddress;
 
-  @ApiModelProperty(example = "Stéphan")
-  private final String firstName;
+    @NullOrNotBlank
+    @ApiModelProperty(example = "Stéphan")
+    private final String firstName;
 
-  @ApiModelProperty(example = "Minko")
-  private final String lastName;
+    @NullOrNotBlank
+    @ApiModelProperty(example = "Minko")
+    private final String lastName;
 
   @ApiModelProperty(example = "1980-06-13")
   @JsonDeserialize(using = JsonDateDeSerializer.class)
