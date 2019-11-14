@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet id="CreateUserHistoryTable" author="Stéphan.Minko">
+    <changeSet id="CreateOauthClientTable" author="Stéphan.Minko">
         <sql>
             create table data.oauth_client_details
             (
