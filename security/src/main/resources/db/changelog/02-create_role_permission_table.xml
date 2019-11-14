@@ -8,9 +8,9 @@
             (
             id uuid not null constraint role_permissions_pkey primary key,
             created_at timestamp not null,
-            created_by uuid not null,
+            created_by varchar(255) not null,
             last_updated_at timestamp not null,
-            last_updated_by uuid not null,
+            last_updated_by varchar(255) not null,
             version bigint not null,
             permission_id uuid not null constraint fk_permissions references data.permissions,
             role_id uuid not null constraint fk_role references data.roles,

@@ -1,0 +1,17 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="CreateUserHistoryTable" author="Stéphan.Minko">
+        <sql>
+            CREATE SEQUENCE oauth_code_sequence;
+            create table oauth_code
+            (
+            id bigint not null DEFAULT NEXTVAL ('oauth_code_sequence') constraint oauth_codes_pkey primary key,
+            authentication oid,
+            code varchar(255)
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

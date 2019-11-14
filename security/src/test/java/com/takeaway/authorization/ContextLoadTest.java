@@ -19,7 +19,7 @@ class ContextLoadTest extends IntegrationTestSuite
 
   @DisplayName("The spring related application context should be loaded")
   @Test
-  void contextLoads() {}
+  void givenApplicationContext_whenLoad_thenPass() {}
 
   // ===========================  private  Methods  ========================
   // ============================  Inner Classes  ==========================

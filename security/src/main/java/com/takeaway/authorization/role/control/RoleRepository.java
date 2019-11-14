@@ -1,6 +1,6 @@
 package com.takeaway.authorization.role.control;
 
-import com.takeaway.authorization.integrationsupport.control.JpaAuditedSpecificationRepository;
+import com.takeaway.authorization.persistence.boundary.JpaAuditedSpecificationRepository;
 import com.takeaway.authorization.role.entity.Role;
 import org.springframework.stereotype.Repository;
 

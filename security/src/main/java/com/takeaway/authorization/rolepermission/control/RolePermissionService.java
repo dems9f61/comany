@@ -1,6 +1,6 @@
 package com.takeaway.authorization.rolepermission.control;
 
-import com.takeaway.authorization.integrationsupport.entity.ServiceException;
+import com.takeaway.authorization.errorhandling.entity.ServiceException;
 import com.takeaway.authorization.permission.control.PermissionService;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.role.control.RoleService;
@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-import static com.takeaway.authorization.integrationsupport.entity.ServiceException.Reason.SUB_RESOURCE_NOT_FOUND;
+import static com.takeaway.authorization.errorhandling.entity.ServiceException.Reason.SUB_RESOURCE_NOT_FOUND;
 
 /**
  * User: StMinko Date: 19.10.2019 Time: 16:49

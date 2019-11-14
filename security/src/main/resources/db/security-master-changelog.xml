@@ -22,4 +22,18 @@
     <include file="changelog/04-create_role_history_table.xml" relativeToChangelogFile="true"/>
     <!-- Create the user Audit Trail Table -->
     <include file="changelog/04-create_user_history_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the oauth access token table -->
+    <include file="changelog/05-create_oauth_access_token_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the oauth access approvals table -->
+    <include file="changelog/05-create_oauth_approvals_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the oauth client details table -->
+    <include file="changelog/05-create_oauth_client_details_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the oauth client token table -->
+    <include file="changelog/05-create_oauth_client_token_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the oauth code table -->
+    <include file="changelog/05-create_oauth_code_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the oauth refresh token table -->
+    <include file="changelog/05-create_oauth_refresh_token_table.xml" relativeToChangelogFile="true"/>
+    <!-- Create the oauth client details history table -->
+    <include file="changelog/06-create_oauth_client_details_history_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

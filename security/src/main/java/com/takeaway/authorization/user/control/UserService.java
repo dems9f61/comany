@@ -1,7 +1,7 @@
 package com.takeaway.authorization.user.control;
 
-import com.takeaway.authorization.integrationsupport.control.AbstractDefaultAuditedEntityService;
-import com.takeaway.authorization.integrationsupport.entity.ServiceException;
+import com.takeaway.authorization.auditing.boundary.AbstractDefaultAuditedEntityService;
+import com.takeaway.authorization.errorhandling.entity.ServiceException;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.takeaway.authorization.integrationsupport.entity.ServiceException.Reason.INVALID_PARAMETER;
+import static com.takeaway.authorization.errorhandling.entity.ServiceException.Reason.INVALID_PARAMETER;
 
 /**
  * User: StMinko Date: 21.10.2019 Time: 10:49

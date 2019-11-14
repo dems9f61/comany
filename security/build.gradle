@@ -26,10 +26,8 @@ dependencies {
     implementation group: 'org.liquibase', name: 'liquibase-core', version: "${project.liquibaseVersion}"
     implementation group: 'org.hibernate', name: 'hibernate-envers', version: "${project.enversVersion}"
     implementation group: 'org.springframework.data', name: 'spring-data-envers', version: "${project.springEnversVersion}"
-
-    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.2.0.RELEASE'
-//    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: "${project.springBootVersion}"
-//    implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: "${project.springBootVersion}"
+    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: "${project.springBootVersion}"
+    implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: "${project.springBootVersion}"
     
     annotationProcessor ("org.projectlombok:lombok:${project.lombokVersion}")
     compileOnly ("org.projectlombok:lombok:${project.lombokVersion}")
@@ -42,4 +40,7 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${project.mockitoJunitJupiterVersion}"
     testImplementation group: 'org.mockito', name: 'mockito-core', version: "${project.mockitoJunitJupiterVersion}"
     testImplementation group: 'info.solidsoft.mockito', name: 'mockito-java8', version: "${project.mockitoJava8Version}"
+    testImplementation group: 'com.nimbusds', name: 'oauth2-oidc-sdk', version: '5.17.1'
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.2.1.RELEASE'
+   
 }

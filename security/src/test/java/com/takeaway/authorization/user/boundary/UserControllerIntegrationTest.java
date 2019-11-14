@@ -2,26 +2,26 @@ package com.takeaway.authorization.user.boundary;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.takeaway.authorization.IntegrationTestSuite;
-import com.takeaway.authorization.integrationsupport.boundary.ApiResponsePage;
-import com.takeaway.authorization.integrationsupport.boundary.DataView;
+import com.takeaway.authorization.auditing.entity.AuditTrail;
+import com.takeaway.authorization.oauth.boundary.AccessTokenParameter;
 import com.takeaway.authorization.permission.control.PermissionService;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.role.control.RoleService;
 import com.takeaway.authorization.role.entity.Role;
 import com.takeaway.authorization.rolepermission.control.RolePermissionService;
-import com.takeaway.authorization.user.control.UserService;
 import com.takeaway.authorization.user.entity.User;
 import com.takeaway.authorization.user.entity.UserTestFactory;
 import com.takeaway.authorization.userrole.control.UserRoleService;
+import com.takeaway.authorization.view.boundary.DataView;
+import com.takeaway.authorization.view.boundary.ResponsePage;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hibernate.envers.RevisionType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,12 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * <p>
  */
-@AutoConfigureMockMvc
 class UserControllerIntegrationTest extends IntegrationTestSuite
 {
-  @Autowired
-  private MockMvc mockMvc;
-
   @Autowired
   private RoleService roleService;
 
@@ -61,32 +58,80 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
   class WhenAccess
   {
     @Test
+    @DisplayName("GET: 'http://.../users' returns UNAUTHORIZED for missing Authorization header  ")
+    void givenMissingAuthorizationHeader_whenFindAll_thenStatus401() throws Exception
+    {
+      // Arrange
+      String uri = String.format("%s", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(get(uri).contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("GET: 'http://.../users' returns FORBIDDEN for missing scope  ")
+    void givenMissingScope_whenFindAll_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .clientId("clientWithBadScope")
+                                                                      .clientSecret("secret")
+                                                                      .scopes("bad_scope")
+                                                                      .build();
+      String uri = String.format("%s", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(get(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                              .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("GET: 'http://.../users' returns FORBIDDEN for missing role  ")
+    void givenMissingRole_whenFindAll_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .userName("userWithNoRole")
+                                                                      .userPassword("user")
+                                                                      .build();
+      String uri = String.format("%s", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(get(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                              .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("GET: 'http://.../users' returns OK and an list of all users ")
-    void givenRoles_whenFindAll_thenStatus200AndReturnFullList() throws Exception
+    void givenUsers_whenFindAll_thenStatus200AndReturnFullList() throws Exception
     {
       // Arrange
       List<User> savedUsers = saveRandomUsers(4);
       String uri = String.format("%s", UserController.BASE_URI);
 
       // Act / Assert
-      MvcResult mvcResult = mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_UTF8))
+      MvcResult mvcResult = mockMvc.perform(get(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                    .contentType(APPLICATION_JSON_UTF8))
                                    .andExpect(status().isOk())
-                                   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                                    .andExpect(jsonPath("$", notNullValue()))
                                    .andReturn();
       String contentAsString = mvcResult.getResponse()
                                         .getContentAsString();
-      ApiResponsePage<User> apiResponsePage = objectMapper.readValue(contentAsString, new TypeReference<ApiResponsePage<User>>() {});
-      assertThat(apiResponsePage).isNotNull();
-      assertThat(apiResponsePage.getTotalElements()).isEqualTo(savedUsers.size());
+      ResponsePage<User> responsePage = objectMapper.readValue(contentAsString, new TypeReference<ResponsePage<User>>() {});
+      assertThat(responsePage).isNotNull();
+      assertThat(responsePage.getTotalElements()).isEqualTo(savedUsers.size());
       assertThat(savedUsers.stream()
-                           .allMatch(savedUser -> apiResponsePage.stream()
-                                                                 .anyMatch(role -> role.getId() != null && role.getId()
-                                                                                                               .equals(savedUser.getId())))).isTrue();
+                           .allMatch(savedUser -> responsePage.stream()
+                                                              .anyMatch(role -> role.getId() != null && role.getId()
+                                                                                                            .equals(savedUser.getId())))).isTrue();
     }
 
     @Test
-    @DisplayName("GET: 'http://.../users/{id}' returns BAD REQUEST for unknown id ")
+    @DisplayName("GET: 'http://.../users/{id}' returns NOT FOUND for unknown id ")
     void givenUnknownId_whenFindById_thenStatus404() throws Exception
     {
       // Arrange
@@ -94,7 +139,8 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{id}", UserController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(get(uri, unknownId).contentType(MediaType.APPLICATION_JSON_UTF8))
+      mockMvc.perform(get(uri, unknownId.toString()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                    .contentType(MediaType.APPLICATION_JSON))
              .andExpect(status().isNotFound())
              .andExpect(jsonPath("$", notNullValue()))
              .andExpect(jsonPath("$", containsString(String.format("Could not find an entity by the specified id [%s]!", unknownId))));
@@ -102,14 +148,15 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
 
     @Test
     @DisplayName("GET: 'http://.../users/{id}' returns OK and the requested user")
-    void givenUser_whenFindById_thenStatus200AndReturnRole() throws Exception
+    void givenUser_whenFindById_thenStatus200AndReturnUser() throws Exception
     {
       // Arrange
       User persistedUser = saveRandomUsers(1).get(0);
       String uri = String.format("%s/{id}", UserController.BASE_URI);
 
       // Act / Assert
-      MvcResult mvcResult = mockMvc.perform(get(uri, persistedUser.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
+      MvcResult mvcResult = mockMvc.perform(get(uri, persistedUser.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                           .contentType(MediaType.APPLICATION_JSON))
                                    .andExpect(status().isOk())
                                    .andExpect(jsonPath("$", notNullValue()))
                                    .andReturn();
@@ -123,7 +170,7 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
 
     @Test
     @DisplayName("GET: 'http://.../users/{id}/permissions' returns OK and all requested permissions")
-    void givePermissions_whenFindByUIserId_thenStatus200AndReturnPermissions() throws Exception
+    void givePermissions_whenFindByUserId_thenStatus200AndReturnPermissions() throws Exception
     {
       // Arrange
       User persistedUser = saveRandomUsers(1).get(0);
@@ -145,7 +192,8 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{id}/permissions", UserController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(get(uri, persistedUser.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
+      mockMvc.perform(get(uri, persistedUser.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                     .contentType(MediaType.APPLICATION_JSON))
              .andExpect(status().isOk())
              .andExpect(jsonPath("$", notNullValue()))
              .andExpect(jsonPath("$.numberOfElements", is(expectedPermissionsForFirstRole.size() + expectedPermissionsForSecondRole.size())));
@@ -157,6 +205,64 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
   class WhenUpdate
   {
     @Test
+    @DisplayName("PUT: 'http://.../users' returns UNAUTHORIZED for missing Authorization header")
+    void givenMissingAuthorizationHeader_whenDoFullUpdate_thenStatus401() throws Exception
+    {
+      // Arrange
+      User initial = saveRandomUsers(1).get(0);
+      User update = userTestFactory.createDefault();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+      // Act / Assert
+      mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                               .content(requestAsJson))
+             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("PUT: 'http://.../users' returns FORBIDDEN for missing scope")
+    void givenMissingScope_whenDoFullUpdate_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .clientId("clientWithBadScope")
+                                                                      .clientSecret("secret")
+                                                                      .build();
+      User initial = saveRandomUsers(1).get(0);
+      User update = userTestFactory.createDefault();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+      // Act / Assert
+      mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                                               .contentType(APPLICATION_JSON_UTF8)
+                                               .content(requestAsJson))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("PUT: 'http://.../users' returns FORBIDDEN for missing role")
+    void givenMissingRole_whenDoFullUpdate_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .userName("userWithNoRole")
+                                                                      .userPassword("user")
+                                                                      .build();
+      User initial = saveRandomUsers(1).get(0);
+      User update = userTestFactory.createDefault();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
+
+      // Act/ Assert
+      mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                                               .contentType(APPLICATION_JSON_UTF8)
+                                               .content(requestAsJson))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("PUT: 'http://.../users/{id}' returns OK on valid full request")
     void givenValidFullRequest_whenDoFullUpdate_thenStatus200AndReturnUpdated() throws Exception
     {
@@ -167,10 +273,11 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
       // Act / Assert
-      MvcResult mvcResult = mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      MvcResult mvcResult = mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                     .contentType(APPLICATION_JSON_UTF8)
                                                                      .content(requestAsJson))
                                    .andExpect(status().isOk())
-                                   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                                    .andExpect(jsonPath("$", notNullValue()))
                                    .andReturn();
       String contentAsString = mvcResult.getResponse()
@@ -194,7 +301,8 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
       // Act / Assert
-      mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                               .contentType(APPLICATION_JSON_UTF8)
                                                .content(requestAsJson))
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
@@ -213,7 +321,8 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
       // Act / Assert
-      mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                               .contentType(APPLICATION_JSON_UTF8)
                                                .content(requestAsJson))
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
@@ -232,7 +341,8 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
       // Act / Assert
-      mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                               .contentType(APPLICATION_JSON_UTF8)
                                                .content(requestAsJson))
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
@@ -251,7 +361,8 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
       // Act / Assert
-      mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                               .contentType(APPLICATION_JSON_UTF8)
                                                .content(requestAsJson))
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
@@ -270,7 +381,8 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
       // Act / Assert
-      mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                               .contentType(APPLICATION_JSON_UTF8)
                                                .content(requestAsJson))
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
@@ -289,10 +401,84 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PUT.class);
 
       // Act / Assert
-      mockMvc.perform(put(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      mockMvc.perform(put(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                               .contentType(APPLICATION_JSON_UTF8)
                                                .content(requestAsJson))
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
+    }
+
+    @Test
+    @DisplayName("PATCH: 'http://.../users' returns UNAUTHORIZED for missing Authorization header")
+    void givenMissingAuthorizationHeader_whenDoPartialUpdate_thenStatus401() throws Exception
+    {
+      // Arrange
+      User initial = saveRandomUsers(1).get(0);
+      User update = userTestFactory.builder()
+                                   .userName(RandomStringUtils.randomAlphabetic(8))
+                                   .oldPassword(null)
+                                   .newPassword(null)
+                                   .confirmPassword(null)
+                                   .create();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(update, DataView.PATCH.class);
+
+      // Act / Assert
+      mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+                                                 .content(requestAsJson))
+             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("PATCH: 'http://.../users' returns FORBIDDEN for missing scope")
+    void givenMissingScope_whenDoPartialUpdate_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .clientId("clientWithBadScope")
+                                                                      .clientSecret("secret")
+                                                                      .build();
+      User initial = saveRandomUsers(1).get(0);
+      User update = userTestFactory.builder()
+                                   .userName(RandomStringUtils.randomAlphabetic(8))
+                                   .oldPassword(null)
+                                   .newPassword(null)
+                                   .confirmPassword(null)
+                                   .create();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(update, DataView.PATCH.class);
+
+      // Act / Assert
+      mockMvc.perform(patch(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                 .contentType(APPLICATION_JSON_UTF8)
+                                                 .content(requestAsJson))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("PATCH: 'http://.../users' returns FORBIDDEN for missing role")
+    void givenMissingRole_whenDoPartialUpdate_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .userName("userWithNoRole")
+                                                                      .userPassword("user")
+                                                                      .build();
+      User initial = saveRandomUsers(1).get(0);
+      User update = userTestFactory.builder()
+                                   .userName(RandomStringUtils.randomAlphabetic(8))
+                                   .oldPassword(null)
+                                   .newPassword(null)
+                                   .confirmPassword(null)
+                                   .create();
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+      String requestAsJson = transformRequestToJSON(update, DataView.PATCH.class);
+
+      // Act/ Assert
+      mockMvc.perform(patch(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                 .contentType(APPLICATION_JSON_UTF8)
+                                                 .content(requestAsJson))
+             .andExpect(status().isForbidden());
     }
 
     @Test
@@ -311,10 +497,11 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PATCH.class);
 
       // Act / Assert
-      MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                       .contentType(APPLICATION_JSON_UTF8)
                                                                        .content(requestAsJson))
                                    .andExpect(status().isOk())
-                                   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                                    .andExpect(jsonPath("$", notNullValue()))
                                    .andReturn();
       String contentAsString = mvcResult.getResponse()
@@ -344,7 +531,8 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(secondUpdate, DataView.PATCH.class);
 
       // Act / Assert
-      mockMvc.perform(put(uri, second.getId()).contentType(APPLICATION_JSON_UTF8)
+      mockMvc.perform(put(uri, second.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                              .contentType(APPLICATION_JSON_UTF8)
                                               .content(requestAsJson))
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
@@ -367,10 +555,11 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String requestAsJson = transformRequestToJSON(update, DataView.PATCH.class);
 
       // Act / Assert
-      MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).contentType(APPLICATION_JSON_UTF8)
+      MvcResult mvcResult = mockMvc.perform(patch(uri, initial.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                       .contentType(APPLICATION_JSON_UTF8)
                                                                        .content(requestAsJson))
                                    .andExpect(status().isOk())
-                                   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                                    .andExpect(jsonPath("$", notNullValue()))
                                    .andReturn();
       String contentAsString = mvcResult.getResponse()
@@ -387,6 +576,61 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
   class WhenCreate
   {
     @Test
+    @DisplayName("POST: 'http://.../users' returns UNAUTHORIZED for missing Authorization header")
+    void givenMissingAuthorizationHeader_whenCreate_thenStatus401() throws Exception
+    {
+      // Arrange
+      User toPersist = userTestFactory.createDefault();
+      String requestAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
+      String uri = String.format("%s", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                               .content(requestAsJson))
+             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("POST: 'http://.../users' returns FORBIDDEN for missing scope")
+    void givenMissingScope_whenCreate_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .clientId("clientWithBadScope")
+                                                                      .clientSecret("secret")
+                                                                      .build();
+      User toPersist = userTestFactory.createDefault();
+      String requestAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
+      String uri = String.format("%s", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(post(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                               .contentType(APPLICATION_JSON_UTF8)
+                               .content(requestAsJson))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("POST: 'http://.../users' returns FORBIDDEN for missing role")
+    void givenMissingRole_whenCreate_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .userName("userWithNoRole")
+                                                                      .userPassword("user")
+                                                                      .build();
+      User toPersist = userTestFactory.createDefault();
+      String requestAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
+      String uri = String.format("%s", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(post(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                               .contentType(APPLICATION_JSON_UTF8)
+                               .content(requestAsJson))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("POST: 'http://.../users' returns CREATED if the creation request is valid")
     void givenValidCreateRequest_whenCreate_thenStatus201AndReturnNewEntity() throws Exception
     {
@@ -396,13 +640,14 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s", UserController.BASE_URI);
 
       // Act / Assert
-      MvcResult mvcResult = mockMvc
-              .perform(post(uri).contentType(APPLICATION_JSON_UTF8).content(requestAsJson))
-              .andExpect(status().isCreated())
-              .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-              .andExpect(jsonPath("$", notNullValue()))
-              .andExpect(header().string(HttpHeaders.LOCATION, containsString(UserController.BASE_URI)))
-              .andReturn();
+      MvcResult mvcResult = mockMvc.perform(post(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                     .contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                                   .andExpect(status().isCreated())
+                                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                                   .andExpect(jsonPath("$", notNullValue()))
+                                   .andExpect(header().string(HttpHeaders.LOCATION, containsString(UserController.BASE_URI)))
+                                   .andReturn();
 
       String contentAsString = mvcResult.getResponse().getContentAsString();
       User created = objectMapper.readValue(contentAsString, User.class);
@@ -421,7 +666,11 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s", UserController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8).content(requestAsJson)).andExpect(status().isBadRequest()).andExpect(jsonPath("$", notNullValue()));
+      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                               .header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                               .content(requestAsJson))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()));
     }
 
     @Test
@@ -434,7 +683,11 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s", UserController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8).content(requestAsJson)).andExpect(status().isBadRequest()).andExpect(jsonPath("$", notNullValue()));
+      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                               .header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                               .content(requestAsJson))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()));
     }
 
     @Test
@@ -447,7 +700,11 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s", UserController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8).content(requestAsJson)).andExpect(status().isBadRequest()).andExpect(jsonPath("$", notNullValue()));
+      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                               .header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                               .content(requestAsJson))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()));
     }
 
     @Test
@@ -460,7 +717,11 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s", UserController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8).content(requestAsJson)).andExpect(status().isBadRequest()).andExpect(jsonPath("$", notNullValue()));
+      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                               .header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                               .content(requestAsJson))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()));
     }
 
     @Test
@@ -473,7 +734,11 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s", UserController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8).content(requestAsJson)).andExpect(status().isBadRequest()).andExpect(jsonPath("$", notNullValue()));
+      mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                               .header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                               .content(requestAsJson))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()));
     }
 
     @Test
@@ -490,6 +755,7 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
 
       // Act / Assert
       mockMvc.perform(post(uri).contentType(APPLICATION_JSON_UTF8)
+                               .header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
                                .content(requestAsJson))
              .andExpect(status().isBadRequest())
              .andExpect(jsonPath("$", notNullValue()));
@@ -501,14 +767,65 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
   class WhenDelete
   {
     @Test
+    @DisplayName("DELETE: 'http://.../users' returns UNAUTHORIZED for missing Authorization header")
+    void givenMissingAuthorizationHeader_whenDelete_thenStatus401() throws Exception
+    {
+      // Arrange
+      User toDelete = saveRandomUsers(1).get(0);
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+
+      // Act/ Assert
+      mockMvc.perform(delete(uri, toDelete.getId()).contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("DELETE: 'http://.../users' returns FORBIDDEN for missing scope")
+    void givenMissingScope_whenDelete_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .clientId("clientWithBadScope")
+                                                                      .clientSecret("secret")
+                                                                      .build();
+      User toDelete = saveRandomUsers(1).get(0);
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(delete(uri, toDelete.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                   .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("DELETE: 'http://.../users' returns FORBIDDEN for missing role")
+    void givenMissingRole_whenCreate_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .userName("userWithNoRole")
+                                                                      .userPassword("user")
+                                                                      .build();
+      User toDelete = saveRandomUsers(1).get(0);
+      String uri = String.format("%s/{id}", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(delete(uri, toDelete.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                   .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("DELETE: 'http://.../users/{id}' returns NOT FOUND if the specified id doesn't exist")
-    void givenUnknownUuid_whenDeleteById_thenStatus404() throws Exception
+    void givenUnknownUuid_whenDelete_thenStatus404() throws Exception
     {
       // Arrange
       UUID unknownId = UUID.randomUUID();
       String uri = String.format("%s/{id}", UserController.BASE_URI);
 
-      mockMvc.perform(delete(uri, unknownId).contentType(APPLICATION_JSON_UTF8))
+      // Act / Assert
+      mockMvc.perform(delete(uri, unknownId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                            .contentType(APPLICATION_JSON_UTF8))
              .andExpect(status().isNotFound())
              .andExpect(jsonPath("$", notNullValue()))
              .andExpect(jsonPath("$", containsString(String.format("Could not find an entity by the specified id [%s]!", unknownId))));
@@ -516,28 +833,170 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
 
     @Test
     @DisplayName("DELETE: 'http://.../users/{id}' returns NO CONTENT if the specified id exists")
-    void givenUser_whenDeleteById_thenStatus204() throws Exception
+    void givenUser_whenDelete_thenStatus204() throws Exception
     {
       // Arrange
       User toDelete = saveRandomUsers(1).get(0);
       String uri = String.format("%s/{id}", UserController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(delete(uri, toDelete.getId()).contentType(APPLICATION_JSON_UTF8))
+      mockMvc.perform(delete(uri, toDelete.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                   .contentType(APPLICATION_JSON_UTF8))
              .andExpect(status().isNoContent());
     }
   }
 
-  @Autowired
-  private UserService userService;
+  @Nested
+  @DisplayName("when revise")
+  class WhenRevise
+  {
+    @Test
+    @DisplayName("GET: 'http://.../users/{id}/auditTrails' returns UNAUTHORIZED for missing Authorization header")
+    void givenMissingAuthorizationHeader_whenFindAuditTrails_thenStatus401() throws Exception
+    {
+      // Arrange
+      String uri = String.format("%s/{id}/auditTrails", UserController.BASE_URI);
+
+      // Act/ Assert
+      mockMvc.perform(get(uri, UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("GET: 'http://.../users/{id}/auditTrails' returns FORBIDDEN for missing scope")
+    void givenMissingScope_whenFindAuditTrails_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .clientId("clientWithBadScope")
+                                                                      .clientSecret("secret")
+                                                                      .build();
+      String uri = String.format("%s/{id}/auditTrails", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(get(uri, UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                 .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("GET: 'http://.../users/{id}/auditTrails' returns FORBIDDEN for missing role")
+    void givenMissingRole_whenFindAuditTrails_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .userName("userWithNoRole")
+                                                                      .userPassword("user")
+                                                                      .build();
+      String uri = String.format("%s/{id}/auditTrails", UserController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(get(uri, UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                 .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("GET: 'http://.../users/{id}/auditTrails' returns OK and audit trails")
+    void givenIdWithHistory_whenFindAuditTrails_thenStatus200() throws Exception
+    {
+      // Arrange
+      String accessToken = obtainAccessToken();
+      // 1-Action: CREATE
+      User toPersist = userTestFactory.createDefault();
+      String toPersistAstAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
+      String uri = String.format("%s", UserController.BASE_URI);
+      MvcResult mvcCreateResult = mockMvc.perform(post(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                                                           .contentType(APPLICATION_JSON_UTF8)
+                                                           .content(toPersistAstAsJson))
+                                         .andReturn();
+      String createResponseContentAsString = mvcCreateResult.getResponse()
+                                                            .getContentAsString();
+      User created = objectMapper.readValue(createResponseContentAsString, User.class);
+
+      // 2-Action: UPDATE
+      User update = userTestFactory.createDefault();
+      uri = String.format("%s/{id}", UserController.BASE_URI);
+      String updateAsJson = transformRequestToJSON(update, DataView.PUT.class);
+      MvcResult mvcResult = mockMvc.perform(put(uri, created.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                                                                     .contentType(APPLICATION_JSON_UTF8)
+                                                                     .content(updateAsJson))
+                                   .andReturn();
+      String updateContentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+      User updated = objectMapper.readValue(updateContentAsString, User.class);
+
+      // 3-Action: DELETE
+      mockMvc.perform(delete(uri, created.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                                                  .contentType(APPLICATION_JSON_UTF8));
+
+      uri = String.format("%s/{id}/auditTrails", UserController.BASE_URI);
+
+      // Act / Assert
+      MvcResult revisionResult = mockMvc.perform(get(uri, created.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                                                                          .contentType(APPLICATION_JSON_UTF8))
+                                        .andExpect(status().isOk())
+                                        .andExpect(jsonPath("$", notNullValue()))
+                                        .andReturn();
+      String revisionResultAsString = revisionResult.getResponse()
+                                                    .getContentAsString();
+      ResponsePage<AuditTrail<UUID, User>> responsePage = objectMapper.readValue(revisionResultAsString,
+                                                                                 new TypeReference<ResponsePage<AuditTrail<UUID, User>>>() {});
+      assertThat(responsePage).isNotNull()
+                              .hasSize(3);
+      responsePage.forEach(page -> {
+        RevisionType revisionType = page.getRevisionType();
+        User entity = page.getEntity();
+        switch (revisionType)
+        {
+          case ADD:
+          {
+            assertThat(entity.getId()).isEqualTo(created.getId());
+            assertThat(entity.getUserName()).isEqualTo(created.getUserName());
+            assertThat(entity.getLastUpdatedAt()).isEqualTo(created.getLastUpdatedAt());
+            assertThat(entity.getLastUpdatedBy()).isEqualTo(created.getLastUpdatedBy());
+            assertThat(entity.getCreatedAt()).isNull(); // NOT AUDITED
+            assertThat(entity.getCreatedBy()).isNull(); // NOT AUDITED
+            assertThat(entity.getVersion()).isEqualTo(created.getVersion());
+            break;
+          }
+          case MOD:
+          case DEL:
+          {
+            assertThat(entity.getId()).isEqualTo(updated.getId());
+            assertThat(entity.getUserName()).isEqualTo(updated.getUserName());
+            assertThat(entity.getLastUpdatedAt()).isEqualTo(updated.getLastUpdatedAt());
+            assertThat(entity.getLastUpdatedBy()).isEqualTo(updated.getLastUpdatedBy());
+            assertThat(entity.getCreatedAt()).isNull(); // NOT AUDITED
+            assertThat(entity.getCreatedBy()).isNull(); // NOT AUDITED
+            assertThat(entity.getVersion()).isEqualTo(updated.getVersion());
+            break;
+          }
+          default:
+          {
+            fail(String.format("Should not happen: Unexpected revision type [%s]!", revisionType));
+          }
+        }
+      });
+    }
+  }
 
   private List<User> saveRandomUsers(int count) throws Exception
   {
     int normalizedCount = count <= 0 ? 1 : count;
     List<User> result = new ArrayList<>(count);
+    String uri = String.format("%s", UserController.BASE_URI);
     for (int i = 0; i < normalizedCount; i++)
     {
-      result.add(userService.create(userTestFactory.createDefault()));
+      User toPersist = userTestFactory.createDefault();
+      String requestAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
+      MvcResult mvcResult = mockMvc.perform(post(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                     .contentType(APPLICATION_JSON_UTF8)
+                                                     .content(requestAsJson))
+                                   .andReturn();
+      String contentAsString = mvcResult.getResponse()
+                                        .getContentAsString();
+      result.add(objectMapper.readValue(contentAsString, User.class));
     }
 
     return result;

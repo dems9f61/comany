@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserTestFactory extends AbstractTestFactory<User, UserTestFactory.Builder>
 {
-  public static final String PWD = "DEFAULT_PASSWORD";
+    public static final String PWD = "PASSWORD";
 
   public Builder builder()
   {

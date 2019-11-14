@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="CreateUserHistoryTable" author="Stéphan.Minko">
+        <sql>
+            create table history.oauth_client_details_history
+            (
+            id uuid not null,
+            rev bigint not null constraint fk_audit_trails references history.audit_trail,
+            revtype smallint,
+            last_updated_at timestamp,
+            last_updated_by varchar(255),
+            version bigint,
+            access_token_validity integer,
+            client_authorities varchar(255),
+            authorized_grant_types varchar(255),
+            client_id varchar(255),
+            web_server_redirect_uri varchar(255),
+            resource_ids varchar(255),
+            scope varchar(255),
+            scoped boolean,
+            client_secret varchar(255),
+            refresh_token_validity integer,
+            secret_required boolean,
+            constraint oauth_client_details_history_pkey primary key (id, rev)
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

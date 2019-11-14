@@ -1,0 +1,35 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="CreateUserHistoryTable" author="Stéphan.Minko">
+        <sql>
+            create table data.oauth_client_details
+            (
+            id uuid not null constraint oauth_client_details_pkey primary key,
+            created_at timestamp not null,
+            created_by varchar(255) not null,
+            last_updated_at timestamp not null,
+            last_updated_by varchar(255) not null,
+            version bigint not null,
+            access_token_validity integer not null constraint oauth_client_details_access_token_validity_check check ((access_token_validity &gt;= '-1'::integer) AND (access_token_validity &lt;=
+            253800)),
+            client_authorities varchar(255),
+            authorized_grant_types varchar(255),
+            client_id varchar(255) constraint uk_clients_client_id unique,
+            web_server_redirect_uri varchar(255),
+            resource_ids varchar(255),
+            scope varchar(255),
+            scoped boolean,
+            client_secret varchar(255),
+            refresh_token_validity integer not null constraint oauth_client_details_refresh_token_validity_check check ((refresh_token_validity &gt;= '-1'::integer) AND (refresh_token_validity &lt;=
+            592200)),
+            secret_required boolean
+            );
+
+            create index idx_clients_client_id
+            on data.oauth_client_details (client_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

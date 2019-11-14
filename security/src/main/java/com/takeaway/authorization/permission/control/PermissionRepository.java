@@ -1,7 +1,7 @@
 package com.takeaway.authorization.permission.control;
 
-import com.takeaway.authorization.integrationsupport.control.JpaAuditedSpecificationRepository;
 import com.takeaway.authorization.permission.entity.Permission;
+import com.takeaway.authorization.persistence.boundary.JpaAuditedSpecificationRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;

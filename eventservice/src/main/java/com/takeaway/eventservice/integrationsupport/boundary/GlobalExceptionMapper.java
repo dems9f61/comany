@@ -50,7 +50,7 @@ public class GlobalExceptionMapper
         String localizedMessage = apiException.getLocalizedMessage();
     if (apiException.getHttpStatus().is4xxClientError())
     {
-        LOGGER.info("API Error occurred: [{}]", localizedMessage);
+        LOGGER.info("Client error occurred: [{}]", localizedMessage);
     }
     else
     {

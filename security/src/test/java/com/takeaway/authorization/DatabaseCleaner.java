@@ -1,5 +1,6 @@
 package com.takeaway.authorization;
 
+import com.takeaway.authorization.oauth.control.OAuthClientRepositoryTestHelper;
 import com.takeaway.authorization.permission.control.PermissionRepositoryTestHelper;
 import com.takeaway.authorization.role.control.RoleRepositoryTestHelper;
 import com.takeaway.authorization.rolepermission.control.RolePermissionRepositoryTestHelper;
@@ -32,6 +33,8 @@ public class DatabaseCleaner
 
     private final UserRoleRepositoryTestHelper userRoleRepositoryTestHelper;
 
+    private final OAuthClientRepositoryTestHelper oAuthClientRepositoryTestHelper;
+
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================
 
@@ -43,6 +46,7 @@ public class DatabaseCleaner
     permissionRepositoryTestHelper.cleanDatabase();
     roleRepositoryTestHelper.cleanDatabase();
       userRepositoryTestHelper.cleanDatabase();
+      oAuthClientRepositoryTestHelper.cleanDatabase();
   }
 
   // =================  protected/package local  Methods ===================

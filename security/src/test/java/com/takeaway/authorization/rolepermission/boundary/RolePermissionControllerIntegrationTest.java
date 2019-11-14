@@ -1,6 +1,7 @@
 package com.takeaway.authorization.rolepermission.boundary;
 
 import com.takeaway.authorization.IntegrationTestSuite;
+import com.takeaway.authorization.oauth.boundary.AccessTokenParameter;
 import com.takeaway.authorization.permission.control.PermissionService;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.role.control.RoleService;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -45,6 +46,54 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
   class WhenAssign
   {
     @Test
+    @DisplayName("POST: 'http://.../roles/{roleId}/permissions/{permissionId}' returns UNAUTHORIZED for missing Authorization header")
+    void givenMissingAuthorizationHeader_whenAssign_thenStatus401() throws Exception
+    {
+      // Arrange
+      String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+      // Act/ Assert
+      mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("POST: 'http://.../roles/{roleId}/permissions/{permissionId}' returns FORBIDDEN for missing scope")
+    void givenMissingScope_whenAssign_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .clientId("clientWithBadScope")
+                                                                      .clientSecret("secret")
+                                                                      .build();
+      String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                             "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                     .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("POST: 'http://.../roles/{roleId}/permissions/{permissionId}' returns FORBIDDEN for missing role")
+    void givenMissingRole_whenAssign_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .userName("userWithNoRole")
+                                                                      .userPassword("user")
+                                                                      .build();
+      String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                             "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                     .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("POST: 'http://.../roles/{roleId}/permissions/{permissionId}' returns CREATED and the assigned permission ")
     void givenRoleAndPermission_whenAssign_thenStatus200AndReturnPermission() throws Exception
     {
@@ -54,12 +103,13 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
 
       // Act / Assert
-      MvcResult mvcResult = mockMvc
-              .perform(post(uri, savedRole.getId(), savedPermission.getId()).contentType(MediaType.APPLICATION_JSON_UTF8))
-              .andExpect(status().isCreated())
-              .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-              .andExpect(jsonPath("$", notNullValue()))
-              .andReturn();
+      MvcResult mvcResult = mockMvc.perform(post(uri, savedRole.getId(), savedPermission.getId()).header(HttpHeaders.AUTHORIZATION,
+                                                                                                         "Bearer " + obtainAccessToken())
+                                                                                                 .contentType(APPLICATION_JSON_UTF8))
+                                   .andExpect(status().isCreated())
+                                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                                   .andExpect(jsonPath("$", notNullValue()))
+                                   .andReturn();
 
       String contentAsString = mvcResult.getResponse().getContentAsString();
       Permission response = objectMapper.readValue(contentAsString, Permission.class);
@@ -84,11 +134,11 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
 
       // Act / Assert
-      mockMvc
-          .perform(post(uri, savedRole.getId(), unknownPermissionId).contentType(APPLICATION_JSON_UTF8))
-          .andExpect(status().isBadRequest())
-          .andExpect(jsonPath("$", notNullValue()))
-          .andExpect(jsonPath("$", is(String.format("Could not find a permission by the specified id [%s]!", unknownPermissionId))));
+      mockMvc.perform(post(uri, savedRole.getId(), unknownPermissionId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                       .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()))
+             .andExpect(jsonPath("$", is(String.format("Could not find a permission by the specified id [%s]!", unknownPermissionId))));
     }
 
     @Test
@@ -101,11 +151,11 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
 
       // Act / Assert
-      mockMvc
-          .perform(post(uri, unknownRoleId, savedPermission.getId()).contentType(APPLICATION_JSON_UTF8))
-          .andExpect(status().isBadRequest())
-          .andExpect(jsonPath("$", notNullValue()))
-          .andExpect(jsonPath("$", is(String.format("Could not find a role by the specified id [%s]!", unknownRoleId))));
+      mockMvc.perform(post(uri, unknownRoleId, savedPermission.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                       .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()))
+             .andExpect(jsonPath("$", is(String.format("Could not find a role by the specified id [%s]!", unknownRoleId))));
     }
   }
 
@@ -114,17 +164,68 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
   class WhenUnassign
   {
     @Test
-    @DisplayName("POST: 'http://.../roles/{roleId}/permissions/{permissionId}' returns NO CONTENT and the assigned permission ")
+    @DisplayName("DELETE: 'http://.../roles/{roleId}/permissions/{permissionId}' returns UNAUTHORIZED for missing Authorization header")
+    void givenMissingAuthorizationHeader_whenUnassign_thenStatus401() throws Exception
+    {
+      // Arrange
+      String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+      // Act/ Assert
+      mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("DELETE: 'http://.../roles/{roleId}/permissions/{permissionId}' returns FORBIDDEN for missing scope")
+    void givenMissingScope_whenUnassign_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .clientId("clientWithBadScope")
+                                                                      .clientSecret("secret")
+                                                                      .build();
+      String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                               "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                       .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("DELETE: 'http://.../roles/{roleId}/permissions/{permissionId}' returns FORBIDDEN for missing role")
+    void givenMissingRole_whenUnassign_thenStatus403() throws Exception
+    {
+      // Arrange
+      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                      .userName("userWithNoRole")
+                                                                      .userPassword("user")
+                                                                      .build();
+      String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
+
+      // Act / Assert
+      mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                               "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                       .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("DELETE: 'http://.../roles/{roleId}/permissions/{permissionId}' returns NO CONTENT ")
     void givenRoleAndPermission_whenUnassign_thenStatus204() throws Exception
     {
       // Arrange
       Role savedRole = saveRole(roleTestFactory.createDefault());
       Permission savedPermission = savePermission(permissionTestFactory.createDefault());
       String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
-      mockMvc.perform(post(uri, savedRole.getId(), savedPermission.getId()).contentType(MediaType.APPLICATION_JSON_UTF8));
+      mockMvc.perform(post(uri, savedRole.getId(), savedPermission.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                           .contentType(APPLICATION_JSON_UTF8));
 
       // Act / Assert
-      mockMvc.perform(delete(uri, savedRole.getId(), savedPermission.getId()).contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isNoContent());
+      mockMvc.perform(delete(uri, savedRole.getId(), savedPermission.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                             .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isNoContent());
     }
 
     @Test
@@ -137,11 +238,11 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
 
       // Act / Assert
-      mockMvc
-          .perform(delete(uri, savedRole.getId(), unknownPermissionId).contentType(APPLICATION_JSON_UTF8))
-          .andExpect(status().isBadRequest())
-          .andExpect(jsonPath("$", notNullValue()))
-          .andExpect(jsonPath("$", is(String.format("Could not find a permission by the specified id [%s]!", unknownPermissionId))));
+      mockMvc.perform(delete(uri, savedRole.getId(), unknownPermissionId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                         .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()))
+             .andExpect(jsonPath("$", is(String.format("Could not find a permission by the specified id [%s]!", unknownPermissionId))));
     }
 
     @Test
@@ -154,11 +255,11 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{permissionId}", RolePermissionController.BASE_URI);
 
       // Act / Assert
-      mockMvc
-          .perform(delete(uri, unknownRoleId, savedPermission.getId()).contentType(APPLICATION_JSON_UTF8))
-          .andExpect(status().isBadRequest())
-          .andExpect(jsonPath("$", notNullValue()))
-          .andExpect(jsonPath("$", is(String.format("Could not find a role by the specified id [%s]!", unknownRoleId))));
+      mockMvc.perform(delete(uri, unknownRoleId, savedPermission.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                         .contentType(APPLICATION_JSON_UTF8))
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$", notNullValue()))
+             .andExpect(jsonPath("$", is(String.format("Could not find a role by the specified id [%s]!", unknownRoleId))));
     }
   }
 

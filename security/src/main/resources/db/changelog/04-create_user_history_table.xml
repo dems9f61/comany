@@ -11,7 +11,7 @@
             rev bigint not null constraint fk_audit_trails references history.audit_trail,
             revtype smallint,
             last_updated_at timestamp,
-            last_updated_by uuid,
+            last_updated_by varchar(255),
             version bigint,
             password_hash varchar(255),
             user_name varchar(255),

@@ -1,16 +1,17 @@
 package com.takeaway.authorization.userrole.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.takeaway.authorization.integrationsupport.boundary.DataView;
-import com.takeaway.authorization.integrationsupport.boundary.ServiceExceptionTranslator;
-import com.takeaway.authorization.integrationsupport.entity.ServiceException;
+import com.takeaway.authorization.errorhandling.control.ServiceExceptionTranslator;
+import com.takeaway.authorization.errorhandling.entity.ServiceException;
 import com.takeaway.authorization.role.entity.Role;
 import com.takeaway.authorization.user.boundary.UserController;
 import com.takeaway.authorization.userrole.control.UserRoleService;
+import com.takeaway.authorization.view.boundary.DataView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class UserRoleController implements ServiceExceptionTranslator
     // ===========================  public  Methods  =========================
     // =================  protected/package local  Methods ===================
 
+    @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
     @PostMapping(value = "/{roleId}")
     @ResponseStatus(HttpStatus.CREATED)
     @JsonView(DataView.GET.class)
@@ -57,6 +59,7 @@ public class UserRoleController implements ServiceExceptionTranslator
         }
     }
 
+    @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
     @DeleteMapping(value = "/{roleId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void unassign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)

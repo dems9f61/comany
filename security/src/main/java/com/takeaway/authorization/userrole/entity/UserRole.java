@@ -1,6 +1,6 @@
 package com.takeaway.authorization.userrole.entity;
 
-import com.takeaway.authorization.integrationsupport.entity.UUIDEntity;
+import com.takeaway.authorization.persistence.boundary.UUIDEntity;
 import com.takeaway.authorization.role.entity.Role;
 import com.takeaway.authorization.user.entity.User;
 import lombok.EqualsAndHashCode;
