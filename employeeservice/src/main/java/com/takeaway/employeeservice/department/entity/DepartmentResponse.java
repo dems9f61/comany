@@ -7,6 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * User: StMinko Date: 18.03.2019 Time: 17:32
  *
@@ -20,15 +24,18 @@ public class DepartmentResponse
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
   @ApiModelProperty(example = "245")
+  @NotNull
+  @Min(1)
   private final Long id;
 
   @ApiModelProperty(example = "Human Resources (HR)")
+  @NotBlank
   private final String departmentName;
 
   // ============================  Constructors  ===========================
 
   @JsonCreator
-  public DepartmentResponse(@JsonProperty(value = "id",required = true) Long id, @JsonProperty(value = "departmentName",required = true) String departmentName)
+  public DepartmentResponse(@JsonProperty(value = "id") Long id, @JsonProperty(value = "departmentName") String departmentName)
   {
     this.id = id;
     this.departmentName = departmentName;

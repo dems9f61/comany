@@ -1,7 +1,7 @@
 package com.takeaway.employeeservice.department.boundary;
 
 import com.takeaway.employeeservice.IntegrationTestSuite;
-import com.takeaway.employeeservice.department.entity.DepartmentRequest;
+import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,12 +33,14 @@ class DepartmentControllerIntegrationTest extends IntegrationTestSuite
     void givenEmptyDepartmentName_whenCreate_thenStatus4xx() throws Exception
     {
       // Arrange
-      DepartmentRequest departmentRequest = departmentRequestTestFactory.builder().departmentName("").create();
+      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
+                                                                                          .departmentName("")
+                                                                                          .create();
 
       // Act / Assert
-      mockMvc
-          .perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(departmentRequest)))
-          .andExpect(status().isBadRequest());
+      mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
+                                                         .content(objectMapper.writeValueAsString(createDepartmentRequest)))
+             .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -46,12 +48,14 @@ class DepartmentControllerIntegrationTest extends IntegrationTestSuite
     void givenEmptyDepartmentName_whenCreate_thenStatus400() throws Exception
     {
       // Arrange
-      DepartmentRequest departmentRequest = departmentRequestTestFactory.builder().departmentName("  ").create();
+      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
+                                                                                          .departmentName("  ")
+                                                                                          .create();
 
       // Act / Assert
-      mockMvc
-          .perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(departmentRequest)))
-          .andExpect(status().isBadRequest());
+      mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
+                                                         .content(objectMapper.writeValueAsString(createDepartmentRequest)))
+             .andExpect(status().isBadRequest());
     }
   }
 }

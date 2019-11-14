@@ -20,7 +20,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class DepartmentRequest
+public class CreateDepartmentRequest
 {
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
@@ -32,7 +32,7 @@ public class DepartmentRequest
   // ============================  Constructors  ===========================
 
   @JsonCreator
-  public DepartmentRequest(@JsonProperty(value = "departmentName",required = true) String departmentName)
+  public CreateDepartmentRequest(@JsonProperty(value = "departmentName") String departmentName)
   {
     this.departmentName = departmentName;
   }

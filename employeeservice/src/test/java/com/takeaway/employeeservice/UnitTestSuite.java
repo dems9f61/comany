@@ -1,7 +1,7 @@
 package com.takeaway.employeeservice;
 
 import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
-import com.takeaway.employeeservice.department.entity.DepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.entity.CreateDepartmentRequestTestFactory;
 import com.takeaway.employeeservice.department.entity.DepartmentTestFactory;
 import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
 import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequestTestFactory;
@@ -26,7 +26,7 @@ public abstract class UnitTestSuite
 
   protected DepartmentTestFactory departmentTestFactory;
 
-  protected DepartmentRequestTestFactory createDepartmentRequestTestFactory;
+  protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
 
   protected EmployeeTestFactory employeeTestFactory;
 
@@ -44,7 +44,7 @@ public abstract class UnitTestSuite
   {
     departmentParameterTestFactory = new DepartmentParameterTestFactory();
     departmentTestFactory = new DepartmentTestFactory();
-    createDepartmentRequestTestFactory = new DepartmentRequestTestFactory();
+    createDepartmentRequestTestFactory = new CreateDepartmentRequestTestFactory();
     employeeTestFactory = new EmployeeTestFactory();
     employeeParameterTestFactory = new EmployeeParameterTestFactory();
     createEmployeeRequestTestFactory = new CreateEmployeeRequestTestFactory();

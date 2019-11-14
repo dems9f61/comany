@@ -3,8 +3,8 @@ package com.takeaway.employeeservice.department.boundary;
 import com.takeaway.employeeservice.department.control.DepartmentParameter;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.control.DepartmentServiceException;
+import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
 import com.takeaway.employeeservice.department.entity.Department;
-import com.takeaway.employeeservice.department.entity.DepartmentRequest;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
 import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
 import com.takeaway.employeeservice.rest.boundary.ApiVersions;
@@ -54,10 +54,10 @@ public class DepartmentController
   @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = "")})
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  DepartmentResponse createDepartment(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
+  DepartmentResponse createDepartment(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
   {
-    LOGGER.info("Creating a department by the request [{}]", departmentRequest);
-    DepartmentParameter createDepartmentParameter = departmentRequest.toDepartmentParameter();
+      LOGGER.info("Creating a department by the request [{}]", createDepartmentRequest);
+      DepartmentParameter createDepartmentParameter = createDepartmentRequest.toDepartmentParameter();
     try
     {
       Department department = departmentService.create(createDepartmentParameter);

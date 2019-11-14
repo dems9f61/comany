@@ -2,7 +2,7 @@ package com.takeaway.employeeservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
-import com.takeaway.employeeservice.department.entity.DepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.entity.CreateDepartmentRequestTestFactory;
 import com.takeaway.employeeservice.employee.control.EmployeeEventPublisherCapable;
 import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
 import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequestTestFactory;
@@ -44,7 +44,7 @@ public abstract class IntegrationTestSuite
   protected EmployeeParameterTestFactory employeeParameterTestFactory;
 
   @Autowired
-  protected DepartmentRequestTestFactory departmentRequestTestFactory;
+  protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
 
   @Autowired
   protected CreateEmployeeRequestTestFactory createEmployeeRequestTestFactory;

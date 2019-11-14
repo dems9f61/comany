@@ -1,7 +1,7 @@
 package com.takeaway.employeeservice.resttest;
 
 import com.takeaway.employeeservice.department.boundary.DepartmentController;
-import com.takeaway.employeeservice.department.entity.DepartmentRequest;
+import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
 import com.takeaway.employeeservice.employee.boundary.EmployeeController;
 import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
@@ -394,7 +394,9 @@ class EmployeeRestTest extends RestTestSuite
 
   private void createAndPersistDepartment(String departmentName)
   {
-    DepartmentRequest createDepartmentRequest = departmentRequestTestFactory.builder().departmentName(departmentName).create();
+    CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
+                                                                                        .departmentName(departmentName)
+                                                                                        .create();
     HttpHeaders headers = defaultHttpHeaders();
     testRestTemplate.exchange(DepartmentController.BASE_URI, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
   }
