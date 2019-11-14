@@ -1,6 +1,5 @@
-package com.takeaway.employeeservice.config;
+package com.takeaway.employeeservice.rest.boundary;
 
-import com.takeaway.employeeservice.ApiVersions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;

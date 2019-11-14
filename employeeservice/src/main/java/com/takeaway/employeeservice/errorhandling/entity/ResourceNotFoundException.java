@@ -1,39 +1,21 @@
-package com.takeaway.employeeservice.integationsupport.entity;
+package com.takeaway.employeeservice.errorhandling.entity;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
- * User: StMinko Date: 18.03.2019 Time: 11:17
+ * User: StMinko Date: 18.03.2019 Time: 11:26
  *
  * <p>
  */
-public class ApiException extends RuntimeException
+public class ResourceNotFoundException extends ApiException
 {
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
-
-  @Getter
-  private final HttpStatus httpStatus;
-
   // ============================  Constructors  ===========================
 
-  public ApiException(Throwable cause, HttpStatus httpStatus)
+  public ResourceNotFoundException(String message)
   {
-    super(cause);
-    this.httpStatus = httpStatus;
-  }
-
-  public ApiException(String message, HttpStatus httpStatus)
-  {
-    super(message);
-    this.httpStatus = httpStatus;
-  }
-
-  public ApiException(String message, HttpStatus httpStatus, Throwable cause)
-  {
-    super(message, cause);
-    this.httpStatus = httpStatus;
+    super(message, HttpStatus.NOT_FOUND);
   }
 
   // ===========================  public  Methods  =========================

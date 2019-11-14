@@ -1,4 +1,4 @@
-package com.takeaway.employeeservice;
+package com.takeaway.employeeservice.rest.boundary;
 
 /**
  * User: StMinko Date: 18.03.2019 Time: 17:24

@@ -1,4 +1,4 @@
-package com.takeaway.employeeservice.integationsupport.entity;
+package com.takeaway.employeeservice.errorhandling.entity;
 
 import org.springframework.http.HttpStatus;
 

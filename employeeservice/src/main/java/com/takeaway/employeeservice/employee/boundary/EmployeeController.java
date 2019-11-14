@@ -1,6 +1,5 @@
 package com.takeaway.employeeservice.employee.boundary;
 
-import com.takeaway.employeeservice.ApiVersions;
 import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceCapable;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceException;
@@ -8,10 +7,11 @@ import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.Employee;
 import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
 import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
-import com.takeaway.employeeservice.integationsupport.entity.ApiException;
-import com.takeaway.employeeservice.integationsupport.entity.BadRequestException;
-import com.takeaway.employeeservice.integationsupport.entity.InternalServerErrorException;
-import com.takeaway.employeeservice.integationsupport.entity.ResourceNotFoundException;
+import com.takeaway.employeeservice.errorhandling.entity.ApiException;
+import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
+import com.takeaway.employeeservice.errorhandling.entity.InternalServerErrorException;
+import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
+import com.takeaway.employeeservice.rest.boundary.ApiVersions;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

@@ -1,21 +1,21 @@
-package com.takeaway.employeeservice.integationsupport.entity;
+package com.takeaway.employeeservice.errorhandling.entity;
 
 import org.springframework.http.HttpStatus;
 
 /**
- * User: StMinko Date: 18.03.2019 Time: 11:26
+ * User: StMinko Date: 18.03.2019 Time: 17:19
  *
  * <p>
  */
-public class ResourceNotFoundException extends ApiException
+public class InternalServerErrorException extends ApiException
 {
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
   // ============================  Constructors  ===========================
 
-  public ResourceNotFoundException(String message)
+  public InternalServerErrorException(String message)
   {
-    super(message, HttpStatus.NOT_FOUND);
+    super(message, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   // ===========================  public  Methods  =========================
