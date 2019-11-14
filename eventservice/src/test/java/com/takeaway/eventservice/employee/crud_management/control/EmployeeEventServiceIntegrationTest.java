@@ -31,7 +31,7 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
   @Autowired
   private EmployeeEventService employeeEventService;
 
-  @DisplayName("All published employee events to a specific uuid appear in ascending order")
+    @DisplayName("All published employee events to a specific id appear in ascending order")
   @Test
   void givenPublishedEmployeeEventsForAnyEmployee_whenFindAll_thenReturnDescendingOrderedList()
   {
@@ -57,7 +57,7 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
     }
   }
 
-  @DisplayName("Finding published employee events returns an empty collection For unknown uuid ")
+    @DisplayName("Finding published employee events returns an empty collection For unknown id ")
   @Test
   void givenUnknownUuid_whenFindAll_thenReturnEmptyList()
   {

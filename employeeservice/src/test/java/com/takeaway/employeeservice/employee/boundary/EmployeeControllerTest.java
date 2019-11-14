@@ -48,15 +48,16 @@ class EmployeeControllerTest extends UnitTestSuite
   class WhenDelete
   {
     @Test
-    @DisplayName("Deleting an employee with a wrong uuid throws ResourceNotFoundException")
-    void givenUnknownUuid_whenDelete_thenThrowNotFoundException() throws Exception
+    @DisplayName("Deleting an employee with a wrong id throws ResourceNotFoundException")
+    void givenUnknownId_whenDelete_thenThrowNotFoundException() throws Exception
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
-      doThrow(new EmployeeServiceException(NOT_FOUND, "bla bla")).when(employeeService).deleteByUuid(any());
+      UUID id = UUID.randomUUID();
+      doThrow(new EmployeeServiceException(NOT_FOUND, "bla bla")).when(employeeService)
+                                                                 .deleteById(any());
 
       // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.deleteEmployee(uuid));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.deleteEmployee(id));
     }
 
     @Test
@@ -64,27 +65,29 @@ class EmployeeControllerTest extends UnitTestSuite
     void givenUnknownException_whenDelete_thenThrowInternalException() throws Exception
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
-      doThrow(new EmployeeServiceException(new Exception())).when(employeeService).deleteByUuid(any());
+      UUID id = UUID.randomUUID();
+      doThrow(new EmployeeServiceException(new Exception())).when(employeeService)
+                                                            .deleteById(any());
 
       // Act / Assert
-      assertThatExceptionOfType(InternalServerErrorException.class).isThrownBy(() -> employeeController.deleteEmployee(uuid));
+      assertThatExceptionOfType(InternalServerErrorException.class).isThrownBy(() -> employeeController.deleteEmployee(id));
     }
 
     @Test
-    @DisplayName("Deleting an employee with a valid uuid succeeds")
-    void givenValidUuid_whenDelete_thenSucceed() throws Exception
+    @DisplayName("Deleting an employee with a valid id succeeds")
+    void givenValidId_whenDelete_thenSucceed() throws Exception
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID id = UUID.randomUUID();
 
-      doNothing().when(employeeService).deleteByUuid(any());
+      doNothing().when(employeeService)
+                 .deleteById(any());
 
       // Act
-      employeeController.deleteEmployee(uuid);
+      employeeController.deleteEmployee(id);
 
       // Assert
-      verify(employeeService).deleteByUuid(uuid);
+      verify(employeeService).deleteById(id);
     }
   }
 
@@ -93,31 +96,33 @@ class EmployeeControllerTest extends UnitTestSuite
   class WhenAccess
   {
     @Test
-    @DisplayName("Finding an employee with a wrong uuid throws ResourceNotFoundException")
-    void givenUnknownUuid_whenFindByUuid_thenThrowNotFoundException()
+    @DisplayName("Finding an employee with a wrong id throws ResourceNotFoundException")
+    void givenUnknownId_whenFindByUuid_thenThrowNotFoundException()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
-      doReturn(Optional.empty()).when(employeeService).findByid(uuid);
+      UUID id = UUID.randomUUID();
+      doReturn(Optional.empty()).when(employeeService)
+                                .findById(id);
 
       // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(uuid));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(id));
     }
 
     @Test
-    @DisplayName("Finding an employee with a valid uuid succeeds")
-    void givenValidUuid_whenFindByUuid_thenSucceed()
+    @DisplayName("Finding an employee with a valid id succeeds")
+    void givenValidId_whenFindByUuid_thenSucceed()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID id = UUID.randomUUID();
       Employee employee = employeeTestFactory.createDefault();
-      doReturn(Optional.of(employee)).when(employeeService).findByid(any());
+      doReturn(Optional.of(employee)).when(employeeService)
+                                     .findById(any());
 
       // Act
-      employeeController.findEmployee(uuid);
+      employeeController.findEmployee(id);
 
       // Assert
-      verify(employeeService).findByid(uuid);
+      verify(employeeService).findById(id);
     }
   }
 
@@ -130,15 +135,15 @@ class EmployeeControllerTest extends UnitTestSuite
     void givenValidRequest_whenUpdate_thenSucceed() throws Exception
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID id = UUID.randomUUID();
       UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
       doNothing().when(employeeService).update(any(), any());
 
       // Act
-      employeeController.updateEmployee(uuid, employeeRequest);
+      employeeController.updateEmployee(id, employeeRequest);
 
       // Assert
-      verify(employeeService).update(eq(uuid), assertArg(getEmployeeParameterConsumer(employeeRequest)));
+      verify(employeeService).update(eq(id), assertArg(getEmployeeParameterConsumer(employeeRequest)));
     }
 
     @Test
@@ -146,12 +151,13 @@ class EmployeeControllerTest extends UnitTestSuite
     void givenUnderlyingNotFound_whenCreate_thenThrowNotFoundException() throws Exception
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID id = UUID.randomUUID();
       UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
-      doThrow(new EmployeeServiceException(NOT_FOUND, "")).when(employeeService).update(uuid, employeeRequest.toEmployerParameter());
+      doThrow(new EmployeeServiceException(NOT_FOUND, "")).when(employeeService)
+                                                          .update(id, employeeRequest.toEmployerParameter());
 
       // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.updateEmployee(id, employeeRequest));
     }
 
     @Test

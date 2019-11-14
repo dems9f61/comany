@@ -42,7 +42,6 @@ class EmployeeService implements EmployeeServiceCapable
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================
 
-  @Transactional
   public Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException
   {
     LOGGER.info("Creating an employee with [{}] ", creationParameter);
@@ -77,14 +76,13 @@ class EmployeeService implements EmployeeServiceCapable
         .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND, String.format("Department name [%s] could not be found!", departmentName)));
   }
 
-  @Transactional
-  public void update(@NonNull UUID uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
+  public void update(@NonNull UUID id, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
   {
-    LOGGER.info("Updating an employeeToUpdate [{}] with [{}] ", uuid, updateParameter);
-    Optional<Employee> optionalEmployee = findByid(uuid);
+    LOGGER.info("Updating an employeeToUpdate [{}] with [{}] ", id, updateParameter);
+    Optional<Employee> optionalEmployee = findById(id);
     if (!optionalEmployee.isPresent())
     {
-      throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid [%s] could not be found!", uuid));
+      throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with id [%s] could not be found!", id));
     }
 
     Employee employee = optionalEmployee.get();
@@ -99,26 +97,25 @@ class EmployeeService implements EmployeeServiceCapable
     }
   }
 
-  public Optional<Employee> findByid(@NonNull UUID uuid)
+  public Optional<Employee> findById(@NonNull UUID id)
   {
-    LOGGER.info("Finding an employee with [{}] ", uuid);
-    return employeeRepository.findById(uuid);
+    LOGGER.info("Finding an employee with [{}] ", id);
+    return employeeRepository.findById(id);
   }
 
-  @Transactional
-  public void deleteByUuid(@NonNull UUID uuid) throws EmployeeServiceException
+  public void deleteById(@NonNull UUID id) throws EmployeeServiceException
   {
-    LOGGER.info("Deleting an employee with [{}] ", uuid);
-    Optional<Employee> found = findByid(uuid);
+    LOGGER.info("Deleting an employee with [{}] ", id);
+    Optional<Employee> found = findById(id);
     if (found.isPresent())
     {
       Employee employee = found.get();
-      employeeRepository.deleteById(uuid);
+      employeeRepository.deleteById(id);
       messagePublisher.employeeDeleted(employee);
     }
     else
     {
-      throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with uuid [%s] could not be found!", uuid));
+      throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with id [%s] could not be found!", id));
     }
   }
 

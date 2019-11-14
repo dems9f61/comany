@@ -50,7 +50,7 @@ class EmployeeRestTest extends RestTestSuite
       assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
       EmployeeResponse employeeResponse = responseEntity.getBody();
       assertThat(employeeResponse).isNotNull();
-      assertThat(employeeResponse.getUuid()).isNotNull();
+      assertThat(employeeResponse.getId()).isNotNull();
       assertThat(employeeResponse.getDepartmentName()).isEqualTo(createEmployeeRequest.getDepartmentName());
       assertThat(employeeResponse.getEmailAddress()).isEqualTo(createEmployeeRequest.getEmailAddress());
       assertThat(employeeResponse.getFirstName()).isEqualTo(createEmployeeRequest.getFirstName());
@@ -84,7 +84,7 @@ class EmployeeRestTest extends RestTestSuite
       assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
       EmployeeResponse employeeResponse = responseEntity.getBody();
       assertThat(employeeResponse).isNotNull();
-      assertThat(employeeResponse.getUuid()).isNotNull();
+      assertThat(employeeResponse.getId()).isNotNull();
       assertThat(employeeResponse.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
       assertThat(employeeResponse.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
       assertThat(employeeResponse.getFirstName()).isEqualTo(employeeRequest.getFirstName());
@@ -177,7 +177,7 @@ class EmployeeRestTest extends RestTestSuite
   class WhenAccess
   {
     @Test
-    @DisplayName("GET: 'http://.../employees/{uuid}' returns NOT FOUND if the specified uuid doesn't exist ")
+    @DisplayName("GET: 'http://.../employees/{id}' returns NOT FOUND if the specified uuid doesn't exist ")
     void givenUnknownUuid_whenFindEmployeeByUuid_thenStatus404()
     {
       // Arrange
@@ -194,15 +194,15 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Test
-    @DisplayName("GET: 'http://.../employees/{uuid}' returns OK if the specified uuid exists ")
-    void givenEmployee_whenFindEmployeeByUuid_thenStatus200()
+    @DisplayName("GET: 'http://.../employees/{id}' returns OK if the specified uuid exists ")
+    void givenEmployee_whenFindEmployeeById_thenStatus200()
     {
       // Arrange
       String departmentName = RandomStringUtils.randomAlphabetic(23);
       createAndPersistDepartment(departmentName);
       CreateEmployeeRequest createEmployeeRequest = createEmployeeRequestTestFactory.builder().departmentName(departmentName).create();
       EmployeeResponse persistedEmployee = createAndPersistEmployee(createEmployeeRequest);
-      UUID uuidToFind = persistedEmployee.getUuid();
+      UUID uuidToFind = persistedEmployee.getId();
 
       // Act
       ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, uuidToFind),
@@ -221,7 +221,7 @@ class EmployeeRestTest extends RestTestSuite
   class WhenPartialUpdate
   {
     @Test
-    @DisplayName("PATCH: 'http://.../employees/{uuid}' returns NOT FOUND if the specified employee doesn't exist ")
+    @DisplayName("PATCH: 'http://.../employees/{id}' returns NOT FOUND if the specified employee doesn't exist ")
     void givenUnknownEmployee_whenUpdateEmployee_thenStatus404()
     {
       // Arrange
@@ -242,7 +242,7 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Test
-    @DisplayName("PATCH: 'http://.../employees/{uuid}' returns NOT FOUND if the specified department doesn't exist ")
+    @DisplayName("PATCH: 'http://.../employees/{id}' returns NOT FOUND if the specified department doesn't exist ")
     void givenUnknownDepartment_whenUpdateEmployee_thenStatus404()
     {
       // Arrange
@@ -251,7 +251,7 @@ class EmployeeRestTest extends RestTestSuite
 
       CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder().departmentName(departmentName).create();
       EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
-      UUID uuidToUpdate = persistedEmployee.getUuid();
+      UUID uuidToUpdate = persistedEmployee.getId();
       String unknownDepartmentName = RandomStringUtils.randomAlphabetic(32);
       UpdateEmployeeRequest updateRequest = updateEmployeeRequestTestFactory.builder().departmentName(unknownDepartmentName).create();
       HttpHeaders headers = defaultHttpHeaders();
@@ -267,7 +267,7 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Test
-    @DisplayName("PATCH: 'http://.../employees/{uuid} returns NO CONTENT if the specified parameters are valid")
+    @DisplayName("PATCH: 'http://.../employees/{id} returns NO CONTENT if the specified parameters are valid")
     void givenValidParameters_whenUpdateEmployee_thenStatus204()
     {
       // Arrange
@@ -276,7 +276,7 @@ class EmployeeRestTest extends RestTestSuite
 
       CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder().departmentName(firstDepartmentName).create();
       EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
-      UUID uuidToUpdate = persistedEmployee.getUuid();
+      UUID uuidToUpdate = persistedEmployee.getId();
 
       String secondDepartmentName = RandomStringUtils.randomAlphabetic(23);
       createAndPersistDepartment(secondDepartmentName);
@@ -302,7 +302,7 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Test
-    @DisplayName("PATCH: 'http://.../employees/{uuid} returns NO CONTENT on only updating birthday")
+    @DisplayName("PATCH: 'http://.../employees/{id} returns NO CONTENT on only updating birthday")
     void givenNewBirthDay_whenUpdateEmployee_thenStatus204()
     {
       // Arrange
@@ -311,7 +311,7 @@ class EmployeeRestTest extends RestTestSuite
 
       CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder().departmentName(departmentName).create();
       EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
-      UUID uuidToUpdate = persistedEmployee.getUuid();
+      UUID uuidToUpdate = persistedEmployee.getId();
 
       LocalDate localDate = employeeParameterTestFactory.builder().generateRandomDate();
       java.sql.Date newBirthDay = java.sql.Date.valueOf(localDate);
@@ -348,7 +348,7 @@ class EmployeeRestTest extends RestTestSuite
   class WhenDelete
   {
     @Test
-    @DisplayName("DELETE: 'http://.../employees/{uuid}' returns NOT FOUND if the specified uuid doesn't exist")
+    @DisplayName("DELETE: 'http://.../employees/{id}' returns NOT FOUND if the specified uuid doesn't exist")
     void givenUnknownUuid_whenDeleteEmployeeByUuid_thenStatus404()
     {
       // Arrange
@@ -365,7 +365,7 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Test
-    @DisplayName("DELETE: 'http://.../employees/{uuid}' returns NO CONTENT if the specified uuid exists")
+    @DisplayName("DELETE: 'http://.../employees/{id}' returns NO CONTENT if the specified uuid exists")
     void givenEmployee_whenDeleteEmployeeByUuid_thenStatus204()
     {
       // Arrange
@@ -373,7 +373,7 @@ class EmployeeRestTest extends RestTestSuite
       createAndPersistDepartment(departmentName);
       CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.builder().departmentName(departmentName).create();
       EmployeeResponse persistedEmployee = createAndPersistEmployee(employeeRequest);
-      UUID uuidToDelete = persistedEmployee.getUuid();
+      UUID uuidToDelete = persistedEmployee.getId();
 
       // Act
       ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, uuidToDelete),
@@ -403,9 +403,9 @@ class EmployeeRestTest extends RestTestSuite
     return testRestTemplate.exchange(EmployeeController.BASE_URI, HttpMethod.POST, new HttpEntity<>(employeeRequest, headers), EmployeeResponse.class).getBody();
   }
 
-  private EmployeeResponse findPersistedEmployee(UUID uuidToFind)
+  private EmployeeResponse findPersistedEmployee(UUID idToFind)
   {
-    ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, uuidToFind),
+    ResponseEntity<EmployeeResponse> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeController.BASE_URI, idToFind),
             HttpMethod.GET,
             new HttpEntity<>(defaultHttpHeaders()),
             EmployeeResponse.class);

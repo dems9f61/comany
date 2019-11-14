@@ -21,12 +21,12 @@ public interface EmployeeServiceCapable
 
   Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException;
 
-  void update(@NonNull UUID uuid, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException;
+  void update(@NonNull UUID id, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException;
 
   @Transactional(propagation = Propagation.SUPPORTS)
-  Optional<Employee> findByid(@NonNull UUID id);
+  Optional<Employee> findById(@NonNull UUID id);
 
-  void deleteByUuid(@NonNull UUID uuid) throws EmployeeServiceException;
+  void deleteById(@NonNull UUID id) throws EmployeeServiceException;
 
   // ============================  Inner Classes  ==========================
   // ============================  End of class  ===========================

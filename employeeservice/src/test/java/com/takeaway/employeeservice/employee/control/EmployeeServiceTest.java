@@ -56,7 +56,7 @@ class EmployeeServiceTest extends UnitTestSuite
       doReturn(Optional.empty()).when(employeeRepository).findById(any());
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.deleteByUuid(uuid));
+        assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.deleteById(uuid));
     }
 
     @Test
@@ -71,7 +71,7 @@ class EmployeeServiceTest extends UnitTestSuite
       doNothing().when(employeeEventPublisher).employeeDeleted(any());
 
       // Act
-      employeeService.deleteByUuid(uuid);
+        employeeService.deleteById(uuid);
 
       // Assert
       verify(employeeRepository).deleteById(uuid);

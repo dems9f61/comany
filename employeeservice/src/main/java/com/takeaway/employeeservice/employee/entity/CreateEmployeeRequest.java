@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
@@ -28,6 +30,7 @@ public class CreateEmployeeRequest implements EmployeeRequest
   // =============================  Variables  =============================
 
   @ApiModelProperty(example = "stephan.minko@nba.com")
+  @Email
   private final String emailAddress;
 
   @ApiModelProperty(example = "Stéphan")
@@ -42,6 +45,7 @@ public class CreateEmployeeRequest implements EmployeeRequest
   @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
   private final Date birthday;
 
+  @NotBlank
   @ApiModelProperty(example = "Java Development")
   private final String departmentName;
 
@@ -49,10 +53,9 @@ public class CreateEmployeeRequest implements EmployeeRequest
 
   @JsonCreator
   public CreateEmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
-        @JsonProperty(value = "firstName") String firstName,
-        @JsonProperty(value = "lastName") String lastName,
-        @JsonProperty(value = "birthday") Date birthday,
-        @JsonProperty(value = "departmentName",required = true) String departmentName)
+                               @JsonProperty(value = "firstName") String firstName,
+                               @JsonProperty(value = "lastName") String lastName,
+                               @JsonProperty(value = "birthday") Date birthday, @JsonProperty(value = "departmentName") String departmentName)
   {
     this.emailAddress = emailAddress;
     this.firstName = firstName;

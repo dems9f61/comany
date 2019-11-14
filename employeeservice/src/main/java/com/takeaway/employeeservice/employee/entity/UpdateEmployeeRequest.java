@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Email;
 import java.util.Date;
 
 /**
@@ -27,8 +28,9 @@ public class UpdateEmployeeRequest implements EmployeeRequest
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
 
-  @ApiModelProperty(example = "hugues.minko@nba.com")
-  private final String emailAddress;
+    @Email
+    @ApiModelProperty(example = "hugues.minko@nba.com")
+    private final String emailAddress;
 
   @ApiModelProperty(example = "Hugues")
   private final String firstName;

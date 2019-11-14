@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,8 +27,9 @@ public class EmployeeResponse
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
 
+  @NotNull
   @ApiModelProperty(example = "6a225af8-e783-4e60-a5d0-418830330eab")
-  private final UUID uuid;
+  private final UUID id;
 
   @ApiModelProperty(example = "stephan.minko@nba.com")
   private final String emailAddress;
@@ -50,14 +52,14 @@ public class EmployeeResponse
   // ============================  Constructors  ===========================
 
   @JsonCreator
-  public EmployeeResponse(@JsonProperty(value = "uuid",required = true) UUID uuid,
-        @JsonProperty(value = "emailAddress") String emailAddress,
-        @JsonProperty(value = "firstName") String firstName,
-        @JsonProperty(value = "lastName") String lastName,
-        @JsonProperty(value = "birthday") Date birthday,
-        @JsonProperty(value = "departmentName",required = true) String departmentName)
+  public EmployeeResponse(@JsonProperty(value = "id") UUID id,
+                          @JsonProperty(value = "emailAddress") String emailAddress,
+                          @JsonProperty(value = "firstName") String firstName,
+                          @JsonProperty(value = "lastName") String lastName,
+                          @JsonProperty(value = "birthday") Date birthday,
+                          @JsonProperty(value = "departmentName",required = true) String departmentName)
   {
-    this.uuid = uuid;
+    this.id = id;
     this.emailAddress = emailAddress;
     this.firstName = firstName;
     this.lastName = lastName;
