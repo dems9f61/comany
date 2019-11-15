@@ -10,7 +10,7 @@ import javax.persistence.*;
  * <p>
  */
 @Data
-@Entity
+//@Entity
 @Table(name = "oauth_code")
 public class OauthCode
 {

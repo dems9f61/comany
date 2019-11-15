@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
  * <p>
  */
 @Data
-@Entity
+//@Entity
 @Table(name = "oauth_approvals")
 public class OauthApprovals
 {

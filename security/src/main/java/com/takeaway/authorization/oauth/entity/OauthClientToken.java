@@ -10,7 +10,7 @@ import javax.persistence.*;
  * <p>
  */
 @Data
-@Entity
+//@Entity
 @Table(name = "oauth_client_token")
 public class OauthClientToken
 {

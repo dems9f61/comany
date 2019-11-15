@@ -1,44 +1,37 @@
-package com.takeaway.authorization.oauth.entity;
+package com.sample;
 
-import lombok.Data;
 
-import javax.persistence.*;
+public class OauthRefreshToken {
 
-/**
- * User: StMinko Date: 06.11.2019 Time: 15:28
- *
- * <p>
- */
-@Data
-@Entity
-@Table(name = "oauth_refresh_token")
-public class OauthRefreshToken
-{
-    // =========================== Class Variables ===========================
-    // =============================  Variables  =============================
+  private String tokenId;
+  private String token;
+  private String authentication;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "oauth_refresh_token_sequence")
-    @SequenceGenerator(name = "oauth_refresh_token_sequence",
-            allocationSize = 1)
-    private Long id;
 
-    @Column(name = "token_id")
-    private String tokenId;
+  public String getTokenId() {
+    return tokenId;
+  }
 
-    @Lob
-    @Column(name = "token")
-    private byte[] token;
+  public void setTokenId(String tokenId) {
+    this.tokenId = tokenId;
+  }
 
-    @Lob
-    @Column(name = "authentication")
-    private byte[] authentication;
 
-    // ============================  Constructors  ===========================
-    // ===========================  public  Methods  =========================
-    // =================  protected/package local  Methods ===================
-    // ===========================  private  Methods  ========================
-    // ============================  Inner Classes  ==========================
-    // ============================  End of class  ===========================
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
+  }
+
+
+  public String getAuthentication() {
+    return authentication;
+  }
+
+  public void setAuthentication(String authentication) {
+    this.authentication = authentication;
+  }
+
 }

@@ -3,6 +3,7 @@ package com.takeaway.authorization.oauth.entity;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
  * <p>
  */
 @Data
-public final class UserInformation
+public final class UserInformation implements Serializable
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================

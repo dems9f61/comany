@@ -5,6 +5,8 @@ import com.takeaway.authorization.oauth.control.SpringSecuritySecurityProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +23,9 @@ import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+
+import javax.sql.DataSource;
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 16:54
@@ -51,23 +55,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================
 
-  @Autowired
-  public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception
-  {
-    auth.userDetailsService(this.userDetailsService);
-  }
-
   @Override
   @Bean
   public AuthenticationManager authenticationManagerBean() throws Exception
   {
     return super.authenticationManagerBean();
-  }
-
-  @Bean
-  public TokenStore tokenStore()
-  {
-    return new InMemoryTokenStore();
   }
 
   @Bean
@@ -109,6 +101,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         .and()
         .httpBasic()
         .realmName(AuthorizationServerConfig.REALM);
+  }
+
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception
+  {
+    auth.userDetailsService(userDetailsService);
+  }
+
+  @Primary
+  @Profile("!INTEGRATION")
+  @Bean
+  public JdbcTokenStore tokenStore(DataSource dataSource)
+  {
+    return new JdbcTokenStore(dataSource);
   }
 
   // ===========================  private  Methods  ========================
