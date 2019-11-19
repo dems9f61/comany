@@ -113,23 +113,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     auth.userDetailsService(userDetailsService);
   }
 
-  //  @Primary
-  //  @Profile("!INTEGRATION")
-  //  @Bean
-  //  public JdbcTokenStore tokenStore(DataSource dataSource)
-  //  {
-  //    return new JdbcTokenStore(dataSource);
-  //  }
-
   @Bean
-//  @Profile("!INTEGRATION")
   public TokenStore tokenStore()
   {
     return new CustomJwtTokenStore(accessTokenConverter());
   }
 
   @Bean
-  //  @Profile("!INTEGRATION")
   public JwtAccessTokenConverter accessTokenConverter()
   {
     JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -140,13 +130,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
 
   @Bean
-  //  @Profile("!INTEGRATION")
-  public CustomUserDetailsEnhancer customUserDetailsEnhancer () {
-      return new CustomUserDetailsEnhancer();
-  }
-
-  @Bean
-  //  @Profile("!INTEGRATION") 
   public SecurityInfoTokenEnhancer tokenEnhancer(CustomUserDetailsEnhancer customUserDetailsEnhancer)
   {
     return new SecurityInfoTokenEnhancer(customUserDetailsEnhancer);

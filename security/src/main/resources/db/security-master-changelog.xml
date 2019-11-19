@@ -24,8 +24,5 @@
     <include file="changelog/04-create_user_history_table.xml" relativeToChangelogFile="true"/>
     <!-- Create the user Oauth client details Table -->
     <include file="changelog/05-create_oauth_client_details_table.xml" relativeToChangelogFile="true"/>
-    <!-- Create the remaining Oauth stuff Tables -->
-    <include file="changelog/05-create_oauth_required_tables.xml" relativeToChangelogFile="true"/>
-    <!-- Create the user Oauth client details history Table -->
     <include file="changelog/06-create_oauth_client_details_history_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

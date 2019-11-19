@@ -1,10 +1,13 @@
 package com.takeaway.authorization.oauth.entity;
 
+import org.springframework.stereotype.Component;
+
 /**
  * User: StMinko Date: 18.11.2019 Time: 12:37
  *
  * <p>
  */
+@Component
 public class CustomUserDetailsEnhancer
 {
   // =========================== Class Variables ===========================
