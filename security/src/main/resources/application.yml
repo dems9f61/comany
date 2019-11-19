@@ -1,3 +1,4 @@
+# Global Configuration
 spring.profiles.active: ${mode:LOCAL}
 server.port: 8084
 
@@ -37,6 +38,49 @@ logging:
 #     Hibernate SQL Debug output on local profile - want to see the SQL
 #    org.hibernate.sql: DEBUG
 #    org.hibernate.SQL: DEBUG
+
+oauth:
+  resourceserver:
+    # openssl rsa -in jwt.pem -pubout
+    verifierKey: "-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwI0gT/vkwrbnug5L0aRf
+nEW3s6hnH/a+5M8SYsQLtW6ei4kaQv1KnOCfgzF46d+F1EAYCXEkrLxyYzEtGGTI
+wpgOj1JTjDxRsC+FnUYpouv5bCcJ6XQfB+AJ6V7ucxp46AMAelYhb59RjPa/opxu
+0ze12ksczCIAklriP5plVumwa9jooW2JkCibM+ab0K6dcgOAa5kEib40J0wpZ+l6
+0lIhzA/r3/XEpFGslNRQhGiKRqcJcbIKo0RmaMkmSZRqTZLJ8YgS79mplLuR8xYl
+iPhl6/PsNoqzH/5VGQzJdRwywfFj7cM02hp8GGnfU351uLPaYVA2sWjQnstF2RKW
+PwIDAQAB
+-----END PUBLIC KEY-----"
+    # openssl genrsa -out jwt.pem 2048
+    # openssl rsa -in jwt.pem
+  authorizationserver:
+    signingKey: "-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAwI0gT/vkwrbnug5L0aRfnEW3s6hnH/a+5M8SYsQLtW6ei4ka
+Qv1KnOCfgzF46d+F1EAYCXEkrLxyYzEtGGTIwpgOj1JTjDxRsC+FnUYpouv5bCcJ
+6XQfB+AJ6V7ucxp46AMAelYhb59RjPa/opxu0ze12ksczCIAklriP5plVumwa9jo
+oW2JkCibM+ab0K6dcgOAa5kEib40J0wpZ+l60lIhzA/r3/XEpFGslNRQhGiKRqcJ
+cbIKo0RmaMkmSZRqTZLJ8YgS79mplLuR8xYliPhl6/PsNoqzH/5VGQzJdRwywfFj
+7cM02hp8GGnfU351uLPaYVA2sWjQnstF2RKWPwIDAQABAoIBAEpJKCIziDom3pfF
+VDL5O3nK2+iQG9kVFOipiupXwDyrBLfImT0nA1Yqwt+WgpOYDMWqRJu/7upFecwS
++Nbkax/IEjXxCRKdYtaaPu5CV2XnrD6xgP10M1SSdsB2Q4BcwjCgl9qayCOMT6YW
+vDA8MfWDFMG3INEQfS/5qDfplRdGPa8N7tB05QBjAGzj37kmL1kJgrIaCf6dMIfh
+kmOZoV2f2tifDzeHyWAZ5OQyLSCHn6Sl+AT7kncKNE0qgZPLAAFafAyOeGDNiA4S
+szxw24TJwI9Rsga8K8bFEv5RwunGqri4a1BnHK9eHKklcgpnllR72tlH6RP/yA6C
+/gh3U0ECgYEA6IwoE8hCRx6ZcKKWxBLMtcpFkGOW3bUxYiU3J47ZyIdXxmLpS0lK
+oyj7XsADsqPtzJHGRIOvkjiybAtMNnwXXZhWQq278Ey4ZS0fGJabHcUD9W8rY5JE
+3K/7FkPUYexXkRGNqzb1xMrRv/cjn7JZfMbzmkISphM/oovTExwBuzkCgYEA0/hb
+7LgVX/R+1iq4+W1jyHpp8Yig823kGzidOdjwitAhHFj43TDSPpo0mRl4wkylq1Ec
+QcLXQzakfj1DHZW22FaFvO/bJrwuGNSwq5cAhLtGZcjcH0GsesGm40TKO288tXWN
+RiwGc1sH+agoh6PNCif1T+fPBElYZv5nur4lRTcCgYAgF1dgg35B+kMKfCV6IW4G
+mEdJSbUEG4EZHjGiT+BV//do9TVkolSed4VY6f6YpG6okGVgBxwvfYuBxX1a93zx
++ZfN09PfsXaw360u43m8ffex4wmF0CWYnuBzjiC88rSS3G1Ed20rHyIa76wG2cHn
+qjzryLpyGK3rbIhQVskWYQKBgEOVzLmNeENAEbD3rkLZPheN8Hmytp7nSvPi+T6Y
+jRm1gtknBTKBfoe3Y03tcTOCfNBC7F+LYFdt9MTLg7rLIaGY9MtpLtcK6SfBqRMM
+8n1fuPJ7OLQ+nGAHns6YAGMy9IhnEsRtBSGCxOg1Vbbp41Z5px3zK26SdD1ioHBK
+cFfBAoGAROwmPBNeUlEQwIhRlRGKMAsbNXmCx5vJZAjyPGYuqWgfG6a7OvAmbnvK
+x9MvePmzq/sKKqN7LdhE2+SKV/aPVN2u6y1fs7PaUee0B+yB+698Xw30MYsRlas+
+FZeoIusBtBGQ97gZ9Du5mTTHnBdIR3jw+4aB9RUnE1+MbbP+3Q4=
+-----END RSA PRIVATE KEY-----"
 
 ---
 spring.profiles: LOCAL

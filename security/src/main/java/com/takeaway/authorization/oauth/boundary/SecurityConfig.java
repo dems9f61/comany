@@ -1,17 +1,18 @@
 package com.takeaway.authorization.oauth.boundary;
 
 import com.takeaway.authorization.oauth.control.EntitySecurityHolder;
+import com.takeaway.authorization.oauth.control.SecurityInfoTokenEnhancer;
 import com.takeaway.authorization.oauth.control.SpringSecuritySecurityProvider;
+import com.takeaway.authorization.oauth.entity.CustomJwtTokenStore;
+import com.takeaway.authorization.oauth.entity.CustomUserDetailsEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,9 +24,7 @@ import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
-
-import javax.sql.DataSource;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 16:54
@@ -34,7 +33,6 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
   // =========================== Class Variables ===========================
@@ -43,6 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
   private final ClientDetailsService clientDetailsService;
 
   private final UserDetailsService userDetailsService;
+
+  @Value("${oauth.resourceserver.verifierKey}")
+   private String verifierKey;
+
+   @Value("${oauth.authorizationserver.signingKey}")
+   private String signingKey;
 
   @Autowired
   public SecurityConfig(ClientDetailsService clientDetailsService, UserDetailsService userDetailsService)
@@ -109,12 +113,43 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     auth.userDetailsService(userDetailsService);
   }
 
-  @Primary
-  @Profile("!INTEGRATION")
+  //  @Primary
+  //  @Profile("!INTEGRATION")
+  //  @Bean
+  //  public JdbcTokenStore tokenStore(DataSource dataSource)
+  //  {
+  //    return new JdbcTokenStore(dataSource);
+  //  }
+
   @Bean
-  public JdbcTokenStore tokenStore(DataSource dataSource)
+//  @Profile("!INTEGRATION")
+  public TokenStore tokenStore()
   {
-    return new JdbcTokenStore(dataSource);
+    return new CustomJwtTokenStore(accessTokenConverter());
+  }
+
+  @Bean
+  //  @Profile("!INTEGRATION")
+  public JwtAccessTokenConverter accessTokenConverter()
+  {
+    JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+    converter.setSigningKey(signingKey);
+    converter.setVerifierKey(verifierKey);
+    return converter;
+  }
+
+
+  @Bean
+  //  @Profile("!INTEGRATION")
+  public CustomUserDetailsEnhancer customUserDetailsEnhancer () {
+      return new CustomUserDetailsEnhancer();
+  }
+
+  @Bean
+  //  @Profile("!INTEGRATION") 
+  public SecurityInfoTokenEnhancer tokenEnhancer(CustomUserDetailsEnhancer customUserDetailsEnhancer)
+  {
+    return new SecurityInfoTokenEnhancer(customUserDetailsEnhancer);
   }
 
   // ===========================  private  Methods  ========================

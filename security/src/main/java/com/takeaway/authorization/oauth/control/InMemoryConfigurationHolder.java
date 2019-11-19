@@ -16,8 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.client.InMemoryClientDetailsService;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import java.util.LinkedList;
@@ -132,13 +130,6 @@ public class InMemoryConfigurationHolder
               .orElseThrow(() -> new UsernameNotFoundException(username));
       }
     };
-  }
-
-  @Profile("INTEGRATION")
-  @Bean
-  public TokenStore inMemoryTokenStore()
-  {
-    return new InMemoryTokenStore();
   }
 
   // =================  protected/package local  Methods ===================
