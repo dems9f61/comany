@@ -62,7 +62,7 @@ gradle-app.setting
 /buildSrc/out
 /buildSrc/subprojects/*/*.iml
 /buildSrc/subprojects/*/out
-/out
+/*/out
 /subprojects/*/*.iml
 /subprojects/*/out
 /.teamcity/*.iml
