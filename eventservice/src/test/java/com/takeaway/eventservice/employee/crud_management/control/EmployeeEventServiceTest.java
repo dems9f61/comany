@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Date;
 import java.util.UUID;
 
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
@@ -57,10 +58,10 @@ class EmployeeEventServiceTest extends UnitTestSuite
                     assertThat(persistentEmployeeEvent.getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
                     assertThat(persistentEmployeeEvent.getFirstName()).isEqualTo(employee.getFullName().getFirstName());
                     assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName().getLastName());
-                    assertThat(persistentEmployeeEvent.getUuid()).isEqualTo(employee.getId());
+                    assertThat(persistentEmployeeEvent.getEmployeeId()).isEqualTo(employee.getId());
                     assertThat(persistentEmployeeEvent.getEmailAddress()).isEqualTo(employee.getEmailAddress());
                     assertThat(persistentEmployeeEvent.getEventType()).isEqualTo(employeeEvent.getEventType());
-                    assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(employee.getBirthday());
+                    assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(Date.from(employee.getBirthday().toInstant()));
                   }));
     }
   }
@@ -74,20 +75,20 @@ class EmployeeEventServiceTest extends UnitTestSuite
     void givenEmployeeVents_whenFindByUuid_thenInvokeRelyOnRepository()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID employeeId = UUID.randomUUID();
       Pageable mockPageable = mock(Pageable.class);
       int expectedPageNumber = RandomUtils.nextInt(0, 23);
       doReturn(expectedPageNumber).when(mockPageable).getPageNumber();
 
       Page<PersistentEmployeeEvent> mockPageableResult = (Page<PersistentEmployeeEvent>) mock(Page.class);
-      doReturn(mockPageableResult).when(employeeEventRepository).findByUuid(eq(uuid), any(Pageable.class));
+      doReturn(mockPageableResult).when(employeeEventRepository).findByEmployeeId(eq(employeeId), any(Pageable.class));
 
       // Act
-      employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, mockPageable);
+      employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, mockPageable);
 
       // Assert
       verify(employeeEventRepository)
-          .findByUuid(eq(uuid),
+          .findByEmployeeId(eq(employeeId),
               assertArg(pageable -> {
                     assertThat(pageable.getPageNumber()).isEqualTo(expectedPageNumber);
                     assertThat(pageable.getPageSize()).isEqualTo(EmployeeEventService.MAX_PAGE_SIZE);

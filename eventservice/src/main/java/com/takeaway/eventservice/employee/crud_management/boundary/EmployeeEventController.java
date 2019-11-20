@@ -3,7 +3,6 @@ package com.takeaway.eventservice.employee.crud_management.boundary;
 import com.takeaway.eventservice.employee.crud_management.control.EmployeeEventService;
 import com.takeaway.eventservice.employee.crud_management.entity.ApiResponsePage;
 import com.takeaway.eventservice.employee.crud_management.entity.EmployeeEventResponse;
-import com.takeaway.eventservice.errorhandling.entity.ResourceNotFoundException;
 import com.takeaway.eventservice.rest.boundary.ApiVersions;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -44,21 +44,13 @@ public class EmployeeEventController
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================
 
-  @ApiOperation(value = "Retrieves all events related to an employee in ascending order")
-  @GetMapping("/{id}")
+  @ApiOperation(value = "Retrieves all events related to an employee id in ascending order")
+  @GetMapping("/{employeeId}")
   @ResponseStatus(HttpStatus.OK)
-  ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("id") UUID id, Pageable pageable)
+  ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("employeeId") UUID employeeId, @NotNull @PageableDefault(50) Pageable pageable)
   {
-    Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByUuidOrderByCreatedAtAsc(id, pageable)
-                                                                             .map(EmployeeEventResponse::new);
-    if (employeeEventResponses.isEmpty())
-    {
-      throw new ResourceNotFoundException(String.format("Could not find employee events by the specified id [%s]", id));
-    }
-    else
-    {
-      return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
-    }
+    Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, pageable).map(EmployeeEventResponse::new);
+    return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
   }
 
   // =================  protected/package local  Methods ===================

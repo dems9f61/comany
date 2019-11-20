@@ -22,7 +22,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Document(collection = "employeeenvents")
+@Document(collection = "employee-events")
 public class PersistentEmployeeEvent
 {
   // =========================== Class Variables ===========================
@@ -33,7 +33,7 @@ public class PersistentEmployeeEvent
 
   private EventType eventType;
 
-  private UUID uuid;
+  private UUID employeeId;
 
   private String emailAddress;
 

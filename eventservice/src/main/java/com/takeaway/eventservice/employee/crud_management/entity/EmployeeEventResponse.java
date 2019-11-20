@@ -12,8 +12,11 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.UUID;
+
+import static java.time.ZoneId.systemDefault;
+import static java.time.ZonedDateTime.ofInstant;
 
 /**
  * User: StMinko Date: 20.03.2019 Time: 20:15
@@ -34,7 +37,7 @@ public class EmployeeEventResponse
   private EventType eventType;
 
   @ApiModelProperty(example = "6a225af8-e783-4e60-a5d0-418830330eab")
-  private UUID uuid;
+  private UUID employeeId;
 
   @ApiModelProperty(example = "stephan.minko@nba.com")
   private String emailAddress;
@@ -49,7 +52,7 @@ public class EmployeeEventResponse
   @JsonDeserialize(using = JsonDateDeSerializer.class)
   @JsonSerialize(using = JsonDateSerializer.class)
   @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
-  private Date birthday;
+  private ZonedDateTime birthday;
 
   @ApiModelProperty(example = "Java Development")
   private String departmentName;
@@ -61,11 +64,11 @@ public class EmployeeEventResponse
   public EmployeeEventResponse(PersistentEmployeeEvent employeeEvent)
   {
     this.eventType = employeeEvent.getEventType();
-    this.uuid = employeeEvent.getUuid();
+    this.employeeId = employeeEvent.getEmployeeId();
     this.emailAddress = employeeEvent.getEmailAddress();
     this.firstName = employeeEvent.getFirstName();
     this.lastName = employeeEvent.getLastName();
-    this.birthday = employeeEvent.getBirthday();
+    this.birthday = ofInstant(employeeEvent.getBirthday().toInstant(), systemDefault());
     this.departmentName = employeeEvent.getDepartmentName();
     this.createdAt = employeeEvent.getCreatedAt();
   }

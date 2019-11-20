@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -46,7 +47,7 @@ public class EmployeeEventService
     PersistentEmployeeEvent persistentEmployeeEvent = new PersistentEmployeeEvent();
     Employee employee = employeeEvent.getEmployee();
     persistentEmployeeEvent.setEventType(employeeEvent.getEventType());
-    persistentEmployeeEvent.setBirthday(employee.getBirthday());
+    persistentEmployeeEvent.setBirthday(Date.from(employee.getBirthday().toInstant()));
     persistentEmployeeEvent.setEmailAddress(employee.getEmailAddress());
     Employee.FullName fullName = employee.getFullName();
     if (fullName != null)
@@ -54,15 +55,15 @@ public class EmployeeEventService
       persistentEmployeeEvent.setFirstName(fullName.getFirstName());
       persistentEmployeeEvent.setLastName(fullName.getLastName());
     }
-    persistentEmployeeEvent.setUuid(employee.getId());
+    persistentEmployeeEvent.setEmployeeId(employee.getId());
     persistentEmployeeEvent.setDepartmentName(employee.getDepartment().getDepartmentName());
     employeeEventRepository.save(persistentEmployeeEvent);
   }
 
-  public Page<PersistentEmployeeEvent> findByUuidOrderByCreatedAtAsc(@NonNull UUID uuid, Pageable pageable)
+  public Page<PersistentEmployeeEvent> findByEmployeeIdOrderByCreatedAtAsc(@NonNull UUID employeeId, @NonNull Pageable pageable)
   {
     PageRequest createdAtPageRequest = PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE, CREATED_AT_WITH_ASC_SORT);
-    return employeeEventRepository.findByUuid(uuid, createdAtPageRequest);
+    return employeeEventRepository.findByEmployeeId(employeeId, createdAtPageRequest);
   }
 
   // =================  protected/package local  Methods ===================

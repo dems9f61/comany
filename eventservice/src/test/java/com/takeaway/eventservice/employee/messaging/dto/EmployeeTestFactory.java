@@ -7,7 +7,8 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class EmployeeTestFactory
 
     private Employee.FullName fullName;
 
-    private Date birthday;
+    private ZonedDateTime birthday;
 
     private Department department;
 
@@ -62,7 +63,7 @@ public class EmployeeTestFactory
       this.uuid = UUID.randomUUID();
       this.emailAddress = generateRandomEmail();
       this.department = departmentTestFactory.createDefault();
-      this.birthday = java.sql.Date.valueOf(generateRandomDate());
+      this.birthday = createRandomBirthday();
       this.fullName = new Employee.FullName();
       this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
       this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
@@ -80,7 +81,7 @@ public class EmployeeTestFactory
       return this;
     }
 
-    public Builder birthday(Date birthday)
+    public Builder birthday(ZonedDateTime birthday)
     {
       this.birthday = birthday;
       return this;
@@ -97,9 +98,20 @@ public class EmployeeTestFactory
       return createRandomDate(1900, 2000);
     }
 
-    private int createRandomIntBetween(int start, int end)
+    private String generateRandomEmail()
     {
-      return start + (int) Math.round(Math.random() * (end - start));
+      return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
+    }
+
+    public Employee create()
+    {
+      Employee employee = new Employee();
+      return employee.setBirthday(birthday).setId(uuid).setDepartment(department).setEmailAddress(emailAddress).setFullName(fullName);
+    }
+
+    private ZonedDateTime createRandomBirthday()
+    {
+      return createRandomDate(1900, 2010).atStartOfDay(ZoneOffset.UTC);
     }
 
     private LocalDate createRandomDate(int startYear, int endYear)
@@ -110,15 +122,9 @@ public class EmployeeTestFactory
       return LocalDate.of(year, month, day);
     }
 
-    private String generateRandomEmail()
+    private int createRandomIntBetween(int start, int end)
     {
-      return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
-    }
-
-    public Employee create()
-    {
-      Employee employee = new Employee();
-      return employee.setBirthday(birthday).setId(uuid).setDepartment(department).setEmailAddress(emailAddress).setFullName(fullName);
+      return start + (int) Math.round(Math.random() * (end - start));
     }
   }
 }

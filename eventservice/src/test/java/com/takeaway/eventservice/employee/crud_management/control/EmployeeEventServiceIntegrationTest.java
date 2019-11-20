@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.sql.Date;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -31,18 +32,18 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
   @Autowired
   private EmployeeEventService employeeEventService;
 
-    @DisplayName("All published employee events to a specific id appear in ascending order")
+  @DisplayName("All published employee events to a specific id appear in ascending order")
   @Test
   void givenPublishedEmployeeEventsForAnyEmployee_whenFindAll_thenReturnDescendingOrderedList()
   {
     // Arrange
-    UUID uuid = UUID.randomUUID();
+    UUID employeeId = UUID.randomUUID();
     int eventCount = RandomUtils.nextInt(50, 60);
-    receiveRandomMessageFor(uuid, eventCount);
+    receiveRandomMessageFor(employeeId, eventCount);
     PageRequest pageRequest = PageRequest.of(0, 10, null);
 
     // Act
-    Page<PersistentEmployeeEvent> allDescOrderedByCreatedAt = employeeEventService.findByUuidOrderByCreatedAtAsc(uuid, pageRequest);
+    Page<PersistentEmployeeEvent> allDescOrderedByCreatedAt = employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, pageRequest);
 
     // Assert
     Instant previous = null;
@@ -57,18 +58,18 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
     }
   }
 
-    @DisplayName("Finding published employee events returns an empty collection For unknown id ")
+  @DisplayName("Finding published employee events returns an empty collection For unknown id ")
   @Test
   void givenUnknownUuid_whenFindAll_thenReturnEmptyList()
   {
     // Arrange
     int eventCount = RandomUtils.nextInt(10, 20);
     receiveRandomMessageFor(eventCount);
-    UUID unknownUuid = UUID.randomUUID();
+    UUID unknownEmployeeId = UUID.randomUUID();
     PageRequest pageRequest = PageRequest.of(0, eventCount, null);
 
     // Act
-    Page<PersistentEmployeeEvent> events = employeeEventService.findByUuidOrderByCreatedAtAsc(unknownUuid, pageRequest);
+    Page<PersistentEmployeeEvent> events = employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(unknownEmployeeId, pageRequest);
 
     // Assert
     assertThat(events).isNotNull().isEmpty();
@@ -92,11 +93,11 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
     PersistentEmployeeEvent persistentEmployeeEvent = allEvents.get(0);
     assertThat(persistentEmployeeEvent.getId()).isNotBlank();
     assertThat(persistentEmployeeEvent.getCreatedAt()).isNotNull().isBefore(Instant.now());
-    assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(employee.getBirthday());
+    assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(Date.from(employee.getBirthday().toInstant()));
     assertThat(persistentEmployeeEvent.getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
     assertThat(persistentEmployeeEvent.getEmailAddress()).isEqualTo(employee.getEmailAddress());
     assertThat(persistentEmployeeEvent.getEventType()).isNotNull().isEqualTo(employeeEvent.getEventType());
-    assertThat(persistentEmployeeEvent.getUuid()).isEqualTo(employee.getId());
+    assertThat(persistentEmployeeEvent.getEmployeeId()).isEqualTo(employee.getId());
     assertThat(persistentEmployeeEvent.getFirstName()).isEqualTo(employee.getFullName().getFirstName());
     assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName().getLastName());
   }

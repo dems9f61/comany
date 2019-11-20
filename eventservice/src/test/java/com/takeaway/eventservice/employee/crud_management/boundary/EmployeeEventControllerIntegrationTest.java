@@ -12,7 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -41,37 +42,23 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
   class WhenAccess
   {
     @Test
-    @DisplayName("GET: 'http://.../events/{id}' returns OK and an list ")
-    void givenEmployeeVents_whenFindByUuid_thenStatus200AndContent() throws Exception
+    @DisplayName("GET: 'http://.../events/{employeeId}' returns OK and an list ")
+    void givenEmployeeVents_whenFindByEmployeeId_thenStatus200AndContent() throws Exception
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID employeeId = UUID.randomUUID();
       int expectedEventCount = RandomUtils.nextInt(10, 20);
-      receiveRandomMessageFor(uuid, expectedEventCount);
+      receiveRandomMessageFor(employeeId, expectedEventCount);
 
-        String uri = String.format("%s/{id}", EmployeeEventController.BASE_URI);
+      String uri = String.format("%s/{employeeId}", EmployeeEventController.BASE_URI);
 
       // Act / Assert
       mockMvc
-          .perform(get(uri, uuid))
+          .perform(get(uri, employeeId))
           .andExpect(status().isOk())
           .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
           .andExpect(jsonPath("$", notNullValue()))
           .andExpect(jsonPath("$.content", hasSize(expectedEventCount)));
-    }
-
-    @Test
-    @DisplayName("GET: 'http://.../events/{id}' returns 404 for unknown uuid ")
-    void givenWrongUuid_whenFindByUuid_thenStatus404() throws Exception
-    {
-      // Arrange
-      UUID wrongUuid = UUID.randomUUID();
-        String uri = String.format("%s/{id}", EmployeeEventController.BASE_URI);
-
-      // Act / Assert
-      mockMvc.perform(get(uri, wrongUuid))
-             .andExpect(status().isNotFound())
-             .andExpect(jsonPath("$", containsString(String.format("Could not find employee events by the specified id [%s]", wrongUuid))));
     }
   }
 

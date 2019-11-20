@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 /**
@@ -27,7 +27,7 @@ public class Employee implements Serializable
 
   private FullName fullName = new FullName();
 
-  private Date birthday;
+  private ZonedDateTime birthday;
 
   private Department department;
 

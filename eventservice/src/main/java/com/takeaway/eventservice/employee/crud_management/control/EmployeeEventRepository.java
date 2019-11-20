@@ -19,7 +19,7 @@ interface EmployeeEventRepository extends MongoRepository<PersistentEmployeeEven
   // =========================== Class Variables ===========================
   // ==============================  Methods  ==============================
 
-  Page<PersistentEmployeeEvent> findByUuid(UUID uuid, Pageable pageable);
+  Page<PersistentEmployeeEvent> findByEmployeeId(UUID employeeId, Pageable pageable);
 
   // ============================  Inner Classes  ==========================
   // ============================  End of class  ===========================
