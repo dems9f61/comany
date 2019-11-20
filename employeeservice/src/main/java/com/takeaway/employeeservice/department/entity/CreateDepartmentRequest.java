@@ -43,13 +43,6 @@ public class CreateDepartmentRequest
   }
 
   // ===========================  public  Methods  =========================
-
-  public Department toDepartment(){
-    Department department = new Department();
-    department.setDepartmentName(getDepartmentName());
-    return department;
-  }
-
   // =================  protected/package local  Methods ===================
   // ===========================  private  Methods  ========================
   // ============================  Inner Classes  ==========================
