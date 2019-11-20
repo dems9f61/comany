@@ -36,14 +36,14 @@ public class UpdateEmployeeRequestTestFactory extends AbstractTestFactory<Update
 
     private String lastName;
 
-      private ZonedDateTime birthday;
+    private ZonedDateTime birthday;
 
     private String departmentName;
 
     Builder()
     {
       this.emailAddress = generateRandomEmail();
-        this.birthday = createRandomBirthday();
+      this.birthday = createRandomBirthday();
       this.firstName = RandomStringUtils.randomAlphabetic(20);
       this.lastName = RandomStringUtils.randomAlphabetic(10);
       this.departmentName = RandomStringUtils.randomAlphabetic(10);
@@ -67,7 +67,7 @@ public class UpdateEmployeeRequestTestFactory extends AbstractTestFactory<Update
       return this;
     }
 
-      public UpdateEmployeeRequestTestFactory.Builder birthday(ZonedDateTime birthday)
+    public UpdateEmployeeRequestTestFactory.Builder birthday(ZonedDateTime birthday)
     {
       this.birthday = birthday;
       return this;

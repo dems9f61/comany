@@ -27,7 +27,7 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
 
     private String lastName;
 
-      private ZonedDateTime birthday;
+    private ZonedDateTime birthday;
 
     private String departmentName;
 
@@ -36,7 +36,7 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
       this.emailAddress = generateRandomEmail();
       this.firstName = RandomStringUtils.randomAlphabetic(10);
       this.lastName = RandomStringUtils.randomAlphabetic(13);
-        this.birthday = createRandomBirthday();
+      this.birthday = createRandomBirthday();
       this.departmentName = RandomStringUtils.randomAlphabetic(24);
     }
 
@@ -58,7 +58,7 @@ public class EmployeeParameterTestFactory extends AbstractTestFactory<EmployeePa
       return this;
     }
 
-      public Builder birthday(ZonedDateTime birthday)
+    public Builder birthday(ZonedDateTime birthday)
     {
       this.birthday = birthday;
       return this;

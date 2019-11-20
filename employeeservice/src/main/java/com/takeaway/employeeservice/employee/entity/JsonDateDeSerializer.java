@@ -25,9 +25,9 @@ public class JsonDateDeSerializer extends JsonDeserializer<ZonedDateTime>
   @Override
   public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException
   {
-      DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(UsableDateFormat.DEFAULT.getDateFormat());
-      LocalDate localDate = LocalDate.parse(jsonParser.getValueAsString(), dateFormatter);
-      return localDate.atStartOfDay(ZoneOffset.UTC);
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(UsableDateFormat.DEFAULT.getDateFormat());
+    LocalDate localDate = LocalDate.parse(jsonParser.getValueAsString(), dateFormatter);
+    return localDate.atStartOfDay(ZoneOffset.UTC);
   }
 
   // =================  protected/package local  Methods ===================

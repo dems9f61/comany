@@ -41,16 +41,11 @@ public class Department extends AbstractEntity<Long>
   @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "department_sequence")
   private Long id;
 
-  @Column(name = "DEPARTMENT_NAME",
-          length = 50,
-          nullable = false,
-          unique = true)
+  @Column(name = "DEPARTMENT_NAME",length = 50,nullable = false,unique = true)
   private String departmentName;
 
   @JsonBackReference
-  @OneToMany(mappedBy = "department",
-          cascade = CascadeType.ALL,
-          orphanRemoval = true)
+  @OneToMany(mappedBy = "department",cascade = CascadeType.ALL,orphanRemoval = true)
   private Set<Employee> employees = new HashSet<>();
 
   // ============================  Constructors  ===========================

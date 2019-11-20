@@ -394,9 +394,7 @@ class EmployeeRestTest extends RestTestSuite
 
   private void createAndPersistDepartment(String departmentName)
   {
-    CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                        .departmentName(departmentName)
-                                                                                        .create();
+    CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName(departmentName).create();
     HttpHeaders headers = defaultHttpHeaders();
     testRestTemplate.exchange(DepartmentController.BASE_URI, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
   }

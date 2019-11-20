@@ -30,18 +30,18 @@ public class CreateEmployeeRequest implements EmployeeRequest
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
 
-    @NullOrNotBlank
-    @ApiModelProperty(example = "stephan.minko@nba.com")
-    @Email
-    private final String emailAddress;
+  @NullOrNotBlank
+  @ApiModelProperty(example = "stephan.minko@nba.com")
+  @Email
+  private final String emailAddress;
 
-    @NullOrNotBlank
-    @ApiModelProperty(example = "Stéphan")
-    private final String firstName;
+  @NullOrNotBlank
+  @ApiModelProperty(example = "Stéphan")
+  private final String firstName;
 
-    @NullOrNotBlank
-    @ApiModelProperty(example = "Minko")
-    private final String lastName;
+  @NullOrNotBlank
+  @ApiModelProperty(example = "Minko")
+  private final String lastName;
 
   @ApiModelProperty(example = "1980-06-13")
   @JsonDeserialize(using = JsonDateDeSerializer.class)
@@ -57,10 +57,10 @@ public class CreateEmployeeRequest implements EmployeeRequest
 
   @JsonCreator
   public CreateEmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
-                               @JsonProperty(value = "firstName") String firstName,
-                               @JsonProperty(value = "lastName") String lastName,
-                               @JsonProperty(value = "birthday") ZonedDateTime birthday,
-                               @JsonProperty(value = "departmentName") String departmentName)
+        @JsonProperty(value = "firstName") String firstName,
+        @JsonProperty(value = "lastName") String lastName,
+        @JsonProperty(value = "birthday") ZonedDateTime birthday,
+        @JsonProperty(value = "departmentName") String departmentName)
   {
     this.emailAddress = emailAddress;
     this.firstName = firstName;

@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * <p>
  */
-@Target({ FIELD })
+@Target({FIELD})
 @Retention(RUNTIME)
 @Constraint(validatedBy = NullOrNotBlank.NullOrNotBlankValidator.class)
 @Documented
@@ -34,8 +34,7 @@ public @interface NullOrNotBlank
   class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBlank, String>
   {
     @Override
-    public void initialize(NullOrNotBlank constraintAnnotation)
-    {
+    public void initialize(NullOrNotBlank constraintAnnotation) {
       // Nothing to do here
     }
 

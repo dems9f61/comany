@@ -86,8 +86,9 @@ public class EmployeeController
   EmployeeResponse findEmployee(@NotNull @PathVariable("id") UUID uuid)
   {
     LOGGER.info("Retrieving an employee by the uuid [{}]", uuid);
-      return employeeService.findById(uuid)
-                            .map(employee -> {
+    return employeeService
+        .findById(uuid)
+        .map(employee -> {
               Employee.FullName fullName = employee.getFullName();
               return new EmployeeResponse(employee.getId(),
                   employee.getEmailAddress(),
@@ -96,7 +97,7 @@ public class EmployeeController
                   employee.getBirthday(),
                   employee.getDepartment().getDepartmentName());
             })
-                            .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified uuid!"));
+        .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified uuid!"));
   }
 
   @ApiOperation(value = "Updates an employee with the request values")
@@ -125,7 +126,7 @@ public class EmployeeController
     LOGGER.info("Deleting an employee by the uuid [{}]", uuid);
     try
     {
-        employeeService.deleteById(uuid);
+      employeeService.deleteById(uuid);
     }
     catch (EmployeeServiceException caught)
     {

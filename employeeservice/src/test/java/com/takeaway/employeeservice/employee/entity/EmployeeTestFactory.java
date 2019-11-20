@@ -25,7 +25,7 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
 
     private Employee.FullName fullName;
 
-      private ZonedDateTime birthday;
+    private ZonedDateTime birthday;
 
     private Department department;
 
@@ -35,7 +35,7 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
     {
       this.emailAddress = generateRandomEmail();
       this.department = departmentTestFactory.createDefault();
-        this.birthday = createRandomBirthday();
+      this.birthday = createRandomBirthday();
       this.fullName = new Employee.FullName();
       this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
       this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
@@ -53,7 +53,7 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
       return this;
     }
 
-      public Builder birthday(ZonedDateTime birthday)
+    public Builder birthday(ZonedDateTime birthday)
     {
       this.birthday = birthday;
       return this;

@@ -35,9 +35,7 @@ class DepartmentRestTest extends RestTestSuite
     {
       // Arrange
       String departmentName = RandomStringUtils.randomAlphabetic(23);
-      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                          .departmentName(departmentName)
-                                                                                          .create();
+      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName(departmentName).create();
       HttpHeaders headers = defaultHttpHeaders();
       testRestTemplate.exchange(DepartmentController.BASE_URI, HttpMethod.POST, new HttpEntity<>(createDepartmentRequest, headers), DepartmentResponse.class);
 
@@ -55,9 +53,7 @@ class DepartmentRestTest extends RestTestSuite
     void givenBlankDepartmentName_whenCreateDepartment_thenStatus400()
     {
       // Arrange
-      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                          .departmentName("  ")
-                                                                                          .create();
+      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName("  ").create();
 
       HttpHeaders headers = defaultHttpHeaders();
 
@@ -75,9 +71,7 @@ class DepartmentRestTest extends RestTestSuite
     void givenNullDepartmentName_whenCreateDepartment_thenStatus400()
     {
       // Arrange
-      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                          .departmentName(null)
-                                                                                          .create();
+      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName(null).create();
 
       HttpHeaders headers = defaultHttpHeaders();
 

@@ -56,10 +56,10 @@ public class UpdateEmployeeRequest implements EmployeeRequest
 
   @JsonCreator
   public UpdateEmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
-                               @JsonProperty(value = "firstName") String firstName,
-                               @JsonProperty(value = "lastName") String lastName,
-                               @JsonProperty(value = "birthday") ZonedDateTime birthday,
-                               @JsonProperty(value = "departmentName") String departmentName)
+        @JsonProperty(value = "firstName") String firstName,
+        @JsonProperty(value = "lastName") String lastName,
+        @JsonProperty(value = "birthday") ZonedDateTime birthday,
+        @JsonProperty(value = "departmentName") String departmentName)
   {
     this.emailAddress = emailAddress;
     this.firstName = firstName;
