@@ -79,15 +79,15 @@ public class EmployeeController
     }
   }
 
-  @ApiOperation(value = "Retrieves an employee by a given uuid")
+  @ApiOperation(value = "Retrieves an employee by a given id")
   @GetMapping("/{id}")
-  @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "Could not find employee by the specified uuid!")})
+  @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "Could not find employee by the specified id!")})
   @ResponseStatus(HttpStatus.OK)
-  EmployeeResponse findEmployee(@NotNull @PathVariable("id") UUID uuid)
+  EmployeeResponse findEmployee(@NotNull @PathVariable("id") UUID id)
   {
-    LOGGER.info("Retrieving an employee by the uuid [{}]", uuid);
+    LOGGER.info("Retrieving an employee by the id [{}]", id);
     return employeeService
-        .findById(uuid)
+        .findById(id)
         .map(employee -> {
               Employee.FullName fullName = employee.getFullName();
               return new EmployeeResponse(employee.getId(),
@@ -97,19 +97,19 @@ public class EmployeeController
                   employee.getBirthday(),
                   employee.getDepartment().getDepartmentName());
             })
-        .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified uuid!"));
+        .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified id!"));
   }
 
   @ApiOperation(value = "Updates an employee with the request values")
   @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = ""), @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "")})
   @PatchMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  void updateEmployee(@NotNull @PathVariable("id") UUID uuid, @Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
+  void updateEmployee(@NotNull @PathVariable("id") UUID id, @Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
   {
-    LOGGER.info("Updating an employee by the uuid [{}] and request [{}]", uuid, updateEmployeeRequest);
+    LOGGER.info("Updating an employee by the id [{}] and request [{}]", id, updateEmployeeRequest);
     try
     {
-      employeeService.update(uuid, updateEmployeeRequest.toEmployerParameter());
+      employeeService.update(id, updateEmployeeRequest.toEmployerParameter());
     }
     catch (EmployeeServiceException caught)
     {
@@ -118,15 +118,15 @@ public class EmployeeController
   }
 
   @ApiOperation(value = "Deletes permanently an employee")
-  @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "Could not delete employee by the specified uuid!")})
+  @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "Could not delete employee by the specified id!")})
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  void deleteEmployee(@NotNull @PathVariable("id") UUID uuid)
+  void deleteEmployee(@NotNull @PathVariable("id") UUID id)
   {
-    LOGGER.info("Deleting an employee by the uuid [{}]", uuid);
+    LOGGER.info("Deleting an employee by the id [{}]", id);
     try
     {
-      employeeService.deleteById(uuid);
+      employeeService.deleteById(id);
     }
     catch (EmployeeServiceException caught)
     {
