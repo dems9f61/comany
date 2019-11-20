@@ -1,6 +1,6 @@
 package com.takeaway.authorization.rolepermission.control;
 
-import com.takeaway.authorization.errorhandling.entity.ServiceException;
+import com.takeaway.authorization.errorhandling.entity.BadRequestException;
 import com.takeaway.authorization.permission.control.PermissionService;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.role.control.RoleService;
@@ -13,8 +13,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
-
-import static com.takeaway.authorization.errorhandling.entity.ServiceException.Reason.SUB_RESOURCE_NOT_FOUND;
 
 /**
  * User: StMinko Date: 19.10.2019 Time: 16:49
@@ -39,16 +37,10 @@ public class RolePermissionService
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================
 
-  public Permission assign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
+  public Permission assign(@NotNull UUID roleId, @NotNull UUID permissionId)
   {
-    Role role = roleService
-            .findById(roleId)
-            .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                    String.format("Could not find a role by the specified id [%s]!", roleId)));
-    Permission permission = permissionService
-            .findById(permissionId)
-            .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                    String.format("Could not find a permission by the specified id [%s]!", permissionId)));
+    Role role = roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
+    Permission permission = permissionService.findByIdOrElseThrow(permissionId, BadRequestException.class);
     return rolePermissionRepository
         .findByRoleAndPermission(roleId, permissionId)
         .orElseGet(() -> {
@@ -60,14 +52,10 @@ public class RolePermissionService
         .getPermission();
   }
 
-  public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId) throws ServiceException
+  public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId)
   {
-      roleService.findById(roleId)
-                 .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                         String.format("Could not find a role by the specified id [%s]!", roleId)));
-    permissionService.findById(permissionId)
-                     .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                             String.format("Could not find a permission by the specified id [%s]!", permissionId)));
+    roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
+    permissionService.findByIdOrElseThrow(permissionId, BadRequestException.class);
     rolePermissionRepository.findByRoleAndPermission(roleId, permissionId).ifPresent(rolePermissionRepository::delete);
   }
 

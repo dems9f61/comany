@@ -1,6 +1,6 @@
 package com.takeaway.authorization.userrole.control;
 
-import com.takeaway.authorization.errorhandling.entity.ServiceException;
+import com.takeaway.authorization.errorhandling.entity.BadRequestException;
 import com.takeaway.authorization.role.control.RoleService;
 import com.takeaway.authorization.role.entity.Role;
 import com.takeaway.authorization.user.control.UserService;
@@ -13,8 +13,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
-
-import static com.takeaway.authorization.errorhandling.entity.ServiceException.Reason.SUB_RESOURCE_NOT_FOUND;
 
 /**
  * User: StMinko Date: 30.10.2019 Time: 11:45
@@ -39,15 +37,10 @@ public class UserRoleService
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 
-    public Role assign(@NotNull UUID userId, @NotNull UUID roleId) throws ServiceException
+    public Role assign(@NotNull UUID userId, @NotNull UUID roleId)
     {
-        User user = userService.findById(userId)
-                               .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                                       String.format("Could not find a user by the specified id [%s]!", userId)));
-
-        Role role = roleService.findById(roleId)
-                               .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                                       String.format("Could not find a role by the specified id [%s]!", roleId)));
+        User user = userService.findByIdOrElseThrow(userId, BadRequestException.class);
+        Role role = roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
 
         return repository.findByUserAndPermission(userId, roleId)
                          .orElseGet(() -> {
@@ -59,15 +52,10 @@ public class UserRoleService
                          .getRole();
     }
 
-    public void unassign(@NotNull UUID userId, @NotNull UUID roleId) throws ServiceException
+    public void unassign(@NotNull UUID userId, @NotNull UUID roleId)
     {
-        userService.findById(userId)
-                   .orElseThrow(() -> new ServiceException(SUB_RESOURCE_NOT_FOUND,
-                                                           String.format("Could not find a user by the specified id [%s]!", userId)));
-        roleService.findById(roleId)
-                   .orElseThrow(() -> new ServiceException(ServiceException.Reason.SUB_RESOURCE_NOT_FOUND,
-                                                           String.format("Could not find a role by the specified id [%s]!", roleId)));
-
+        userService.findByIdOrElseThrow(userId, BadRequestException.class);
+        roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
         repository.findByUserAndPermission(userId, roleId)
                   .ifPresent(repository::delete);
     }

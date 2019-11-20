@@ -134,7 +134,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                                            .contentType(APPLICATION_JSON_UTF8))
                .andExpect(status().isNotFound())
                .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", containsString(String.format("Could not find an entity by the specified id [%s]!", unknownId))));
+               .andExpect(jsonPath("$", containsString(String.format("Could not find [Role] for Id [%s]!", unknownId))));
     }
 
     @Test
@@ -699,7 +699,7 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                                               .contentType(APPLICATION_JSON_UTF8))
                .andExpect(status().isNotFound())
                .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", containsString(String.format("Could not find an entity by the specified id [%s]!", unknownId))));
+               .andExpect(jsonPath("$", containsString(String.format("Could not find [Role] for Id [%s]!", unknownId))));
     }
 
     @Test

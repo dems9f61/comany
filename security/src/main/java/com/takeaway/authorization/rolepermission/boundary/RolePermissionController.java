@@ -1,8 +1,6 @@
 package com.takeaway.authorization.rolepermission.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.takeaway.authorization.errorhandling.control.ServiceExceptionTranslator;
-import com.takeaway.authorization.errorhandling.entity.ServiceException;
 import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.role.boundary.RoleController;
@@ -30,7 +28,7 @@ import java.util.UUID;
 @RequestMapping(value = RolePermissionController.BASE_URI,
     produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
     consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
-public class RolePermissionController implements ServiceExceptionTranslator
+public class RolePermissionController
 {
   // =========================== Class Variables ===========================
 
@@ -44,36 +42,22 @@ public class RolePermissionController implements ServiceExceptionTranslator
   // ===========================  public  Methods  =========================
   // =================  protected/package local  Methods ===================
 
-    @PreAuthorize("hasRole('USER_ROLE_UPDATE') and #oauth2.hasScope('write')")
-    @PostMapping(value = "/{permissionId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    @JsonView(DataView.GET.class)
-    Permission assign(@NotNull @PathVariable UUID roleId, @NotNull @PathVariable UUID permissionId)
-    {
-        try
-        {
-            return rolePermissionService.assign(roleId, permissionId);
-        }
-        catch (ServiceException caught)
-        {
-            throw translateIntoApiException(caught);
-        }
-    }
+  @PreAuthorize("hasRole('USER_ROLE_UPDATE') and #oauth2.hasScope('write')")
+  @PostMapping(value = "/{permissionId}")
+  @ResponseStatus(HttpStatus.CREATED)
+  @JsonView(DataView.GET.class)
+  Permission assign(@NotNull @PathVariable UUID roleId, @NotNull @PathVariable UUID permissionId)
+  {
+    return rolePermissionService.assign(roleId, permissionId);
+  }
 
-    @PreAuthorize("hasRole('USER_ROLE_UPDATE') and #oauth2.hasScope('write')")
-    @DeleteMapping(value = "/{permissionId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void unassign(@NotNull @PathVariable UUID roleId, @NotNull @PathVariable UUID permissionId)
-    {
-        try
-        {
-            rolePermissionService.unassign(roleId, permissionId);
-        }
-        catch (ServiceException caught)
-        {
-            throw translateIntoApiException(caught);
-        }
-    }
+  @PreAuthorize("hasRole('USER_ROLE_UPDATE') and #oauth2.hasScope('write')")
+  @DeleteMapping(value = "/{permissionId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  void unassign(@NotNull @PathVariable UUID roleId, @NotNull @PathVariable UUID permissionId)
+  {
+    rolePermissionService.unassign(roleId, permissionId);
+  }
 
   // ===========================  private  Methods  ========================
   // ============================  Inner Classes  ==========================

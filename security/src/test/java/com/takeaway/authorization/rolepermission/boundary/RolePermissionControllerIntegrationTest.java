@@ -138,7 +138,7 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
                                                                          .contentType(APPLICATION_JSON_UTF8))
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", is(String.format("Could not find a permission by the specified id [%s]!", unknownPermissionId))));
+               .andExpect(jsonPath("$", is(String.format("Could not find [Permission] for Id [%s]!", unknownPermissionId))));
     }
 
     @Test
@@ -155,7 +155,7 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
                                                                          .contentType(APPLICATION_JSON_UTF8))
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", is(String.format("Could not find a role by the specified id [%s]!", unknownRoleId))));
+               .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
     }
   }
 
@@ -242,7 +242,7 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
                                                                            .contentType(APPLICATION_JSON_UTF8))
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", is(String.format("Could not find a permission by the specified id [%s]!", unknownPermissionId))));
+               .andExpect(jsonPath("$", is(String.format("Could not find [Permission] for Id [%s]!", unknownPermissionId))));
     }
 
     @Test
@@ -259,7 +259,7 @@ class RolePermissionControllerIntegrationTest extends IntegrationTestSuite
                                                                            .contentType(APPLICATION_JSON_UTF8))
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", is(String.format("Could not find a role by the specified id [%s]!", unknownRoleId))));
+               .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
     }
   }
 

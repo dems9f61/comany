@@ -1,8 +1,6 @@
 package com.takeaway.authorization.userrole.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.takeaway.authorization.errorhandling.control.ServiceExceptionTranslator;
-import com.takeaway.authorization.errorhandling.entity.ServiceException;
 import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.role.entity.Role;
 import com.takeaway.authorization.user.boundary.UserController;
@@ -28,9 +26,9 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = UserRoleController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
-public class UserRoleController implements ServiceExceptionTranslator
+    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
+public class UserRoleController
 {
   // =========================== Class Variables ===========================
 
@@ -50,14 +48,7 @@ public class UserRoleController implements ServiceExceptionTranslator
   @JsonView(DataView.GET.class)
   Role assign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
   {
-    try
-    {
-      return userRoleService.assign(userId, roleId);
-    }
-    catch (ServiceException caught)
-    {
-      throw translateIntoApiException(caught);
-    }
+    return userRoleService.assign(userId, roleId);
   }
 
   @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
@@ -65,14 +56,7 @@ public class UserRoleController implements ServiceExceptionTranslator
   @ResponseStatus(HttpStatus.NO_CONTENT)
   void unassign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
   {
-    try
-    {
-      userRoleService.unassign(userId, roleId);
-    }
-    catch (ServiceException caught)
-    {
-      throw translateIntoApiException(caught);
-    }
+    userRoleService.unassign(userId, roleId);
   }
 
   // ===========================  private  Methods  ========================

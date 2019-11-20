@@ -1,13 +1,11 @@
 package com.takeaway.authorization.errorhandling.entity;
 
-import org.springframework.http.HttpStatus;
-
 /**
  * User: StMinko Date: 18.03.2019 Time: 11:22
  *
  * <p>
  */
-public class BadRequestException extends ApiException
+public class BadRequestException extends RuntimeException
 {
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
@@ -15,17 +13,17 @@ public class BadRequestException extends ApiException
 
   public BadRequestException(Throwable cause)
   {
-    super(cause, HttpStatus.BAD_REQUEST);
+    super(cause);
   }
 
   public BadRequestException(String message)
   {
-    super(message, HttpStatus.BAD_REQUEST);
+    super(message);
   }
 
   public BadRequestException(String message, Throwable cause)
   {
-    super(message, HttpStatus.BAD_REQUEST, cause);
+    super(message, cause);
   }
 
   // ===========================  public  Methods  =========================

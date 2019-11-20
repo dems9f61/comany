@@ -1,7 +1,7 @@
 package com.takeaway.authorization.user.control;
 
 import com.takeaway.authorization.auditing.boundary.AbstractDefaultAuditedEntityService;
-import com.takeaway.authorization.errorhandling.entity.ServiceException;
+import com.takeaway.authorization.errorhandling.entity.BadRequestException;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,6 @@ import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 import java.util.UUID;
-
-import static com.takeaway.authorization.errorhandling.entity.ServiceException.Reason.INVALID_PARAMETER;
 
 /**
  * User: StMinko Date: 21.10.2019 Time: 10:49
@@ -70,21 +68,21 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
    * @throws RuntimeException on failure
    */
   @Override
-  protected User onBeforeCreate(User create) throws ServiceException
+  protected User onBeforeCreate(User create)
   {
     super.onBeforeCreate(create);
     String userName = create.getUserName();
       if (userName != null && findByUserName(userName).isPresent())
     {
-      throw new ServiceException(INVALID_PARAMETER, "The specified username exists already");
+      throw new BadRequestException("The specified username exists already");
     }
     if (create.getNewPassword() == null || create.getConfirmPassword() == null)
     {
-      throw new ServiceException(INVALID_PARAMETER, "Password creation requires a new password and a confirm password matching each other");
+      throw new BadRequestException("Password creation requires a new password and a confirm password matching each other");
     }
     if (!create.getNewPassword().equals(create.getConfirmPassword()))
     {
-      throw new ServiceException(INVALID_PARAMETER, "New Password and Confirm Password do not match");
+      throw new BadRequestException("New Password and Confirm Password do not match");
     }
     create.setPasswordHash(passwordEncoder.encode(create.getNewPassword()));
     return create;
@@ -98,27 +96,27 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
    * @throws RuntimeException on failure
    */
   @Override
-  protected User onBeforeUpdate(User existing, User update) throws ServiceException
+  protected User onBeforeUpdate(User existing, User update)
   {
     super.onBeforeUpdate(existing, update);
     String userName = update.getUserName();
       if (userName != null && findByUserName(userName).isPresent())
     {
-      throw new ServiceException(INVALID_PARAMETER, "The specified username exists already");
+      throw new BadRequestException("The specified username exists already");
     }
     if (update.getOldPassword() != null)
     {
       if (!passwordEncoder.encode(update.getOldPassword()).equals(existing.getPasswordHash()))
       {
-        throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
+        throw new BadRequestException("Password update - Bad Credentials");
       }
       if (update.getNewPassword() == null || update.getConfirmPassword() == null)
       {
-        throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
+        throw new BadRequestException("Password update - Bad Credentials");
       }
       if (!update.getNewPassword().equals(update.getConfirmPassword()))
       {
-        throw new ServiceException(INVALID_PARAMETER, "Password update - Bad Credentials");
+        throw new BadRequestException("Password update - Bad Credentials");
       }
       update.setPasswordHash(passwordEncoder.encode(update.getNewPassword()));
     }

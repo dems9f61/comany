@@ -2,9 +2,6 @@ package com.takeaway.authorization.rest.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.authorization.businessservice.boundary.EntityService;
-import com.takeaway.authorization.errorhandling.control.ServiceExceptionTranslator;
-import com.takeaway.authorization.errorhandling.entity.ResourceNotFoundException;
-import com.takeaway.authorization.errorhandling.entity.ServiceException;
 import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.json.boundary.ResponsePage;
 import com.takeaway.authorization.persistence.boundary.AbstractEntity;
@@ -29,7 +26,7 @@ import java.io.Serializable;
 @RequiredArgsConstructor
 @Slf4j
 public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, ENTITY extends AbstractEntity<ID>, ID extends Serializable>
-        implements DefaultEntityControllerCapable<ENTITY, ID>, ServiceExceptionTranslator
+    implements DefaultEntityControllerCapable<ENTITY, ID>
 {
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
@@ -51,7 +48,7 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
   public final ENTITY findById(@NotNull ID id)
   {
     LOGGER.info("Calling {}.findById( {} )", this.getClass().getSimpleName(), id);
-    return getService().findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find an entity by the specified id [%s]!", id)));
+    return getService().findById(id);
   }
 
   @Override
@@ -59,18 +56,11 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
   {
     LOGGER.info("{}.create ( {} )", this.getClass().getSimpleName(), create);
     create = onBeforeCreate(create);
-    try
-    {
-      ENTITY created = getService().create(create);
-      HttpHeaders headers = new HttpHeaders();
-      created = onAfterCreate(created, headers);
-      headers.add(HttpHeaders.LOCATION, ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(created.getId()).toUri().toASCIIString());
-      return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(created);
-    }
-    catch (ServiceException caught)
-    {
-      throw translateIntoApiException(caught);
-    }
+    ENTITY created = getService().create(create);
+    HttpHeaders headers = new HttpHeaders();
+    created = onAfterCreate(created, headers);
+    headers.add(HttpHeaders.LOCATION, ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(created.getId()).toUri().toASCIIString());
+    return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(created);
   }
 
   @Override
@@ -90,15 +80,8 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
   public final void delete(ID id)
   {
     LOGGER.info("{}.delete ( {} )", this.getClass().getSimpleName(), id);
-    try
-    {
-      getService().delete(onBeforeDelete(id));
-      onAfterDelete(id);
-    }
-    catch (ServiceException caught)
-    {
-      throw translateIntoApiException(caught);
-    }
+    getService().delete(onBeforeDelete(id));
+    onAfterDelete(id);
     onAfterDelete(id);
   }
 
@@ -131,16 +114,9 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
 
   private ENTITY update(ID id, ENTITY update, Class<? extends DataView> validationGroup)
   {
-    try
-    {
-      update = onBeforeUpdate(id, update);
-      ENTITY updated = getService().update(id, update, validationGroup);
-      return onAfterUpdate(id, updated);
-    }
-    catch (ServiceException e)
-    {
-      throw translateIntoApiException(e);
-    }
+    update = onBeforeUpdate(id, update);
+    ENTITY updated = getService().update(id, update, validationGroup);
+    return onAfterUpdate(id, updated);
   }
 
   /**

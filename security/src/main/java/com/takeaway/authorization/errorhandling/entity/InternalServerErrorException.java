@@ -1,13 +1,11 @@
 package com.takeaway.authorization.errorhandling.entity;
 
-import org.springframework.http.HttpStatus;
-
 /**
  * User: StMinko Date: 18.03.2019 Time: 17:19
  *
  * <p>
  */
-public class InternalServerErrorException extends ApiException
+public class InternalServerErrorException extends RuntimeException
 {
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
@@ -15,13 +13,13 @@ public class InternalServerErrorException extends ApiException
 
   public InternalServerErrorException(String message)
   {
-    super(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    super(message);
   }
 
-    public InternalServerErrorException(String message, Exception exception)
-    {
-        super(message, HttpStatus.INTERNAL_SERVER_ERROR, exception);
-    }
+  public InternalServerErrorException(String message, Exception exception)
+  {
+    super(message, exception);
+  }
 
   // ===========================  public  Methods  =========================
   // =================  protected/package local  Methods ===================

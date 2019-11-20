@@ -1,6 +1,7 @@
 package com.takeaway.authorization.errorhandling.boundary;
 
-import com.takeaway.authorization.errorhandling.entity.*;
+import com.takeaway.authorization.errorhandling.entity.BadRequestException;
+import com.takeaway.authorization.errorhandling.entity.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.NestedRuntimeException;
@@ -57,7 +58,7 @@ public class GlobalExceptionMapper
     {
       errorMsg += globalErrorMessage;
     }
-    return handleApiException(new BadRequestException(errorMsg));
+    return serializeExceptionToResponse(new BadRequestException(errorMsg), HttpStatus.BAD_REQUEST);
   }
 
   @Order(2)
@@ -84,14 +85,14 @@ public class GlobalExceptionMapper
   @ExceptionHandler(value = BadRequestException.class)
   ResponseEntity<String> handleBadRequestException(BadRequestException badRequestException)
   {
-    return handleApiException(badRequestException);
+    return serializeExceptionToResponse(badRequestException, HttpStatus.BAD_REQUEST);
   }
 
   @Order(5)
   @ExceptionHandler(value = ResourceNotFoundException.class)
   ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException)
   {
-    return handleApiException(resourceNotFoundException);
+    return serializeExceptionToResponse(resourceNotFoundException, HttpStatus.NOT_FOUND);
   }
 
   @Order(6)
@@ -100,7 +101,7 @@ public class GlobalExceptionMapper
   {
     String errorMsg = "Unsupported content type: " + mediaNotSupportedException.getContentType();
     errorMsg += "\nSupported content types: " + MediaType.toString(mediaNotSupportedException.getSupportedMediaTypes());
-    return handleApiException(new BadRequestException(errorMsg));
+    return serializeExceptionToResponse(new BadRequestException(errorMsg), HttpStatus.BAD_REQUEST);
   }
 
   @Order(7)
@@ -128,14 +129,15 @@ public class GlobalExceptionMapper
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<String> handleDAccessDeniedException(AccessDeniedException exception)
     {
-        return handleApiException(new NotAuthorizedException(exception.getMessage()));
+      return serializeExceptionToResponse(exception, HttpStatus.FORBIDDEN);
     }
 
   @Order(1999)
   @ExceptionHandler(value = {Exception.class})
   ResponseEntity<String> handleException(Exception exception)
   {
-      return handleApiException(new InternalServerErrorException(exception.getMessage(), exception));
+    LOGGER.error("Unhandled exception occurred", exception);
+    return serializeExceptionToResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   // ===========================  private  Methods  ========================
@@ -155,18 +157,17 @@ public class GlobalExceptionMapper
     return handleException(exception);
   }
 
-  private ResponseEntity<String> handleApiException(ApiException apiException)
+  private ResponseEntity<String> serializeExceptionToResponse(Exception exception, HttpStatus httpStatus)
   {
-    HttpStatus httpStatus = apiException.getHttpStatus();
-    if (httpStatus.is4xxClientError())
-    {
-        LOGGER.info("Client error occurred: [{}]", apiException.getLocalizedMessage());
-    }
-    else
-    {
-      LOGGER.error("Unhandled exception occurred: [{}]", apiException.getLocalizedMessage(), apiException);
-    }
-    return ResponseEntity.status(httpStatus).body(apiException.getMessage());
+      if (httpStatus.is4xxClientError())
+      {
+          LOGGER.info("Client Exception occurred. Error: {}", exception.getLocalizedMessage());
+      }
+      else
+      {
+          LOGGER.error("Unhandled Exception occurred. Error: {}", exception.getLocalizedMessage(), exception);
+      }
+      return ResponseEntity.status(httpStatus.value()).body(exception.getMessage());
   }
 
   // ============================  Inner Classes  ==========================
