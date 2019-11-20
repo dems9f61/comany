@@ -3,13 +3,11 @@ package com.takeaway.employeeservice.employee.boundary;
 import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceCapable;
-import com.takeaway.employeeservice.employee.control.EmployeeServiceException;
 import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.Employee;
 import com.takeaway.employeeservice.employee.entity.EmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
 import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
-import com.takeaway.employeeservice.errorhandling.entity.InternalServerErrorException;
 import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,12 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static com.takeaway.employeeservice.employee.control.EmployeeServiceException.Reason.INVALID_REQUEST;
-import static com.takeaway.employeeservice.employee.control.EmployeeServiceException.Reason.NOT_FOUND;
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -49,35 +44,22 @@ class EmployeeControllerTest extends UnitTestSuite
   {
     @Test
     @DisplayName("Deleting an employee with a wrong id throws ResourceNotFoundException")
-    void givenUnknownId_whenDelete_thenThrowNotFoundException() throws Exception
+    void givenUnknownId_whenDelete_thenThrowNotFoundException()
     {
       // Arrange
       UUID id = UUID.randomUUID();
-      doThrow(new EmployeeServiceException(NOT_FOUND, "bla bla")).when(employeeService).deleteById(any());
+      doThrow(ResourceNotFoundException.class).when(employeeService).deleteById(any());
 
       // Act / Assert
       assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.deleteEmployee(id));
     }
 
     @Test
-    @DisplayName("Deleting an employee throws InternalServerErrorException if something unexpected occurs")
-    void givenUnknownException_whenDelete_thenThrowInternalException() throws Exception
-    {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      doThrow(new EmployeeServiceException(new Exception())).when(employeeService).deleteById(any());
-
-      // Act / Assert
-      assertThatExceptionOfType(InternalServerErrorException.class).isThrownBy(() -> employeeController.deleteEmployee(id));
-    }
-
-    @Test
     @DisplayName("Deleting an employee with a valid id succeeds")
-    void givenValidId_whenDelete_thenSucceed() throws Exception
+    void givenValidId_whenDelete_thenSucceed()
     {
       // Arrange
       UUID id = UUID.randomUUID();
-
       doNothing().when(employeeService).deleteById(any());
 
       // Act
@@ -94,11 +76,11 @@ class EmployeeControllerTest extends UnitTestSuite
   {
     @Test
     @DisplayName("Finding an employee with a wrong id throws ResourceNotFoundException")
-    void givenUnknownId_whenFindByUuid_thenThrowNotFoundException()
+    void givenUnknownId_whenFindById_thenThrowNotFoundException()
     {
       // Arrange
       UUID id = UUID.randomUUID();
-      doReturn(Optional.empty()).when(employeeService).findById(id);
+      doThrow(ResourceNotFoundException.class).when(employeeService).findById(id);
 
       // Act / Assert
       assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(id));
@@ -106,12 +88,12 @@ class EmployeeControllerTest extends UnitTestSuite
 
     @Test
     @DisplayName("Finding an employee with a valid id succeeds")
-    void givenValidId_whenFindByUuid_thenSucceed()
+    void givenValidId_whenFindById_thenSucceed()
     {
       // Arrange
       UUID id = UUID.randomUUID();
       Employee employee = employeeTestFactory.createDefault();
-      doReturn(Optional.of(employee)).when(employeeService).findById(any());
+      doReturn(employee).when(employeeService).findById(any());
 
       // Act
       employeeController.findEmployee(id);
@@ -142,43 +124,31 @@ class EmployeeControllerTest extends UnitTestSuite
     }
 
     @Test
-    @DisplayName("Updating an employee throws ResourceNotFoundException if the underlying service throws a Not Found")
+    @DisplayName("Updating an employee throws ResourceNotFoundException if the underlying service throws ResourceNotFoundException")
     void givenUnderlyingNotFound_whenCreate_thenThrowNotFoundException() throws Exception
     {
       // Arrange
       UUID id = UUID.randomUUID();
       UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
-      doThrow(new EmployeeServiceException(NOT_FOUND, "")).when(employeeService).update(id, employeeRequest.toEmployerParameter());
+      doThrow(ResourceNotFoundException.class).when(employeeService).update(id, employeeRequest.toEmployerParameter());
 
       // Act / Assert
       assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.updateEmployee(id, employeeRequest));
     }
 
     @Test
-    @DisplayName("Updating an employee throws BadRequestException if the underlying service throws a Invalid Request")
-    void givenUnderlyingInvalidRequest_whenCreate_thenThrowBadRequestException() throws Exception
+    @DisplayName("Updating an employee throws BadRequestException if the underlying service throws a BadRequestException")
+    void givenUnderlyingBadRequest_whenCreate_thenThrowBadRequestException()
     {
       // Arrange
       UUID uuid = UUID.randomUUID();
       UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
-      doThrow(new EmployeeServiceException(INVALID_REQUEST, "")).when(employeeService).update(uuid, employeeRequest.toEmployerParameter());
+      doThrow(BadRequestException.class).when(employeeService).update(uuid, employeeRequest.toEmployerParameter());
 
       // Act / Assert
       assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
     }
 
-    @Test
-    @DisplayName("Updating an employee throws InternalServerErrorException if the underlying service throws a unknown reason")
-    void givenUnderlyingInvalidGenericException_whenUpdate_thenThrowInternalServerErrorException() throws Exception
-    {
-      // Arrange
-      UUID uuid = UUID.randomUUID();
-      UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
-      doThrow(new EmployeeServiceException(new Exception())).when(employeeService).update(uuid, employeeRequest.toEmployerParameter());
-
-      // Act / Assert
-      assertThatExceptionOfType(InternalServerErrorException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
-    }
   }
 
   @Nested
@@ -202,39 +172,15 @@ class EmployeeControllerTest extends UnitTestSuite
     }
 
     @Test
-    @DisplayName("Creating an employee throws ResourceNotFoundException if the underlying service throws a Not Found")
-    void givenUnderlyingNotFound_whenCreate_thenThrowNotFoundException() throws Exception
+    @DisplayName("Creating an employee throws BadRequestException if the underlying service throws a BadRequestException")
+    void givenUnderlyingBadRequestException_whenCreate_thenThrowBadRequestException() throws Exception
     {
       // Arrange
       CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
-      doThrow(new EmployeeServiceException(NOT_FOUND, "")).when(employeeService).create(employeeRequest.toEmployerParameter());
-
-      // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.createEmployee(employeeRequest));
-    }
-
-    @Test
-    @DisplayName("Creating an employee throws BadRequestException if the underlying service throws a Invalid Request")
-    void givenUnderlyingInvalidRequest_whenCreate_thenThrowBadRequestException() throws Exception
-    {
-      // Arrange
-      CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
-      doThrow(new EmployeeServiceException(INVALID_REQUEST, "")).when(employeeService).create(employeeRequest.toEmployerParameter());
+      doThrow(BadRequestException.class).when(employeeService).create(employeeRequest.toEmployerParameter());
 
       // Act / Assert
       assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.createEmployee(employeeRequest));
-    }
-
-    @Test
-    @DisplayName("Creating an employee throws InternalServerErrorException if the underlying service throws a unknown reason")
-    void givenUnderlyingInvalidGenericException_whenCreate_thenThrowInternalServerErrorException() throws Exception
-    {
-      // Arrange
-      CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
-      doThrow(new EmployeeServiceException(new Exception())).when(employeeService).create(employeeRequest.toEmployerParameter());
-
-      // Act / Assert
-      assertThatExceptionOfType(InternalServerErrorException.class).isThrownBy(() -> employeeController.createEmployee(employeeRequest));
     }
   }
 

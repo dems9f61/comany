@@ -1,11 +1,15 @@
 package com.takeaway.employeeservice.employee.control;
 
 import com.takeaway.employeeservice.employee.entity.Employee;
+import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
 import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import javax.validation.constraints.NotNull;
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 /**
@@ -17,16 +21,49 @@ import java.util.UUID;
 public interface EmployeeServiceCapable
 {
   // =========================== Class Variables ===========================
+
+  Logger LOGGER = LoggerFactory.getLogger(EmployeeServiceCapable.class);
+
   // ==============================  Methods  ==============================
 
-  Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException;
+  EmployeeRepository getRepository();
 
-  void update(@NonNull UUID id, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException;
+  Employee create(@NonNull EmployeeParameter creationParameter);
+
+  void update(@NonNull UUID id, @NonNull EmployeeParameter updateParameter);
 
   @Transactional(propagation = Propagation.SUPPORTS)
-  Optional<Employee> findById(@NonNull UUID id);
+  default Employee findById(@NonNull UUID id)
+  {
+    LOGGER.info("Finding employee by name [{}", id);
+    return findByIdOrElseThrow(id, ResourceNotFoundException.class);
+  }
 
-  void deleteById(@NonNull UUID id) throws EmployeeServiceException;
+  @Transactional(propagation = Propagation.SUPPORTS)
+  default Employee findByIdOrElseThrow(@NotNull UUID id, @NotNull Class<? extends RuntimeException> exceptionClass)
+  {
+    LOGGER.info("Finding employee by name [{}] or throw [{}]", id, exceptionClass.getSimpleName());
+    return getRepository()
+        .findById(id)
+        .orElseThrow(() -> {
+              String message = String.format("Could not find employee for Id [%s]!", id);
+              try
+              {
+                return exceptionClass.getConstructor(String.class).newInstance(message);
+              }
+              catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e)
+              {
+                LOGGER.warn("Could not instantiate Exception of Type [{}] on {}.findByIdOrElseThrow ( {} ,  {}.class )",
+                    exceptionClass.getName(),
+                    getClass().getSimpleName(),
+                    id,
+                    exceptionClass.getSimpleName());
+                return new RuntimeException(message);
+              }
+            });
+  }
+
+  void deleteById(@NonNull UUID id);
 
   // ============================  Inner Classes  ==========================
   // ============================  End of class  ===========================

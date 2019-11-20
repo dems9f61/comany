@@ -2,6 +2,8 @@ package com.takeaway.employeeservice.department.control;
 
 import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.department.entity.Department;
+import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
+import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.assertj.core.util.Lists;
@@ -12,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
-import java.util.Optional;
 
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +48,7 @@ class DepartmentServiceTest extends UnitTestSuite
       DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(" ").create();
 
       // Act / Assert
-      assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
     }
 
     @Test
@@ -57,7 +58,7 @@ class DepartmentServiceTest extends UnitTestSuite
       // Arrange
       DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(null).create();
       // Act / Assert
-      assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
     }
 
     @Test
@@ -69,7 +70,7 @@ class DepartmentServiceTest extends UnitTestSuite
       doReturn(Lists.newArrayList(departmentTestFactory.createDefault())).when(departmentRepository).findByDepartmentName(creationParameter.getDepartmentName());
 
       // Act / Assert
-      assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
     }
 
     @Test
@@ -112,18 +113,14 @@ class DepartmentServiceTest extends UnitTestSuite
 
     @Test
     @DisplayName("Finding a department with a wrong department name returns nothing")
-    void givenNotExistingDepartmentName_whenFindByDepartmentName_thenReturnNothing() throws Exception
+    void givenNotExistingDepartmentName_whenFindByDepartmentName_thenThrowException() throws Exception
     {
       // Arrange
       String departmentName = RandomStringUtils.randomAlphabetic(24);
       doReturn(Lists.emptyList()).when(departmentRepository).findByDepartmentName(departmentName);
 
-      // Act
-      Optional<Department> found = departmentService.findByDepartmentName(departmentName);
-
-      // Assert
-      verify(departmentRepository).findByDepartmentName(departmentName);
-      assertThat(found).isEmpty();
+      // Act / Assert
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> departmentService.findByDepartmentName(departmentName));
     }
 
     @Test
@@ -136,11 +133,11 @@ class DepartmentServiceTest extends UnitTestSuite
       doReturn(Lists.newArrayList(department)).when(departmentRepository).findByDepartmentName(departmentName);
 
       // Act
-      Optional<Department> found = departmentService.findByDepartmentName(departmentName);
+      Department found = departmentService.findByDepartmentName(departmentName);
 
       // Assert
       verify(departmentRepository).findByDepartmentName(departmentName);
-      assertThat(found).isPresent().hasValue(department);
+      assertThat(found).isEqualTo(department);
     }
   }
 }

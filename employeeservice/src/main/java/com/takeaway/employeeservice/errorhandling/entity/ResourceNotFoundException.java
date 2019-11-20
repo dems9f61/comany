@@ -1,13 +1,11 @@
 package com.takeaway.employeeservice.errorhandling.entity;
 
-import org.springframework.http.HttpStatus;
-
 /**
  * User: StMinko Date: 18.03.2019 Time: 11:26
  *
  * <p>
  */
-public class ResourceNotFoundException extends ApiException
+public class ResourceNotFoundException extends RuntimeException
 {
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
@@ -15,7 +13,7 @@ public class ResourceNotFoundException extends ApiException
 
   public ResourceNotFoundException(String message)
   {
-    super(message, HttpStatus.NOT_FOUND);
+    super(message);
   }
 
   // ===========================  public  Methods  =========================

@@ -97,7 +97,7 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Test
-    @DisplayName("POST: 'http://.../employees' returns NOT FOUND if the specified department name doesn't exist ")
+    @DisplayName("POST: 'http://.../employees' returns BAD REQUEST if the specified department name doesn't exist ")
     void givenUnknownDepartment_whenCreateEmployee_thenStatus404()
     {
       CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
@@ -110,7 +110,7 @@ class EmployeeRestTest extends RestTestSuite
               String.class);
 
       // Assert
-      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -246,7 +246,7 @@ class EmployeeRestTest extends RestTestSuite
     }
 
     @Test
-    @DisplayName("PATCH: 'http://.../employees/{id}' returns NOT FOUND if the specified department doesn't exist ")
+    @DisplayName("PATCH: 'http://.../employees/{id}' returns BAD REQUEST if the specified department doesn't exist ")
     void givenUnknownDepartment_whenUpdateEmployee_thenStatus404()
     {
       // Arrange
@@ -267,7 +267,7 @@ class EmployeeRestTest extends RestTestSuite
               Void.class);
 
       // Assert
-      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test

@@ -3,9 +3,10 @@ package com.takeaway.employeeservice.employee.control;
 import com.google.common.collect.Lists;
 import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
-import com.takeaway.employeeservice.department.control.DepartmentServiceException;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.employee.entity.Employee;
+import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
+import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,14 +50,14 @@ class EmployeeServiceTest extends UnitTestSuite
   {
     @Test
     @DisplayName("Deleting an employee with a wrong uuid fails")
-    void givenUnknownUuid_whenDelete_thenReturnNothing()
+    void givenUnknownUuid_whenDelete_thenThrowException()
     {
       // Arrange
       UUID uuid = UUID.randomUUID();
       doReturn(Optional.empty()).when(employeeRepository).findById(any());
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.deleteById(uuid));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.deleteById(uuid));
     }
 
     @Test
@@ -85,7 +86,7 @@ class EmployeeServiceTest extends UnitTestSuite
   {
     @Test
     @DisplayName("Updating an employee with a valid parameters succeeds")
-    void giveValidParameters_whenUpdate_thenSucceed() throws Exception
+    void giveValidParameters_whenUpdate_thenSucceed()
     {
       // Arrange
       UUID uuid = UUID.randomUUID();
@@ -94,7 +95,7 @@ class EmployeeServiceTest extends UnitTestSuite
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
       Department department = departmentTestFactory.createDefault();
 
-      doReturn(Optional.of(department)).when(departmentService).findByDepartmentName(employeeParameter.getDepartmentName());
+      doReturn(department).when(departmentService).findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
       doReturn(employee).when(employeeRepository).save(any());
 
       // Act
@@ -116,12 +117,12 @@ class EmployeeServiceTest extends UnitTestSuite
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(uuid, employeeParameter));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.update(uuid, employeeParameter));
     }
 
     @Test
     @DisplayName("Updating an employee with a unknown department fails")
-    void givenUnknownDepartment_whenUpdate_thenThrowException() throws Exception
+    void givenUnknownDepartment_whenUpdate_thenThrowException()
     {
       // Arrange
       UUID uuid = UUID.randomUUID();
@@ -129,10 +130,10 @@ class EmployeeServiceTest extends UnitTestSuite
       doReturn(Optional.of(employee)).when(employeeRepository).findById(uuid);
 
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-      doThrow(DepartmentServiceException.class).when(departmentService).findByDepartmentName(employeeParameter.getDepartmentName());
+      doThrow(BadRequestException.class).when(departmentService).findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(uuid, employeeParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.update(uuid, employeeParameter));
     }
   }
 
@@ -142,12 +143,12 @@ class EmployeeServiceTest extends UnitTestSuite
   {
     @Test
     @DisplayName("Updating an employee with a valid parameters succeeds")
-    void giveValidParameters_whenCreate_thenSucceed() throws Exception
+    void giveValidParameters_whenCreate_thenSucceed()
     {
       // Arrange
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
       Department department = departmentTestFactory.createDefault();
-      doReturn(Optional.of(department)).when(departmentService).findByDepartmentName(employeeParameter.getDepartmentName());
+      doReturn(department).when(departmentService).findByDepartmentNameOrElseThrow(any(), any());
 
       doReturn(Collections.emptyList()).when(employeeRepository).findByEmailAddress(employeeParameter.getEmailAddress());
       Employee employee = employeeTestFactory.createDefault();
@@ -171,19 +172,19 @@ class EmployeeServiceTest extends UnitTestSuite
 
     @Test
     @DisplayName("Creating an employee with a unknown department fails")
-    void givenUnknownDepartment_whenCreate_thenThrowException() throws Exception
+    void givenUnknownDepartment_whenCreate_thenThrowBadRequestException()
     {
       // Arrange
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-      doThrow(DepartmentServiceException.class).when(departmentService).findByDepartmentName(employeeParameter.getDepartmentName());
+      doThrow(BadRequestException.class).when(departmentService).findByDepartmentNameOrElseThrow(any(), any());
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
     }
 
     @Test
     @DisplayName("Creating an employee with an already used mail")
-    void givenAlreadyUsedEmail_whenCreate_thenThrowException()
+    void givenAlreadyUsedEmail_whenCreate_thenThrowBadRequestException()
     {
       // Arrange
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
@@ -191,7 +192,7 @@ class EmployeeServiceTest extends UnitTestSuite
       doReturn(Lists.newArrayList(employee)).when(employeeRepository).findByEmailAddress(employeeParameter.getEmailAddress());
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
     }
   }
 

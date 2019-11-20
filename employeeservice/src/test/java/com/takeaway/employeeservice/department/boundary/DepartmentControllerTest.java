@@ -2,7 +2,6 @@ package com.takeaway.employeeservice.department.boundary;
 
 import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
-import com.takeaway.employeeservice.department.control.DepartmentServiceException;
 import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
@@ -38,19 +37,19 @@ class DepartmentControllerTest extends UnitTestSuite
   {
     @Test
     @DisplayName("Creating a department throws BadRequestException when departmentService throws Exception")
-    void givenUnderlyingException_whenCreate_thenThrowBadRequestException() throws Exception
+    void givenUnderlyingException_whenCreate_thenThrowBadRequestException()
     {
       // Arrange
       CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
-      doThrow(DepartmentServiceException.class).when(departmentService).create(createDepartmentRequest.toDepartmentParameter());
+      doThrow(BadRequestException.class).when(departmentService).create(createDepartmentRequest.toDepartmentParameter());
 
       // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentController.createDepartment(createDepartmentRequest));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentController.create(createDepartmentRequest));
     }
 
     @Test
     @DisplayName("Creating a department succeeds when request is valid")
-    void giveValidRequest_whenCreate_thenSucceed() throws Exception
+    void giveValidRequest_whenCreate_thenSucceed()
     {
       // Arrange
       CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
@@ -58,7 +57,7 @@ class DepartmentControllerTest extends UnitTestSuite
       doReturn(department).when(departmentService).create(createDepartmentRequest.toDepartmentParameter());
 
       // Act
-      DepartmentResponse departmentResponse = departmentController.createDepartment(createDepartmentRequest);
+      DepartmentResponse departmentResponse = departmentController.create(createDepartmentRequest);
 
       // Assert
       assertThat(departmentResponse).isNotNull();

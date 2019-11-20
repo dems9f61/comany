@@ -2,6 +2,8 @@ package com.takeaway.employeeservice.department.control;
 
 import com.takeaway.employeeservice.IntegrationTestSuite;
 import com.takeaway.employeeservice.department.entity.Department;
+import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
+import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -35,7 +36,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
   {
     @Test
     @DisplayName("Creating a department with a valid parameter succeeds")
-    void givenValidRequestParams_whenCreate_thenStatusSucceed() throws Exception
+    void givenValidRequestParams_whenCreate_thenStatusSucceed()
     {
       // Arrange
       DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
@@ -51,7 +52,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
 
     @Test
     @DisplayName("Creating a departments with a already existing name fails")
-    void givenAlreadyExistingDepartmentName_whenCreate_thenThrowException() throws Exception
+    void givenAlreadyExistingDepartmentName_whenCreate_thenThrowException()
     {
       // Arrange
       String departmentName = RandomStringUtils.randomAlphabetic(23);
@@ -60,7 +61,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
 
       DepartmentParameter creationParameter_2 = departmentParameterTestFactory.builder().departmentName(departmentName).create();
       // Act / Assert
-      assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter_2));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter_2));
     }
 
     @Test
@@ -70,7 +71,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
       // Arrange
       DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(" ").create();
       // Act / Assert
-      assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
     }
 
     @Test
@@ -80,7 +81,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
       // Arrange
       DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(null).create();
       // Act / Assert
-      assertThatExceptionOfType(DepartmentServiceException.class).isThrownBy(() -> departmentService.create(creationParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
     }
   }
 
@@ -90,7 +91,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
   {
     @Test
     @DisplayName("Finding all departments returns all existing departments")
-    void givenDepartments_whenFindAll_thenReturnAll() throws Exception
+    void givenDepartments_whenFindAll_thenReturnAll()
     {
       // Arrange
       departmentRepository.deleteAll();
@@ -109,7 +110,7 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
 
     @Test
     @DisplayName("Finding a department with a correct department name returns the related department")
-    void givenDepartments_whenFindByDepartmentName_thenReturnDepartment() throws Exception
+    void givenDepartments_whenFindByDepartmentName_thenReturnDepartment()
     {
       // Arrange
       List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
@@ -122,18 +123,16 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
       Department department = departmentService.create(creationParameter);
 
       // Act
-      Optional<Department> found = departmentService.findByDepartmentName(creationParameter.getDepartmentName());
+      Department foundDepartment = departmentService.findByDepartmentName(creationParameter.getDepartmentName());
 
       // Assert
-      assertThat(found).isPresent();
-      Department foundDepartment = found.get();
       assertThat(foundDepartment.getId()).isEqualTo(department.getId());
       assertThat(foundDepartment.getDepartmentName()).isEqualTo(department.getDepartmentName());
     }
 
     @Test
     @DisplayName("Finding a department with a wrong department name returns nothing")
-    void givenNotExistingDepartmentName_whenFindByDepartmentName_thenReturnNothing() throws Exception
+    void givenNotExistingDepartmentName_whenFindByDepartmentName_thenReturnNothing()
     {
       // Arrange
       List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
@@ -141,13 +140,10 @@ class DepartmentServiceIntegrationTest extends IntegrationTestSuite
       {
         departmentService.create(creationParameter);
       }
-      String wrongDepartmentName = "-23";
+      String wrongDepartmentName = "unknownName";
 
-      // Act
-      Optional<Department> found = departmentService.findByDepartmentName(wrongDepartmentName);
-
-      // Assert
-      assertThat(found).isEmpty();
+      // Act / Assert
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> departmentService.findByDepartmentName(wrongDepartmentName));
     }
   }
 }

@@ -6,6 +6,8 @@ import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.employee.entity.Employee;
 import com.takeaway.employeeservice.employee.entity.UsableDateFormat;
+import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
+import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
@@ -19,12 +21,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
 import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -47,7 +49,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
   {
     @Test
     @DisplayName("Creating an employee with valid parameters succeeds")
-    void givenValidRequestParams_whenCreate_thenSucceed() throws Exception
+    void givenValidRequestParams_whenCreate_thenSucceed()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -73,17 +75,17 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
 
     @Test
     @DisplayName("Creating an employee with a wrong department name fails")
-    void givenWrongDepartmentName_whenCreate_thenThrowException()
+    void givenWrongDepartmentName_whenCreate_thenThrowBadRequestException()
     {
       // Arrange
       EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(RandomStringUtils.randomAlphabetic(4)).create();
       // Act/ Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
     }
 
     @Test
     @DisplayName("Creating two employees with the same email fails")
-    void givenEmailAddressToUseForTwoEmployees_whenCreate_thenThrowException() throws Exception
+    void givenEmailAddressToUseForTwoEmployees_whenCreate_thenThrowBadRequestException()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -98,7 +100,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
               .create();
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.create(secondEmployeeParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(secondEmployeeParameter));
     }
   }
 
@@ -108,7 +110,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
   {
     @Test
     @DisplayName("Finding an employee with a wrong uuid fails")
-    void givenUnknownUuid_whenFind_thenReturnNothing() throws Exception
+    void givenUnknownUuid_whenFind_thenThrowResourceNotFoundException()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -121,16 +123,15 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       {
         employeeService.create(employeeParameter);
       }
+      UUID unknownId = UUID.randomUUID();
 
-      // Act
-      Optional<Employee> foundEmployee = employeeService.findById(UUID.randomUUID());
-      // Assert
-      assertThat(foundEmployee).isEmpty();
+      // Act / Assert
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.findById(unknownId));
     }
 
     @Test
     @DisplayName("Finding an employee with a correct employee uuid returns the related employee")
-    void givenEmployee_whenFind_thenReturnEmployee() throws Exception
+    void givenEmployee_whenFind_thenReturnEmployee()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -139,21 +140,13 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       Employee employee = employeeService.create(employeeParameter);
 
       // Act
-      Optional<Employee> foundEmployeeOpt = employeeService.findById(employee.getId());
+      Employee foundEmployee = employeeService.findById(employee.getId());
 
       // Assert
-      if (!foundEmployeeOpt.isPresent())
-      {
-        fail("Fail to retrieve the  employee");
-      }
-      else
-      {
-        Employee foundEmployee = foundEmployeeOpt.get();
-        assertThat(foundEmployee.getId()).isEqualTo(employee.getId());
-        assertThat(foundEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-        assertThat(foundEmployee.getFullName()).isEqualTo(employee.getFullName());
-        assertThat(foundEmployee.getDepartment().getId()).isEqualTo(employee.getDepartment().getId());
-      }
+      assertThat(foundEmployee.getId()).isEqualTo(employee.getId());
+      assertThat(foundEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+      assertThat(foundEmployee.getFullName()).isEqualTo(employee.getFullName());
+      assertThat(foundEmployee.getDepartment().getId()).isEqualTo(employee.getDepartment().getId());
     }
   }
 
@@ -163,7 +156,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
   {
     @Test
     @DisplayName("Deleting an employee with a wrong uuid fails")
-    void givenUnknownUuid_whenFind_thenReturnNothing() throws Exception
+    void givenUnknownUuid_whenFind_thenThrowResourceNotFoundException()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -178,12 +171,12 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       }
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.deleteById(UUID.randomUUID()));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.deleteById(UUID.randomUUID()));
     }
 
     @Test
     @DisplayName("Deleting an employee with a correct employee uuid succeeds")
-    void givenEmployee_whenDelete_thenSucceed() throws Exception
+    void givenEmployee_whenDelete_thenSucceed() 
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -196,7 +189,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       employeeService.deleteById(uuid);
 
       // Assert
-      assertThat(employeeService.findById(uuid)).isEmpty();
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.findById(uuid));
       verify(employeeEventPublisher).employeeDeleted(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(uuid)));
     }
   }
@@ -207,7 +200,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
   {
     @Test
     @DisplayName("Updating all employee fields with valid parameters succeeds")
-    void givenValidRequestParams_whenUpdate_thenSucceed() throws Exception
+    void givenValidRequestParams_whenUpdate_thenSucceed()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -223,26 +216,18 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       employeeService.update(employee.getId(), updateParameters);
 
       // Assert
-      Optional<Employee> updated = employeeService.findById(employee.getId());
-      if (!updated.isPresent())
-      {
-        fail("Fail to retrieve the updated employee");
-      }
-      else
-      {
-        Employee updatedEmployee = updated.get();
-        assertThat(updatedEmployee.getEmailAddress()).isEqualTo(updateParameters.getEmailAddress());
-        assertThat(updatedEmployee.getFullName().getFirstName()).isEqualTo(updateParameters.getFirstName());
-        assertThat(updatedEmployee.getFullName().getLastName()).isEqualTo(updateParameters.getLastName());
-        assertThat(updatedEmployee.getBirthday()).isEqualTo(updateParameters.getBirthday());
-        assertThat(updatedEmployee.getDepartment().getDepartmentName()).isEqualTo(updateParameters.getDepartmentName());
-        verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updatedEmployee.getId())));
-      }
+      Employee updated = employeeService.findById(employee.getId());
+      assertThat(updated.getEmailAddress()).isEqualTo(updateParameters.getEmailAddress());
+      assertThat(updated.getFullName().getFirstName()).isEqualTo(updateParameters.getFirstName());
+      assertThat(updated.getFullName().getLastName()).isEqualTo(updateParameters.getLastName());
+      assertThat(updated.getBirthday()).isEqualTo(updateParameters.getBirthday());
+      assertThat(updated.getDepartment().getDepartmentName()).isEqualTo(updateParameters.getDepartmentName());
+      verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updated.getId())));
     }
 
     @Test
     @DisplayName("Updating an employee birthday succeeds without affecting other values")
-    void givenValidBirthday_whenUpdate_thenUpdateOnlyBirthDay() throws Exception
+    void givenValidBirthday_whenUpdate_thenUpdateOnlyBirthDay()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -266,26 +251,18 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       employeeService.update(employee.getId(), updateParameters);
 
       // Assert
-      Optional<Employee> updated = employeeService.findById(employee.getId());
-      if (!updated.isPresent())
-      {
-        fail("Fail to retrieve the updated employee");
-      }
-      else
-      {
-        Employee updatedEmployee = updated.get();
-        assertThat(updatedEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-        assertThat(updatedEmployee.getFullName().getFirstName()).isEqualTo(employee.getFullName().getFirstName());
-        assertThat(updatedEmployee.getFullName().getLastName()).isEqualTo(employee.getFullName().getLastName());
-        assertThat(updatedEmployee.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
-        assertThat(updatedEmployee.getBirthday()).isEqualTo(newBirthDay);
-        verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updatedEmployee.getId())));
-      }
+      Employee updated = employeeService.findById(employee.getId());
+      assertThat(updated.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+      assertThat(updated.getFullName().getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+      assertThat(updated.getFullName().getLastName()).isEqualTo(employee.getFullName().getLastName());
+      assertThat(updated.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
+      assertThat(updated.getBirthday()).isEqualTo(newBirthDay);
+      verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updated.getId())));
     }
 
     @Test
     @DisplayName("Updating an employee full name succeeds without affecting other values")
-    void givenValidFullName_whenUpdate_thenUpdateOnlyFullName() throws Exception
+    void givenValidFullName_whenUpdate_thenUpdateOnlyFullName()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -309,26 +286,18 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       employeeService.update(employee.getId(), updateParameters);
 
       // Assert
-      Optional<Employee> updated = employeeService.findById(employee.getId());
-      if (!updated.isPresent())
-      {
-        fail("Fail to retrieve the updated employee");
-      }
-      else
-      {
-        Employee updatedEmployee = updated.get();
-        assertThat(updatedEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-        assertThat(updatedEmployee.getFullName().getFirstName()).isEqualTo(expectedFirstName);
-        assertThat(updatedEmployee.getFullName().getLastName()).isEqualTo(expectedLastName);
-        assertThat(updatedEmployee.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
-        assertThat(updatedEmployee.getBirthday()).isEqualTo(employee.getBirthday());
-        verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updatedEmployee.getId())));
-      }
+      Employee updated = employeeService.findById(employee.getId());
+      assertThat(updated.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+      assertThat(updated.getFullName().getFirstName()).isEqualTo(expectedFirstName);
+      assertThat(updated.getFullName().getLastName()).isEqualTo(expectedLastName);
+      assertThat(updated.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
+      assertThat(updated.getBirthday()).isEqualTo(employee.getBirthday());
+      verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updated.getId())));
     }
 
     @Test
     @DisplayName("Updating an employee email succeeds without affecting other values")
-    void givenValidEmail_whenUpdate_thenUpdateOnlyEmail() throws Exception
+    void givenValidEmail_whenUpdate_thenUpdateOnlyEmail()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
@@ -351,47 +320,39 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
       employeeService.update(employee.getId(), updateParameters);
 
       // Assert
-      Optional<Employee> updated = employeeService.findById(employee.getId());
-      if (!updated.isPresent())
-      {
-        fail("Fail to retrieve the updated employee");
-      }
-      else
-      {
-        Employee updatedEmployee = updated.get();
-        assertThat(updatedEmployee.getEmailAddress()).isEqualTo(expectedEmail);
-        assertThat(updatedEmployee.getFullName().getFirstName()).isEqualTo(employee.getFullName().getFirstName());
-        assertThat(updatedEmployee.getFullName().getLastName()).isEqualTo(employee.getFullName().getLastName());
-        assertThat(updatedEmployee.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
-        assertThat(updatedEmployee.getBirthday()).isEqualTo(employee.getBirthday());
-        verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updatedEmployee.getId())));
-      }
+      Employee updated = employeeService.findById(employee.getId());
+      assertThat(updated.getEmailAddress()).isEqualTo(expectedEmail);
+      assertThat(updated.getFullName().getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+      assertThat(updated.getFullName().getLastName()).isEqualTo(employee.getFullName().getLastName());
+      assertThat(updated.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
+      assertThat(updated.getBirthday()).isEqualTo(employee.getBirthday());
+      verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updated.getId())));
     }
 
     @Test
     @DisplayName("Updating an employee with wrong uuid fails")
-    void givenUnknownUuid_whenUpdate_thenThrowException()
+    void givenUnknownUuid_whenUpdate_thenThrowResourceNotFoundException()
     {
       // Arrange
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(UUID.randomUUID(), employeeParameter));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.update(UUID.randomUUID(), employeeParameter));
     }
 
     @Test
     @DisplayName("Updating an employee with unknown department fails")
-    void givenUnknownDepartment_whenUpdate_thenThrowException() throws Exception
+    void givenUnknownDepartment_whenUpdate_thenThrowBadRequestException()
     {
       // Arrange
       DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
       departmentService.create(departmentParameter);
       EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
       Employee employee = employeeService.create(employeeParameter);
-      EmployeeParameter updateParameters = employeeParameterTestFactory.createDefault();
+      EmployeeParameter update = employeeParameterTestFactory.createDefault();
 
       // Act / Assert
-      assertThatExceptionOfType(EmployeeServiceException.class).isThrownBy(() -> employeeService.update(employee.getId(), updateParameters));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.update(employee.getId(), update));
     }
   }
 }

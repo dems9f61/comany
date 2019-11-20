@@ -1,9 +1,10 @@
 package com.takeaway.employeeservice.employee.control;
 
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
-import com.takeaway.employeeservice.department.control.DepartmentServiceException;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.employee.entity.Employee;
+import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.ZonedDateTime;
-import java.util.*;
-
-import static com.takeaway.employeeservice.employee.control.EmployeeServiceException.Reason.INVALID_REQUEST;
-import static com.takeaway.employeeservice.employee.control.EmployeeServiceException.Reason.NOT_FOUND;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * User: StMinko Date: 19.03.2019 Time: 09:52
@@ -34,7 +35,8 @@ class EmployeeService implements EmployeeServiceCapable
   // =========================== Class Variables ===========================
   // =============================  Variables  =============================
 
-  private final EmployeeRepository employeeRepository;
+  @Getter
+  private final EmployeeRepository repository;
 
   private final DepartmentServiceCapable departmentService;
 
@@ -43,111 +45,68 @@ class EmployeeService implements EmployeeServiceCapable
   // ============================  Constructors  ===========================
   // ===========================  public  Methods  =========================
 
-  public Employee create(@NonNull EmployeeParameter creationParameter) throws EmployeeServiceException
+  public Employee create(@NonNull EmployeeParameter creationParameter)
   {
     LOGGER.info("Creating an employee with [{}] ", creationParameter);
     String emailAddress = StringUtils.trim(creationParameter.getEmailAddress());
     validateUniquenessOfEmail(emailAddress);
 
     String departmentName = StringUtils.trim(creationParameter.getDepartmentName());
-    Optional<Department> departmentOptional = findDepartmentByName(departmentName);
-    return departmentOptional
-        .map(department -> {
-              Employee newEmployee = new Employee();
-              newEmployee.setEmailAddress(emailAddress);
+    Department department = departmentService.findByDepartmentNameOrElseThrow(departmentName, BadRequestException.class);
+    Employee newEmployee = new Employee();
+    newEmployee.setEmailAddress(emailAddress);
 
-              String firstName = StringUtils.trim(creationParameter.getFirstName());
-              String lastName = StringUtils.trim(creationParameter.getLastName());
-              if (!StringUtils.isBlank(firstName) || StringUtils.isBlank(lastName))
-              {
-                Employee.FullName fullName = new Employee.FullName();
-                fullName.setFirstName(StringUtils.trim(firstName));
-
-                fullName.setLastName(StringUtils.trim(lastName));
-                newEmployee.setFullName(fullName);
-              }
-
-              newEmployee.setBirthday(creationParameter.getBirthday());
-              newEmployee.setDepartment(department);
-              Employee savedEmployee = employeeRepository.save(newEmployee);
-
-              messagePublisher.employeeCreated(savedEmployee);
-              return savedEmployee;
-            })
-        .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND, String.format("Department name [%s] could not be found!", departmentName)));
-  }
-
-  public void update(@NonNull UUID id, @NonNull EmployeeParameter updateParameter) throws EmployeeServiceException
-  {
-    LOGGER.info("Updating an employeeToUpdate [{}] with [{}] ", id, updateParameter);
-    Optional<Employee> optionalEmployee = findById(id);
-    if (!optionalEmployee.isPresent())
+    String firstName = StringUtils.trim(creationParameter.getFirstName());
+    String lastName = StringUtils.trim(creationParameter.getLastName());
+    if (!StringUtils.isBlank(firstName) || StringUtils.isBlank(lastName))
     {
-      throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with id [%s] could not be found!", id));
+      Employee.FullName fullName = new Employee.FullName();
+      fullName.setFirstName(StringUtils.trim(firstName));
+
+      fullName.setLastName(StringUtils.trim(lastName));
+      newEmployee.setFullName(fullName);
     }
 
-    Employee employee = optionalEmployee.get();
+    newEmployee.setBirthday(creationParameter.getBirthday());
+    newEmployee.setDepartment(department);
+    Employee savedEmployee = repository.save(newEmployee);
+
+    messagePublisher.employeeCreated(savedEmployee);
+    return savedEmployee;
+  }
+
+  public void update(@NonNull UUID id, @NonNull EmployeeParameter updateParameter)
+  {
+    LOGGER.info("Updating an employeeToUpdate [{}] with [{}] ", id, updateParameter);
+    Employee employee = findById(id);
     boolean hasChanged = hasEmailAddressChangedAfterUpdate(updateParameter, employee);
     hasChanged = hasFullNameChangedAfterUpdate(updateParameter, employee) || hasChanged;
     hasChanged = hasBirthDayChangedAfterUpdate(updateParameter, employee) || hasChanged;
     hasChanged = hasDepartmentChangedAfterUpdate(updateParameter, employee) || hasChanged;
     if (hasChanged)
     {
-      Employee updatedEmployee = employeeRepository.save(employee);
+      Employee updatedEmployee = repository.save(employee);
       messagePublisher.employeeUpdated(updatedEmployee);
     }
   }
 
-  public Optional<Employee> findById(@NonNull UUID id)
-  {
-    LOGGER.info("Finding an employee with [{}] ", id);
-    return employeeRepository.findById(id);
-  }
-
-  public void deleteById(@NonNull UUID id) throws EmployeeServiceException
+  public void deleteById(@NonNull UUID id)
   {
     LOGGER.info("Deleting an employee with [{}] ", id);
-    Optional<Employee> found = findById(id);
-    if (found.isPresent())
-    {
-      Employee employee = found.get();
-      employeeRepository.deleteById(id);
-      messagePublisher.employeeDeleted(employee);
-    }
-    else
-    {
-      throw new EmployeeServiceException(NOT_FOUND, String.format("Employee with id [%s] could not be found!", id));
-    }
+    Employee employee = findById(id);
+    repository.deleteById(id);
+    messagePublisher.employeeDeleted(employee);
   }
 
   // =================  protected/package local  Methods ===================
   // ===========================  private  Methods  ========================
 
-  private Optional<Department> findDepartmentByName(String departmentName) throws EmployeeServiceException
+  private void validateUniquenessOfEmail(String emailAddress)
   {
-    if (StringUtils.isBlank(departmentName))
-    {
-      throw new EmployeeServiceException(INVALID_REQUEST, "Department name is blank!");
-    }
-
-    Optional<Department> departmentOptional;
-    try
-    {
-      departmentOptional = departmentService.findByDepartmentName(departmentName);
-    }
-    catch (DepartmentServiceException e)
-    {
-      throw new EmployeeServiceException(e);
-    }
-    return departmentOptional;
-  }
-
-  private void validateUniquenessOfEmail(String emailAddress) throws EmployeeServiceException
-  {
-    List<Employee> employeesWithSameEmail = StringUtils.isBlank(emailAddress) ? Collections.emptyList() : employeeRepository.findByEmailAddress(emailAddress);
+    List<Employee> employeesWithSameEmail = StringUtils.isBlank(emailAddress) ? Collections.emptyList() : repository.findByEmailAddress(emailAddress);
     if (!employeesWithSameEmail.isEmpty())
     {
-      throw new EmployeeServiceException(INVALID_REQUEST, String.format("Email [%s] is already used", emailAddress));
+      throw new BadRequestException(String.format("Email [%s] is already used", emailAddress));
     }
   }
 
@@ -210,23 +169,14 @@ class EmployeeService implements EmployeeServiceCapable
     return hasUpdated;
   }
 
-  private boolean hasDepartmentChangedAfterUpdate(EmployeeParameter updateParameter, Employee employee) throws EmployeeServiceException
+  private boolean hasDepartmentChangedAfterUpdate(EmployeeParameter updateParameter, Employee employee)
   {
     boolean hasUpdated = false;
     String newDepartmentName = StringUtils.trim(updateParameter.getDepartmentName());
     if (StringUtils.isNotBlank(newDepartmentName) && !StringUtils.equals(newDepartmentName, employee.getDepartment().getDepartmentName()))
     {
-      try
-      {
-        Department department = departmentService
-                .findByDepartmentName(newDepartmentName)
-                .orElseThrow(() -> new EmployeeServiceException(NOT_FOUND, String.format("A department with name [%s] could not be found!", newDepartmentName)));
-        employee.setDepartment(department);
-      }
-      catch (DepartmentServiceException e)
-      {
-        throw new EmployeeServiceException(e);
-      }
+      Department department = departmentService.findByDepartmentNameOrElseThrow(newDepartmentName, BadRequestException.class);
+      employee.setDepartment(department);
       hasUpdated = true;
     }
     return hasUpdated;

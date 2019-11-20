@@ -29,8 +29,8 @@ class DepartmentControllerIntegrationTest extends IntegrationTestSuite
   class WhenAccess
   {
     @Test
-    @DisplayName("Creating a department with a empty department name fails due to 400")
-    void givenEmptyDepartmentName_whenCreate_thenStatus4xx() throws Exception
+    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on empty department name")
+    void givenEmptyDepartmentName_whenCreate_thenStatus400() throws Exception
     {
       // Arrange
       CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName("").create();
@@ -42,11 +42,24 @@ class DepartmentControllerIntegrationTest extends IntegrationTestSuite
     }
 
     @Test
-    @DisplayName("Creating a department with a blank department name fails due to 400")
-    void givenEmptyDepartmentName_whenCreate_thenStatus400() throws Exception
+    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on blank department name")
+    void givenBlankDepartmentName_whenCreate_thenStatus400() throws Exception
     {
       // Arrange
       CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName("  ").create();
+
+      // Act / Assert
+      mockMvc
+          .perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(createDepartmentRequest)))
+          .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on null department name")
+    void givenNullDepartmentName_whenCreate_thenStatus400() throws Exception
+    {
+      // Arrange
+      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName("").create();
 
       // Act / Assert
       mockMvc

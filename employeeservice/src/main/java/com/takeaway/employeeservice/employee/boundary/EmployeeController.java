@@ -2,15 +2,10 @@ package com.takeaway.employeeservice.employee.boundary;
 
 import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceCapable;
-import com.takeaway.employeeservice.employee.control.EmployeeServiceException;
 import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.Employee;
 import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
 import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
-import com.takeaway.employeeservice.errorhandling.entity.ApiException;
-import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
-import com.takeaway.employeeservice.errorhandling.entity.InternalServerErrorException;
-import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
 import com.takeaway.employeeservice.rest.boundary.ApiVersions;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,20 +58,13 @@ public class EmployeeController
   {
     LOGGER.info("Creating an employee by the request [{}]", createEmployeeRequest);
     EmployeeParameter employeeParameter = createEmployeeRequest.toEmployerParameter();
-    try
-    {
-      Employee employee = employeeService.create(employeeParameter);
-      return new EmployeeResponse(employee.getId(),
-          employee.getEmailAddress(),
-          employee.getFullName().getFirstName(),
-          employee.getFullName().getLastName(),
-          employee.getBirthday(),
-          employee.getDepartment().getDepartmentName());
-    }
-    catch (EmployeeServiceException caught)
-    {
-      throw translateInApiException(caught);
-    }
+    Employee employee = employeeService.create(employeeParameter);
+    return new EmployeeResponse(employee.getId(),
+        employee.getEmailAddress(),
+        employee.getFullName().getFirstName(),
+        employee.getFullName().getLastName(),
+        employee.getBirthday(),
+        employee.getDepartment().getDepartmentName());
   }
 
   @ApiOperation(value = "Retrieves an employee by a given id")
@@ -86,18 +74,14 @@ public class EmployeeController
   EmployeeResponse findEmployee(@NotNull @PathVariable("id") UUID id)
   {
     LOGGER.info("Retrieving an employee by the id [{}]", id);
-    return employeeService
-        .findById(id)
-        .map(employee -> {
-              Employee.FullName fullName = employee.getFullName();
-              return new EmployeeResponse(employee.getId(),
-                  employee.getEmailAddress(),
-                  fullName != null ? fullName.getFirstName() : null,
-                  fullName != null ? fullName.getLastName() : null,
-                  employee.getBirthday(),
-                  employee.getDepartment().getDepartmentName());
-            })
-        .orElseThrow(() -> new ResourceNotFoundException("Could not find employee by the specified id!"));
+    Employee employee = employeeService.findById(id);
+    Employee.FullName fullName = employee.getFullName();
+    return new EmployeeResponse(employee.getId(),
+        employee.getEmailAddress(),
+        fullName != null ? fullName.getFirstName() : null,
+        fullName != null ? fullName.getLastName() : null,
+        employee.getBirthday(),
+        employee.getDepartment().getDepartmentName());
   }
 
   @ApiOperation(value = "Updates an employee with the request values")
@@ -107,14 +91,7 @@ public class EmployeeController
   void updateEmployee(@NotNull @PathVariable("id") UUID id, @Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
   {
     LOGGER.info("Updating an employee by the id [{}] and request [{}]", id, updateEmployeeRequest);
-    try
-    {
-      employeeService.update(id, updateEmployeeRequest.toEmployerParameter());
-    }
-    catch (EmployeeServiceException caught)
-    {
-      throw translateInApiException(caught);
-    }
+    employeeService.update(id, updateEmployeeRequest.toEmployerParameter());
   }
 
   @ApiOperation(value = "Deletes permanently an employee")
@@ -124,40 +101,10 @@ public class EmployeeController
   void deleteEmployee(@NotNull @PathVariable("id") UUID id)
   {
     LOGGER.info("Deleting an employee by the id [{}]", id);
-    try
-    {
-      employeeService.deleteById(id);
-    }
-    catch (EmployeeServiceException caught)
-    {
-      EmployeeServiceException.Reason reason = caught.getReason();
-      if (reason == EmployeeServiceException.Reason.NOT_FOUND)
-      {
-        throw new ResourceNotFoundException(caught.getMessage());
-      }
-      else
-      {
-        throw new InternalServerErrorException(caught.getMessage());
-      }
-    }
+    employeeService.deleteById(id);
   }
 
   // ===========================  private  Methods  ========================
-
-  private ApiException translateInApiException(EmployeeServiceException caught)
-  {
-    EmployeeServiceException.Reason reason = caught.getReason();
-    switch (reason)
-    {
-      case NOT_FOUND:
-        return new ResourceNotFoundException(caught.getMessage());
-      case INVALID_REQUEST:
-        return new BadRequestException(caught.getMessage(), caught.getCause());
-      default:
-        return new InternalServerErrorException(caught.getMessage());
-    }
-  }
-
   // ============================  Inner Classes  ==========================
   // ============================  End of class  ===========================
 }

@@ -1,12 +1,9 @@
 package com.takeaway.employeeservice.department.boundary;
 
-import com.takeaway.employeeservice.department.control.DepartmentParameter;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
-import com.takeaway.employeeservice.department.control.DepartmentServiceException;
 import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
-import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
 import com.takeaway.employeeservice.rest.boundary.ApiVersions;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,19 +51,11 @@ public class DepartmentController
   @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = "")})
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  DepartmentResponse createDepartment(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
+  DepartmentResponse create(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
   {
     LOGGER.info("Creating a department by the request [{}]", createDepartmentRequest);
-    DepartmentParameter createDepartmentParameter = createDepartmentRequest.toDepartmentParameter();
-    try
-    {
-      Department department = departmentService.create(createDepartmentParameter);
-      return new DepartmentResponse(department.getId(), department.getDepartmentName());
-    }
-    catch (DepartmentServiceException caught)
-    {
-      throw new BadRequestException(caught.getMessage(), caught.getCause());
-    }
+    Department department = departmentService.create(createDepartmentRequest.toDepartmentParameter());
+    return new DepartmentResponse(department.getId(), department.getDepartmentName());
   }
 
   // ===========================  private  Methods  ========================
