@@ -1,3 +1,15 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
@@ -17,31 +29,31 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-amqp:${project.springBootVersion}")
-    implementation("org.springframework.boot:spring-boot-starter-data-rest:${project.springBootVersion}")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:${project.springBootVersion}")
-    implementation("org.springframework.boot:spring-boot-starter-validation:${project.springBootVersion}")
-    implementation("org.springframework.boot:spring-boot-starter-web:${project.springBootVersion}")
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${project.apacheCommonsLang3Version}"
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: "${project.apacheCommonsCollections}"
-    implementation group: 'org.postgresql', name: 'postgresql', version: "${project.postgreVersion}"
-    implementation("org.projectlombok:lombok:${project.lombokVersion}")
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: "${project.httpClientVesion}"
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: "${project.swaggerUiVersion}"
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: "${project.springfoxVersion}"
-    implementation group: 'org.liquibase', name: 'liquibase-core', version: "${project.liquibaseVersion}"
-    implementation group: 'org.hibernate', name: 'hibernate-envers', version: "${project.enversVersion}"
-    implementation group: 'org.springframework.data', name: 'spring-data-envers', version: "${project.springEnversVersion}"
+    implementation("org.springframework.boot:spring-boot-starter-amqp")
+    implementation("org.springframework.boot:spring-boot-starter-data-rest")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.8'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'org.liquibase', name: 'liquibase-core', version: '3.7.0'
+    implementation group: 'org.hibernate', name: 'hibernate-envers', version: '5.3.7.Final'
+    implementation group: 'org.springframework.data', name: 'spring-data-envers', version: "${springBootVersion}"
     
-    annotationProcessor ("org.projectlombok:lombok:${project.lombokVersion}")
-    compileOnly ("org.projectlombok:lombok:${project.lombokVersion}")
+    annotationProcessor ("org.projectlombok:lombok:1.18.10")
+    compileOnly ("org.projectlombok:lombok:1.18.6")
 
-    testImplementation ("org.springframework.boot:spring-boot-starter-test:${project.springBootVersion}")
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${project.junitJupiterVersion}"
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${project.junitJupiterVersion}"
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${project.junitJupiterVersion}"
-    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: "${project.junitJupiterVersion}"
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${project.mockitoJunitJupiterVersion}"
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: "${project.mockitoJunitJupiterVersion}"
-    testImplementation group: 'info.solidsoft.mockito', name: 'mockito-java8', version: "${project.mockitoJava8Version}"
+    testImplementation ("org.springframework.boot:spring-boot-starter-test")
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.3.2'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.24.5'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.24.5'
+    testImplementation group: 'info.solidsoft.mockito', name: 'mockito-java8', version: '2.5.0'
 }

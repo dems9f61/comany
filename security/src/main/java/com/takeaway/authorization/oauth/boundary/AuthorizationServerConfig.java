@@ -1,7 +1,6 @@
 package com.takeaway.authorization.oauth.boundary;
 
 import com.takeaway.authorization.oauth.control.SecurityInfoTokenEnhancer;
-import com.takeaway.authorization.oauth.entity.CustomAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
+import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
@@ -107,7 +107,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         .tokenKeyAccess("permitAll()")
         .checkTokenAccess("isAuthenticated()")
         .authenticationEntryPoint(new OAuth2AuthenticationEntryPoint())
-        .accessDeniedHandler(new CustomAuthenticationFailureHandler());
+        .accessDeniedHandler(new OAuth2AccessDeniedHandler());
     oauthServer.addTokenEndpointAuthenticationFilter(authorizationServerEndpointCorsFilter());
   }
 

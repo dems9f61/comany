@@ -1,8 +1,8 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-    }
-}
+//pluginManagement {
+//    repositories {
+//        gradlePluginPortal()
+//    }
+//}
 rootProject.name = 'company'
 include 'employeeservice', 'eventservice', 'security'
 
