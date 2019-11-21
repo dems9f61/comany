@@ -28,8 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -1002,7 +1002,7 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
     return result;
   }
 
-  private List<Role> saveRandomRoles(int count) throws Exception
+  private List<Role> saveRandomRoles(int count)
   {
     int normalizedCount = count <= 0 ? 1 : count;
     List<Role> result = new ArrayList<>(count);
@@ -1014,7 +1014,7 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
     return result;
   }
 
-  private List<Permission> saveRandomPermissions(int count) throws Exception
+  private List<Permission> saveRandomPermissions(int count)
   {
     int normalizedCount = count <= 0 ? 1 : count;
     List<Permission> result = new ArrayList<>(count);

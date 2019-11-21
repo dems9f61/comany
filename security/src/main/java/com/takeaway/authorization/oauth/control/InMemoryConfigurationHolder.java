@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.takeaway.authorization.oauth.entity.CustomUserDetails;
 import com.takeaway.authorization.oauth.entity.UserInformation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -13,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.client.InMemoryClientDetailsService;
@@ -29,15 +31,18 @@ import java.util.UUID;
  * <p>
  */
 @Configuration
+@RequiredArgsConstructor
 public class InMemoryConfigurationHolder
 {
   // =========================== Class Variables ===========================
 
   private static final int ONE_DAY = 60 * 60 * 24;
-
   private static final int THIRTY_DAYS = 60 * 60 * 24 * 30;
 
   // =============================  Variables  =============================
+
+  private final PasswordEncoder passwordEncoder;
+
   // ============================  Constructors  ===========================
 
   // ===========================  public  Methods  =========================
@@ -50,13 +55,13 @@ public class InMemoryConfigurationHolder
     InMemoryClientDetailsService clientDetailsService = new InMemoryClientDetailsService();
     Map<String, BaseClientDetails> clients = Maps.newHashMap();
     BaseClientDetails firstClient = new BaseClientDetails("client", "", "read,write", "client_credentials,password,refresh_token", "", "");
-    firstClient.setClientSecret("{noop}secret");
+    firstClient.setClientSecret(passwordEncoder.encode("secret"));
     firstClient.setAccessTokenValiditySeconds(ONE_DAY);
     firstClient.setRefreshTokenValiditySeconds(THIRTY_DAYS);
     clients.put("client", firstClient);
 
     BaseClientDetails secondClient = new BaseClientDetails("clientWithBadScope", "", "bad_scope", "password,refresh_token", "", "");
-    secondClient.setClientSecret("{noop}secret");
+    secondClient.setClientSecret(passwordEncoder.encode("secret"));
     secondClient.setAccessTokenValiditySeconds(ONE_DAY);
     secondClient.setRefreshTokenValiditySeconds(THIRTY_DAYS);
     clients.put("clientWithBadScope", secondClient);
@@ -93,7 +98,7 @@ public class InMemoryConfigurationHolder
     firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_AUDIT_TRAIL"));
     firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_UPDATE"));
 
-    CustomUserDetails firstUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), firstUserAuthorities), "admin", "{noop}admin", true, firstUserAuthorities);
+    CustomUserDetails firstUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), firstUserAuthorities), "admin", passwordEncoder.encode("admin"), true, firstUserAuthorities);
     users.add(firstUser);
 
     List<GrantedAuthority> secondUserAuthorities = new LinkedList<>();
@@ -106,14 +111,14 @@ public class InMemoryConfigurationHolder
     secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_READ"));
     secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_AUDIT_TRAIL"));
 
-    CustomUserDetails secondUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), secondUserAuthorities), "user", "{noop}user", true, secondUserAuthorities);
+    CustomUserDetails secondUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), secondUserAuthorities), "user", passwordEncoder.encode("user"), true, secondUserAuthorities);
     users.add(secondUser);
 
     List<GrantedAuthority> thirdUserAuthorities = new LinkedList<>();
     thirdUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USELESS_ROLE"));
     CustomUserDetails thirdUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), thirdUserAuthorities),
             "userWithNoRole",
-            "{noop}user",
+            passwordEncoder.encode("user"),
             true,
             thirdUserAuthorities);
     users.add(thirdUser);
