@@ -2,7 +2,7 @@ package com.takeaway.employeeservice.employee.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.takeaway.employeeservice.department.entity.Department;
-import com.takeaway.employeeservice.errorhandling.entity.AbstractEntity;
+import com.takeaway.employeeservice.persistence.boundary.AbstractEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

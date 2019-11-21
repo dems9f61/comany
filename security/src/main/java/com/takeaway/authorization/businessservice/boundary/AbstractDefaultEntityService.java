@@ -1,11 +1,11 @@
 package com.takeaway.authorization.businessservice.boundary;
 
 import com.takeaway.authorization.businessservice.control.BeanTool;
-import com.takeaway.authorization.errorhandling.entity.ResourceNotFoundException;
 import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.json.boundary.ResponsePage;
 import com.takeaway.authorization.persistence.boundary.AbstractEntity;
 import com.takeaway.authorization.persistence.boundary.JpaSpecificationRepository;
+import com.takeaway.exeption.boundary.ResourceNotFoundException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.takeaway.employeeservice.errorhandling.entity;
+package com.takeaway.employeeservice.persistence.boundary;
 
 import lombok.AccessLevel;
 import lombok.Setter;

@@ -1,8 +1,8 @@
 package com.takeaway.employeeservice.department.control;
 
 import com.takeaway.employeeservice.department.entity.Department;
-import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
-import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
+import com.takeaway.exeption.boundary.BadRequestException;
+import com.takeaway.exeption.boundary.ResourceNotFoundException;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

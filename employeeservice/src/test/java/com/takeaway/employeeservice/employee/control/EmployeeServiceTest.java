@@ -5,8 +5,8 @@ import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.employee.entity.Employee;
-import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
-import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
+import com.takeaway.exeption.boundary.BadRequestException;
+import com.takeaway.exeption.boundary.ResourceNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,33 +49,33 @@ class EmployeeServiceTest extends UnitTestSuite
   class WhenDelete
   {
     @Test
-    @DisplayName("Deleting an employee with a wrong uuid fails")
-    void givenUnknownUuid_whenDelete_thenThrowException()
+    @DisplayName("Deleting an employee with a wrong id fails")
+    void givenUnknownId_whenDelete_thenThrowException()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID id = UUID.randomUUID();
       doReturn(Optional.empty()).when(employeeRepository).findById(any());
 
       // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.deleteById(uuid));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.deleteById(id));
     }
 
     @Test
-    @DisplayName("Deleting an employee with a valid uuid succeeds")
-    void givenValidUuid_whenDelete_thenSucceed() throws Exception
+    @DisplayName("Deleting an employee with a valid id succeeds")
+    void givenValidId_whenDelete_thenSucceed()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID id = UUID.randomUUID();
       Employee employee = employeeTestFactory.createDefault();
-      doReturn(Optional.of(employee)).when(employeeRepository).findById(uuid);
+      doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
       doNothing().when(employeeRepository).deleteById(any());
       doNothing().when(employeeEventPublisher).employeeDeleted(any());
 
       // Act
-      employeeService.deleteById(uuid);
+      employeeService.deleteById(id);
 
       // Assert
-      verify(employeeRepository).deleteById(uuid);
+      verify(employeeRepository).deleteById(id);
       verify(employeeEventPublisher).employeeDeleted(assertArg(getDefaultEmployeeConsumer(employee)));
     }
   }
@@ -89,9 +89,9 @@ class EmployeeServiceTest extends UnitTestSuite
     void giveValidParameters_whenUpdate_thenSucceed()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID id = UUID.randomUUID();
       Employee employee = employeeTestFactory.createDefault();
-      doReturn(Optional.of(employee)).when(employeeRepository).findById(uuid);
+      doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
       Department department = departmentTestFactory.createDefault();
 
@@ -99,7 +99,7 @@ class EmployeeServiceTest extends UnitTestSuite
       doReturn(employee).when(employeeRepository).save(any());
 
       // Act
-      employeeService.update(uuid, employeeParameter);
+      employeeService.update(id, employeeParameter);
 
       // Assert
       verify(employeeRepository).save(assertArg(getDefaultEmployeeConsumer(employee)));
@@ -111,13 +111,13 @@ class EmployeeServiceTest extends UnitTestSuite
     void givenUnknownUuid_whenUpdate_thenThrowException()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
-      doReturn(Optional.empty()).when(employeeRepository).findById(uuid);
+      UUID id = UUID.randomUUID();
+      doReturn(Optional.empty()).when(employeeRepository).findById(id);
 
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
 
       // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.update(uuid, employeeParameter));
+      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.update(id, employeeParameter));
     }
 
     @Test
@@ -125,15 +125,15 @@ class EmployeeServiceTest extends UnitTestSuite
     void givenUnknownDepartment_whenUpdate_thenThrowException()
     {
       // Arrange
-      UUID uuid = UUID.randomUUID();
+      UUID id = UUID.randomUUID();
       Employee employee = employeeTestFactory.createDefault();
-      doReturn(Optional.of(employee)).when(employeeRepository).findById(uuid);
+      doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
 
       EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
       doThrow(BadRequestException.class).when(departmentService).findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
 
       // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.update(uuid, employeeParameter));
+      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.update(id, employeeParameter));
     }
   }
 

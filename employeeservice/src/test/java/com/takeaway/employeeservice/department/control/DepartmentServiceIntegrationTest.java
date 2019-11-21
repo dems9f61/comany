@@ -2,8 +2,8 @@ package com.takeaway.employeeservice.department.control;
 
 import com.takeaway.employeeservice.IntegrationTestSuite;
 import com.takeaway.employeeservice.department.entity.Department;
-import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
-import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
+import com.takeaway.exeption.boundary.BadRequestException;
+import com.takeaway.exeption.boundary.ResourceNotFoundException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
