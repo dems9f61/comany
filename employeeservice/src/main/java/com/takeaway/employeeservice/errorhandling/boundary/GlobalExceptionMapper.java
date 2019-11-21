@@ -1,7 +1,5 @@
 package com.takeaway.employeeservice.errorhandling.boundary;
 
-//import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
-//import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
 import com.takeaway.exeption.boundary.BadRequestException;
 import com.takeaway.exeption.boundary.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
