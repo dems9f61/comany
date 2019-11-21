@@ -1,13 +1,20 @@
 buildscript {
-	ext {
-		springBootVersion = '2.1.3.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '2.1.3.RELEASE'
+        apacheCommonsLang3Version = '3.8.1'
+        lombokVersion = '1.18.10'
+        mongoDBVersion = '2.1.6.RELEASE'
+        springfoxVersion = '2.9.2'
+        junitJupiterVersion = '5.3.2'
+        mockitoJunitJupiterVersion = '2.24.5'
+        mockitoJava8Version = '2.5.0'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -33,22 +40,20 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: '2.1.6.RELEASE'
-    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${apacheCommonsLang3Version}"
+    implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: "${mongoDBVersion}"
+    implementation group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: "${springfoxVersion}"
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: "${springfoxVersion}"
 
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-
-    annotationProcessor("org.projectlombok:lombok:1.18.10")
-    compileOnly("org.projectlombok:lombok:1.18.10")
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
-    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.3.2'
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.24.5'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.24.5'
-    testImplementation group: 'info.solidsoft.mockito', name: 'mockito-java8', version: '2.5.0'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoJunitJupiterVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: "${mockitoJunitJupiterVersion}"
+    testImplementation group: 'info.solidsoft.mockito', name: 'mockito-java8', version: "${mockitoJava8Version}"
 }
