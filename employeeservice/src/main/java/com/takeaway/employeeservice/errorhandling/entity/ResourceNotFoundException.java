@@ -1,4 +1,4 @@
-package com.takeaway.exeption.boundary;
+package com.takeaway.employeeservice.errorhandling.entity;
 
 /**
  * User: StMinko Date: 18.03.2019 Time: 11:26

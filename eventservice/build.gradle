@@ -44,7 +44,6 @@ repositories {
 }
 
 dependencies {
-    implementation project(":lib:exception")
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-validation")

@@ -1,11 +1,11 @@
 package com.takeaway.authorization.rolepermission.control;
 
+import com.takeaway.authorization.errorhandling.entity.BadRequestException;
 import com.takeaway.authorization.permission.control.PermissionService;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.role.control.RoleService;
 import com.takeaway.authorization.role.entity.Role;
 import com.takeaway.authorization.rolepermission.entity.RolePermission;
-import com.takeaway.exeption.boundary.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

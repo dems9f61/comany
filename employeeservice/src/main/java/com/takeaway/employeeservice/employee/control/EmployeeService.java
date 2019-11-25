@@ -3,7 +3,7 @@ package com.takeaway.employeeservice.employee.control;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.employee.entity.Employee;
-import com.takeaway.exeption.boundary.BadRequestException;
+import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
