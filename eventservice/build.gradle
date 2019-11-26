@@ -55,6 +55,7 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: "${springfoxVersion}"
 
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    implementation "org.springframework.boot:spring-boot-configuration-processor"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitJupiterVersion}"
