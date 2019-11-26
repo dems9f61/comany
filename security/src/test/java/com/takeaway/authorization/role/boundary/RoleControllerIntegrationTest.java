@@ -2,12 +2,12 @@ package com.takeaway.authorization.role.boundary;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.takeaway.authorization.IntegrationTestSuite;
-import com.takeaway.authorization.auditing.entity.AuditTrail;
-import com.takeaway.authorization.json.boundary.DataView;
-import com.takeaway.authorization.json.boundary.ResponsePage;
-import com.takeaway.authorization.oauth.boundary.AccessTokenParameter;
 import com.takeaway.authorization.role.control.RoleService;
 import com.takeaway.authorization.role.entity.Role;
+import com.takeaway.authorization.runtime.auditing.entity.AuditTrail;
+import com.takeaway.authorization.runtime.rest.DataView;
+import com.takeaway.authorization.runtime.rest.ResponsePage;
+import com.takeaway.authorization.runtime.security.boundary.AccessTokenParameter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.envers.RevisionType;
 import org.junit.jupiter.api.DisplayName;

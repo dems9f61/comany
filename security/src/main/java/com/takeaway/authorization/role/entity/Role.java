@@ -1,9 +1,9 @@
 package com.takeaway.authorization.role.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.takeaway.authorization.json.boundary.DataView;
-import com.takeaway.authorization.persistence.boundary.AuditedUUIDEntity;
-import com.takeaway.authorization.validation.boundary.NullOrNotBlank;
+import com.takeaway.authorization.runtime.persistence.AuditedUUIDEntity;
+import com.takeaway.authorization.runtime.rest.DataView;
+import com.takeaway.authorization.runtime.rest.NullOrNotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

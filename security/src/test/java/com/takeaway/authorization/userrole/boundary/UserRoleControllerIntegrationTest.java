@@ -1,9 +1,9 @@
 package com.takeaway.authorization.userrole.boundary;
 
 import com.takeaway.authorization.IntegrationTestSuite;
-import com.takeaway.authorization.oauth.boundary.AccessTokenParameter;
 import com.takeaway.authorization.role.control.RoleService;
 import com.takeaway.authorization.role.entity.Role;
+import com.takeaway.authorization.runtime.security.boundary.AccessTokenParameter;
 import com.takeaway.authorization.user.control.UserService;
 import com.takeaway.authorization.user.entity.User;
 import org.junit.jupiter.api.DisplayName;
@@ -53,8 +53,8 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act/ Assert
-      mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isUnauthorized());
+        mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -62,17 +62,17 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
     void givenMissingScope_whenAssign_thenStatus403() throws Exception
     {
       // Arrange
-      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                      .clientId("clientWithBadScope")
-                                                                      .clientSecret("secret")
-                                                                      .build();
+        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                        .clientId("clientWithBadScope")
+                                                                        .clientSecret("secret")
+                                                                        .build();
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
-                                                                             "Bearer " + obtainAccessToken(accessTokenParameter))
-                                                                     .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isForbidden());
+        mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                               "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                       .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isForbidden());
     }
 
     @Test
@@ -80,17 +80,17 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
     void givenMissingRole_whenAssign_thenStatus403() throws Exception
     {
       // Arrange
-      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                      .userName("userWithNoRole")
-                                                                      .userPassword("user")
-                                                                      .build();
+        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                        .userName("userWithNoRole")
+                                                                        .userPassword("user")
+                                                                        .build();
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
-                                                                             "Bearer " + obtainAccessToken(accessTokenParameter))
-                                                                     .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isForbidden());
+        mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                               "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                       .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isForbidden());
     }
 
     @Test
@@ -103,15 +103,15 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      MvcResult mvcResult = mockMvc.perform(post(uri, savedUser.getId(), savedRole.getId()).header(HttpHeaders.AUTHORIZATION,
-                                                                                                   "Bearer " + obtainAccessToken())
-                                                                                           .contentType(APPLICATION_JSON_UTF8))
-                                   .andExpect(status().isCreated())
-                                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                                   .andExpect(jsonPath("$", notNullValue()))
-                                   .andReturn();
-      String contentAsString = mvcResult.getResponse()
-                                        .getContentAsString();
+        MvcResult mvcResult = mockMvc.perform(post(uri, savedUser.getId(), savedRole.getId()).header(HttpHeaders.AUTHORIZATION,
+                                                                                                     "Bearer " + obtainAccessToken())
+                                                                                             .contentType(APPLICATION_JSON_UTF8))
+                                     .andExpect(status().isCreated())
+                                     .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                                     .andExpect(jsonPath("$", notNullValue()))
+                                     .andReturn();
+        String contentAsString = mvcResult.getResponse()
+                                          .getContentAsString();
       Role response = objectMapper.readValue(contentAsString, Role.class);
       assertThat(response).isNotNull();
       assertThat(response.getId()).isEqualTo(savedRole.getId());
@@ -134,11 +134,11 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri, savedUser.getId(), unknownRoleId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                 .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isBadRequest())
-             .andExpect(jsonPath("$", notNullValue()))
-             .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
+        mockMvc.perform(post(uri, savedUser.getId(), unknownRoleId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                   .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$", notNullValue()))
+               .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
     }
 
     @Test
@@ -151,11 +151,11 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(post(uri, unknownUserId, savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                 .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isBadRequest())
-             .andExpect(jsonPath("$", notNullValue()))
-             .andExpect(jsonPath("$", is(String.format("Could not find [User] for Id [%s]!", unknownUserId))));
+        mockMvc.perform(post(uri, unknownUserId, savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                   .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$", notNullValue()))
+               .andExpect(jsonPath("$", is(String.format("Could not find [User] for Id [%s]!", unknownUserId))));
     }
   }
 
@@ -171,8 +171,8 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act/ Assert
-      mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isUnauthorized());
+        mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -180,17 +180,17 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
     void givenMissingScope_whenUnassign_thenStatus403() throws Exception
     {
       // Arrange
-      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                      .clientId("clientWithBadScope")
-                                                                      .clientSecret("secret")
-                                                                      .build();
+        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                        .clientId("clientWithBadScope")
+                                                                        .clientSecret("secret")
+                                                                        .build();
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
-                                                                               "Bearer " + obtainAccessToken(accessTokenParameter))
-                                                                       .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isForbidden());
+        mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                                 "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                         .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isForbidden());
     }
 
     @Test
@@ -198,17 +198,17 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
     void givenMissingRole_whenUnassign_thenStatus403() throws Exception
     {
       // Arrange
-      AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                      .userName("userWithNoRole")
-                                                                      .userPassword("user")
-                                                                      .build();
+        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                        .userName("userWithNoRole")
+                                                                        .userPassword("user")
+                                                                        .build();
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
-                                                                               "Bearer " + obtainAccessToken(accessTokenParameter))
-                                                                       .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isForbidden());
+        mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                                 "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                         .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isForbidden());
     }
 
     @Test
@@ -222,9 +222,9 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
       mockMvc.perform(post(uri, savedUser.getId(), savedRole.getId()).contentType(APPLICATION_JSON_UTF8));
 
       // Act / Assert
-      mockMvc.perform(delete(uri, savedUser.getId(), savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                       .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isNoContent());
+        mockMvc.perform(delete(uri, savedUser.getId(), savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                         .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isNoContent());
     }
 
     @Test
@@ -237,11 +237,11 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(delete(uri, savedUser.getId(), unknownRoleId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                   .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isBadRequest())
-             .andExpect(jsonPath("$", notNullValue()))
-             .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
+        mockMvc.perform(delete(uri, savedUser.getId(), unknownRoleId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                     .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$", notNullValue()))
+               .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
     }
 
     @Test
@@ -254,11 +254,11 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
       String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
       // Act / Assert
-      mockMvc.perform(delete(uri, unknownUserId, savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                   .contentType(APPLICATION_JSON_UTF8))
-             .andExpect(status().isBadRequest())
-             .andExpect(jsonPath("$", notNullValue()))
-             .andExpect(jsonPath("$", is(String.format("Could not find [User] for Id [%s]!", unknownUserId))));
+        mockMvc.perform(delete(uri, unknownUserId, savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                     .contentType(APPLICATION_JSON_UTF8))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$", notNullValue()))
+               .andExpect(jsonPath("$", is(String.format("Could not find [User] for Id [%s]!", unknownUserId))));
     }
   }
 

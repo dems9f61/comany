@@ -1,10 +1,10 @@
 package com.takeaway.authorization.rolepermission.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.role.boundary.RoleController;
 import com.takeaway.authorization.rolepermission.control.RolePermissionService;
+import com.takeaway.authorization.runtime.rest.DataView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

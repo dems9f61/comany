@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.takeaway.authorization.oauth.boundary.AccessTokenParameter;
-import com.takeaway.authorization.oauth.entity.OAuthClientTestFactory;
+import com.takeaway.authorization.oauthclient.entity.OAuthClientTestFactory;
 import com.takeaway.authorization.permission.entity.PermissionTestFactory;
 import com.takeaway.authorization.role.entity.RoleTestFactory;
+import com.takeaway.authorization.runtime.security.boundary.AccessTokenParameter;
 import com.takeaway.authorization.user.entity.UserTestFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -46,15 +46,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 public abstract class IntegrationTestSuite
 {
-    public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
-                                                                        MediaType.APPLICATION_JSON.getSubtype(),
-                                                                        StandardCharsets.UTF_8);
+  public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
+                                                                      MediaType.APPLICATION_JSON.getSubtype(),
+                                                                      StandardCharsets.UTF_8);
 
   @Autowired
   protected ObjectMapper objectMapper;
 
-    @Autowired
-    protected MockMvc mockMvc;
+  @Autowired
+  protected MockMvc mockMvc;
 
   @Autowired
   protected RoleTestFactory roleTestFactory;
@@ -65,8 +65,8 @@ public abstract class IntegrationTestSuite
   @Autowired
   protected UserTestFactory userTestFactory;
 
-    @Autowired
-    protected OAuthClientTestFactory oAuthClientTestFactory;
+  @Autowired
+  protected OAuthClientTestFactory oAuthClientTestFactory;
 
   @Autowired
   private DatabaseCleaner databaseCleaner;
@@ -97,56 +97,56 @@ public abstract class IntegrationTestSuite
     databaseCleaner.cleanDatabases();
   }
 
-    protected String obtainAccessToken() throws Exception
+  protected String obtainAccessToken() throws Exception
+  {
+    AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                    .clientId("client")
+                                                                    .clientSecret("secret")
+                                                                    .scopes("read,write")
+                                                                    .userName("admin")
+                                                                    .userPassword("admin")
+                                                                    .build();
+    return obtainAccessToken(accessTokenParameter);
+  }
+
+  protected String obtainAccessToken(AccessTokenParameter accessTokenParameter) throws Exception
+  {
+    String basicAuthorizationHeader = new ClientSecretBasic(new ClientID(accessTokenParameter.getClientId()),
+                                                            new Secret(accessTokenParameter.getClientSecret())).toHTTPAuthorizationHeader();
+
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    params.add("grant_type", accessTokenParameter.getGrantType());
+    params.add("client_id", accessTokenParameter.getClientId());
+    params.add("username", accessTokenParameter.getUserName());
+    params.add("password", accessTokenParameter.getUserPassword());
+    String scopes = accessTokenParameter.getScopes();
+    if (StringUtils.isNotBlank(scopes))
     {
-        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                        .clientId("client")
-                                                                        .clientSecret("secret")
-                                                                        .scopes("read,write")
-                                                                        .userName("admin")
-                                                                        .userPassword("admin")
-                                                                        .build();
-        return obtainAccessToken(accessTokenParameter);
+      params.add("scopes", scopes);
     }
 
-    protected String obtainAccessToken(AccessTokenParameter accessTokenParameter) throws Exception
+    String resultString = mockMvc.perform(post("/oauth/token").params(params)
+                                                              .header(HttpHeaders.AUTHORIZATION, basicAuthorizationHeader)
+                                                              .accept(APPLICATION_JSON_UTF8))
+                                 .andReturn()
+                                 .getResponse()
+                                 .getContentAsString();
+
+    if (StringUtils.isBlank(resultString))
     {
-        String basicAuthorizationHeader = new ClientSecretBasic(new ClientID(accessTokenParameter.getClientId()),
-                                                                new Secret(accessTokenParameter.getClientSecret())).toHTTPAuthorizationHeader();
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", accessTokenParameter.getGrantType());
-        params.add("client_id", accessTokenParameter.getClientId());
-        params.add("username", accessTokenParameter.getUserName());
-        params.add("password", accessTokenParameter.getUserPassword());
-        String scopes = accessTokenParameter.getScopes();
-        if (StringUtils.isNotBlank(scopes))
-        {
-            params.add("scopes", scopes);
-        }
-
-        String resultString = mockMvc.perform(post("/oauth/token").params(params)
-                                                                  .header(HttpHeaders.AUTHORIZATION, basicAuthorizationHeader)
-                                                                  .accept(APPLICATION_JSON_UTF8))
-                                     .andReturn()
-                                     .getResponse()
-                                     .getContentAsString();
-
-        if (StringUtils.isBlank(resultString))
-        {
-            return resultString;
-        }
-        else
-        {
-            JacksonJsonParser jsonParser = new JacksonJsonParser();
-            Map<String, Object> stringObjectMap = jsonParser.parseMap(resultString);
-
-            String accessTokenKey = "access_token";
-            Object accessTokenValue = stringObjectMap.get(accessTokenKey);
-            return Objects.nonNull(accessTokenValue) ?
-                    accessTokenValue.toString() :
-                    stringObjectMap.get("error_description")
-                                   .toString();
-        }
+      return resultString;
     }
+    else
+    {
+      JacksonJsonParser jsonParser = new JacksonJsonParser();
+      Map<String, Object> stringObjectMap = jsonParser.parseMap(resultString);
+
+      String accessTokenKey = "access_token";
+      Object accessTokenValue = stringObjectMap.get(accessTokenKey);
+      return Objects.nonNull(accessTokenValue) ?
+              accessTokenValue.toString() :
+              stringObjectMap.get("error_description")
+                             .toString();
+    }
+  }
 }

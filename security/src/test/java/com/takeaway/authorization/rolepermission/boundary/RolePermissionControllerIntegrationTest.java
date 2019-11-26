@@ -1,11 +1,11 @@
 package com.takeaway.authorization.rolepermission.boundary;
 
 import com.takeaway.authorization.IntegrationTestSuite;
-import com.takeaway.authorization.oauth.boundary.AccessTokenParameter;
 import com.takeaway.authorization.permission.control.PermissionService;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.role.control.RoleService;
 import com.takeaway.authorization.role.entity.Role;
+import com.takeaway.authorization.runtime.security.boundary.AccessTokenParameter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

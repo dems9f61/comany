@@ -1,8 +1,8 @@
 package com.takeaway.authorization.rolepermission.entity;
 
 import com.takeaway.authorization.permission.entity.Permission;
-import com.takeaway.authorization.persistence.boundary.UUIDEntity;
 import com.takeaway.authorization.role.entity.Role;
+import com.takeaway.authorization.runtime.persistence.UUIDEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

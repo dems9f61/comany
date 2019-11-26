@@ -1,12 +1,12 @@
 package com.takeaway.authorization.user.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.takeaway.authorization.auditing.entity.AuditTrail;
-import com.takeaway.authorization.json.boundary.DataView;
-import com.takeaway.authorization.json.boundary.ResponsePage;
 import com.takeaway.authorization.permission.entity.Permission;
-import com.takeaway.authorization.rest.boundary.ApiVersions;
-import com.takeaway.authorization.rest.boundary.DefaultAuditedEntityController;
+import com.takeaway.authorization.runtime.auditing.entity.AuditTrail;
+import com.takeaway.authorization.runtime.rest.ApiVersions;
+import com.takeaway.authorization.runtime.rest.DataView;
+import com.takeaway.authorization.runtime.rest.DefaultAuditedEntityController;
+import com.takeaway.authorization.runtime.rest.ResponsePage;
 import com.takeaway.authorization.user.control.UserService;
 import com.takeaway.authorization.user.entity.User;
 import lombok.extern.slf4j.Slf4j;

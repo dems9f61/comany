@@ -1,7 +1,7 @@
 package com.takeaway.authorization.permission.control;
 
-import com.takeaway.authorization.auditing.boundary.AbstractDefaultAuditedEntityService;
 import com.takeaway.authorization.permission.entity.Permission;
+import com.takeaway.authorization.runtime.auditing.boundary.AbstractDefaultAuditedEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.takeaway.authorization;
 
-import com.takeaway.authorization.oauth.control.OAuthClientRepositoryTestHelper;
+import com.takeaway.authorization.oauthclient.control.OAuthClientRepositoryTestHelper;
 import com.takeaway.authorization.permission.control.PermissionRepositoryTestHelper;
 import com.takeaway.authorization.role.control.RoleRepositoryTestHelper;
 import com.takeaway.authorization.rolepermission.control.RolePermissionRepositoryTestHelper;

@@ -1,8 +1,8 @@
 package com.takeaway.authorization.user.control;
 
-import com.takeaway.authorization.auditing.boundary.AbstractDefaultAuditedEntityService;
-import com.takeaway.authorization.errorhandling.entity.BadRequestException;
 import com.takeaway.authorization.permission.entity.Permission;
+import com.takeaway.authorization.runtime.auditing.boundary.AbstractDefaultAuditedEntityService;
+import com.takeaway.authorization.runtime.errorhandling.entity.BadRequestException;
 import com.takeaway.authorization.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

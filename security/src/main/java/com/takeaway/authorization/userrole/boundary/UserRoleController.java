@@ -1,8 +1,8 @@
 package com.takeaway.authorization.userrole.boundary;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.takeaway.authorization.json.boundary.DataView;
 import com.takeaway.authorization.role.entity.Role;
+import com.takeaway.authorization.runtime.rest.DataView;
 import com.takeaway.authorization.user.boundary.UserController;
 import com.takeaway.authorization.userrole.control.UserRoleService;
 import lombok.RequiredArgsConstructor;
