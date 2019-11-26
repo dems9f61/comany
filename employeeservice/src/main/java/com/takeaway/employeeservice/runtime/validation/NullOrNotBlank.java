@@ -1,4 +1,4 @@
-package com.takeaway.employeeservice.validation.boundary;
+package com.takeaway.employeeservice.runtime.validation;
 
 import lombok.extern.slf4j.Slf4j;
 

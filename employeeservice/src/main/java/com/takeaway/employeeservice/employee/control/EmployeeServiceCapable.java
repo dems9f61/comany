@@ -1,7 +1,7 @@
 package com.takeaway.employeeservice.employee.control;
 
 import com.takeaway.employeeservice.employee.entity.Employee;
-import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
+import com.takeaway.employeeservice.runtime.errorhandling.entity.ResourceNotFoundException;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

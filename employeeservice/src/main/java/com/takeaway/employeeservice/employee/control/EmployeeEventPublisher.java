@@ -2,7 +2,7 @@ package com.takeaway.employeeservice.employee.control;
 
 import com.takeaway.employeeservice.employee.entity.Employee;
 import com.takeaway.employeeservice.employee.entity.EmployeeMessage;
-import com.takeaway.employeeservice.messaging.boundary.MessagingConfig;
+import com.takeaway.employeeservice.runtime.config.MessagingConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

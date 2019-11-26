@@ -1,4 +1,4 @@
-package com.takeaway.employeeservice.auditing.entity;
+package com.takeaway.employeeservice.runtime.auditing;
 
 import lombok.Getter;
 import lombok.Setter;

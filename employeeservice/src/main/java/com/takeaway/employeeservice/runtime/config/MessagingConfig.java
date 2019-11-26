@@ -1,4 +1,4 @@
-package com.takeaway.employeeservice.messaging.boundary;
+package com.takeaway.employeeservice.runtime.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;

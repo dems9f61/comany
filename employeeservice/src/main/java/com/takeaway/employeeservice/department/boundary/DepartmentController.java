@@ -4,7 +4,7 @@ import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
-import com.takeaway.employeeservice.rest.boundary.ApiVersions;
+import com.takeaway.employeeservice.runtime.rest.ApiVersions;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

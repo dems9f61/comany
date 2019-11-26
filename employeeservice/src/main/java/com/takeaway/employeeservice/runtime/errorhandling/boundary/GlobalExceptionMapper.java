@@ -1,7 +1,7 @@
-package com.takeaway.employeeservice.errorhandling.boundary;
+package com.takeaway.employeeservice.runtime.errorhandling.boundary;
 
-import com.takeaway.employeeservice.errorhandling.entity.BadRequestException;
-import com.takeaway.employeeservice.errorhandling.entity.ResourceNotFoundException;
+import com.takeaway.employeeservice.runtime.errorhandling.entity.BadRequestException;
+import com.takeaway.employeeservice.runtime.errorhandling.entity.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.NestedRuntimeException;

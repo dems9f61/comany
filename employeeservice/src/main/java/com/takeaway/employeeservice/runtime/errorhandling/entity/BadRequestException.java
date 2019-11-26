@@ -1,22 +1,29 @@
-package com.takeaway.employeeservice.rest.boundary;
+package com.takeaway.employeeservice.runtime.errorhandling.entity;
 
 /**
- * User: StMinko Date: 18.03.2019 Time: 17:24
+ * User: StMinko Date: 18.03.2019 Time: 11:22
  *
  * <p>
  */
-public final class ApiVersions
+public class BadRequestException extends RuntimeException
 {
   // =========================== Class Variables ===========================
-
-  public static final String V1 = "/api/v1";
-
   // =============================  Variables  =============================
   // ============================  Constructors  ===========================
 
-  private ApiVersions()
+  public BadRequestException(Throwable cause)
   {
-    throw new AssertionError("This is not meant to be instantiated");
+    super(cause);
+  }
+
+  public BadRequestException(String message)
+  {
+    super(message);
+  }
+
+  public BadRequestException(String message, Throwable cause)
+  {
+    super(message, cause);
   }
 
   // ===========================  public  Methods  =========================

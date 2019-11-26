@@ -6,7 +6,7 @@ import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.Employee;
 import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
 import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
-import com.takeaway.employeeservice.rest.boundary.ApiVersions;
+import com.takeaway.employeeservice.runtime.rest.ApiVersions;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

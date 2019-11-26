@@ -1,4 +1,4 @@
-package com.takeaway.employeeservice.persistence.boundary;
+package com.takeaway.employeeservice.runtime.persistence;
 
 import lombok.AccessLevel;
 import lombok.Setter;
