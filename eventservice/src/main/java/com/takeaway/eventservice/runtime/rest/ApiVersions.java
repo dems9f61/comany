@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.rest.boundary;
+package com.takeaway.eventservice.runtime.rest;
 
 /**
  * User: StMinko Date: 18.03.2019 Time: 17:24

@@ -1,4 +1,4 @@
-package com.takeaway.eventservice.errorhandling.boundary;
+package com.takeaway.eventservice.runtime.errorhandling;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
