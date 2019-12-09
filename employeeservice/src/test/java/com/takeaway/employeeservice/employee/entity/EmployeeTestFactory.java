@@ -29,11 +29,10 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
 
         private Department department;
 
-        private DepartmentTestFactory departmentTestFactory = new DepartmentTestFactory();
-
         Builder()
         {
             this.emailAddress = generateRandomEmail();
+            DepartmentTestFactory departmentTestFactory = new DepartmentTestFactory();
             this.department = departmentTestFactory.createDefault();
             this.birthday = createRandomBirthday();
             this.fullName = new Employee.FullName();

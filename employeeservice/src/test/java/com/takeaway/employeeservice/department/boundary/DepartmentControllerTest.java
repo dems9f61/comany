@@ -2,8 +2,8 @@ package com.takeaway.employeeservice.department.boundary;
 
 import com.takeaway.employeeservice.UnitTestSuite;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
-import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
 import com.takeaway.employeeservice.department.entity.Department;
+import com.takeaway.employeeservice.department.entity.DepartmentRequest;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
 import com.takeaway.employeeservice.runtime.errorhandling.entity.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
@@ -40,12 +40,12 @@ class DepartmentControllerTest extends UnitTestSuite
         void givenUnderlyingException_whenCreate_thenThrowBadRequestException()
         {
             // Arrange
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.createDefault();
             doThrow(BadRequestException.class).when(departmentService)
-                                              .create(createDepartmentRequest.toDepartmentParameter());
+                                              .create(departmentRequest.toDepartmentParameter());
 
             // Act / Assert
-            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentController.create(createDepartmentRequest));
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentController.create(departmentRequest));
         }
 
         @Test
@@ -53,13 +53,13 @@ class DepartmentControllerTest extends UnitTestSuite
         void giveValidRequest_whenCreate_thenSucceed()
         {
             // Arrange
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.createDefault();
             Department department = departmentTestFactory.createDefault();
             doReturn(department).when(departmentService)
-                                .create(createDepartmentRequest.toDepartmentParameter());
+                                .create(departmentRequest.toDepartmentParameter());
 
             // Act
-            DepartmentResponse departmentResponse = departmentController.create(createDepartmentRequest);
+            DepartmentResponse departmentResponse = departmentController.create(departmentRequest);
 
             // Assert
             assertThat(departmentResponse).isNotNull();

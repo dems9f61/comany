@@ -1,8 +1,8 @@
 package com.takeaway.employeeservice.department.boundary;
 
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
-import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
 import com.takeaway.employeeservice.department.entity.Department;
+import com.takeaway.employeeservice.department.entity.DepartmentRequest;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
 import com.takeaway.employeeservice.runtime.rest.ApiVersions;
 import io.swagger.annotations.Api;
@@ -53,10 +53,10 @@ public class DepartmentController
                     message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    DepartmentResponse create(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
+    DepartmentResponse create(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
     {
-        LOGGER.info("Creating a department by the request [{}]", createDepartmentRequest);
-        Department department = departmentService.create(createDepartmentRequest.toDepartmentParameter());
+        LOGGER.info("Creating a department by the request [{}]", departmentRequest);
+        Department department = departmentService.create(departmentRequest.toDepartmentParameter());
         return new DepartmentResponse(department.getId(), department.getDepartmentName());
     }
 

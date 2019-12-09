@@ -1,7 +1,7 @@
 package com.takeaway.employeeservice.resttest;
 
 import com.takeaway.employeeservice.department.boundary.DepartmentController;
-import com.takeaway.employeeservice.department.entity.CreateDepartmentRequest;
+import com.takeaway.employeeservice.department.entity.DepartmentRequest;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
@@ -35,19 +35,17 @@ class DepartmentRestTest extends RestTestSuite
         {
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                                .departmentName(departmentName)
-                                                                                                .create();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder()
+                                                                              .departmentName(departmentName)
+                                                                              .create();
             HttpHeaders headers = defaultHttpHeaders();
             testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                      HttpMethod.POST,
-                                      new HttpEntity<>(createDepartmentRequest, headers),
+                                      HttpMethod.POST, new HttpEntity<>(departmentRequest, headers),
                                       DepartmentResponse.class);
 
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                                                            HttpMethod.POST,
-                                                                            new HttpEntity<>(createDepartmentRequest, headers),
+                                                                            HttpMethod.POST, new HttpEntity<>(departmentRequest, headers),
                                                                             Void.class);
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -58,16 +56,15 @@ class DepartmentRestTest extends RestTestSuite
         void givenBlankDepartmentName_whenCreateDepartment_thenStatus400()
         {
             // Arrange
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                                .departmentName("  ")
-                                                                                                .create();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder()
+                                                                              .departmentName("  ")
+                                                                              .create();
 
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
             ResponseEntity<Void> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                                                            HttpMethod.POST,
-                                                                            new HttpEntity<>(createDepartmentRequest, headers),
+                                                                            HttpMethod.POST, new HttpEntity<>(departmentRequest, headers),
                                                                             Void.class);
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -78,16 +75,15 @@ class DepartmentRestTest extends RestTestSuite
         void givenNullDepartmentName_whenCreateDepartment_thenStatus400()
         {
             // Arrange
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
-                                                                                                .departmentName(null)
-                                                                                                .create();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder()
+                                                                              .departmentName(null)
+                                                                              .create();
 
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
             ResponseEntity<String> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
-                                                                              HttpMethod.POST,
-                                                                              new HttpEntity<>(createDepartmentRequest, headers),
+                                                                              HttpMethod.POST, new HttpEntity<>(departmentRequest, headers),
                                                                               String.class);
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -98,13 +94,13 @@ class DepartmentRestTest extends RestTestSuite
         void givenValidDepartmentName_whenCreateDepartment_thenStatus201()
         {
             // Arrange
-            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.createDefault();
             HttpHeaders headers = defaultHttpHeaders();
 
             // Act
             ResponseEntity<DepartmentResponse> responseEntity = testRestTemplate.exchange(DepartmentController.BASE_URI,
                                                                                           HttpMethod.POST,
-                                                                                          new HttpEntity<>(createDepartmentRequest, headers),
+                                                                                          new HttpEntity<>(departmentRequest, headers),
                                                                                           DepartmentResponse.class);
 
             // Assert
@@ -112,7 +108,7 @@ class DepartmentRestTest extends RestTestSuite
             DepartmentResponse departmentResponse = responseEntity.getBody();
             assertThat(departmentResponse).isNotNull();
             assertThat(departmentResponse.getId()).isGreaterThan(0);
-            assertThat(departmentResponse.getDepartmentName()).isEqualTo(createDepartmentRequest.getDepartmentName());
+            assertThat(departmentResponse.getDepartmentName()).isEqualTo(departmentRequest.getDepartmentName());
         }
     }
 

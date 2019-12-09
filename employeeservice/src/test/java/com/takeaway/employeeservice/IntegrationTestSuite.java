@@ -2,11 +2,10 @@ package com.takeaway.employeeservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.takeaway.employeeservice.department.control.DepartmentParameterTestFactory;
-import com.takeaway.employeeservice.department.entity.CreateDepartmentRequestTestFactory;
+import com.takeaway.employeeservice.department.entity.DepartmentRequestTestFactory;
 import com.takeaway.employeeservice.employee.control.EmployeeEventPublisherCapable;
 import com.takeaway.employeeservice.employee.control.EmployeeParameterTestFactory;
-import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequestTestFactory;
-import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequestTestFactory;
+import com.takeaway.employeeservice.employee.entity.EmployeeRequestTestFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,13 +43,10 @@ public abstract class IntegrationTestSuite
     protected EmployeeParameterTestFactory employeeParameterTestFactory;
 
     @Autowired
-    protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
+    protected DepartmentRequestTestFactory departmentRequestTestFactory;
 
     @Autowired
-    protected CreateEmployeeRequestTestFactory createEmployeeRequestTestFactory;
-
-    @Autowired
-    protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
+    protected EmployeeRequestTestFactory employeeRequestTestFactory;
 
     @Autowired
     protected DatabaseCleaner databaseCleaner;

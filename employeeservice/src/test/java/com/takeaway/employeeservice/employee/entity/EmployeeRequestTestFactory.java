@@ -12,14 +12,14 @@ import java.time.ZonedDateTime;
  * <p>
  */
 @Component
-public class CreateEmployeeRequestTestFactory extends AbstractTestFactory<CreateEmployeeRequest, CreateEmployeeRequestTestFactory.Builder>
+public class EmployeeRequestTestFactory extends AbstractTestFactory<EmployeeRequest, EmployeeRequestTestFactory.Builder>
 {
     public Builder builder()
     {
         return new Builder();
     }
 
-    public static class Builder implements AbstractTestFactory.Builder<CreateEmployeeRequest>
+    public static class Builder implements AbstractTestFactory.Builder<EmployeeRequest>
     {
         private String emailAddress;
 
@@ -70,9 +70,9 @@ public class CreateEmployeeRequestTestFactory extends AbstractTestFactory<Create
             return this;
         }
 
-        public CreateEmployeeRequest create()
+        public EmployeeRequest create()
         {
-            return new CreateEmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
+            return new EmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
         }
     }
 }

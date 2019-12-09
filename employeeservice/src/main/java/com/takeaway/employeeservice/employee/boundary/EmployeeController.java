@@ -1,12 +1,13 @@
 package com.takeaway.employeeservice.employee.boundary;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.employeeservice.employee.control.EmployeeParameter;
 import com.takeaway.employeeservice.employee.control.EmployeeServiceCapable;
-import com.takeaway.employeeservice.employee.entity.CreateEmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.Employee;
+import com.takeaway.employeeservice.employee.entity.EmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
-import com.takeaway.employeeservice.employee.entity.UpdateEmployeeRequest;
 import com.takeaway.employeeservice.runtime.rest.ApiVersions;
+import com.takeaway.employeeservice.runtime.rest.DataView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -58,10 +59,10 @@ public class EmployeeController
                     message = "") })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    EmployeeResponse createEmployee(@RequestBody @NotNull @Valid CreateEmployeeRequest createEmployeeRequest)
+    EmployeeResponse createEmployee(@RequestBody @NotNull @Valid @JsonView(DataView.POST.class) EmployeeRequest employeeRequest)
     {
-        LOGGER.info("Creating an employee by the request [{}]", createEmployeeRequest);
-        EmployeeParameter employeeParameter = createEmployeeRequest.toEmployerParameter();
+        LOGGER.info("Creating an employee by the request [{}]", employeeRequest);
+        EmployeeParameter employeeParameter = employeeRequest.toEmployerParameter();
         Employee employee = employeeService.create(employeeParameter);
         return new EmployeeResponse(employee.getId(),
                                     employee.getEmailAddress(),
@@ -102,10 +103,10 @@ public class EmployeeController
                     message = "") })
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void updateEmployee(@NotNull @PathVariable("id") UUID id, @Valid @RequestBody UpdateEmployeeRequest updateEmployeeRequest)
+    void updateEmployee(@NotNull @PathVariable("id") UUID id, @Valid @RequestBody @JsonView(DataView.PATCH.class) EmployeeRequest employeeRequest)
     {
-        LOGGER.info("Updating an employee by the id [{}] and request [{}]", id, updateEmployeeRequest);
-        employeeService.update(id, updateEmployeeRequest.toEmployerParameter());
+        LOGGER.info("Updating an employee by the id [{}] and request [{}]", id, employeeRequest);
+        employeeService.update(id, employeeRequest.toEmployerParameter());
     }
 
     @ApiOperation(value = "Deletes permanently an employee")
