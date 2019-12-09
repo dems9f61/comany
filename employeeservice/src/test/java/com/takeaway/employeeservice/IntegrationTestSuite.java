@@ -13,9 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.nio.charset.StandardCharsets;
 import java.util.TimeZone;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -34,6 +36,11 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public abstract class IntegrationTestSuite
 {
     // =========================== Class Variables ===========================
+
+    protected static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
+                                                                           MediaType.APPLICATION_JSON.getSubtype(),
+                                                                           StandardCharsets.UTF_8);
+
     // =============================  Variables  =============================
 
     @Autowired

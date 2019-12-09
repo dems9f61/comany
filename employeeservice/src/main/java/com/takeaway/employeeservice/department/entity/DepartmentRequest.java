@@ -3,6 +3,7 @@ package com.takeaway.employeeservice.department.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.employeeservice.department.control.DepartmentParameter;
 import com.takeaway.employeeservice.runtime.rest.DataView;
 import com.takeaway.employeeservice.runtime.validation.NullOrNotBlank;
@@ -27,6 +28,7 @@ public class DepartmentRequest
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
+    @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
     @ApiModelProperty(example = "Human Resources (HR)")
     @NullOrNotBlank(groups = {DataView.PATCH.class})
     @NotBlank(message = "The department name must not be blank",

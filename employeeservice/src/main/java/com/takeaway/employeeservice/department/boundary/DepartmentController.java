@@ -1,10 +1,12 @@
 package com.takeaway.employeeservice.department.boundary;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.takeaway.employeeservice.department.control.DepartmentServiceCapable;
 import com.takeaway.employeeservice.department.entity.Department;
 import com.takeaway.employeeservice.department.entity.DepartmentRequest;
 import com.takeaway.employeeservice.department.entity.DepartmentResponse;
 import com.takeaway.employeeservice.runtime.rest.ApiVersions;
+import com.takeaway.employeeservice.runtime.rest.DataView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -51,7 +53,7 @@ public class DepartmentController
     @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = "")})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    DepartmentResponse create(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)
+    DepartmentResponse create(@RequestBody @NotNull @Valid @JsonView(DataView.POST.class) DepartmentRequest departmentRequest)
     {
         LOGGER.info("Creating a department by the request [{}]", departmentRequest);
         Department department = departmentService.create(departmentRequest.toDepartmentParameter());
