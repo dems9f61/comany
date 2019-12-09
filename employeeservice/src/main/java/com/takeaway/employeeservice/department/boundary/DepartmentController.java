@@ -30,8 +30,8 @@ import java.net.HttpURLConnection;
 @RestController
 @Api(value = "Department service: Operations pertaining to department service interface")
 @RequestMapping(value = DepartmentController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+        consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class DepartmentController
 {
@@ -48,9 +48,7 @@ public class DepartmentController
     // =================  protected/package local  Methods ===================
 
     @ApiOperation(value = "Creates a department with the request values")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,
-                    message = "") })
+    @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = "")})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     DepartmentResponse create(@RequestBody @NotNull @Valid DepartmentRequest departmentRequest)

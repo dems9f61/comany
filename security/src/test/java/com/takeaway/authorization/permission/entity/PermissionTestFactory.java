@@ -44,8 +44,7 @@ public class PermissionTestFactory extends AbstractTestFactory<Permission, Permi
         public Permission create()
         {
             Permission permission = new Permission();
-            return permission.setName(name)
-                             .setDescription(description);
+            return permission.setName(name).setDescription(description);
         }
     }
 }

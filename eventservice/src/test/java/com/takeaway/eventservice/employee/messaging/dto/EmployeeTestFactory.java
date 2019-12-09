@@ -31,14 +31,12 @@ public class EmployeeTestFactory
 
     public List<Employee> createManyDefault(int count)
     {
-        return manyBuilders(count).map(Builder::create)
-                                  .collect(Collectors.toList());
+        return manyBuilders(count).map(Builder::create).collect(Collectors.toList());
     }
 
     private Stream<Builder> manyBuilders(int count)
     {
-        return IntStream.range(0, count)
-                        .mapToObj(i -> builder());
+        return IntStream.range(0, count).mapToObj(i -> builder());
     }
 
     public Builder builder()
@@ -108,11 +106,7 @@ public class EmployeeTestFactory
         public Employee create()
         {
             Employee employee = new Employee();
-            return employee.setBirthday(birthday)
-                           .setId(uuid)
-                           .setDepartment(department)
-                           .setEmailAddress(emailAddress)
-                           .setFullName(fullName);
+            return employee.setBirthday(birthday).setId(uuid).setDepartment(department).setEmailAddress(emailAddress).setFullName(fullName);
         }
 
         private ZonedDateTime createRandomBirthday()

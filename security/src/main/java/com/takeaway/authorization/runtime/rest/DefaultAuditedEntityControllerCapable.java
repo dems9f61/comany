@@ -16,8 +16,7 @@ import java.io.Serializable;
  * <p>
  */
 @Validated
-public interface DefaultAuditedEntityControllerCapable<ENTITY extends AuditedEntity<ID>, ID extends Serializable>
-        extends DefaultEntityControllerCapable<ENTITY, ID>
+public interface DefaultAuditedEntityControllerCapable<ENTITY extends AuditedEntity<ID>, ID extends Serializable> extends DefaultEntityControllerCapable<ENTITY, ID>
 {
     // =========================== Class Variables ===========================
     // ==============================  Methods  ==============================

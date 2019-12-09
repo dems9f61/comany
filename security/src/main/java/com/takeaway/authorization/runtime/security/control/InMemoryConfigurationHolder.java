@@ -36,7 +36,7 @@ public class InMemoryConfigurationHolder
 {
     // =========================== Class Variables ===========================
 
-    private static final int ONE_DAY     = 60 * 60 * 24;
+    private static final int ONE_DAY = 60 * 60 * 24;
 
     private static final int THIRTY_DAYS = 60 * 60 * 24 * 30;
 
@@ -61,12 +61,7 @@ public class InMemoryConfigurationHolder
         firstClient.setRefreshTokenValiditySeconds(THIRTY_DAYS);
         clients.put("client", firstClient);
 
-        BaseClientDetails secondClient = new BaseClientDetails("clientWithBadScope",
-                                                               "",
-                                                               "bad_scope",
-                                                               "client_credentials,password,refresh_token",
-                                                               "",
-                                                               "");
+        BaseClientDetails secondClient = new BaseClientDetails("clientWithBadScope", "", "bad_scope", "client_credentials,password,refresh_token", "", "");
         secondClient.setClientSecret(passwordEncoder.encode("secret"));
         secondClient.setAccessTokenValiditySeconds(ONE_DAY);
         secondClient.setRefreshTokenValiditySeconds(THIRTY_DAYS);
@@ -105,10 +100,10 @@ public class InMemoryConfigurationHolder
         allAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_UPDATE"));
 
         CustomUserDetails admintUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), allAuthorities),
-                                                             "admin",
-                                                             passwordEncoder.encode("admin"),
-                                                             true,
-                                                             allAuthorities);
+                        "admin",
+                        passwordEncoder.encode("admin"),
+                        true,
+                        allAuthorities);
         users.add(admintUser);
 
         List<GrantedAuthority> readAuthorities = new LinkedList<>();
@@ -122,19 +117,19 @@ public class InMemoryConfigurationHolder
         readAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_AUDIT_TRAIL"));
 
         CustomUserDetails readUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), readAuthorities),
-                                                           "user",
-                                                           passwordEncoder.encode("user"),
-                                                           true,
-                                                           readAuthorities);
+                        "user",
+                        passwordEncoder.encode("user"),
+                        true,
+                        readAuthorities);
         users.add(readUser);
 
         List<GrantedAuthority> uselessAuthorities = new LinkedList<>();
         uselessAuthorities.add(new SimpleGrantedAuthority("ROLE_USELESS_ROLE"));
         CustomUserDetails uselessUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), uselessAuthorities),
-                                                              "userWithNoRole",
-                                                              passwordEncoder.encode("user"),
-                                                              true,
-                                                              uselessAuthorities);
+                        "userWithNoRole",
+                        passwordEncoder.encode("user"),
+                        true,
+                        uselessAuthorities);
         users.add(uselessUser);
 
         return new InMemoryUserDetailsManager(users)
@@ -144,8 +139,7 @@ public class InMemoryConfigurationHolder
             {
                 UserDetails userDetails = super.loadUserByUsername(username);
                 return users.stream()
-                            .filter(user -> user.getUsername()
-                                                .equals(userDetails.getUsername()))
+                            .filter(user -> user.getUsername().equals(userDetails.getUsername()))
                             .findFirst()
                             .orElseThrow(() -> new UsernameNotFoundException(username));
             }

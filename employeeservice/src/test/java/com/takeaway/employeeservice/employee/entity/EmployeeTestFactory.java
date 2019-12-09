@@ -67,10 +67,7 @@ public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeT
         public Employee create()
         {
             Employee employee = new Employee();
-            return employee.setBirthday(birthday)
-                           .setDepartment(department)
-                           .setEmailAddress(emailAddress)
-                           .setFullName(fullName);
+            return employee.setBirthday(birthday).setDepartment(department).setEmailAddress(emailAddress).setFullName(fullName);
         }
     }
 }

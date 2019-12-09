@@ -20,15 +20,14 @@ class OauthAuthorizationServerIntegrationTest extends IntegrationTestSuite
     {
         // Arrange
         AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                        .userPassword(RandomStringUtils.randomAlphabetic(8))
-                                                                        .userName(RandomStringUtils.randomAlphabetic(9))
-                                                                        .build();
+                            .userPassword(RandomStringUtils.randomAlphabetic(8))
+                            .userName(RandomStringUtils.randomAlphabetic(9))
+                            .build();
         // Act
         String response = obtainAccessToken(accessTokenParameter);
 
         // Assert
-        assertThat(response).isNotNull()
-                            .isEqualTo("Bad credentials");
+        assertThat(response).isNotNull().isEqualTo("Bad credentials");
     }
 
     @Test
@@ -37,9 +36,9 @@ class OauthAuthorizationServerIntegrationTest extends IntegrationTestSuite
     {
         // Arrange
         AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                        .clientId(RandomStringUtils.randomAlphabetic(8))
-                                                                        .clientSecret(RandomStringUtils.randomAlphabetic(9))
-                                                                        .build();
+                            .clientId(RandomStringUtils.randomAlphabetic(8))
+                            .clientSecret(RandomStringUtils.randomAlphabetic(9))
+                            .build();
         // Act
         String response = obtainAccessToken(accessTokenParameter);
 
@@ -52,14 +51,11 @@ class OauthAuthorizationServerIntegrationTest extends IntegrationTestSuite
     void givenValidRequest_whenAccessToken_thenSucceed() throws Exception
     {
         // Arrange
-        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                        .build();
+        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder().build();
         // Act
         String response = obtainAccessToken(accessTokenParameter);
 
         // Assert
-        assertThat(response).isNotEmpty()
-                            .isNotBlank()
-                            .isNotEqualTo("Bad credentials");
+        assertThat(response).isNotEmpty().isNotBlank().isNotEqualTo("Bad credentials");
     }
 }

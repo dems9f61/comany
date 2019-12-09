@@ -27,7 +27,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT,
-        classes = { EventServiceApplication.class })
+        classes = {EventServiceApplication.class})
 @TestPropertySource(properties = {"config.asyncEnabled=false"})
 @ActiveProfiles("INTEGRATION")
 public abstract class IntegrationTestSuite
@@ -67,12 +67,10 @@ public abstract class IntegrationTestSuite
     {
         List<Employee> employees = employeeTestFactory.createManyDefault(count <= 0 ? RandomUtils.nextInt(30, 100) : count);
         employees.forEach(employee -> {
-            employee.setId(uuid);
-            EmployeeMessage employeeMessage = employeeMessageTestFactory.builder()
-                                                                        .employee(employee)
-                                                                        .create();
-            employeeMessageReceiver.receiveEmployeeMessage(employeeMessage);
-        });
+                    employee.setId(uuid);
+                    EmployeeMessage employeeMessage = employeeMessageTestFactory.builder().employee(employee).create();
+                    employeeMessageReceiver.receiveEmployeeMessage(employeeMessage);
+                });
     }
     // =================  protected/package local  Methods ===================
 

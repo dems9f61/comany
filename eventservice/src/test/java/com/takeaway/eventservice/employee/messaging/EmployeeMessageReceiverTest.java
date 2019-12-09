@@ -36,18 +36,18 @@ class EmployeeMessageReceiverTest extends UnitTestSuite
     {
         // Arrange
         EmployeeMessage employeeMessage = employeeMessageTestFactory.createDefault();
-        doNothing().when(eventPublisher)
-                   .publishEvent(any());
+        doNothing().when(eventPublisher).publishEvent(any());
 
         // Act
         employeeMessageReceiver.receiveEmployeeMessage(employeeMessage);
 
         // Assert
-        verify(eventPublisher).publishEvent(assertArg(event -> {
-            assertThat(event).isInstanceOf(EmployeeEvent.class);
-            EmployeeEvent employeeEvent = (EmployeeEvent) event;
-            assertThat(employeeEvent.getEmployee()).isEqualTo(employeeMessage.getEmployee());
-            assertThat(employeeEvent.getEventType()).isEqualTo(employeeMessage.getEventType());
-        }));
+        verify(eventPublisher)
+                .publishEvent(assertArg(event -> {
+                                    assertThat(event).isInstanceOf(EmployeeEvent.class);
+                                    EmployeeEvent employeeEvent = (EmployeeEvent) event;
+                                    assertThat(employeeEvent.getEmployee()).isEqualTo(employeeMessage.getEmployee());
+                                    assertThat(employeeEvent.getEventType()).isEqualTo(employeeMessage.getEventType());
+                                }));
     }
 }

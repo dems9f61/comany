@@ -22,8 +22,7 @@ public class JsonDateSerializer extends JsonSerializer<ZonedDateTime>
     @Override
     public void serialize(ZonedDateTime value, JsonGenerator jsonGenerator, SerializerProvider provider) throws IOException
     {
-        jsonGenerator.writeString(value.toLocalDate()
-                                       .toString());
+        jsonGenerator.writeString(value.toLocalDate().toString());
     }
 
     // =================  protected/package local  Methods ===================

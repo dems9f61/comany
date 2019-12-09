@@ -23,9 +23,7 @@ public abstract class AbstractRepositoryTestHelper<ENTITY, ID, REPOSITORY extend
 
     public final void cleanDatabase()
     {
-        LOGGER.info("{}.cleanDatabase ()",
-                    this.getClass()
-                        .getSimpleName());
+        LOGGER.info("{}.cleanDatabase ()", this.getClass().getSimpleName());
         repository.deleteAll();
     }
 

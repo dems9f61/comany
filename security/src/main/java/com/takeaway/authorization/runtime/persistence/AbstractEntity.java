@@ -35,25 +35,25 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
     @JsonView(DataView.GET.class)
     private ID id;
 
-    @NotNull(groups = { Default.class, DataView.GET.class })
+    @NotNull(groups = {Default.class, DataView.GET.class})
     @JsonView(DataView.GET.class)
     @NotAudited
     private ZonedDateTime createdAt;
 
-    @NotNull(groups = { Default.class, DataView.GET.class })
+    @NotNull(groups = {Default.class, DataView.GET.class})
     @JsonView(DataView.GET.class)
     @NotAudited
     private String createdBy;
 
-    @NotNull(groups = { Default.class, DataView.GET.class })
+    @NotNull(groups = {Default.class, DataView.GET.class})
     @JsonView(DataView.GET.class)
     private ZonedDateTime lastUpdatedAt;
 
-    @NotNull(groups = { Default.class, DataView.GET.class })
+    @NotNull(groups = {Default.class, DataView.GET.class})
     @JsonView(DataView.GET.class)
     private String lastUpdatedBy;
 
-    @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class })
+    @JsonView({DataView.GET.class, DataView.PUT.class, DataView.PATCH.class})
     @Setter(value = AccessLevel.PRIVATE)
     @Column(nullable = false)
     @Version
@@ -76,8 +76,7 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
     private void patchAuditData()
     {
         this.lastUpdatedAt = ZonedDateTime.now();
-        this.lastUpdatedBy = EntitySecurityHolder.get()
-                                                 .getActingUser();
+        this.lastUpdatedBy = EntitySecurityHolder.get().getActingUser();
         if (this.createdAt == null)
         {
             this.createdAt = this.lastUpdatedAt;
@@ -121,8 +120,18 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
     @Override
     public String toString()
     {
-        return "AbstractEntity{" + "id=" + id + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", lastUpdatedAt=" + lastUpdatedAt
-                + ", lastUpdatedBy=" + lastUpdatedBy + '}';
+        return "AbstractEntity{"
+            + "id="
+            + id
+            + ", createdAt="
+            + createdAt
+            + ", createdBy="
+            + createdBy
+            + ", lastUpdatedAt="
+            + lastUpdatedAt
+            + ", lastUpdatedBy="
+            + lastUpdatedBy
+            + '}';
     }
 
     // =================  protected/package local  Methods ===================

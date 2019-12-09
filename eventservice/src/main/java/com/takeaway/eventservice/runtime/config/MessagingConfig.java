@@ -82,8 +82,8 @@ public class MessagingConfig
 
     @Bean
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory,
-                                                                               Jackson2JsonMessageConverter converter,
-                                                                               MethodInterceptor retryOperationsInterceptor)
+                Jackson2JsonMessageConverter converter,
+                MethodInterceptor retryOperationsInterceptor)
     {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
@@ -110,10 +110,10 @@ public class MessagingConfig
         backOffPolicy.setInitialInterval(1000);
 
         return RetryInterceptorBuilder.stateless()
-                                      .backOffPolicy(backOffPolicy)
-                                      .maxAttempts(3)
-                                      .recoverer(new RepublishMessageRecoverer(rabbitTemplate, errorQueue().getName(), routingKey))
-                                      .build();
+                    .backOffPolicy(backOffPolicy)
+                    .maxAttempts(3)
+                    .recoverer(new RepublishMessageRecoverer(rabbitTemplate, errorQueue().getName(), routingKey))
+                    .build();
     }
 
     @Bean
@@ -144,10 +144,10 @@ public class MessagingConfig
     public Queue queue()
     {
         Queue queue = QueueBuilder.durable(queueName)
-                                  .withArgument("x-message-ttl", 10000)
-                                  .withArgument("x-dead-letter-exchange", exchangeName + "." + DEAD_LETTER)
-                                  .withArgument("x-dead-letter-routing-key", routingKey)
-                                  .build();
+                            .withArgument("x-message-ttl", 10000)
+                            .withArgument("x-dead-letter-exchange", exchangeName + "." + DEAD_LETTER)
+                            .withArgument("x-dead-letter-routing-key", routingKey)
+                            .build();
         queue.setAdminsThatShouldDeclare(admin());
         return queue;
     }
@@ -155,8 +155,7 @@ public class MessagingConfig
     @Bean
     public Queue deadLetterQueue()
     {
-        Queue queue = QueueBuilder.durable(queueName + "." + DEAD_LETTER)
-                                  .build();
+        Queue queue = QueueBuilder.durable(queueName + "." + DEAD_LETTER).build();
         queue.setAdminsThatShouldDeclare(admin());
         return queue;
     }
@@ -164,8 +163,7 @@ public class MessagingConfig
     @Bean
     public Queue errorQueue()
     {
-        Queue queue = QueueBuilder.durable(queueName + "." + ERROR)
-                                  .build();
+        Queue queue = QueueBuilder.durable(queueName + "." + ERROR).build();
         queue.setAdminsThatShouldDeclare(admin());
         return queue;
     }
@@ -173,28 +171,19 @@ public class MessagingConfig
     @Bean
     public Binding queueBinding()
     {
-        return BindingBuilder.bind(queue())
-                             .to(exchange())
-                             .with(routingKey)
-                             .noargs();
+        return BindingBuilder.bind(queue()).to(exchange()).with(routingKey).noargs();
     }
 
     @Bean
     public Binding queueBindingDlx()
     {
-        return BindingBuilder.bind(deadLetterQueue())
-                             .to(deadLetterExchange())
-                             .with(routingKey)
-                             .noargs();
+        return BindingBuilder.bind(deadLetterQueue()).to(deadLetterExchange()).with(routingKey).noargs();
     }
 
     @Bean
     public Binding queueBindingError()
     {
-        return BindingBuilder.bind(errorQueue())
-                             .to(errorExchange())
-                             .with(routingKey)
-                             .noargs();
+        return BindingBuilder.bind(errorQueue()).to(errorExchange()).with(routingKey).noargs();
     }
 
     // =================  protected/package local  Methods ===================

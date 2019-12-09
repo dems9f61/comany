@@ -31,11 +31,7 @@ public class CustomUserDetails implements UserDetails
 
     // ============================  Constructors  ===========================
 
-    public CustomUserDetails(UserInformation userInformation,
-                             String username,
-                             String password,
-                             boolean enabled,
-                             Collection<? extends GrantedAuthority> authorities)
+    public CustomUserDetails(UserInformation userInformation, String username, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities)
     {
         this.authorities = new HashSet<>(authorities);
         this.username = username;

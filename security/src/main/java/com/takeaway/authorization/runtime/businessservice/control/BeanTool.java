@@ -71,11 +71,7 @@ public final class BeanTool
             }
             catch (IllegalAccessException caught)
             {
-                LOGGER.debug("IllegalAccessException when reading value of Field: {} on Object: {}. Error was: {}",
-                             field.getName(),
-                             source,
-                             caught.getMessage(),
-                             caught);
+                LOGGER.debug("IllegalAccessException when reading value of Field: {} on Object: {}. Error was: {}", field.getName(), source, caught.getMessage(), caught);
             }
             finally
             {

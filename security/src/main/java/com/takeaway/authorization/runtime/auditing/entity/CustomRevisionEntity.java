@@ -12,21 +12,16 @@ import javax.persistence.*;
  * <p>
  */
 @Entity
-@Table(name = "audit_trail",
-        schema = "history")
+@Table(name = "audit_trail",schema = "history")
 @RevisionEntity
-@SequenceGenerator(name = "audit_trail_sequence",
-        schema = "history",
-        initialValue = 1,
-        allocationSize = 1)
+@SequenceGenerator(name = "audit_trail_sequence",schema = "history",initialValue = 1,allocationSize = 1)
 public class CustomRevisionEntity
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "audit_trail_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "audit_trail_sequence")
     @RevisionNumber
     private Long revisionNumber;
 

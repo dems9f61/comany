@@ -33,8 +33,7 @@ public abstract class AbstractTestFactory<TYPE, BUILDER_TYPE extends AbstractTes
 
     public List<TYPE> createManyDefault(int count)
     {
-        return manyBuilders(count).map(Builder::create)
-                                  .collect(Collectors.toList());
+        return manyBuilders(count).map(Builder::create).collect(Collectors.toList());
     }
 
     // =================  protected/package local  Methods ===================
@@ -42,8 +41,7 @@ public abstract class AbstractTestFactory<TYPE, BUILDER_TYPE extends AbstractTes
 
     private Stream<Builder<TYPE>> manyBuilders(int count)
     {
-        return IntStream.range(0, count)
-                        .mapToObj(i -> builder());
+        return IntStream.range(0, count).mapToObj(i -> builder());
     }
 
     // ============================  Inner Classes  ==========================
@@ -54,20 +52,17 @@ public abstract class AbstractTestFactory<TYPE, BUILDER_TYPE extends AbstractTes
 
         default LocalDate generateRandomDate()
         {
-            long minDay = LocalDate.of(1900, 1, 1)
-                                   .toEpochDay();
-            long maxDay = LocalDate.now()
-                                   .toEpochDay();
-            long randomDay = ThreadLocalRandom.current()
-                                              .nextLong(minDay, maxDay);
+            long minDay = LocalDate.of(1900, 1, 1).toEpochDay();
+            long maxDay = LocalDate.now().toEpochDay();
+            long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
 
             return LocalDate.ofEpochDay(randomDay);
         }
 
-    default String generateRandomEmail()
-    {
-      return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
-    }
+        default String generateRandomEmail()
+        {
+            return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
+        }
 
         default ZonedDateTime createRandomBirthday()
         {

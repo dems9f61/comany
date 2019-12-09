@@ -46,9 +46,7 @@ public class MessagingConfig
 
     @Bean
     @Primary
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
-                                         Jackson2JsonMessageConverter messageConverter,
-                                         MessagePostProcessor messagePostProcessor)
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter messageConverter, MessagePostProcessor messagePostProcessor)
     {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
         template.setRetryTemplate(retryTemplate());

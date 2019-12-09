@@ -31,29 +31,28 @@ public class Employee extends AbstractEntity<UUID>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
-    @Getter(onMethod = @__(@Override))
+    @Getter(onMethod =
+                    @__(
+                            @Override
+                            ))
     @Id
     private UUID id;
 
-    @Column(name = "EMAIL_ADDRESS",
-            unique = true)
+    @Column(name = "EMAIL_ADDRESS",unique = true)
     private String emailAddress;
 
     @Embedded
     @AttributeOverrides(value = {
-            @AttributeOverride(name = "firstName",
-                    column = @Column(name = "FIRST_NAME")),
-            @AttributeOverride(name = "lastName",
-                    column = @Column(name = "LAST_NAME")) })
+                @AttributeOverride(name = "firstName",column = @Column(name = "FIRST_NAME")),
+                @AttributeOverride(name = "lastName",column = @Column(name = "LAST_NAME"))
+            })
     private FullName fullName = new FullName();
 
     private ZonedDateTime birthday;
 
     @JsonManagedReference
-    @ManyToOne(optional = false,
-            cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "DEPARTMENT_ID",
-            nullable = false)
+    @ManyToOne(optional = false,cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "DEPARTMENT_ID",nullable = false)
     private Department department;
 
     // ============================  Constructors  ===========================

@@ -41,8 +41,7 @@ class DepartmentControllerTest extends UnitTestSuite
         {
             // Arrange
             DepartmentRequest departmentRequest = departmentRequestTestFactory.createDefault();
-            doThrow(BadRequestException.class).when(departmentService)
-                                              .create(departmentRequest.toDepartmentParameter());
+            doThrow(BadRequestException.class).when(departmentService).create(departmentRequest.toDepartmentParameter());
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentController.create(departmentRequest));
@@ -55,8 +54,7 @@ class DepartmentControllerTest extends UnitTestSuite
             // Arrange
             DepartmentRequest departmentRequest = departmentRequestTestFactory.createDefault();
             Department department = departmentTestFactory.createDefault();
-            doReturn(department).when(departmentService)
-                                .create(departmentRequest.toDepartmentParameter());
+            doReturn(department).when(departmentService).create(departmentRequest.toDepartmentParameter());
 
             // Act
             DepartmentResponse departmentResponse = departmentController.create(departmentRequest);

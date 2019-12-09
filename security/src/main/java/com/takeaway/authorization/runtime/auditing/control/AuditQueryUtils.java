@@ -26,7 +26,7 @@ public final class AuditQueryUtils
     // ===========================  public  Methods  =========================
 
     public static <ID extends Serializable, ENTITY extends AuditedEntity<ID>> List<AuditQueryResult<ID, ENTITY>> getAuditQueryResults(AuditQuery query,
-                                                                                                                                      Class<ENTITY> targetType)
+                Class<ENTITY> targetType)
     {
         List<?> results = query.getResultList();
 
@@ -43,14 +43,14 @@ public final class AuditQueryUtils
         //
         // We cast it into something useful for a safe access:
         return results.stream()
-                      // Only use Object[] results:
-                      .filter(x -> x instanceof Object[])
-                      // Then convert to Object[]:
-                      .map(x -> (Object[]) x)
-                      // Transform into the AuditQueryResult:
-                      .map(x -> AuditQueryResultUtils.getAuditQueryResult(x, targetType))
-                      // And collect the Results into a List:
-                      .collect(Collectors.toList());
+                // Only use Object[] results:
+                .filter(x -> x instanceof Object[])
+                // Then convert to Object[]:
+                .map(x -> (Object[]) x)
+                // Transform into the AuditQueryResult:
+                .map(x -> AuditQueryResultUtils.getAuditQueryResult(x, targetType))
+                // And collect the Results into a List:
+                .collect(Collectors.toList());
     }
 
     // =================  protected/package local  Methods ===================

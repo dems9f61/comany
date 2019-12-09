@@ -41,33 +41,33 @@ public class EmployeeRequest
 
     // =============================  Variables  =============================
 
-    @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class, DataView.POST.class })
+    @JsonView({DataView.POST.class, DataView.PUT.class, DataView.PATCH.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class, DataView.POST.class})
     @ApiModelProperty(example = "stephan.minko@nba.com")
     @Pattern(regexp = EMAIL_REGEX)
     private final String emailAddress;
 
-    @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class, DataView.POST.class })
+    @JsonView({DataView.POST.class, DataView.PUT.class, DataView.PATCH.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class, DataView.POST.class})
     @ApiModelProperty(example = "Stéphan")
     private final String firstName;
 
-    @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class, DataView.POST.class })
+    @JsonView({DataView.POST.class, DataView.PUT.class, DataView.PATCH.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class, DataView.POST.class})
     @ApiModelProperty(example = "Minko")
     private final String lastName;
 
-    @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
+    @JsonView({DataView.POST.class, DataView.PUT.class, DataView.PATCH.class})
     @ApiModelProperty(example = "1980-06-13")
-    @NullOrNotBlank(groups = { DataView.PATCH.class, DataView.POST.class })
+    @NullOrNotBlank(groups = {DataView.PATCH.class, DataView.POST.class})
     @JsonDeserialize(using = JsonDateDeSerializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
     private final ZonedDateTime birthday;
 
-    @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class })
-    @NotBlank(groups = { DataView.POST.class, DataView.PUT.class })
+    @JsonView({DataView.POST.class, DataView.PUT.class, DataView.PATCH.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class})
+    @NotBlank(groups = {DataView.POST.class, DataView.PUT.class})
     @ApiModelProperty(example = "Java Development")
     private final String departmentName;
 
@@ -75,10 +75,10 @@ public class EmployeeRequest
 
     @JsonCreator
     public EmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
-                           @JsonProperty(value = "firstName") String firstName,
-                           @JsonProperty(value = "lastName") String lastName,
-                           @JsonProperty(value = "birthday") ZonedDateTime birthday,
-                           @JsonProperty(value = "departmentName") String departmentName)
+                @JsonProperty(value = "firstName") String firstName,
+                @JsonProperty(value = "lastName") String lastName,
+                @JsonProperty(value = "birthday") ZonedDateTime birthday,
+                @JsonProperty(value = "departmentName") String departmentName)
     {
         this.emailAddress = emailAddress;
         this.firstName = firstName;
@@ -92,12 +92,12 @@ public class EmployeeRequest
     public final EmployeeParameter toEmployerParameter()
     {
         return EmployeeParameter.builder()
-                                .emailAddress(getEmailAddress())
-                                .birthday(getBirthday())
-                                .firstName(getFirstName())
-                                .lastName(getLastName())
-                                .departmentName(getDepartmentName())
-                                .build();
+                    .emailAddress(getEmailAddress())
+                    .birthday(getBirthday())
+                    .firstName(getFirstName())
+                    .lastName(getLastName())
+                    .departmentName(getDepartmentName())
+                    .build();
     }
 
     // =================  protected/package local  Methods ===================

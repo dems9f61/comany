@@ -54,8 +54,7 @@ public class OAuthClientTestFactory extends AbstractTestFactory<OauthClient, OAu
         public Builder()
         {
             this.clientId = RandomStringUtils.randomAlphabetic(10);
-            this.resourceIds =
-                    RandomStringUtils.randomAlphabetic(3) + "," + RandomStringUtils.randomAlphabetic(3) + "," + RandomStringUtils.randomAlphabetic(5);
+            this.resourceIds = RandomStringUtils.randomAlphabetic(3) + "," + RandomStringUtils.randomAlphabetic(3) + "," + RandomStringUtils.randomAlphabetic(5);
             this.secretRequired = true;
             this.oldClientSecret = SECRET;
             this.newClientSecret = oldClientSecret;
@@ -63,9 +62,7 @@ public class OAuthClientTestFactory extends AbstractTestFactory<OauthClient, OAu
             this.scoped = true;
             this.scope = "read,write";
             this.authorizedGrantTypes = "client_credentials,password,refresh_token";
-            this.registeredRedirectUri = URI.create(
-                    RandomStringUtils.randomAlphabetic(4) + "." + RandomStringUtils.randomAlphabetic(4) + ".com//authorize")
-                                            .toASCIIString();
+            this.registeredRedirectUri = URI.create(RandomStringUtils.randomAlphabetic(4) + "." + RandomStringUtils.randomAlphabetic(4) + ".com//authorize").toASCIIString();
             this.authorities = RandomStringUtils.randomAlphabetic(3) + "," + RandomStringUtils.randomAlphabetic(3);
             this.accessTokenValidityInSeconds = 84600 * 3;
             this.refreshTokenValidityInSeconds = 84600 * 7;
@@ -153,19 +150,20 @@ public class OAuthClientTestFactory extends AbstractTestFactory<OauthClient, OAu
         public OauthClient create()
         {
             OauthClient oAuthClient = new OauthClient();
-            return oAuthClient.setClientId(clientId)
-                              .setClientResourceIds(resourceIds)
-                              .setSecretRequired(secretRequired)
-                              .setOldClientSecret(oldClientSecret)
-                              .setNewClientSecret(newClientSecret)
-                              .setConfirmClientSecret(confirmClientSecret)
-                              .setClientScope(scope)
-                              .setClientScoped(scoped)
-                              .setClientRegisteredRedirectUri(registeredRedirectUri)
-                              .setClientAuthorizedGrantTypes(authorizedGrantTypes)
-                              .setClientAuthorities(authorities)
-                              .setAccessTokenValidityInSeconds(accessTokenValidityInSeconds)
-                              .setRefreshTokenValidityInSeconds(refreshTokenValidityInSeconds);
+            return oAuthClient
+                    .setClientId(clientId)
+                    .setClientResourceIds(resourceIds)
+                    .setSecretRequired(secretRequired)
+                    .setOldClientSecret(oldClientSecret)
+                    .setNewClientSecret(newClientSecret)
+                    .setConfirmClientSecret(confirmClientSecret)
+                    .setClientScope(scope)
+                    .setClientScoped(scoped)
+                    .setClientRegisteredRedirectUri(registeredRedirectUri)
+                    .setClientAuthorizedGrantTypes(authorizedGrantTypes)
+                    .setClientAuthorities(authorities)
+                    .setAccessTokenValidityInSeconds(accessTokenValidityInSeconds)
+                    .setRefreshTokenValidityInSeconds(refreshTokenValidityInSeconds);
         }
     }
 }

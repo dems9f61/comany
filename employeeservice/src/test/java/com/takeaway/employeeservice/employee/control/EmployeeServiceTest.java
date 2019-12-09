@@ -54,8 +54,7 @@ class EmployeeServiceTest extends UnitTestSuite
         {
             // Arrange
             UUID id = UUID.randomUUID();
-            doReturn(Optional.empty()).when(employeeRepository)
-                                      .findById(any());
+            doReturn(Optional.empty()).when(employeeRepository).findById(any());
 
             // Act / Assert
             assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.deleteById(id));
@@ -68,12 +67,9 @@ class EmployeeServiceTest extends UnitTestSuite
             // Arrange
             UUID id = UUID.randomUUID();
             Employee employee = employeeTestFactory.createDefault();
-            doReturn(Optional.of(employee)).when(employeeRepository)
-                                           .findById(id);
-            doNothing().when(employeeRepository)
-                       .deleteById(any());
-            doNothing().when(employeeEventPublisher)
-                       .employeeDeleted(any());
+            doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
+            doNothing().when(employeeRepository).deleteById(any());
+            doNothing().when(employeeEventPublisher).employeeDeleted(any());
 
             // Act
             employeeService.deleteById(id);
@@ -95,15 +91,12 @@ class EmployeeServiceTest extends UnitTestSuite
             // Arrange
             UUID id = UUID.randomUUID();
             Employee employee = employeeTestFactory.createDefault();
-            doReturn(Optional.of(employee)).when(employeeRepository)
-                                           .findById(id);
+            doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
             Department department = departmentTestFactory.createDefault();
 
-            doReturn(department).when(departmentService)
-                                .findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
-            doReturn(employee).when(employeeRepository)
-                              .save(any());
+            doReturn(department).when(departmentService).findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
+            doReturn(employee).when(employeeRepository).save(any());
 
             // Act
             employeeService.update(id, employeeParameter);
@@ -119,8 +112,7 @@ class EmployeeServiceTest extends UnitTestSuite
         {
             // Arrange
             UUID id = UUID.randomUUID();
-            doReturn(Optional.empty()).when(employeeRepository)
-                                      .findById(id);
+            doReturn(Optional.empty()).when(employeeRepository).findById(id);
 
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
 
@@ -135,12 +127,10 @@ class EmployeeServiceTest extends UnitTestSuite
             // Arrange
             UUID id = UUID.randomUUID();
             Employee employee = employeeTestFactory.createDefault();
-            doReturn(Optional.of(employee)).when(employeeRepository)
-                                           .findById(id);
+            doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
 
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-            doThrow(BadRequestException.class).when(departmentService)
-                                              .findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
+            doThrow(BadRequestException.class).when(departmentService).findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.update(id, employeeParameter));
@@ -158,31 +148,25 @@ class EmployeeServiceTest extends UnitTestSuite
             // Arrange
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
             Department department = departmentTestFactory.createDefault();
-            doReturn(department).when(departmentService)
-                                .findByDepartmentNameOrElseThrow(any(), any());
+            doReturn(department).when(departmentService).findByDepartmentNameOrElseThrow(any(), any());
 
-            doReturn(Collections.emptyList()).when(employeeRepository)
-                                             .findByEmailAddress(employeeParameter.getEmailAddress());
+            doReturn(Collections.emptyList()).when(employeeRepository).findByEmailAddress(employeeParameter.getEmailAddress());
             Employee employee = employeeTestFactory.createDefault();
-            doReturn(employee).when(employeeRepository)
-                              .save(any());
-            doNothing().when(employeeEventPublisher)
-                       .employeeCreated(any());
+            doReturn(employee).when(employeeRepository).save(any());
+            doNothing().when(employeeEventPublisher).employeeCreated(any());
 
             // Act
             employeeService.create(employeeParameter);
 
             // Assert
-            verify(employeeRepository).save(assertArg(persisted -> {
-                assertThat(persisted.getBirthday()).isEqualTo(employeeParameter.getBirthday());
-                assertThat(persisted.getDepartment()
-                                    .getDepartmentName()).isEqualTo(department.getDepartmentName());
-                assertThat(persisted.getEmailAddress()).isEqualTo(employeeParameter.getEmailAddress());
-                assertThat(persisted.getFullName()
-                                    .getFirstName()).isEqualTo(employeeParameter.getFirstName());
-                assertThat(persisted.getFullName()
-                                    .getLastName()).isEqualTo(employeeParameter.getLastName());
-            }));
+            verify(employeeRepository)
+                    .save(assertArg(persisted -> {
+                                        assertThat(persisted.getBirthday()).isEqualTo(employeeParameter.getBirthday());
+                                        assertThat(persisted.getDepartment().getDepartmentName()).isEqualTo(department.getDepartmentName());
+                                        assertThat(persisted.getEmailAddress()).isEqualTo(employeeParameter.getEmailAddress());
+                                        assertThat(persisted.getFullName().getFirstName()).isEqualTo(employeeParameter.getFirstName());
+                                        assertThat(persisted.getFullName().getLastName()).isEqualTo(employeeParameter.getLastName());
+                                    }));
             verify(employeeEventPublisher).employeeCreated(assertArg(getDefaultEmployeeConsumer(employee)));
         }
 
@@ -192,8 +176,7 @@ class EmployeeServiceTest extends UnitTestSuite
         {
             // Arrange
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-            doThrow(BadRequestException.class).when(departmentService)
-                                              .findByDepartmentNameOrElseThrow(any(), any());
+            doThrow(BadRequestException.class).when(departmentService).findByDepartmentNameOrElseThrow(any(), any());
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
@@ -206,8 +189,7 @@ class EmployeeServiceTest extends UnitTestSuite
             // Arrange
             EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
             Employee employee = employeeTestFactory.createDefault();
-            doReturn(Lists.newArrayList(employee)).when(employeeRepository)
-                                                  .findByEmailAddress(employeeParameter.getEmailAddress());
+            doReturn(Lists.newArrayList(employee)).when(employeeRepository).findByEmailAddress(employeeParameter.getEmailAddress());
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
@@ -219,9 +201,7 @@ class EmployeeServiceTest extends UnitTestSuite
         return candidate -> {
             assertThat(candidate.getBirthday()).isEqualTo(employee.getBirthday());
             assertThat(candidate.getId()).isEqualTo(employee.getId());
-            assertThat(candidate.getDepartment()
-                                .getId()).isEqualTo(employee.getDepartment()
-                                                            .getId());
+            assertThat(candidate.getDepartment().getId()).isEqualTo(employee.getDepartment().getId());
             assertThat(candidate.getEmailAddress()).isEqualTo(employee.getEmailAddress());
             assertThat(candidate.getFullName()).isEqualTo(employee.getFullName());
         };

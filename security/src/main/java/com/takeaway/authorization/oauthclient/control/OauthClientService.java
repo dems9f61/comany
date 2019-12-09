@@ -61,8 +61,7 @@ public class OauthClientService extends AbstractDefaultAuditedEntityService<Oaut
         {
             throw new BadRequestException("Password creation requires a new secret and a confirm secret!");
         }
-        if (!create.getNewClientSecret()
-                   .equals(create.getConfirmClientSecret()))
+        if (!create.getNewClientSecret().equals(create.getConfirmClientSecret()))
         {
             throw new BadRequestException("New Password and Confirm Password do not match!");
         }
@@ -81,8 +80,7 @@ public class OauthClientService extends AbstractDefaultAuditedEntityService<Oaut
         }
         if (update.getOldClientSecret() != null)
         {
-            if (!passwordEncoder.encode(update.getOldClientSecret())
-                                .equals(existing.getClientSecretHash()))
+            if (!passwordEncoder.encode(update.getOldClientSecret()).equals(existing.getClientSecretHash()))
             {
                 throw new BadRequestException("Password update - Bad Credentials");
             }
@@ -90,8 +88,7 @@ public class OauthClientService extends AbstractDefaultAuditedEntityService<Oaut
             {
                 throw new BadRequestException("Password update - Bad Credentials");
             }
-            if (!update.getNewClientSecret()
-                       .equals(update.getConfirmClientSecret()))
+            if (!update.getNewClientSecret().equals(update.getConfirmClientSecret()))
             {
                 throw new BadRequestException("Password update - Bad Credentials");
             }

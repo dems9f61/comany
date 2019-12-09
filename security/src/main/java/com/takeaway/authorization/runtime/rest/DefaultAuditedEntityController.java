@@ -40,9 +40,7 @@ public class DefaultAuditedEntityController<SERVICE extends AuditedEntityService
     }
 
     @Override
-    public ResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id,
-                                                                @NotNull Pageable pageable,
-                                                                @NotNull Class<? extends ENTITY> entityClass)
+    public ResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable, @NotNull Class<? extends ENTITY> entityClass)
     {
         List<AuditTrail<ID, ENTITY>> auditTrails = getService().findAuditTrails(id, entityClass);
         return new ResponsePage<>(auditTrails, pageable, auditTrails.size());

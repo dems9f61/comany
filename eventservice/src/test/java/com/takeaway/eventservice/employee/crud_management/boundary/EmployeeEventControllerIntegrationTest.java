@@ -54,10 +54,10 @@ class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
 
             // Act / Assert
             mockMvc.perform(get(uri, employeeId))
-                   .andExpect(status().isOk())
-                   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                   .andExpect(jsonPath("$", notNullValue()))
-                   .andExpect(jsonPath("$.content", hasSize(expectedEventCount)));
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$", notNullValue()))
+                    .andExpect(jsonPath("$.content", hasSize(expectedEventCount)));
         }
     }
 

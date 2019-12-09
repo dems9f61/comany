@@ -38,72 +38,46 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
     @Override
     public final ResponsePage<ENTITY> findAll(@NotNull Pageable pageable)
     {
-        LOGGER.info("Calling {}.findAll",
-                    this.getClass()
-                        .getSimpleName());
+        LOGGER.info("Calling {}.findAll", this.getClass().getSimpleName());
         return getService().findAll(pageable);
     }
 
     @Override
     public final ENTITY findById(@NotNull ID id)
     {
-        LOGGER.info("Calling {}.findById( {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id);
+        LOGGER.info("Calling {}.findById( {} )", this.getClass().getSimpleName(), id);
         return getService().findById(id);
     }
 
     @Override
     public final ResponseEntity<ENTITY> create(@RequestBody @JsonView(DataView.POST.class) ENTITY create)
     {
-        LOGGER.info("{}.create ( {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    create);
+        LOGGER.info("{}.create ( {} )", this.getClass().getSimpleName(), create);
         create = onBeforeCreate(create);
         ENTITY created = getService().create(create);
         HttpHeaders headers = new HttpHeaders();
         created = onAfterCreate(created, headers);
-        headers.add(HttpHeaders.LOCATION,
-                    ServletUriComponentsBuilder.fromCurrentRequestUri()
-                                               .path("/{id}")
-                                               .buildAndExpand(created.getId())
-                                               .toUri()
-                                               .toASCIIString());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                             .headers(headers)
-                             .body(created);
+        headers.add(HttpHeaders.LOCATION, ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(created.getId()).toUri().toASCIIString());
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(created);
     }
 
     @Override
     public final ENTITY doFullUpdate(ID id, ENTITY update)
     {
-        LOGGER.info("{}.doFullUpdate ( {}, {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id,
-                    update);
+        LOGGER.info("{}.doFullUpdate ( {}, {} )", this.getClass().getSimpleName(), id, update);
         return update(id, update, DataView.PUT.class);
     }
 
     @Override
     public final ENTITY doPartialUpdate(ID id, ENTITY update)
     {
-        LOGGER.info("{}.doPartialUpdate ( {}, {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id,
-                    update);
+        LOGGER.info("{}.doPartialUpdate ( {}, {} )", this.getClass().getSimpleName(), id, update);
         return update(id, update, DataView.PATCH.class);
     }
 
     public final void delete(ID id)
     {
-        LOGGER.info("{}.delete ( {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id);
+        LOGGER.info("{}.delete ( {} )", this.getClass().getSimpleName(), id);
         getService().delete(onBeforeDelete(id));
         onAfterDelete(id);
         onAfterDelete(id);
@@ -147,7 +121,7 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
      * Extension Point for before update actions. Should return the ENTITY containing values to update for Entity identified by id. Default implementation returns the input
      * parameter create.
      *
-     * @param id     The ID typed id of the Entity to perform an update on
+     * @param id The ID typed id of the Entity to perform an update on
      * @param update The ENTITY typed Entity containing values to update on the Entity identified by id
      * @return The Entity values to update, modified by "before update actions". Default implementation returns the input parameter update.
      */
@@ -160,7 +134,7 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
      * Extension Point for after update actions. Should return the ENTITY that was updated. Default implementation returns the input parameter create. Only called if an Entity
      * could be found for id and updated.
      *
-     * @param id      The ID typed id of the Entity to perform an update on
+     * @param id The ID typed id of the Entity to perform an update on
      * @param updated The ENTITY typed Entity to create
      * @return The after create actions modified Entity that was created. Default implementation returns the input parameter updated.
      */

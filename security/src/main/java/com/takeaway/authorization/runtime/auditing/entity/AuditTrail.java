@@ -34,9 +34,7 @@ public final class AuditTrail<ID extends Serializable, T extends AuditedEntity<I
     // ============================  Constructors  ===========================
 
     @JsonCreator
-    public AuditTrail(@JsonProperty("entity") T entity,
-                      @JsonProperty("revision") Number revision,
-                      @JsonProperty("revisionType") RevisionType revisionType)
+    public AuditTrail(@JsonProperty("entity") T entity, @JsonProperty("revision") Number revision, @JsonProperty("revisionType") RevisionType revisionType)
     {
         this.entity = entity;
         this.revision = revision;

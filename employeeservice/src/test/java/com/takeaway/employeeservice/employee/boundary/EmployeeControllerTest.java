@@ -46,8 +46,7 @@ class EmployeeControllerTest extends UnitTestSuite
         {
             // Arrange
             UUID id = UUID.randomUUID();
-            doThrow(ResourceNotFoundException.class).when(employeeService)
-                                                    .deleteById(any());
+            doThrow(ResourceNotFoundException.class).when(employeeService).deleteById(any());
 
             // Act / Assert
             assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.deleteEmployee(id));
@@ -59,8 +58,7 @@ class EmployeeControllerTest extends UnitTestSuite
         {
             // Arrange
             UUID id = UUID.randomUUID();
-            doNothing().when(employeeService)
-                       .deleteById(any());
+            doNothing().when(employeeService).deleteById(any());
 
             // Act
             employeeController.deleteEmployee(id);
@@ -80,8 +78,7 @@ class EmployeeControllerTest extends UnitTestSuite
         {
             // Arrange
             UUID id = UUID.randomUUID();
-            doThrow(ResourceNotFoundException.class).when(employeeService)
-                                                    .findById(id);
+            doThrow(ResourceNotFoundException.class).when(employeeService).findById(id);
 
             // Act / Assert
             assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(id));
@@ -94,8 +91,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             UUID id = UUID.randomUUID();
             Employee employee = employeeTestFactory.createDefault();
-            doReturn(employee).when(employeeService)
-                              .findById(any());
+            doReturn(employee).when(employeeService).findById(any());
 
             // Act
             employeeController.findEmployee(id);
@@ -116,8 +112,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             UUID id = UUID.randomUUID();
             EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
-            doNothing().when(employeeService)
-                       .update(any(), any());
+            doNothing().when(employeeService).update(any(), any());
 
             // Act
             employeeController.updateEmployee(id, employeeRequest);
@@ -133,8 +128,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             UUID id = UUID.randomUUID();
             EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
-            doThrow(ResourceNotFoundException.class).when(employeeService)
-                                                    .update(id, employeeRequest.toEmployerParameter());
+            doThrow(ResourceNotFoundException.class).when(employeeService).update(id, employeeRequest.toEmployerParameter());
 
             // Act / Assert
             assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.updateEmployee(id, employeeRequest));
@@ -147,8 +141,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             UUID uuid = UUID.randomUUID();
             EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
-            doThrow(BadRequestException.class).when(employeeService)
-                                              .update(uuid, employeeRequest.toEmployerParameter());
+            doThrow(BadRequestException.class).when(employeeService).update(uuid, employeeRequest.toEmployerParameter());
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
@@ -166,8 +159,7 @@ class EmployeeControllerTest extends UnitTestSuite
             // Arrange
             EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
             Employee employee = employeeTestFactory.createDefault();
-            doReturn(employee).when(employeeService)
-                              .create(any());
+            doReturn(employee).when(employeeService).create(any());
 
             // Act
             employeeController.createEmployee(employeeRequest);
@@ -182,8 +174,7 @@ class EmployeeControllerTest extends UnitTestSuite
         {
             // Arrange
             EmployeeRequest employeeRequest = employeeRequestTestFactory.createDefault();
-            doThrow(BadRequestException.class).when(employeeService)
-                                              .create(employeeRequest.toEmployerParameter());
+            doThrow(BadRequestException.class).when(employeeService).create(employeeRequest.toEmployerParameter());
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.createEmployee(employeeRequest));

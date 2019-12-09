@@ -35,13 +35,14 @@ public class SwaggerConfig
     @Bean
     public Docket api()
     {
-        return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(true)
-                                                      .enableUrlTemplating(true)
-                                                      .select()
-                                                      .apis(RequestHandlerSelectors.basePackage(SOURCE_PACKAGE))
-                                                      .paths(PathSelectors.any())
-                                                      .build()
-                                                      .apiInfo(apiInfo());
+        return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(true)
+                .enableUrlTemplating(true)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage(SOURCE_PACKAGE))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(apiInfo());
     }
 
     // =================  protected/package local  Methods ===================
@@ -51,28 +52,28 @@ public class SwaggerConfig
     {
         List<VendorExtension> vendorExtensions = new LinkedList<>();
         vendorExtensions.add(new VendorExtension()
-        {
-            @Override
-            public String getName()
-            {
-                return "Minko";
-            }
+                {
+                    @Override
+                    public String getName()
+                    {
+                        return "Minko";
+                    }
 
-            @Override
-            public Object getValue()
-            {
-                return "https://www.lieferando.de";
-            }
-        });
+                    @Override
+                    public Object getValue()
+                    {
+                        return "https://www.lieferando.de";
+                    }
+                });
 
         return new ApiInfo("REST API of " + applicationName(),
-                           description(),
-                           version(),
-                           "Terms of service",
-                           new Contact("Stéphan Minko", "https://www.lieferando.de", "stephan.minko@lieferando.com"),
-                           null,
-                           null,
-                           vendorExtensions);
+                description(),
+                version(),
+                "Terms of service",
+                new Contact("Stéphan Minko", "https://www.lieferando.de", "stephan.minko@lieferando.com"),
+                null,
+                null,
+                vendorExtensions);
     }
 
     private String applicationName()

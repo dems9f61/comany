@@ -34,8 +34,7 @@ public @interface NullOrNotBlank
     class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBlank, String>
     {
         @Override
-        public void initialize(NullOrNotBlank constraintAnnotation)
-        {
+        public void initialize(NullOrNotBlank constraintAnnotation) {
             // Nothing to do here
         }
 

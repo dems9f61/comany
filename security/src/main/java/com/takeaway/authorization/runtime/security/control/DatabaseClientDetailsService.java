@@ -30,8 +30,7 @@ public class DatabaseClientDetailsService implements ClientDetailsService
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException
     {
-        return oauthClientService.findByClientId(clientId)
-                                 .orElseThrow(() -> new NoSuchClientException(String.format("No client with requested id: [%s]", clientId)));
+        return oauthClientService.findByClientId(clientId).orElseThrow(() -> new NoSuchClientException(String.format("No client with requested id: [%s]", clientId)));
     }
 
     // =================  protected/package local  Methods ===================

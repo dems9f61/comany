@@ -26,7 +26,7 @@ public class GlobalExceptionMapper
     // =================  protected/package local  Methods ===================
 
     @Order(1999)
-    @ExceptionHandler(value = { Exception.class })
+    @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<String> handleException(HttpServletRequest httpServletRequest, Exception exception)
     {
         return serializeExceptionToResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR, httpServletRequest);
@@ -48,8 +48,7 @@ public class GlobalExceptionMapper
         Instant time = Instant.now();
         String requestURI = httpServletRequest.getRequestURI();
         String sb = "Time: " + time + "\n" + "Requested URI: " + requestURI + "\n" + "Error message: " + localizedMessage;
-        return ResponseEntity.status(httpStatus.value())
-                             .body(exception.getMessage());
+        return ResponseEntity.status(httpStatus.value()).body(exception.getMessage());
     }
 
     // ============================  Inner Classes  ==========================

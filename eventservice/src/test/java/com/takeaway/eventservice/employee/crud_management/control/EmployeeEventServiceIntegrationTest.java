@@ -72,8 +72,7 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
         Page<PersistentEmployeeEvent> events = employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(unknownEmployeeId, pageRequest);
 
         // Assert
-        assertThat(events).isNotNull()
-                          .isEmpty();
+        assertThat(events).isNotNull().isEmpty();
     }
 
     @DisplayName("Handling an employee events makes it persistent")
@@ -83,32 +82,23 @@ class EmployeeEventServiceIntegrationTest extends IntegrationTestSuite
         // Arrange
         employeeEventRepository.deleteAll();
         Employee employee = employeeTestFactory.createDefault();
-        EmployeeEvent employeeEvent = employeeEventTestFactory.builder()
-                                                              .employee(employee)
-                                                              .create();
+        EmployeeEvent employeeEvent = employeeEventTestFactory.builder().employee(employee).create();
 
         // Act
         employeeEventService.handleEmployeeEvent(employeeEvent);
 
         // Assert
         List<PersistentEmployeeEvent> allEvents = employeeEventRepository.findAll();
-        assertThat(allEvents).isNotEmpty()
-                             .hasSize(1);
+        assertThat(allEvents).isNotEmpty().hasSize(1);
         PersistentEmployeeEvent persistentEmployeeEvent = allEvents.get(0);
         assertThat(persistentEmployeeEvent.getId()).isNotBlank();
-        assertThat(persistentEmployeeEvent.getCreatedAt()).isNotNull()
-                                                          .isBefore(Instant.now());
-        assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(Date.from(employee.getBirthday()
-                                                                                      .toInstant()));
-        assertThat(persistentEmployeeEvent.getDepartmentName()).isEqualTo(employee.getDepartment()
-                                                                                  .getDepartmentName());
+        assertThat(persistentEmployeeEvent.getCreatedAt()).isNotNull().isBefore(Instant.now());
+        assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(Date.from(employee.getBirthday().toInstant()));
+        assertThat(persistentEmployeeEvent.getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
         assertThat(persistentEmployeeEvent.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-        assertThat(persistentEmployeeEvent.getEventType()).isNotNull()
-                                                          .isEqualTo(employeeEvent.getEventType());
+        assertThat(persistentEmployeeEvent.getEventType()).isNotNull().isEqualTo(employeeEvent.getEventType());
         assertThat(persistentEmployeeEvent.getEmployeeId()).isEqualTo(employee.getId());
-        assertThat(persistentEmployeeEvent.getFirstName()).isEqualTo(employee.getFullName()
-                                                                             .getFirstName());
-        assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName()
-                                                                            .getLastName());
+        assertThat(persistentEmployeeEvent.getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+        assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName().getLastName());
     }
 }

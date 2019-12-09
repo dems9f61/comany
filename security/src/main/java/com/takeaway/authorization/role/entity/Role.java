@@ -28,11 +28,9 @@ import javax.validation.groups.Default;
 @Getter
 @Entity
 @Table(name = "roles",
-        schema = "data",
-        uniqueConstraints = @UniqueConstraint(name = "uk_roles_name",
-                columnNames = "name"),
-        indexes = @Index(name = "idx_roles_name",
-                columnList = "name"))
+            schema = "data",
+            uniqueConstraints = @UniqueConstraint(name = "uk_roles_name",columnNames = "name"),
+            indexes = @Index(name = "idx_roles_name",columnList = "name"))
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class Role extends AuditedUUIDEntity
@@ -40,17 +38,17 @@ public class Role extends AuditedUUIDEntity
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    @NotBlank(groups = { Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class })
-    @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class })
+    @NotBlank(groups = {Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class})
+    @JsonView({DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class})
     @Size(min = 1,
             max = 255,
-            groups = { Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class })
+            groups = {Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class})
     private String name;
 
-    @NotBlank(groups = { DataView.PUT.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class, DataView.POST.class })
-    @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class })
+    @NotBlank(groups = {DataView.PUT.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class, DataView.POST.class})
+    @JsonView({DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class})
     private String description;
 
     // ============================  Constructors  ===========================

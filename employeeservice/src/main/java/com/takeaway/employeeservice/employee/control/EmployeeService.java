@@ -103,9 +103,7 @@ class EmployeeService implements EmployeeServiceCapable
 
     private void validateUniquenessOfEmail(String emailAddress)
     {
-        List<Employee> employeesWithSameEmail = StringUtils.isBlank(emailAddress) ?
-                Collections.emptyList() :
-                repository.findByEmailAddress(emailAddress);
+        List<Employee> employeesWithSameEmail = StringUtils.isBlank(emailAddress) ? Collections.emptyList() : repository.findByEmailAddress(emailAddress);
         if (!employeesWithSameEmail.isEmpty())
         {
             throw new BadRequestException(String.format("Email [%s] is already used", emailAddress));
@@ -175,9 +173,7 @@ class EmployeeService implements EmployeeServiceCapable
     {
         boolean hasUpdated = false;
         String newDepartmentName = StringUtils.trim(updateParameter.getDepartmentName());
-        if (StringUtils.isNotBlank(newDepartmentName) && !StringUtils.equals(newDepartmentName,
-                                                                             employee.getDepartment()
-                                                                                     .getDepartmentName()))
+        if (StringUtils.isNotBlank(newDepartmentName) && !StringUtils.equals(newDepartmentName, employee.getDepartment().getDepartmentName()))
         {
             Department department = departmentService.findByDepartmentNameOrElseThrow(newDepartmentName, BadRequestException.class);
             employee.setDepartment(department);

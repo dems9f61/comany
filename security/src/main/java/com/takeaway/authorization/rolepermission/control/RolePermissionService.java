@@ -41,22 +41,22 @@ public class RolePermissionService
     {
         Role role = roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
         Permission permission = permissionService.findByIdOrElseThrow(permissionId, BadRequestException.class);
-        return rolePermissionRepository.findByRoleAndPermission(roleId, permissionId)
-                                       .orElseGet(() -> {
-                                           RolePermission rolePermission = new RolePermission();
-                                           rolePermission.setPermission(permission);
-                                           rolePermission.setRole(role);
-                                           return rolePermissionRepository.save(rolePermission);
-                                       })
-                                       .getPermission();
+        return rolePermissionRepository
+                .findByRoleAndPermission(roleId, permissionId)
+                .orElseGet(() -> {
+                            RolePermission rolePermission = new RolePermission();
+                            rolePermission.setPermission(permission);
+                            rolePermission.setRole(role);
+                            return rolePermissionRepository.save(rolePermission);
+                        })
+                .getPermission();
     }
 
     public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId)
     {
         roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
         permissionService.findByIdOrElseThrow(permissionId, BadRequestException.class);
-        rolePermissionRepository.findByRoleAndPermission(roleId, permissionId)
-                                .ifPresent(rolePermissionRepository::delete);
+        rolePermissionRepository.findByRoleAndPermission(roleId, permissionId).ifPresent(rolePermissionRepository::delete);
     }
 
     // =================  protected/package local  Methods ===================

@@ -43,24 +43,24 @@ public interface EmployeeServiceCapable
     default Employee findByIdOrElseThrow(@NotNull UUID id, @NotNull Class<? extends RuntimeException> exceptionClass)
     {
         LOGGER.info("Finding employee by name [{}] or throw [{}]", id, exceptionClass.getSimpleName());
-        return getRepository().findById(id)
-                              .orElseThrow(() -> {
-                                  String message = String.format("Could not find employee for Id [%s]!", id);
-                                  try
-                                  {
-                                      return exceptionClass.getConstructor(String.class)
-                                                           .newInstance(message);
-                                  }
-                                  catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e)
-                                  {
-                                      LOGGER.warn("Could not instantiate Exception of Type [{}] on {}.findByIdOrElseThrow ( {} ,  {}.class )",
-                                                  exceptionClass.getName(),
-                                                  getClass().getSimpleName(),
-                                                  id,
-                                                  exceptionClass.getSimpleName());
-                                      return new RuntimeException(message);
-                                  }
-                              });
+        return getRepository()
+                .findById(id)
+                .orElseThrow(() -> {
+                            String message = String.format("Could not find employee for Id [%s]!", id);
+                            try
+                            {
+                                return exceptionClass.getConstructor(String.class).newInstance(message);
+                            }
+                            catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e)
+                            {
+                                LOGGER.warn("Could not instantiate Exception of Type [{}] on {}.findByIdOrElseThrow ( {} ,  {}.class )",
+                                        exceptionClass.getName(),
+                                        getClass().getSimpleName(),
+                                        id,
+                                        exceptionClass.getSimpleName());
+                                return new RuntimeException(message);
+                            }
+                        });
     }
 
     void deleteById(@NonNull UUID id);

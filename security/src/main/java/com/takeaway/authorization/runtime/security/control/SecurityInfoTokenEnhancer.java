@@ -49,16 +49,13 @@ public class SecurityInfoTokenEnhancer implements TokenEnhancer
         else
         {
             LOGGER.debug("Adding additionalInformation to Access Token");
-            if (authentication != null && authentication.getUserAuthentication() != null && authentication.getUserAuthentication()
-                                                                                                          .getPrincipal() != null
-                    && authentication.getUserAuthentication()
-                                     .getPrincipal() instanceof CustomUserDetails)
+            if (authentication != null
+                && authentication.getUserAuthentication() != null
+                && authentication.getUserAuthentication().getPrincipal() != null
+                && authentication.getUserAuthentication().getPrincipal() instanceof CustomUserDetails)
             {
-                CustomUserDetails userDetails = (CustomUserDetails) authentication.getUserAuthentication()
-                                                                                  .getPrincipal();
-                additionalInformation.put("user_information",
-                                          customUserDetailsEnhancer.enhance(userDetails)
-                                                                   .getUserInformation());
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getUserAuthentication().getPrincipal();
+                additionalInformation.put("user_information", customUserDetailsEnhancer.enhance(userDetails).getUserInformation());
             }
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInformation);
         }

@@ -60,48 +60,38 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
     @Override
     public ENTITY findById(@NotNull ID id)
     {
-        LOGGER.info("{}.findOne ( {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id);
+        LOGGER.info("{}.findOne ( {} )", this.getClass().getSimpleName(), id);
         return findByIdOrElseThrow(id, ResourceNotFoundException.class);
     }
 
     @Override
     public ENTITY findByIdOrElseThrow(@NotNull ID id, @NotNull Class<? extends RuntimeException> exceptionClass)
     {
-        LOGGER.info("{}.findByIdOrElseThrow ( {} , {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id,
-                    exceptionClass);
-        return repository.findById(id)
-                         .orElseThrow(() -> {
-                             String message = String.format("Could not find [%s] for Id [%s]!", getEntityClass().getSimpleName(), id);
-                             try
-                             {
-                                 return exceptionClass.getConstructor(String.class)
-                                                      .newInstance(message);
-                             }
-                             catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e)
-                             {
-                                 LOGGER.warn("Could not instantiate Exception of Type [{}] on {}.findByIdOrElseThrow ( {} ,  {}.class )",
-                                             exceptionClass.getName(),
-                                             getClass().getSimpleName(),
-                                             id,
-                                             exceptionClass.getSimpleName());
-                                 return new RuntimeException(message);
-                             }
-                         });
+        LOGGER.info("{}.findByIdOrElseThrow ( {} , {} )", this.getClass().getSimpleName(), id, exceptionClass);
+        return repository
+                .findById(id)
+                .orElseThrow(() -> {
+                            String message = String.format("Could not find [%s] for Id [%s]!", getEntityClass().getSimpleName(), id);
+                            try
+                            {
+                                return exceptionClass.getConstructor(String.class).newInstance(message);
+                            }
+                            catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e)
+                            {
+                                LOGGER.warn("Could not instantiate Exception of Type [{}] on {}.findByIdOrElseThrow ( {} ,  {}.class )",
+                                        exceptionClass.getName(),
+                                        getClass().getSimpleName(),
+                                        id,
+                                        exceptionClass.getSimpleName());
+                                return new RuntimeException(message);
+                            }
+                        });
     }
 
     @Override
     public ENTITY create(@Validated(DataView.POST.class) @NotNull ENTITY create)
     {
-        LOGGER.info("{}.create ( {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    create);
+        LOGGER.info("{}.create ( {} )", this.getClass().getSimpleName(), create);
         ENTITY beforeCreate = onBeforeCreate(create);
         validateEntity(beforeCreate, DataView.POST.class);
         ENTITY created = doCreate(beforeCreate);
@@ -111,11 +101,7 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
     @Override
     public ENTITY update(@NotNull ID id, @NotNull ENTITY update, Class<? extends DataView> validationGroup)
     {
-        LOGGER.info("{}.update ( {}, {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id,
-                    update);
+        LOGGER.info("{}.update ( {}, {} )", this.getClass().getSimpleName(), id, update);
         validateEntity(update, validationGroup);
         ENTITY loaded = findById(id);
         BeanTool.copyNonNullProperties(onBeforeUpdate(loaded, update), loaded, "id", "createdAt", "createdBy", "lastUpdatedAt", "lastUpdatedBy");
@@ -125,10 +111,7 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
     @Override
     public void delete(ID id)
     {
-        LOGGER.info("{}.delete ( {} )",
-                    this.getClass()
-                        .getSimpleName(),
-                    id);
+        LOGGER.info("{}.delete ( {} )", this.getClass().getSimpleName(), id);
         ENTITY loaded = findById(id);
         repository.delete(onBeforeDelete(id, loaded));
         onAfterDelete(id, loaded);
@@ -184,7 +167,7 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
      * Extension Point for before update actions. Modify ENTITY typed Entity to update. Default implementation returns parameter update unmodified.
      *
      * @param existing The ENTITY typed Entity that exists
-     * @param update   The ENTITY typed Entity containing values to update
+     * @param update The ENTITY typed Entity containing values to update
      * @return The before update actions modified Entity to update. Default implementation returns the input parameter update.
      */
     protected ENTITY onBeforeUpdate(ENTITY existing, ENTITY update)
@@ -222,7 +205,7 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
     /**
      * Extension Point for after delete actions. Perform after delete actions on the deleted Entity and its id. Default Implemetnation does nothing
      *
-     * @param id      The ID typed Entity id
+     * @param id The ID typed Entity id
      * @param deleted The Entity as it was when it was deleted
      */
     protected void onAfterDelete(ID id, ENTITY deleted) {}

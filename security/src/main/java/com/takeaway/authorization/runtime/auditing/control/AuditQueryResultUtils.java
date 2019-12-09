@@ -25,8 +25,7 @@ class AuditQueryResultUtils
 
     // ===========================  public  Methods  =========================
 
-    static <ID extends Serializable, ENTITY extends AuditedEntity<ID>> AuditQueryResult<ID, ENTITY> getAuditQueryResult(Object[] item,
-                                                                                                                        Class<ENTITY> type)
+    static <ID extends Serializable, ENTITY extends AuditedEntity<ID>> AuditQueryResult<ID, ENTITY> getAuditQueryResult(Object[] item, Class<ENTITY> type)
     {
         // Early exit, if no item given:
         if (item == null)

@@ -17,8 +17,7 @@ public class CustomRevisionEntity
     @Setter
     @Getter
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "audit_trail_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "audit_trail_sequence")
     @RevisionNumber
     private Long revisionNumber;
 

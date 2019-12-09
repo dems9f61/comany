@@ -33,14 +33,11 @@ class DepartmentControllerIntegrationTest extends IntegrationTestSuite
         void givenEmptyDepartmentName_whenCreate_thenStatus400() throws Exception
         {
             // Arrange
-            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder()
-                                                                              .departmentName("")
-                                                                              .create();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder().departmentName("").create();
 
             // Act / Assert
-            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
-                                                               .content(objectMapper.writeValueAsString(departmentRequest)))
-                   .andExpect(status().isBadRequest());
+            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(departmentRequest)))
+                    .andExpect(status().isBadRequest());
         }
 
         @Test
@@ -48,14 +45,11 @@ class DepartmentControllerIntegrationTest extends IntegrationTestSuite
         void givenBlankDepartmentName_whenCreate_thenStatus400() throws Exception
         {
             // Arrange
-            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder()
-                                                                              .departmentName("  ")
-                                                                              .create();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder().departmentName("  ").create();
 
             // Act / Assert
-            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
-                                                               .content(objectMapper.writeValueAsString(departmentRequest)))
-                   .andExpect(status().isBadRequest());
+            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(departmentRequest)))
+                    .andExpect(status().isBadRequest());
         }
 
         @Test
@@ -63,14 +57,11 @@ class DepartmentControllerIntegrationTest extends IntegrationTestSuite
         void givenNullDepartmentName_whenCreate_thenStatus400() throws Exception
         {
             // Arrange
-            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder()
-                                                                              .departmentName("")
-                                                                              .create();
+            DepartmentRequest departmentRequest = departmentRequestTestFactory.builder().departmentName("").create();
 
             // Act / Assert
-            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
-                                                               .content(objectMapper.writeValueAsString(departmentRequest)))
-                   .andExpect(status().isBadRequest());
+            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(departmentRequest)))
+                    .andExpect(status().isBadRequest());
         }
     }
 }

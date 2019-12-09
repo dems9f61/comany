@@ -35,8 +35,8 @@ import java.util.UUID;
 @RestController
 @Api(value = "User role service: Operations pertaining to the user role service interface")
 @RequestMapping(value = RoleController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+        consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class RoleController
 {
     // =========================== Class Variables ===========================

@@ -47,8 +47,7 @@ public class EmployeeEventService
         PersistentEmployeeEvent persistentEmployeeEvent = new PersistentEmployeeEvent();
         Employee employee = employeeEvent.getEmployee();
         persistentEmployeeEvent.setEventType(employeeEvent.getEventType());
-        persistentEmployeeEvent.setBirthday(Date.from(employee.getBirthday()
-                                                              .toInstant()));
+        persistentEmployeeEvent.setBirthday(Date.from(employee.getBirthday().toInstant()));
         persistentEmployeeEvent.setEmailAddress(employee.getEmailAddress());
         Employee.FullName fullName = employee.getFullName();
         if (fullName != null)
@@ -57,8 +56,7 @@ public class EmployeeEventService
             persistentEmployeeEvent.setLastName(fullName.getLastName());
         }
         persistentEmployeeEvent.setEmployeeId(employee.getId());
-        persistentEmployeeEvent.setDepartmentName(employee.getDepartment()
-                                                          .getDepartmentName());
+        persistentEmployeeEvent.setDepartmentName(employee.getDepartment().getDepartmentName());
         employeeEventRepository.save(persistentEmployeeEvent);
     }
 

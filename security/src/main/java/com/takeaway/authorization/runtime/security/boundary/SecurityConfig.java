@@ -93,18 +93,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception
     {
         http.sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .csrf()
-            .disable()
-            .authorizeRequests()
-            .antMatchers("/oauth/token")
-            .permitAll()
-            .antMatchers("/api/**")
-            .authenticated()
-            .and()
-            .httpBasic()
-            .realmName(AuthorizationServerConfig.REALM);
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/oauth/token")
+                .permitAll()
+                .antMatchers("/api/**")
+                .authenticated()
+                .and()
+                .httpBasic()
+                .realmName(AuthorizationServerConfig.REALM);
     }
 
     @Override

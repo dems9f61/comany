@@ -29,7 +29,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT,
-        classes = { EmployeeServiceApplication.class })
+        classes = {EmployeeServiceApplication.class})
 @ActiveProfiles("INTEGRATION")
 public abstract class IntegrationTestSuite
 {
@@ -69,12 +69,9 @@ public abstract class IntegrationTestSuite
     @BeforeEach
     void setUp()
     {
-        doNothing().when(employeeEventPublisher)
-                   .employeeCreated(any());
-        doNothing().when(employeeEventPublisher)
-                   .employeeDeleted(any());
-        doNothing().when(employeeEventPublisher)
-                   .employeeUpdated(any());
+        doNothing().when(employeeEventPublisher).employeeCreated(any());
+        doNothing().when(employeeEventPublisher).employeeDeleted(any());
+        doNothing().when(employeeEventPublisher).employeeUpdated(any());
     }
 
     @AfterEach

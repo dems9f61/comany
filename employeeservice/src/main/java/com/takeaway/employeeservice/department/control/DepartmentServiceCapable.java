@@ -81,8 +81,7 @@ public interface DepartmentServiceCapable
     {
         try
         {
-            throw exceptionClass.getConstructor(String.class)
-                                .newInstance(errorMessage);
+            throw exceptionClass.getConstructor(String.class).newInstance(errorMessage);
         }
         catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e)
         {

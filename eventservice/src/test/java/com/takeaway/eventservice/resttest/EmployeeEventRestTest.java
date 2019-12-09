@@ -40,18 +40,15 @@ class EmployeeEventRestTest extends RestTestSuite
             receiveRandomMessageFor(id);
 
             // Act
-            ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
-                                                                                                                            EmployeeEventController.BASE_URI,
-                                                                                                                            id),
-                                                                                                              HttpMethod.GET,
-                                                                                                              new HttpEntity<>(defaultHttpHeaders()),
-                                                                                                              new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
+            ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeEventController.BASE_URI, id),
+                            HttpMethod.GET,
+                            new HttpEntity<>(defaultHttpHeaders()),
+                            new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
 
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             Page<EmployeeEventResponse> eventResponsePage = responseEntity.getBody();
-            assertThat(eventResponsePage).isNotNull()
-                                         .isNotEmpty();
+            assertThat(eventResponsePage).isNotNull().isNotEmpty();
             Instant previous = null;
             for (EmployeeEventResponse event : eventResponsePage)
             {

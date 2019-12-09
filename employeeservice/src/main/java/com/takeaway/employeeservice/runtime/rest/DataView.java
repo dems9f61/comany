@@ -2,6 +2,7 @@ package com.takeaway.employeeservice.runtime.rest;
 
 /**
  * User: StMinko Date: 11.10.2019 Time: 16:20
+ *
  * <p>
  */
 public interface DataView

@@ -44,8 +44,7 @@ public class RoleTestFactory extends AbstractTestFactory<Role, RoleTestFactory.B
         public Role create()
         {
             Role role = new Role();
-            return role.setName(name)
-                       .setDescription(description);
+            return role.setName(name).setDescription(description);
         }
     }
 }

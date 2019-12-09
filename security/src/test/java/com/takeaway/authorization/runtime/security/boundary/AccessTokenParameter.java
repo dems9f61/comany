@@ -103,8 +103,19 @@ public final class AccessTokenParameter
 
         public String toString()
         {
-            return "AccessTokenParameter.AccessTokenParameterBuilder(grantType=" + this.grantType + ", clientId=" + this.clientId + ", clientSecret="
-                    + this.clientSecret + ", userName=" + this.userName + ", userPassword=" + this.userPassword + ", scopes=" + this.scopes + ")";
+            return "AccessTokenParameter.AccessTokenParameterBuilder(grantType="
+                + this.grantType
+                + ", clientId="
+                + this.clientId
+                + ", clientSecret="
+                + this.clientSecret
+                + ", userName="
+                + this.userName
+                + ", userPassword="
+                + this.userPassword
+                + ", scopes="
+                + this.scopes
+                + ")";
         }
     }
 }

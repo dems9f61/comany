@@ -80,8 +80,7 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
         {
             throw new BadRequestException("Password creation requires a new password and a confirm password matching each other");
         }
-        if (!create.getNewPassword()
-                   .equals(create.getConfirmPassword()))
+        if (!create.getNewPassword().equals(create.getConfirmPassword()))
         {
             throw new BadRequestException("New Password and Confirm Password do not match");
         }
@@ -107,8 +106,7 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
         }
         if (update.getOldPassword() != null)
         {
-            if (!passwordEncoder.encode(update.getOldPassword())
-                                .equals(existing.getPasswordHash()))
+            if (!passwordEncoder.encode(update.getOldPassword()).equals(existing.getPasswordHash()))
             {
                 throw new BadRequestException("Password update - Bad Credentials");
             }
@@ -116,8 +114,7 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
             {
                 throw new BadRequestException("Password update - Bad Credentials");
             }
-            if (!update.getNewPassword()
-                       .equals(update.getConfirmPassword()))
+            if (!update.getNewPassword().equals(update.getConfirmPassword()))
             {
                 throw new BadRequestException("Password update - Bad Credentials");
             }

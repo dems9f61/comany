@@ -28,9 +28,9 @@ public class DepartmentRequest
     // =============================  Variables  =============================
 
     @ApiModelProperty(example = "Human Resources (HR)")
-    @NullOrNotBlank(groups = { DataView.PATCH.class })
+    @NullOrNotBlank(groups = {DataView.PATCH.class})
     @NotBlank(message = "The department name must not be blank",
-            groups = { DataView.POST.class, DataView.PUT.class })
+            groups = {DataView.POST.class, DataView.PUT.class})
     private final String departmentName;
 
     // ============================  Constructors  ===========================

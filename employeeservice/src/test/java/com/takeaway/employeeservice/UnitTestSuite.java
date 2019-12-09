@@ -33,7 +33,6 @@ public abstract class UnitTestSuite
 
     protected EmployeeRequestTestFactory employeeRequestTestFactory;
 
-
     // ============================  Constructors  ===========================
     // ===========================  public  Methods  =========================
 

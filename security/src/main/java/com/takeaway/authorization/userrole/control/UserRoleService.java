@@ -42,22 +42,22 @@ public class UserRoleService
         User user = userService.findByIdOrElseThrow(userId, BadRequestException.class);
         Role role = roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
 
-        return repository.findByUserAndPermission(userId, roleId)
-                         .orElseGet(() -> {
-                             UserRole userRole = new UserRole();
-                             userRole.setRole(role);
-                             userRole.setUser(user);
-                             return repository.save(userRole);
-                         })
-                         .getRole();
+        return repository
+                .findByUserAndPermission(userId, roleId)
+                .orElseGet(() -> {
+                            UserRole userRole = new UserRole();
+                            userRole.setRole(role);
+                            userRole.setUser(user);
+                            return repository.save(userRole);
+                        })
+                .getRole();
     }
 
     public void unassign(@NotNull UUID userId, @NotNull UUID roleId)
     {
         userService.findByIdOrElseThrow(userId, BadRequestException.class);
         roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
-        repository.findByUserAndPermission(userId, roleId)
-                  .ifPresent(repository::delete);
+        repository.findByUserAndPermission(userId, roleId).ifPresent(repository::delete);
     }
 
     // =================  protected/package local  Methods ===================

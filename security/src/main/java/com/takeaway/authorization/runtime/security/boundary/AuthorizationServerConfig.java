@@ -58,12 +58,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     public AuthorizationServerConfig(TokenStore tokenStore,
-                                     UserApprovalHandler userApprovalHandler,
-                                     @Qualifier("authenticationManagerBean") AuthenticationManager authenticationManager,
-                                     JwtAccessTokenConverter accessTokenConverter,
-                                     SecurityInfoTokenEnhancer securityInfoTokenEnhancer,
-                                     ClientDetailsService clientDetailsService,
-                                     UserDetailsService userDetailsService)
+                UserApprovalHandler userApprovalHandler,
+                @Qualifier("authenticationManagerBean") AuthenticationManager authenticationManager,
+                JwtAccessTokenConverter accessTokenConverter,
+                SecurityInfoTokenEnhancer securityInfoTokenEnhancer,
+                ClientDetailsService clientDetailsService,
+                UserDetailsService userDetailsService)
     {
         this.tokenStore = tokenStore;
         this.userApprovalHandler = userApprovalHandler;
@@ -84,12 +84,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(securityInfoTokenEnhancer, accessTokenConverter));
 
         super.configure(endpoints);
-        endpoints.tokenStore(tokenStore)
-                 .tokenEnhancer(tokenEnhancerChain)
-                 .accessTokenConverter(accessTokenConverter)
-                 .userApprovalHandler(userApprovalHandler)
-                 .authenticationManager(authenticationManager)
-                 .userDetailsService(userDetailsService);
+        endpoints
+                .tokenStore(tokenStore)
+                .tokenEnhancer(tokenEnhancerChain)
+                .accessTokenConverter(accessTokenConverter)
+                .userApprovalHandler(userApprovalHandler)
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
     }
 
     @Override
@@ -101,11 +102,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer)
     {
-        oauthServer.realm(REALM)
-                   .tokenKeyAccess("permitAll()")
-                   .checkTokenAccess("isAuthenticated()")
-                   .authenticationEntryPoint(new OAuth2AuthenticationEntryPoint())
-                   .accessDeniedHandler(new OAuth2AccessDeniedHandler());
+        oauthServer
+                .realm(REALM)
+                .tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()")
+                .authenticationEntryPoint(new OAuth2AuthenticationEntryPoint())
+                .accessDeniedHandler(new OAuth2AccessDeniedHandler());
         oauthServer.addTokenEndpointAuthenticationFilter(authorizationServerEndpointCorsFilter());
     }
 

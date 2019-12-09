@@ -34,8 +34,8 @@ import java.util.UUID;
 @Validated
 @RestController
 @RequestMapping(value = UserController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+        consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class UserController
 {
     // =========================== Class Variables ===========================
@@ -95,8 +95,7 @@ public class UserController
     @ResponseStatus(HttpStatus.OK)
     Page<Permission> findAllPermissionByUser(@NotNull @PathVariable UUID id, @NotNull @PageableDefault(50) Pageable pageable)
     {
-        Page<Permission> permissions = controllerDelegator.getService()
-                                                          .findAllPermissionByUser(id, pageable);
+        Page<Permission> permissions = controllerDelegator.getService().findAllPermissionByUser(id, pageable);
         return new ResponsePage<>(permissions.getContent(), pageable, permissions.getTotalElements());
     }
 

@@ -40,20 +40,14 @@ public class GlobalExceptionMapper
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception)
     {
-        List<FieldError> fieldErrors = exception.getBindingResult()
-                                                .getFieldErrors();
-        List<ObjectError> globalErrors = exception.getBindingResult()
-                                                  .getGlobalErrors();
+        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
+        List<ObjectError> globalErrors = exception.getBindingResult().getGlobalErrors();
         String fieldErrorMessage = fieldErrors.stream()
-                                              .map(fieldError -> String.format("{ Field: %s, Message: %s }",
-                                                                               fieldError.getField(),
-                                                                               fieldError.getDefaultMessage()))
-                                              .collect(joining(","));
+                            .map(fieldError -> String.format("{ Field: %s, Message: %s }", fieldError.getField(), fieldError.getDefaultMessage()))
+                            .collect(joining(","));
         String globalErrorMessage = globalErrors.stream()
-                                                .map(objectError -> String.format("{ Object: %s, Message: %s }",
-                                                                                  objectError.getObjectName(),
-                                                                                  objectError.getDefaultMessage()))
-                                                .collect(joining(","));
+                            .map(objectError -> String.format("{ Object: %s, Message: %s }", objectError.getObjectName(), objectError.getDefaultMessage()))
+                            .collect(joining(","));
 
         String errorMsg = "Constraint(s) failed: ";
         if (StringUtils.trimToNull(fieldErrorMessage) != null)
@@ -71,13 +65,10 @@ public class GlobalExceptionMapper
     @ExceptionHandler(ConstraintViolationException.class)
     ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException constraintViolationException)
     {
-        String errorMessage = "Constraints violated: " + constraintViolationException.getConstraintViolations()
-                                                                                     .stream()
-                                                                                     .map(violation -> String.format(
-                                                                                             "{Property path: :%s, Error message: :%s}",
-                                                                                             violation.getPropertyPath(),
-                                                                                             violation.getMessage()))
-                                                                                     .collect(joining(", ", "[", "]"));
+        String errorMessage = "Constraints violated: "
+                    + constraintViolationException.getConstraintViolations().stream()
+                                    .map(violation -> String.format("{Property path: :%s, Error message: :%s}", violation.getPropertyPath(), violation.getMessage()))
+                                    .collect(joining(", ", "[", "]"));
         return handleBadRequestException(new BadRequestException(errorMessage));
     }
 
@@ -142,7 +133,7 @@ public class GlobalExceptionMapper
     }
 
     @Order(1999)
-    @ExceptionHandler(value = { Exception.class })
+    @ExceptionHandler(value = {Exception.class})
     ResponseEntity<String> handleException(Exception exception)
     {
         LOGGER.error("Unhandled exception occurred", exception);
@@ -176,8 +167,7 @@ public class GlobalExceptionMapper
         {
             LOGGER.error("Unhandled Exception occurred. Error: {}", exception.getLocalizedMessage(), exception);
         }
-        return ResponseEntity.status(httpStatus.value())
-                             .body(exception.getMessage());
+        return ResponseEntity.status(httpStatus.value()).body(exception.getMessage());
     }
 
     // ============================  Inner Classes  ==========================

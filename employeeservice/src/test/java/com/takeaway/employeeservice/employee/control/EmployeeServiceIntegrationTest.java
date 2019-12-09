@@ -54,9 +54,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             departmentService.create(departmentParameter);
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(departmentParameter.getDepartmentName())
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
 
             // Act
             Employee employee = employeeService.create(employeeParameter);
@@ -64,18 +62,14 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Assert
             assertThat(employee).isNotNull();
             Employee.FullName fullName = employee.getFullName();
-            assertThat(fullName.getFirstName()).isNotBlank()
-                                               .isEqualTo(employeeParameter.getFirstName());
-            assertThat(fullName.getLastName()).isNotBlank()
-                                              .isEqualTo(employeeParameter.getLastName());
-            assertThat(employee.getEmailAddress()).isNotBlank()
-                                                  .isEqualTo(employeeParameter.getEmailAddress());
+            assertThat(fullName.getFirstName()).isNotBlank().isEqualTo(employeeParameter.getFirstName());
+            assertThat(fullName.getLastName()).isNotBlank().isEqualTo(employeeParameter.getLastName());
+            assertThat(employee.getEmailAddress()).isNotBlank().isEqualTo(employeeParameter.getEmailAddress());
             Department department = employee.getDepartment();
             assertThat(department).isNotNull();
             assertThat(department.getDepartmentName()).isEqualTo(employeeParameter.getDepartmentName());
             ZonedDateTime birthday = employee.getBirthday();
-            assertThat(birthday).isNotNull()
-                                .isEqualTo(employeeParameter.getBirthday());
+            assertThat(birthday).isNotNull().isEqualTo(employeeParameter.getBirthday());
             verify(employeeEventPublisher).employeeCreated(employee);
         }
 
@@ -84,9 +78,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
         void givenWrongDepartmentName_whenCreate_thenThrowBadRequestException()
         {
             // Arrange
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(RandomStringUtils.randomAlphabetic(4))
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(RandomStringUtils.randomAlphabetic(4)).create();
             // Act/ Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
         }
@@ -98,15 +90,14 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             Department department = departmentService.create(departmentParameter);
-            EmployeeParameter firstEmployeeParameter = employeeParameterTestFactory.builder()
-                                                                                   .departmentName(department.getDepartmentName())
-                                                                                   .create();
+            EmployeeParameter firstEmployeeParameter = employeeParameterTestFactory.builder().departmentName(department.getDepartmentName()).create();
             employeeService.create(firstEmployeeParameter);
 
-            EmployeeParameter secondEmployeeParameter = employeeParameterTestFactory.builder()
-                                                                                    .departmentName(department.getDepartmentName())
-                                                                                    .emailAddress(firstEmployeeParameter.getEmailAddress())
-                                                                                    .create();
+            EmployeeParameter secondEmployeeParameter = employeeParameterTestFactory
+                            .builder()
+                            .departmentName(department.getDepartmentName())
+                            .emailAddress(firstEmployeeParameter.getEmailAddress())
+                            .create();
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(secondEmployeeParameter));
@@ -126,9 +117,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             departmentService.create(departmentParameter);
             List<EmployeeParameter> employeeParameters = new LinkedList<>();
             IntStream.range(0, RandomUtils.nextInt(20, 30))
-                     .forEach(value -> employeeParameters.add(employeeParameterTestFactory.builder()
-                                                                                          .departmentName(departmentParameter.getDepartmentName())
-                                                                                          .create()));
+                        .forEach(value -> employeeParameters.add(employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create()));
 
             for (EmployeeParameter employeeParameter : employeeParameters)
             {
@@ -147,9 +136,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             departmentService.create(departmentParameter);
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(departmentParameter.getDepartmentName())
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
             Employee employee = employeeService.create(employeeParameter);
 
             // Act
@@ -159,9 +146,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             assertThat(foundEmployee.getId()).isEqualTo(employee.getId());
             assertThat(foundEmployee.getEmailAddress()).isEqualTo(employee.getEmailAddress());
             assertThat(foundEmployee.getFullName()).isEqualTo(employee.getFullName());
-            assertThat(foundEmployee.getDepartment()
-                                    .getId()).isEqualTo(employee.getDepartment()
-                                                                .getId());
+            assertThat(foundEmployee.getDepartment().getId()).isEqualTo(employee.getDepartment().getId());
         }
     }
 
@@ -178,9 +163,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             departmentService.create(departmentParameter);
             List<EmployeeParameter> employeeParameters = new LinkedList<>();
             IntStream.range(0, RandomUtils.nextInt(30, 50))
-                     .forEach(value -> employeeParameters.add(employeeParameterTestFactory.builder()
-                                                                                          .departmentName(departmentParameter.getDepartmentName())
-                                                                                          .create()));
+                        .forEach(value -> employeeParameters.add(employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create()));
 
             for (EmployeeParameter employeeParameter : employeeParameters)
             {
@@ -198,9 +181,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             departmentService.create(departmentParameter);
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(departmentParameter.getDepartmentName())
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
             Employee employee = employeeService.create(employeeParameter);
             UUID uuid = employee.getId();
 
@@ -224,15 +205,11 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             departmentService.create(departmentParameter);
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(departmentParameter.getDepartmentName())
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
             Employee employee = employeeService.create(employeeParameter);
 
             EmployeeParameter updateParameters = employeeParameterTestFactory.createDefault();
-            DepartmentParameter newDepartmentParameter = departmentParameterTestFactory.builder()
-                                                                                       .departmentName(updateParameters.getDepartmentName())
-                                                                                       .create();
+            DepartmentParameter newDepartmentParameter = departmentParameterTestFactory.builder().departmentName(updateParameters.getDepartmentName()).create();
             departmentService.create(newDepartmentParameter);
 
             // Act
@@ -241,13 +218,10 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Assert
             Employee updated = employeeService.findById(employee.getId());
             assertThat(updated.getEmailAddress()).isEqualTo(updateParameters.getEmailAddress());
-            assertThat(updated.getFullName()
-                              .getFirstName()).isEqualTo(updateParameters.getFirstName());
-            assertThat(updated.getFullName()
-                              .getLastName()).isEqualTo(updateParameters.getLastName());
+            assertThat(updated.getFullName().getFirstName()).isEqualTo(updateParameters.getFirstName());
+            assertThat(updated.getFullName().getLastName()).isEqualTo(updateParameters.getLastName());
             assertThat(updated.getBirthday()).isEqualTo(updateParameters.getBirthday());
-            assertThat(updated.getDepartment()
-                              .getDepartmentName()).isEqualTo(updateParameters.getDepartmentName());
+            assertThat(updated.getDepartment().getDepartmentName()).isEqualTo(updateParameters.getDepartmentName());
             verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updated.getId())));
         }
 
@@ -258,21 +232,20 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             departmentService.create(departmentParameter);
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(departmentParameter.getDepartmentName())
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
             Employee employee = employeeService.create(employeeParameter);
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(UsableDateFormat.DEFAULT.getDateFormat());
             LocalDate localDate = LocalDate.parse("1979-12-03", dateFormatter);
             ZonedDateTime newBirthDay = localDate.atStartOfDay(ZoneOffset.UTC);
-            EmployeeParameter updateParameters = employeeParameterTestFactory.builder()
-                                                                             .emailAddress(null)
-                                                                             .departmentName(null)
-                                                                             .firstName(null)
-                                                                             .lastName(null)
-                                                                             .birthday(newBirthDay)
-                                                                             .create();
+            EmployeeParameter updateParameters = employeeParameterTestFactory
+                            .builder()
+                            .emailAddress(null)
+                            .departmentName(null)
+                            .firstName(null)
+                            .lastName(null)
+                            .birthday(newBirthDay)
+                            .create();
 
             // Act
             employeeService.update(employee.getId(), updateParameters);
@@ -280,15 +253,9 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Assert
             Employee updated = employeeService.findById(employee.getId());
             assertThat(updated.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-            assertThat(updated.getFullName()
-                              .getFirstName()).isEqualTo(employee.getFullName()
-                                                                 .getFirstName());
-            assertThat(updated.getFullName()
-                              .getLastName()).isEqualTo(employee.getFullName()
-                                                                .getLastName());
-            assertThat(updated.getDepartment()
-                              .getDepartmentName()).isEqualTo(employee.getDepartment()
-                                                                      .getDepartmentName());
+            assertThat(updated.getFullName().getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+            assertThat(updated.getFullName().getLastName()).isEqualTo(employee.getFullName().getLastName());
+            assertThat(updated.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
             assertThat(updated.getBirthday()).isEqualTo(newBirthDay);
             verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updated.getId())));
         }
@@ -300,21 +267,20 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             departmentService.create(departmentParameter);
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(departmentParameter.getDepartmentName())
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
             Employee employee = employeeService.create(employeeParameter);
 
             String expectedFirstName = RandomStringUtils.randomAlphabetic(23);
             String expectedLastName = RandomStringUtils.randomAlphabetic(23);
 
-            EmployeeParameter updateParameters = employeeParameterTestFactory.builder()
-                                                                             .emailAddress(null)
-                                                                             .departmentName(null)
-                                                                             .firstName(expectedFirstName)
-                                                                             .lastName(expectedLastName)
-                                                                             .birthday(null)
-                                                                             .create();
+            EmployeeParameter updateParameters = employeeParameterTestFactory
+                            .builder()
+                            .emailAddress(null)
+                            .departmentName(null)
+                            .firstName(expectedFirstName)
+                            .lastName(expectedLastName)
+                            .birthday(null)
+                            .create();
 
             // Act
             employeeService.update(employee.getId(), updateParameters);
@@ -322,13 +288,9 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Assert
             Employee updated = employeeService.findById(employee.getId());
             assertThat(updated.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-            assertThat(updated.getFullName()
-                              .getFirstName()).isEqualTo(expectedFirstName);
-            assertThat(updated.getFullName()
-                              .getLastName()).isEqualTo(expectedLastName);
-            assertThat(updated.getDepartment()
-                              .getDepartmentName()).isEqualTo(employee.getDepartment()
-                                                                      .getDepartmentName());
+            assertThat(updated.getFullName().getFirstName()).isEqualTo(expectedFirstName);
+            assertThat(updated.getFullName().getLastName()).isEqualTo(expectedLastName);
+            assertThat(updated.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
             assertThat(updated.getBirthday()).isEqualTo(employee.getBirthday());
             verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updated.getId())));
         }
@@ -340,21 +302,19 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             departmentService.create(departmentParameter);
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(departmentParameter.getDepartmentName())
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
             Employee employee = employeeService.create(employeeParameter);
 
-            String expectedEmail = employeeParameterTestFactory.builder()
-                                                               .generateRandomEmail();
+            String expectedEmail = employeeParameterTestFactory.builder().generateRandomEmail();
 
-            EmployeeParameter updateParameters = employeeParameterTestFactory.builder()
-                                                                             .emailAddress(expectedEmail)
-                                                                             .departmentName(null)
-                                                                             .firstName(null)
-                                                                             .lastName(null)
-                                                                             .birthday(null)
-                                                                             .create();
+            EmployeeParameter updateParameters = employeeParameterTestFactory
+                            .builder()
+                            .emailAddress(expectedEmail)
+                            .departmentName(null)
+                            .firstName(null)
+                            .lastName(null)
+                            .birthday(null)
+                            .create();
 
             // Act
             employeeService.update(employee.getId(), updateParameters);
@@ -362,15 +322,9 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Assert
             Employee updated = employeeService.findById(employee.getId());
             assertThat(updated.getEmailAddress()).isEqualTo(expectedEmail);
-            assertThat(updated.getFullName()
-                              .getFirstName()).isEqualTo(employee.getFullName()
-                                                                 .getFirstName());
-            assertThat(updated.getFullName()
-                              .getLastName()).isEqualTo(employee.getFullName()
-                                                                .getLastName());
-            assertThat(updated.getDepartment()
-                              .getDepartmentName()).isEqualTo(employee.getDepartment()
-                                                                      .getDepartmentName());
+            assertThat(updated.getFullName().getFirstName()).isEqualTo(employee.getFullName().getFirstName());
+            assertThat(updated.getFullName().getLastName()).isEqualTo(employee.getFullName().getLastName());
+            assertThat(updated.getDepartment().getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
             assertThat(updated.getBirthday()).isEqualTo(employee.getBirthday());
             verify(employeeEventPublisher).employeeUpdated(assertArg(publishedEmployee -> assertThat(publishedEmployee.getId()).isEqualTo(updated.getId())));
         }
@@ -393,9 +347,7 @@ class EmployeeServiceIntegrationTest extends IntegrationTestSuite
             // Arrange
             DepartmentParameter departmentParameter = departmentParameterTestFactory.createDefault();
             departmentService.create(departmentParameter);
-            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder()
-                                                                              .departmentName(departmentParameter.getDepartmentName())
-                                                                              .create();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.builder().departmentName(departmentParameter.getDepartmentName()).create();
             Employee employee = employeeService.create(employeeParameter);
             EmployeeParameter update = employeeParameterTestFactory.createDefault();
 

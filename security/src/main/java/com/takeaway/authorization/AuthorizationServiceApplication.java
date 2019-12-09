@@ -11,7 +11,7 @@ import java.util.TimeZone;
 
 @EnableJpaAuditing
 @EnableJpaRepositories(repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class)
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class AuthorizationServiceApplication
 {
     public static void main(String[] args)

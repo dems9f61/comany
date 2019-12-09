@@ -23,47 +23,44 @@ import javax.validation.groups.Default;
  */
 @Audited
 @ToString(callSuper = true,
-        exclude = { "oldPassword", "newPassword", "confirmPassword" })
+        exclude = {"oldPassword", "newPassword", "confirmPassword"})
 @Setter
 @Getter
 @Entity
 @Table(name = "users",
         schema = "data",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_users_username",
-                        columnNames = "userName") },
-        indexes = @Index(name = "idx_users_username",
-                columnList = "userName"))
+        uniqueConstraints = {@UniqueConstraint(name = "uk_users_username",columnNames = "userName")},
+        indexes = @Index(name = "idx_users_username",columnList = "userName"))
 @EqualsAndHashCode(callSuper = true)
 public class User extends AuditedUUIDEntity
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
 
-    @NotBlank(groups = { Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class })
-    @JsonView({ DataView.GET.class, DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
+    @NotBlank(groups = {Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class})
+    @JsonView({DataView.GET.class, DataView.POST.class, DataView.PUT.class, DataView.PATCH.class})
     private String userName;
 
-    @NotNull(groups = { Default.class, DataView.GET.class })
+    @NotNull(groups = {Default.class, DataView.GET.class})
     @JsonIgnore
     private String passwordHash;
 
-    @NotBlank(groups = { DataView.PUT.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class })
-    @JsonView({ DataView.PUT.class, DataView.PATCH.class })
+    @NotBlank(groups = {DataView.PUT.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class})
+    @JsonView({DataView.PUT.class, DataView.PATCH.class})
     @Transient
     private String oldPassword;
 
-    @NotBlank(groups = { DataView.PUT.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class })
-    @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
+    @NotBlank(groups = {DataView.PUT.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class})
+    @JsonView({DataView.POST.class, DataView.PUT.class, DataView.PATCH.class})
     @Transient
     private String newPassword;
 
-    @NotBlank(groups = { DataView.PUT.class })
-    @NullOrNotBlank(groups = { DataView.PATCH.class })
-    @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
+    @NotBlank(groups = {DataView.PUT.class})
+    @NullOrNotBlank(groups = {DataView.PATCH.class})
+    @JsonView({DataView.POST.class, DataView.PUT.class, DataView.PATCH.class})
     @Transient
     private String confirmPassword;
 

@@ -44,8 +44,7 @@ public class DatabaseUserDetailsService implements UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        User user = userService.findByUserName(username)
-                               .orElseThrow(() -> new UsernameNotFoundException(String.format("No User found for username: [%s]", username)));
+        User user = userService.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException(String.format("No User found for username: [%s]", username)));
         Page<Permission> userPermissions = userService.findAllPermissionByUser(user.getId(), Pageable.unpaged());
 
         List<GrantedAuthority> permissions = new ArrayList<>(userPermissions.getNumberOfElements());
@@ -57,15 +56,12 @@ public class DatabaseUserDetailsService implements UserDetailsService
         }
 
         CustomUserDetails customUserDetails = new CustomUserDetails(new UserInformation(user.getId(), permissions),
-                                                                    user.getUserName(),
-                                                                    user.getPasswordHash(),
-                                                                    true,
-                                                                    permissions);
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(customUserDetails,
-                                                                                                     null,
-                                                                                                     customUserDetails.getAuthorities());
-        SecurityContextHolder.getContext()
-                             .setAuthentication(authentication);
+                        user.getUserName(),
+                        user.getPasswordHash(),
+                        true,
+                        permissions);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return customUserDetails;
     }
 

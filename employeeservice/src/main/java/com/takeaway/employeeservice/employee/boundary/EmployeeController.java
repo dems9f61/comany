@@ -34,8 +34,8 @@ import java.util.UUID;
 @RestController
 @Api(value = "Employee service: Operations pertaining to the employee service interface")
 @RequestMapping(value = EmployeeController.BASE_URI,
-        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
-        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
+        consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class EmployeeController
 {
@@ -52,11 +52,7 @@ public class EmployeeController
     // =================  protected/package local  Methods ===================
 
     @ApiOperation(value = "Creates an employee with the request values")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,
-                    message = ""),
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,
-                    message = "") })
+    @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = ""), @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "")})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     EmployeeResponse createEmployee(@RequestBody @NotNull @Valid @JsonView(DataView.POST.class) EmployeeRequest employeeRequest)
@@ -65,21 +61,16 @@ public class EmployeeController
         EmployeeParameter employeeParameter = employeeRequest.toEmployerParameter();
         Employee employee = employeeService.create(employeeParameter);
         return new EmployeeResponse(employee.getId(),
-                                    employee.getEmailAddress(),
-                                    employee.getFullName()
-                                            .getFirstName(),
-                                    employee.getFullName()
-                                            .getLastName(),
-                                    employee.getBirthday(),
-                                    employee.getDepartment()
-                                            .getDepartmentName());
+                employee.getEmailAddress(),
+                employee.getFullName().getFirstName(),
+                employee.getFullName().getLastName(),
+                employee.getBirthday(),
+                employee.getDepartment().getDepartmentName());
     }
 
     @ApiOperation(value = "Retrieves an employee by a given id")
     @GetMapping("/{id}")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,
-                    message = "Could not find employee by the specified id!") })
+    @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "Could not find employee by the specified id!")})
     @ResponseStatus(HttpStatus.OK)
     EmployeeResponse findEmployee(@NotNull @PathVariable("id") UUID id)
     {
@@ -87,20 +78,15 @@ public class EmployeeController
         Employee employee = employeeService.findById(id);
         Employee.FullName fullName = employee.getFullName();
         return new EmployeeResponse(employee.getId(),
-                                    employee.getEmailAddress(),
-                                    fullName != null ? fullName.getFirstName() : null,
-                                    fullName != null ? fullName.getLastName() : null,
-                                    employee.getBirthday(),
-                                    employee.getDepartment()
-                                            .getDepartmentName());
+                employee.getEmailAddress(),
+                fullName != null ? fullName.getFirstName() : null,
+                fullName != null ? fullName.getLastName() : null,
+                employee.getBirthday(),
+                employee.getDepartment().getDepartmentName());
     }
 
     @ApiOperation(value = "Updates an employee with the request values")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,
-                    message = ""),
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,
-                    message = "") })
+    @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = ""), @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "")})
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void updateEmployee(@NotNull @PathVariable("id") UUID id, @Valid @RequestBody @JsonView(DataView.PATCH.class) EmployeeRequest employeeRequest)
@@ -110,9 +96,7 @@ public class EmployeeController
     }
 
     @ApiOperation(value = "Deletes permanently an employee")
-    @ApiResponses({
-            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,
-                    message = "Could not delete employee by the specified id!") })
+    @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND,message = "Could not delete employee by the specified id!")})
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteEmployee(@NotNull @PathVariable("id") UUID id)

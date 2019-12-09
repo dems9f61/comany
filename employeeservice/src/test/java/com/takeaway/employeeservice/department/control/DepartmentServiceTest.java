@@ -45,9 +45,7 @@ class DepartmentServiceTest extends UnitTestSuite
         void givenEmptyDepartmentName_whenCreate_thenThrowException()
         {
             // Arrange
-            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
-                                                                                  .departmentName(" ")
-                                                                                  .create();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(" ").create();
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
@@ -58,9 +56,7 @@ class DepartmentServiceTest extends UnitTestSuite
         void givenNullDepartmentName_whenCreate_thenThrowException()
         {
             // Arrange
-            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
-                                                                                  .departmentName(null)
-                                                                                  .create();
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(null).create();
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
         }
@@ -71,8 +67,7 @@ class DepartmentServiceTest extends UnitTestSuite
         {
             // Arrange
             DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
-            doReturn(Lists.newArrayList(departmentTestFactory.createDefault())).when(departmentRepository)
-                                                                               .findByDepartmentName(creationParameter.getDepartmentName());
+            doReturn(Lists.newArrayList(departmentTestFactory.createDefault())).when(departmentRepository).findByDepartmentName(creationParameter.getDepartmentName());
 
             // Act / Assert
             assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
@@ -84,18 +79,16 @@ class DepartmentServiceTest extends UnitTestSuite
         {
             // Arrange
             DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
-            doReturn(Lists.emptyList()).when(departmentRepository)
-                                       .findByDepartmentName(creationParameter.getDepartmentName());
-            doReturn(departmentTestFactory.createDefault()).when(departmentRepository)
-                                                           .save(any());
+            doReturn(Lists.emptyList()).when(departmentRepository).findByDepartmentName(creationParameter.getDepartmentName());
+            doReturn(departmentTestFactory.createDefault()).when(departmentRepository).save(any());
 
             // Act
             departmentService.create(creationParameter);
 
             // Assert
             verify(departmentRepository).findByDepartmentName(creationParameter.getDepartmentName());
-            verify(departmentRepository).save(assertArg(departmentToSave -> assertThat(departmentToSave.getDepartmentName()).isEqualTo(
-                    creationParameter.getDepartmentName())));
+            verify(departmentRepository)
+                    .save(assertArg(departmentToSave -> assertThat(departmentToSave.getDepartmentName()).isEqualTo(creationParameter.getDepartmentName())));
         }
     }
 
@@ -109,8 +102,7 @@ class DepartmentServiceTest extends UnitTestSuite
         {
             // Arrange
             List<Department> departments = departmentTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
-            doReturn(departments).when(departmentRepository)
-                                 .findAll();
+            doReturn(departments).when(departmentRepository).findAll();
 
             // Act
             List<Department> allDepartments = departmentService.findAll();
@@ -126,8 +118,7 @@ class DepartmentServiceTest extends UnitTestSuite
         {
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(24);
-            doReturn(Lists.emptyList()).when(departmentRepository)
-                                       .findByDepartmentName(departmentName);
+            doReturn(Lists.emptyList()).when(departmentRepository).findByDepartmentName(departmentName);
 
             // Act / Assert
             assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> departmentService.findByDepartmentName(departmentName));
@@ -140,8 +131,7 @@ class DepartmentServiceTest extends UnitTestSuite
             // Arrange
             Department department = departmentTestFactory.createDefault();
             String departmentName = department.getDepartmentName();
-            doReturn(Lists.newArrayList(department)).when(departmentRepository)
-                                                    .findByDepartmentName(departmentName);
+            doReturn(Lists.newArrayList(department)).when(departmentRepository).findByDepartmentName(departmentName);
 
             // Act
             Department found = departmentService.findByDepartmentName(departmentName);

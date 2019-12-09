@@ -29,11 +29,9 @@ public class SpringSecuritySecurityProvider implements EntitySecurityHolder.Secu
     @Override
     public String getActingUser()
     {
-        if (SecurityContextHolder.getContext()
-                                 .getAuthentication() instanceof OAuth2Authentication)
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof OAuth2Authentication)
         {
-            OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext()
-                                                                                    .getAuthentication();
+            OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
             Authentication userAuthentication = auth.getUserAuthentication();
             if (userAuthentication != null)
             {
@@ -44,14 +42,12 @@ public class SpringSecuritySecurityProvider implements EntitySecurityHolder.Secu
                     Object decodedDetails = authDetails.getDecodedDetails();
                     Map<String, Object> userInformationMap = (Map<String, Object>) ((Map<String, Object>) decodedDetails).get("user_information");
                     LOGGER.debug("The authenticated user information [{}] ", authenticatedUser);
-                    return userInformationMap.get("userId")
-                                             .toString();
+                    return userInformationMap.get("userId").toString();
                 }
                 else if (userAuthentication.getPrincipal() instanceof CustomUserDetails)
                 {
                     CustomUserDetails customUserDetails = (CustomUserDetails) userAuthentication.getPrincipal();
-                    UUID userId = customUserDetails.getUserInformation()
-                                                   .getUserId();
+                    UUID userId = customUserDetails.getUserInformation().getUserId();
                     LOGGER.debug("The user [{}] with id [{}] is authenticated", authenticatedUser, userId);
                     return userId.toString();
                 }

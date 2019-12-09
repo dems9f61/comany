@@ -68,8 +68,7 @@ public class EmployeeEventResponse
         this.emailAddress = employeeEvent.getEmailAddress();
         this.firstName = employeeEvent.getFirstName();
         this.lastName = employeeEvent.getLastName();
-        this.birthday = ofInstant(employeeEvent.getBirthday()
-                                               .toInstant(), systemDefault());
+        this.birthday = ofInstant(employeeEvent.getBirthday().toInstant(), systemDefault());
         this.departmentName = employeeEvent.getDepartmentName();
         this.createdAt = employeeEvent.getCreatedAt();
     }

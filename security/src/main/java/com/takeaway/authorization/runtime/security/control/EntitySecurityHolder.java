@@ -36,8 +36,7 @@ public class EntitySecurityHolder
         @Override
         public String getActingUser()
         {
-            return UUID.randomUUID()
-                       .toString();
+            return UUID.randomUUID().toString();
         }
     }
 

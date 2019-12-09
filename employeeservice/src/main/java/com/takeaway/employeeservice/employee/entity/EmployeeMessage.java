@@ -12,8 +12,7 @@ public class EmployeeMessage
 {
     // =========================== Class Variables ===========================
 
-    public enum EventType
-    {
+    public enum EventType {
         EMPLOYEE_CREATED,
 
         EMPLOYEE_UPDATED,
