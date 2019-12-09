@@ -25,42 +25,42 @@ import java.util.UUID;
 @Service
 public class RolePermissionService
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final RolePermissionRepository rolePermissionRepository;
+    private final RolePermissionRepository rolePermissionRepository;
 
-  private final RoleService roleService;
+    private final RoleService roleService;
 
-  private final PermissionService permissionService;
+    private final PermissionService permissionService;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public Permission assign(@NotNull UUID roleId, @NotNull UUID permissionId)
-  {
-    Role role = roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
-    Permission permission = permissionService.findByIdOrElseThrow(permissionId, BadRequestException.class);
-    return rolePermissionRepository
-        .findByRoleAndPermission(roleId, permissionId)
-        .orElseGet(() -> {
-              RolePermission rolePermission = new RolePermission();
-              rolePermission.setPermission(permission);
-              rolePermission.setRole(role);
-              return rolePermissionRepository.save(rolePermission);
-            })
-        .getPermission();
-  }
+    public Permission assign(@NotNull UUID roleId, @NotNull UUID permissionId)
+    {
+        Role role = roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
+        Permission permission = permissionService.findByIdOrElseThrow(permissionId, BadRequestException.class);
+        return rolePermissionRepository.findByRoleAndPermission(roleId, permissionId)
+                                       .orElseGet(() -> {
+                                           RolePermission rolePermission = new RolePermission();
+                                           rolePermission.setPermission(permission);
+                                           rolePermission.setRole(role);
+                                           return rolePermissionRepository.save(rolePermission);
+                                       })
+                                       .getPermission();
+    }
 
-  public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId)
-  {
-    roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
-    permissionService.findByIdOrElseThrow(permissionId, BadRequestException.class);
-    rolePermissionRepository.findByRoleAndPermission(roleId, permissionId).ifPresent(rolePermissionRepository::delete);
-  }
+    public void unassign(@NotNull UUID roleId, @NotNull UUID permissionId)
+    {
+        roleService.findByIdOrElseThrow(roleId, BadRequestException.class);
+        permissionService.findByIdOrElseThrow(permissionId, BadRequestException.class);
+        rolePermissionRepository.findByRoleAndPermission(roleId, permissionId)
+                                .ifPresent(rolePermissionRepository::delete);
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

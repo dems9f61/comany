@@ -16,17 +16,17 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Department implements Serializable
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private long id;
+    private long id;
 
-  private String departmentName;
+    private String departmentName;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

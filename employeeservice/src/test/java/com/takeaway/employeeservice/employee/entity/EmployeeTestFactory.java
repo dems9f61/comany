@@ -14,61 +14,64 @@ import java.time.ZonedDateTime;
  */
 public class EmployeeTestFactory extends AbstractTestFactory<Employee, EmployeeTestFactory.Builder>
 {
-  public Builder builder()
-  {
-    return new Builder();
-  }
-
-  public static class Builder implements AbstractTestFactory.Builder<Employee>
-  {
-    private String emailAddress;
-
-    private Employee.FullName fullName;
-
-    private ZonedDateTime birthday;
-
-    private Department department;
-
-    private DepartmentTestFactory departmentTestFactory = new DepartmentTestFactory();
-
-    Builder()
+    public Builder builder()
     {
-      this.emailAddress = generateRandomEmail();
-      this.department = departmentTestFactory.createDefault();
-      this.birthday = createRandomBirthday();
-      this.fullName = new Employee.FullName();
-      this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
-      this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
+        return new Builder();
     }
 
-    public Builder emailAddress(String emailAddress)
+    public static class Builder implements AbstractTestFactory.Builder<Employee>
     {
-      this.emailAddress = emailAddress;
-      return this;
-    }
+        private String emailAddress;
 
-    public Builder fullName(Employee.FullName fullName)
-    {
-      this.fullName = fullName;
-      return this;
-    }
+        private Employee.FullName fullName;
 
-    public Builder birthday(ZonedDateTime birthday)
-    {
-      this.birthday = birthday;
-      return this;
-    }
+        private ZonedDateTime birthday;
 
-    public Builder department(Department department)
-    {
-      this.department = department;
-      return this;
-    }
+        private Department department;
 
-    public Employee create()
-    {
-      Employee employee = new Employee();
-      return employee.setBirthday(birthday).setDepartment(department).setEmailAddress(emailAddress).setFullName(fullName);
+        private DepartmentTestFactory departmentTestFactory = new DepartmentTestFactory();
+
+        Builder()
+        {
+            this.emailAddress = generateRandomEmail();
+            this.department = departmentTestFactory.createDefault();
+            this.birthday = createRandomBirthday();
+            this.fullName = new Employee.FullName();
+            this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
+            this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
+        }
+
+        public Builder emailAddress(String emailAddress)
+        {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public Builder fullName(Employee.FullName fullName)
+        {
+            this.fullName = fullName;
+            return this;
+        }
+
+        public Builder birthday(ZonedDateTime birthday)
+        {
+            this.birthday = birthday;
+            return this;
+        }
+
+        public Builder department(Department department)
+        {
+            this.department = department;
+            return this;
+        }
+
+        public Employee create()
+        {
+            Employee employee = new Employee();
+            return employee.setBirthday(birthday)
+                           .setDepartment(department)
+                           .setEmailAddress(emailAddress)
+                           .setFullName(fullName);
+        }
     }
-  }
 }

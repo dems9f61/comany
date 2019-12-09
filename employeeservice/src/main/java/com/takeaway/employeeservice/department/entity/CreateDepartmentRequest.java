@@ -22,29 +22,29 @@ import javax.validation.constraints.NotBlank;
 @EqualsAndHashCode
 public class CreateDepartmentRequest
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @ApiModelProperty(example = "Human Resources (HR)")
-  @NotBlank(message = "The department name must not be blank")
-  private final String departmentName;
+    @ApiModelProperty(example = "Human Resources (HR)")
+    @NotBlank(message = "The department name must not be blank")
+    private final String departmentName;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @JsonCreator
-  public CreateDepartmentRequest(@JsonProperty(value = "departmentName") String departmentName)
-  {
-    this.departmentName = departmentName;
-  }
+    @JsonCreator
+    public CreateDepartmentRequest(@JsonProperty(value = "departmentName") String departmentName)
+    {
+        this.departmentName = departmentName;
+    }
 
-  public DepartmentParameter toDepartmentParameter()
-  {
-    return new DepartmentParameter(departmentName);
-  }
+    public DepartmentParameter toDepartmentParameter()
+    {
+        return new DepartmentParameter(departmentName);
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

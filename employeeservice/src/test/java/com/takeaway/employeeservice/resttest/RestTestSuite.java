@@ -13,24 +13,24 @@ import org.springframework.http.MediaType;
  */
 public abstract class RestTestSuite extends IntegrationTestSuite
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @Autowired
-  protected TestRestTemplate testRestTemplate;
+    @Autowired
+    protected TestRestTemplate testRestTemplate;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
-  HttpHeaders defaultHttpHeaders()
-  {
-    HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-    return httpHeaders;
-  }
+    HttpHeaders defaultHttpHeaders()
+    {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        return httpHeaders;
+    }
 
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

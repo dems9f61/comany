@@ -12,40 +12,40 @@ import org.springframework.stereotype.Component;
 @Component
 public class PermissionTestFactory extends AbstractTestFactory<Permission, PermissionTestFactory.Builder>
 {
-  public PermissionTestFactory.Builder builder()
-  {
-    return new PermissionTestFactory.Builder();
-  }
-
-  public static class Builder implements AbstractTestFactory.Builder<Permission>
-  {
-    private String name;
-
-    private String description;
-
-    Builder()
+    public PermissionTestFactory.Builder builder()
     {
-      this.name = RandomStringUtils.randomAlphabetic(12);
-      this.description = RandomStringUtils.randomAlphabetic(40);
+        return new PermissionTestFactory.Builder();
     }
 
-    public PermissionTestFactory.Builder name(String name)
+    public static class Builder implements AbstractTestFactory.Builder<Permission>
     {
-      this.name = name;
-      return this;
-    }
+        private String name;
 
-    public PermissionTestFactory.Builder description(String description)
-    {
-      this.description = description;
-      return this;
-    }
+        private String description;
 
-    public Permission create()
-    {
-        Permission permission = new Permission();
-        return permission.setName(name)
-                         .setDescription(description);
+        Builder()
+        {
+            this.name = RandomStringUtils.randomAlphabetic(12);
+            this.description = RandomStringUtils.randomAlphabetic(40);
+        }
+
+        public PermissionTestFactory.Builder name(String name)
+        {
+            this.name = name;
+            return this;
+        }
+
+        public PermissionTestFactory.Builder description(String description)
+        {
+            this.description = description;
+            return this;
+        }
+
+        public Permission create()
+        {
+            Permission permission = new Permission();
+            return permission.setName(name)
+                             .setDescription(description);
+        }
     }
-  }
 }

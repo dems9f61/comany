@@ -11,28 +11,28 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class AuditedUUIDEntity extends AuditedEntity<UUID>
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public String toString()
-  {
-    return "AuditedUUIDEntity{" + super.toString() + '}';
-  }
-
-  // =================  protected/package local  Methods ===================
-
-  protected void onPrePersist()
-  {
-    if (isNew())
+    @Override
+    public String toString()
     {
-      setId(UUID.randomUUID());
+        return "AuditedUUIDEntity{" + super.toString() + '}';
     }
-  }
 
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+
+    protected void onPrePersist()
+    {
+        if (isNew())
+        {
+            setId(UUID.randomUUID());
+        }
+    }
+
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

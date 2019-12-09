@@ -15,9 +15,9 @@ import java.util.UUID;
 @Component
 public class UserRepositoryTestHelper extends AbstractRepositoryTestHelper<User, UUID, UserRepository>
 {
-  @Autowired
-  public UserRepositoryTestHelper(UserRepository repository)
-  {
-    super(repository);
-  }
+    @Autowired
+    public UserRepositoryTestHelper(UserRepository repository)
+    {
+        super(repository);
+    }
 }

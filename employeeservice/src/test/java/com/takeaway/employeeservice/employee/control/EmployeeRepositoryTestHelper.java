@@ -16,22 +16,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class EmployeeRepositoryTestHelper
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public void cleanDatabase()
-  {
-    LOGGER.info("Cleaning the employee repository");
-    employeeRepository.deleteAll();
-  }
+    public void cleanDatabase()
+    {
+        LOGGER.info("Cleaning the employee repository");
+        employeeRepository.deleteAll();
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

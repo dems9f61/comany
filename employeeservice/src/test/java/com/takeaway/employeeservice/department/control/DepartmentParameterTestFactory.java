@@ -13,30 +13,30 @@ import org.springframework.stereotype.Component;
 public class DepartmentParameterTestFactory extends AbstractTestFactory<DepartmentParameter, DepartmentParameterTestFactory.Builder>
 {
 
-  public Builder builder()
-  {
-    return new Builder();
-  }
-
-  public static class Builder implements AbstractTestFactory.Builder<DepartmentParameter>
-  {
-
-    private String departmentName;
-
-    private Builder()
+    public Builder builder()
     {
-      this.departmentName = RandomStringUtils.randomAlphabetic(8);
+        return new Builder();
     }
 
-    public Builder departmentName(String departmentName)
+    public static class Builder implements AbstractTestFactory.Builder<DepartmentParameter>
     {
-      this.departmentName = departmentName;
-      return this;
-    }
 
-    public DepartmentParameter create()
-    {
-      return new DepartmentParameter(departmentName);
+        private String departmentName;
+
+        private Builder()
+        {
+            this.departmentName = RandomStringUtils.randomAlphabetic(8);
+        }
+
+        public Builder departmentName(String departmentName)
+        {
+            this.departmentName = departmentName;
+            return this;
+        }
+
+        public DepartmentParameter create()
+        {
+            return new DepartmentParameter(departmentName);
+        }
     }
-  }
 }

@@ -32,178 +32,198 @@ import static org.mockito.Mockito.*;
 @DisplayName("Unit tests for the employee service")
 class EmployeeServiceTest extends UnitTestSuite
 {
-  @Mock
-  private EmployeeEventPublisherCapable employeeEventPublisher;
+    @Mock
+    private EmployeeEventPublisherCapable employeeEventPublisher;
 
-  @Mock
-  private DepartmentServiceCapable departmentService;
+    @Mock
+    private DepartmentServiceCapable departmentService;
 
-  @Mock
-  private EmployeeRepository employeeRepository;
+    @Mock
+    private EmployeeRepository employeeRepository;
 
-  @InjectMocks
-  private EmployeeService employeeService;
+    @InjectMocks
+    private EmployeeService employeeService;
 
-  @Nested
-  @DisplayName("when delete")
-  class WhenDelete
-  {
-    @Test
-    @DisplayName("Deleting an employee with a wrong id fails")
-    void givenUnknownId_whenDelete_thenThrowException()
+    @Nested
+    @DisplayName("when delete")
+    class WhenDelete
     {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      doReturn(Optional.empty()).when(employeeRepository).findById(any());
+        @Test
+        @DisplayName("Deleting an employee with a wrong id fails")
+        void givenUnknownId_whenDelete_thenThrowException()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            doReturn(Optional.empty()).when(employeeRepository)
+                                      .findById(any());
 
-      // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.deleteById(id));
+            // Act / Assert
+            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.deleteById(id));
+        }
+
+        @Test
+        @DisplayName("Deleting an employee with a valid id succeeds")
+        void givenValidId_whenDelete_thenSucceed()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(Optional.of(employee)).when(employeeRepository)
+                                           .findById(id);
+            doNothing().when(employeeRepository)
+                       .deleteById(any());
+            doNothing().when(employeeEventPublisher)
+                       .employeeDeleted(any());
+
+            // Act
+            employeeService.deleteById(id);
+
+            // Assert
+            verify(employeeRepository).deleteById(id);
+            verify(employeeEventPublisher).employeeDeleted(assertArg(getDefaultEmployeeConsumer(employee)));
+        }
     }
 
-    @Test
-    @DisplayName("Deleting an employee with a valid id succeeds")
-    void givenValidId_whenDelete_thenSucceed()
+    @Nested
+    @DisplayName("when update")
+    class WhenUpdate
     {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      Employee employee = employeeTestFactory.createDefault();
-      doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
-      doNothing().when(employeeRepository).deleteById(any());
-      doNothing().when(employeeEventPublisher).employeeDeleted(any());
+        @Test
+        @DisplayName("Updating an employee with a valid parameters succeeds")
+        void giveValidParameters_whenUpdate_thenSucceed()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(Optional.of(employee)).when(employeeRepository)
+                                           .findById(id);
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            Department department = departmentTestFactory.createDefault();
 
-      // Act
-      employeeService.deleteById(id);
+            doReturn(department).when(departmentService)
+                                .findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
+            doReturn(employee).when(employeeRepository)
+                              .save(any());
 
-      // Assert
-      verify(employeeRepository).deleteById(id);
-      verify(employeeEventPublisher).employeeDeleted(assertArg(getDefaultEmployeeConsumer(employee)));
-    }
-  }
+            // Act
+            employeeService.update(id, employeeParameter);
 
-  @Nested
-  @DisplayName("when update")
-  class WhenUpdate
-  {
-    @Test
-    @DisplayName("Updating an employee with a valid parameters succeeds")
-    void giveValidParameters_whenUpdate_thenSucceed()
-    {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      Employee employee = employeeTestFactory.createDefault();
-      doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
-      EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-      Department department = departmentTestFactory.createDefault();
+            // Assert
+            verify(employeeRepository).save(assertArg(getDefaultEmployeeConsumer(employee)));
+            verify(employeeEventPublisher).employeeUpdated(assertArg(getDefaultEmployeeConsumer(employee)));
+        }
 
-      doReturn(department).when(departmentService).findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
-      doReturn(employee).when(employeeRepository).save(any());
+        @Test
+        @DisplayName("Updating an employee with a wrong uuid fails")
+        void givenUnknownUuid_whenUpdate_thenThrowException()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            doReturn(Optional.empty()).when(employeeRepository)
+                                      .findById(id);
 
-      // Act
-      employeeService.update(id, employeeParameter);
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
 
-      // Assert
-      verify(employeeRepository).save(assertArg(getDefaultEmployeeConsumer(employee)));
-      verify(employeeEventPublisher).employeeUpdated(assertArg(getDefaultEmployeeConsumer(employee)));
-    }
+            // Act / Assert
+            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.update(id, employeeParameter));
+        }
 
-    @Test
-    @DisplayName("Updating an employee with a wrong uuid fails")
-    void givenUnknownUuid_whenUpdate_thenThrowException()
-    {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      doReturn(Optional.empty()).when(employeeRepository).findById(id);
+        @Test
+        @DisplayName("Updating an employee with a unknown department fails")
+        void givenUnknownDepartment_whenUpdate_thenThrowException()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(Optional.of(employee)).when(employeeRepository)
+                                           .findById(id);
 
-      EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            doThrow(BadRequestException.class).when(departmentService)
+                                              .findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
 
-      // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeService.update(id, employeeParameter));
-    }
-
-    @Test
-    @DisplayName("Updating an employee with a unknown department fails")
-    void givenUnknownDepartment_whenUpdate_thenThrowException()
-    {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      Employee employee = employeeTestFactory.createDefault();
-      doReturn(Optional.of(employee)).when(employeeRepository).findById(id);
-
-      EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-      doThrow(BadRequestException.class).when(departmentService).findByDepartmentNameOrElseThrow(eq(employeeParameter.getDepartmentName()), any());
-
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.update(id, employeeParameter));
-    }
-  }
-
-  @Nested
-  @DisplayName("when new")
-  class WhenNew
-  {
-    @Test
-    @DisplayName("Updating an employee with a valid parameters succeeds")
-    void giveValidParameters_whenCreate_thenSucceed()
-    {
-      // Arrange
-      EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-      Department department = departmentTestFactory.createDefault();
-      doReturn(department).when(departmentService).findByDepartmentNameOrElseThrow(any(), any());
-
-      doReturn(Collections.emptyList()).when(employeeRepository).findByEmailAddress(employeeParameter.getEmailAddress());
-      Employee employee = employeeTestFactory.createDefault();
-      doReturn(employee).when(employeeRepository).save(any());
-      doNothing().when(employeeEventPublisher).employeeCreated(any());
-
-      // Act
-      employeeService.create(employeeParameter);
-
-      // Assert
-      verify(employeeRepository)
-          .save(assertArg(persisted -> {
-                    assertThat(persisted.getBirthday()).isEqualTo(employeeParameter.getBirthday());
-                    assertThat(persisted.getDepartment().getDepartmentName()).isEqualTo(department.getDepartmentName());
-                    assertThat(persisted.getEmailAddress()).isEqualTo(employeeParameter.getEmailAddress());
-                    assertThat(persisted.getFullName().getFirstName()).isEqualTo(employeeParameter.getFirstName());
-                    assertThat(persisted.getFullName().getLastName()).isEqualTo(employeeParameter.getLastName());
-                  }));
-      verify(employeeEventPublisher).employeeCreated(assertArg(getDefaultEmployeeConsumer(employee)));
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.update(id, employeeParameter));
+        }
     }
 
-    @Test
-    @DisplayName("Creating an employee with a unknown department fails")
-    void givenUnknownDepartment_whenCreate_thenThrowBadRequestException()
+    @Nested
+    @DisplayName("when new")
+    class WhenNew
     {
-      // Arrange
-      EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-      doThrow(BadRequestException.class).when(departmentService).findByDepartmentNameOrElseThrow(any(), any());
+        @Test
+        @DisplayName("Updating an employee with a valid parameters succeeds")
+        void giveValidParameters_whenCreate_thenSucceed()
+        {
+            // Arrange
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            Department department = departmentTestFactory.createDefault();
+            doReturn(department).when(departmentService)
+                                .findByDepartmentNameOrElseThrow(any(), any());
 
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+            doReturn(Collections.emptyList()).when(employeeRepository)
+                                             .findByEmailAddress(employeeParameter.getEmailAddress());
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(employee).when(employeeRepository)
+                              .save(any());
+            doNothing().when(employeeEventPublisher)
+                       .employeeCreated(any());
+
+            // Act
+            employeeService.create(employeeParameter);
+
+            // Assert
+            verify(employeeRepository).save(assertArg(persisted -> {
+                assertThat(persisted.getBirthday()).isEqualTo(employeeParameter.getBirthday());
+                assertThat(persisted.getDepartment()
+                                    .getDepartmentName()).isEqualTo(department.getDepartmentName());
+                assertThat(persisted.getEmailAddress()).isEqualTo(employeeParameter.getEmailAddress());
+                assertThat(persisted.getFullName()
+                                    .getFirstName()).isEqualTo(employeeParameter.getFirstName());
+                assertThat(persisted.getFullName()
+                                    .getLastName()).isEqualTo(employeeParameter.getLastName());
+            }));
+            verify(employeeEventPublisher).employeeCreated(assertArg(getDefaultEmployeeConsumer(employee)));
+        }
+
+        @Test
+        @DisplayName("Creating an employee with a unknown department fails")
+        void givenUnknownDepartment_whenCreate_thenThrowBadRequestException()
+        {
+            // Arrange
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            doThrow(BadRequestException.class).when(departmentService)
+                                              .findByDepartmentNameOrElseThrow(any(), any());
+
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+        }
+
+        @Test
+        @DisplayName("Creating an employee with an already used mail")
+        void givenAlreadyUsedEmail_whenCreate_thenThrowBadRequestException()
+        {
+            // Arrange
+            EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(Lists.newArrayList(employee)).when(employeeRepository)
+                                                  .findByEmailAddress(employeeParameter.getEmailAddress());
+
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+        }
     }
 
-    @Test
-    @DisplayName("Creating an employee with an already used mail")
-    void givenAlreadyUsedEmail_whenCreate_thenThrowBadRequestException()
+    private Consumer<Employee> getDefaultEmployeeConsumer(Employee employee)
     {
-      // Arrange
-      EmployeeParameter employeeParameter = employeeParameterTestFactory.createDefault();
-      Employee employee = employeeTestFactory.createDefault();
-      doReturn(Lists.newArrayList(employee)).when(employeeRepository).findByEmailAddress(employeeParameter.getEmailAddress());
-
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeService.create(employeeParameter));
+        return candidate -> {
+            assertThat(candidate.getBirthday()).isEqualTo(employee.getBirthday());
+            assertThat(candidate.getId()).isEqualTo(employee.getId());
+            assertThat(candidate.getDepartment()
+                                .getId()).isEqualTo(employee.getDepartment()
+                                                            .getId());
+            assertThat(candidate.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+            assertThat(candidate.getFullName()).isEqualTo(employee.getFullName());
+        };
     }
-  }
-
-  private Consumer<Employee> getDefaultEmployeeConsumer(Employee employee)
-  {
-    return candidate -> {
-      assertThat(candidate.getBirthday()).isEqualTo(employee.getBirthday());
-      assertThat(candidate.getId()).isEqualTo(employee.getId());
-      assertThat(candidate.getDepartment().getId()).isEqualTo(employee.getDepartment().getId());
-      assertThat(candidate.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-      assertThat(candidate.getFullName()).isEqualTo(employee.getFullName());
-    };
-  }
 }

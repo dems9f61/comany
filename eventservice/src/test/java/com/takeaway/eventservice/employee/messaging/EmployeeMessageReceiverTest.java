@@ -24,30 +24,30 @@ import static org.mockito.Mockito.verify;
 @DisplayName("Unit tests for the employee message receiver ")
 class EmployeeMessageReceiverTest extends UnitTestSuite
 {
-  @Mock
-  private ApplicationEventPublisher eventPublisher;
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
-  @InjectMocks
-  private EmployeeMessageReceiver employeeMessageReceiver;
+    @InjectMocks
+    private EmployeeMessageReceiver employeeMessageReceiver;
 
-  @DisplayName("Receiving an employee message should trigger an employee event")
-  @Test
-  void givenEmployeeMessage_whenReceive_thenPublish()
-  {
-    // Arrange
-    EmployeeMessage employeeMessage = employeeMessageTestFactory.createDefault();
-    doNothing().when(eventPublisher).publishEvent(any());
+    @DisplayName("Receiving an employee message should trigger an employee event")
+    @Test
+    void givenEmployeeMessage_whenReceive_thenPublish()
+    {
+        // Arrange
+        EmployeeMessage employeeMessage = employeeMessageTestFactory.createDefault();
+        doNothing().when(eventPublisher)
+                   .publishEvent(any());
 
-    // Act
-    employeeMessageReceiver.receiveEmployeeMessage(employeeMessage);
+        // Act
+        employeeMessageReceiver.receiveEmployeeMessage(employeeMessage);
 
-    // Assert
-    verify(eventPublisher)
-        .publishEvent(assertArg(event -> {
-                  assertThat(event).isInstanceOf(EmployeeEvent.class);
-                  EmployeeEvent employeeEvent = (EmployeeEvent) event;
-                  assertThat(employeeEvent.getEmployee()).isEqualTo(employeeMessage.getEmployee());
-                  assertThat(employeeEvent.getEventType()).isEqualTo(employeeMessage.getEventType());
-                }));
-  }
+        // Assert
+        verify(eventPublisher).publishEvent(assertArg(event -> {
+            assertThat(event).isInstanceOf(EmployeeEvent.class);
+            EmployeeEvent employeeEvent = (EmployeeEvent) event;
+            assertThat(employeeEvent.getEmployee()).isEqualTo(employeeMessage.getEmployee());
+            assertThat(employeeEvent.getEventType()).isEqualTo(employeeMessage.getEventType());
+        }));
+    }
 }

@@ -20,21 +20,21 @@ import java.io.Serializable;
 @Validated
 public interface DefaultEntityControllerCapable<ENTITY extends AbstractEntity<ID>, ID extends Serializable>
 {
-  // =========================== Class Variables ===========================
-  // ==============================  Methods  ==============================
+    // =========================== Class Variables ===========================
+    // ==============================  Methods  ==============================
 
-  Page<ENTITY> findAll(@NotNull Pageable pageable);
+    Page<ENTITY> findAll(@NotNull Pageable pageable);
 
-  ENTITY findById(@PathVariable @NotNull ID id);
+    ENTITY findById(@PathVariable @NotNull ID id);
 
-  ResponseEntity<ENTITY> create(@RequestBody @JsonView(DataView.POST.class) @NotNull ENTITY create);
+    ResponseEntity<ENTITY> create(@RequestBody @JsonView(DataView.POST.class) @NotNull ENTITY create);
 
-  ENTITY doFullUpdate(@PathVariable @NotNull ID id, @RequestBody @JsonView(DataView.PUT.class) ENTITY update);
+    ENTITY doFullUpdate(@PathVariable @NotNull ID id, @RequestBody @JsonView(DataView.PUT.class) ENTITY update);
 
-  ENTITY doPartialUpdate(@PathVariable @NotNull ID id, @RequestBody @JsonView(DataView.PATCH.class) ENTITY update);
+    ENTITY doPartialUpdate(@PathVariable @NotNull ID id, @RequestBody @JsonView(DataView.PATCH.class) ENTITY update);
 
-  void delete(@PathVariable @NotNull ID id);
+    void delete(@PathVariable @NotNull ID id);
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

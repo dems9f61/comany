@@ -7,21 +7,21 @@ package com.takeaway.employeeservice.runtime.rest;
  */
 public final class ApiVersions
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  public static final String V1 = "/api/v1";
+    public static final String V1 = "/api/v1";
 
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
 
-  private ApiVersions()
-  {
-    throw new AssertionError("This is not meant to be instantiated");
-  }
+    private ApiVersions()
+    {
+        throw new AssertionError("This is not meant to be instantiated");
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

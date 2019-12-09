@@ -20,15 +20,15 @@ import java.util.UUID;
 @Repository
 interface UserRepository extends JpaAuditedSpecificationRepository<User, UUID>
 {
-  // =========================== Class Variables ===========================
-  // ==============================  Methods  ==============================
+    // =========================== Class Variables ===========================
+    // ==============================  Methods  ==============================
 
-  Optional<User> findByUserName(String userName);
+    Optional<User> findByUserName(String userName);
 
     @Query("SELECT DISTINCT rp.permission FROM User u " + "           JOIN UserRole ur ON ur.user = u "
             + "           JOIN RolePermission rp ON ur.role = rp.role " + "           WHERE u.id = :userId")
-  Page<Permission> findAllPermissionsByUser(@Param("userId") UUID userId, Pageable pageable);
+    Page<Permission> findAllPermissionsByUser(@Param("userId") UUID userId, Pageable pageable);
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

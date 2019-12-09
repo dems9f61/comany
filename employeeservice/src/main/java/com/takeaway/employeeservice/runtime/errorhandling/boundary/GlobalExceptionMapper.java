@@ -34,139 +34,149 @@ import static java.util.stream.Collectors.joining;
 @ControllerAdvice
 public class GlobalExceptionMapper
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
-  @Order(1)
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  protected ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception)
-  {
-    List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-    List<ObjectError> globalErrors = exception.getBindingResult().getGlobalErrors();
-    String fieldErrorMessage = fieldErrors.stream()
-              .map(fieldError -> String.format("{ Field: %s, Message: %s }", fieldError.getField(), fieldError.getDefaultMessage()))
-              .collect(joining(","));
-    String globalErrorMessage = globalErrors.stream()
-              .map(objectError -> String.format("{ Object: %s, Message: %s }", objectError.getObjectName(), objectError.getDefaultMessage()))
-              .collect(joining(","));
-
-    String errorMsg = "Constraint(s) failed: ";
-    if (StringUtils.trimToNull(fieldErrorMessage) != null)
+    @Order(1)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception)
     {
-      errorMsg += fieldErrorMessage;
+        List<FieldError> fieldErrors = exception.getBindingResult()
+                                                .getFieldErrors();
+        List<ObjectError> globalErrors = exception.getBindingResult()
+                                                  .getGlobalErrors();
+        String fieldErrorMessage = fieldErrors.stream()
+                                              .map(fieldError -> String.format("{ Field: %s, Message: %s }",
+                                                                               fieldError.getField(),
+                                                                               fieldError.getDefaultMessage()))
+                                              .collect(joining(","));
+        String globalErrorMessage = globalErrors.stream()
+                                                .map(objectError -> String.format("{ Object: %s, Message: %s }",
+                                                                                  objectError.getObjectName(),
+                                                                                  objectError.getDefaultMessage()))
+                                                .collect(joining(","));
+
+        String errorMsg = "Constraint(s) failed: ";
+        if (StringUtils.trimToNull(fieldErrorMessage) != null)
+        {
+            errorMsg += fieldErrorMessage;
+        }
+        if (StringUtils.trimToNull(globalErrorMessage) != null)
+        {
+            errorMsg += globalErrorMessage;
+        }
+        return serializeExceptionToResponse(new BadRequestException(errorMsg), HttpStatus.BAD_REQUEST);
     }
-    if (StringUtils.trimToNull(globalErrorMessage) != null)
+
+    @Order(2)
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException constraintViolationException)
     {
-      errorMsg += globalErrorMessage;
+        String errorMessage = "Constraints violated: " + constraintViolationException.getConstraintViolations()
+                                                                                     .stream()
+                                                                                     .map(violation -> String.format(
+                                                                                             "{Property path: :%s, Error message: :%s}",
+                                                                                             violation.getPropertyPath(),
+                                                                                             violation.getMessage()))
+                                                                                     .collect(joining(", ", "[", "]"));
+        return handleBadRequestException(new BadRequestException(errorMessage));
     }
-    return serializeExceptionToResponse(new BadRequestException(errorMsg), HttpStatus.BAD_REQUEST);
-  }
 
-  @Order(2)
-  @ExceptionHandler(ConstraintViolationException.class)
-  protected ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException constraintViolationException)
-  {
-    String errorMessage = "Constraints violated: "
-          + constraintViolationException.getConstraintViolations().stream()
-                  .map(violation -> String.format("{Property path: :%s, Error message: :%s}", violation.getPropertyPath(), violation.getMessage()))
-                  .collect(joining(", ", "[", "]"));
-    return handleBadRequestException(new BadRequestException(errorMessage));
-  }
-
-  @Order(3)
-  @ExceptionHandler(value = HttpMessageNotReadableException.class)
-  protected ResponseEntity<String> handleNotReadableException(HttpMessageNotReadableException notReadableException)
-  {
-    Throwable mostSpecificCause = notReadableException.getMostSpecificCause();
-    String errorMessage = mostSpecificCause != null ? mostSpecificCause.getMessage() : notReadableException.getMessage();
-    return handleBadRequestException(new BadRequestException(errorMessage));
-  }
-
-  @Order(4)
-  @ExceptionHandler(value = BadRequestException.class)
-  protected ResponseEntity<String> handleBadRequestException(BadRequestException badRequestException)
-  {
-    return serializeExceptionToResponse(badRequestException, HttpStatus.BAD_REQUEST);
-  }
-
-  @Order(5)
-  @ExceptionHandler(value = ResourceNotFoundException.class)
-  protected ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException)
-  {
-    return serializeExceptionToResponse(resourceNotFoundException, HttpStatus.NOT_FOUND);
-  }
-
-  @Order(6)
-  @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
-  protected ResponseEntity<String> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException mediaNotSupportedException)
-  {
-    String errorMsg = "Unsupported content type: " + mediaNotSupportedException.getContentType();
-    errorMsg += "\nSupported content types: " + MediaType.toString(mediaNotSupportedException.getSupportedMediaTypes());
-    return serializeExceptionToResponse(new BadRequestException(errorMsg), HttpStatus.BAD_REQUEST);
-  }
-
-  @Order(7)
-  @ExceptionHandler(value = TransactionSystemException.class)
-  public ResponseEntity<String> handleTransactionSystemException(TransactionSystemException exception)
-  {
-    return handleNestedRuntimeException(exception);
-  }
-
-  @Order(8)
-  @ExceptionHandler(value = InvalidDataAccessApiUsageException.class)
-  public ResponseEntity<String> handleTransactionSystemException(InvalidDataAccessApiUsageException exception)
-  {
-    return handleNestedRuntimeException(exception);
-  }
-
-  @Order(9)
-  @ExceptionHandler(value = DataIntegrityViolationException.class)
-  public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException exception)
-  {
-    return handleNestedRuntimeException(exception);
-  }
-
-  @Order(1999)
-  @ExceptionHandler(value = {Exception.class})
-  protected ResponseEntity<String> handleException(Exception exception)
-  {
-    LOGGER.error("Unhandled exception occurred", exception);
-    return serializeExceptionToResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
-  // ===========================  private  Methods  ========================
-
-  private ResponseEntity<String> handleNestedRuntimeException(NestedRuntimeException exception)
-  {
-    Throwable mostSpecificCause = exception.getMostSpecificCause();
-    if (mostSpecificCause instanceof ConstraintViolationException)
+    @Order(3)
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    protected ResponseEntity<String> handleNotReadableException(HttpMessageNotReadableException notReadableException)
     {
-      return handleConstraintViolationException((ConstraintViolationException) mostSpecificCause);
+        Throwable mostSpecificCause = notReadableException.getMostSpecificCause();
+        String errorMessage = mostSpecificCause != null ? mostSpecificCause.getMessage() : notReadableException.getMessage();
+        return handleBadRequestException(new BadRequestException(errorMessage));
     }
-    if (mostSpecificCause instanceof IllegalArgumentException)
+
+    @Order(4)
+    @ExceptionHandler(value = BadRequestException.class)
+    protected ResponseEntity<String> handleBadRequestException(BadRequestException badRequestException)
     {
-      IllegalArgumentException illegalArgumentException = (IllegalArgumentException) mostSpecificCause;
-      return handleBadRequestException(new BadRequestException(illegalArgumentException));
+        return serializeExceptionToResponse(badRequestException, HttpStatus.BAD_REQUEST);
     }
-    return handleException(exception);
-  }
 
-  private ResponseEntity<String> serializeExceptionToResponse(Exception exception, HttpStatus httpStatus)
-  {
-      if (httpStatus.is4xxClientError())
-      {
-          LOGGER.info("Client Exception occurred. Error: {}", exception.getLocalizedMessage());
-      }
-      else
-      {
-          LOGGER.error("Unhandled Exception occurred. Error: {}", exception.getLocalizedMessage(), exception);
-      }
-      return ResponseEntity.status(httpStatus.value()).body(exception.getMessage());
-  }
+    @Order(5)
+    @ExceptionHandler(value = ResourceNotFoundException.class)
+    protected ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException)
+    {
+        return serializeExceptionToResponse(resourceNotFoundException, HttpStatus.NOT_FOUND);
+    }
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    @Order(6)
+    @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
+    protected ResponseEntity<String> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException mediaNotSupportedException)
+    {
+        String errorMsg = "Unsupported content type: " + mediaNotSupportedException.getContentType();
+        errorMsg += "\nSupported content types: " + MediaType.toString(mediaNotSupportedException.getSupportedMediaTypes());
+        return serializeExceptionToResponse(new BadRequestException(errorMsg), HttpStatus.BAD_REQUEST);
+    }
+
+    @Order(7)
+    @ExceptionHandler(value = TransactionSystemException.class)
+    public ResponseEntity<String> handleTransactionSystemException(TransactionSystemException exception)
+    {
+        return handleNestedRuntimeException(exception);
+    }
+
+    @Order(8)
+    @ExceptionHandler(value = InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<String> handleTransactionSystemException(InvalidDataAccessApiUsageException exception)
+    {
+        return handleNestedRuntimeException(exception);
+    }
+
+    @Order(9)
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException exception)
+    {
+        return handleNestedRuntimeException(exception);
+    }
+
+    @Order(1999)
+    @ExceptionHandler(value = { Exception.class })
+    protected ResponseEntity<String> handleException(Exception exception)
+    {
+        LOGGER.error("Unhandled exception occurred", exception);
+        return serializeExceptionToResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // ===========================  private  Methods  ========================
+
+    private ResponseEntity<String> handleNestedRuntimeException(NestedRuntimeException exception)
+    {
+        Throwable mostSpecificCause = exception.getMostSpecificCause();
+        if (mostSpecificCause instanceof ConstraintViolationException)
+        {
+            return handleConstraintViolationException((ConstraintViolationException) mostSpecificCause);
+        }
+        if (mostSpecificCause instanceof IllegalArgumentException)
+        {
+            IllegalArgumentException illegalArgumentException = (IllegalArgumentException) mostSpecificCause;
+            return handleBadRequestException(new BadRequestException(illegalArgumentException));
+        }
+        return handleException(exception);
+    }
+
+    private ResponseEntity<String> serializeExceptionToResponse(Exception exception, HttpStatus httpStatus)
+    {
+        if (httpStatus.is4xxClientError())
+        {
+            LOGGER.info("Client Exception occurred. Error: {}", exception.getLocalizedMessage());
+        }
+        else
+        {
+            LOGGER.error("Unhandled Exception occurred. Error: {}", exception.getLocalizedMessage(), exception);
+        }
+        return ResponseEntity.status(httpStatus.value())
+                             .body(exception.getMessage());
+    }
+
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

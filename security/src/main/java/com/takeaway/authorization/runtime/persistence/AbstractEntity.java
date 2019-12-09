@@ -28,114 +28,105 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 public abstract class AbstractEntity<ID extends Serializable> implements Persistable<ID>
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @Id
-  @JsonView(DataView.GET.class)
-  private ID id;
+    @Id
+    @JsonView(DataView.GET.class)
+    private ID id;
 
-  @NotNull(groups = {Default.class, DataView.GET.class})
-  @JsonView(DataView.GET.class)
-  @NotAudited
-  private ZonedDateTime createdAt;
+    @NotNull(groups = { Default.class, DataView.GET.class })
+    @JsonView(DataView.GET.class)
+    @NotAudited
+    private ZonedDateTime createdAt;
 
-  @NotNull(groups = {Default.class, DataView.GET.class})
-  @JsonView(DataView.GET.class)
-  @NotAudited
-  private String createdBy;
+    @NotNull(groups = { Default.class, DataView.GET.class })
+    @JsonView(DataView.GET.class)
+    @NotAudited
+    private String createdBy;
 
-  @NotNull(groups = {Default.class, DataView.GET.class})
-  @JsonView(DataView.GET.class)
-  private ZonedDateTime lastUpdatedAt;
+    @NotNull(groups = { Default.class, DataView.GET.class })
+    @JsonView(DataView.GET.class)
+    private ZonedDateTime lastUpdatedAt;
 
-  @NotNull(groups = {Default.class, DataView.GET.class})
-  @JsonView(DataView.GET.class)
-  private String lastUpdatedBy;
+    @NotNull(groups = { Default.class, DataView.GET.class })
+    @JsonView(DataView.GET.class)
+    private String lastUpdatedBy;
 
-  @JsonView({DataView.GET.class, DataView.PUT.class, DataView.PATCH.class})
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
-  @Version
-  private Long version;
+    @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class })
+    @Setter(value = AccessLevel.PRIVATE)
+    @Column(nullable = false)
+    @Version
+    private Long version;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public final ID getId()
-  {
-    return id;
-  }
-
-  public final void setId(ID id)
-  {
-    this.id = id;
-  }
-
-  private void patchAuditData()
-  {
-    this.lastUpdatedAt = ZonedDateTime.now();
-    this.lastUpdatedBy = EntitySecurityHolder.get().getActingUser();
-    if (this.createdAt == null)
+    @Override
+    public final ID getId()
     {
-      this.createdAt = this.lastUpdatedAt;
-      this.createdBy = this.lastUpdatedBy;
+        return id;
     }
-  }
 
-  @PrePersist
-  public final void prePersist()
-  {
-    patchAuditData();
-    onPrePersist();
-  }
+    public final void setId(ID id)
+    {
+        this.id = id;
+    }
 
-  @PreUpdate
-  public final void preUpdate()
-  {
-    patchAuditData();
-    onPreUpdate();
-  }
+    private void patchAuditData()
+    {
+        this.lastUpdatedAt = ZonedDateTime.now();
+        this.lastUpdatedBy = EntitySecurityHolder.get()
+                                                 .getActingUser();
+        if (this.createdAt == null)
+        {
+            this.createdAt = this.lastUpdatedAt;
+            this.createdBy = this.lastUpdatedBy;
+        }
+    }
 
-  @PostLoad
-  public final void postLoad()
-  {
-    onPostLoad();
-  }
+    @PrePersist
+    public final void prePersist()
+    {
+        patchAuditData();
+        onPrePersist();
+    }
 
-  protected void onPreUpdate() {}
+    @PreUpdate
+    public final void preUpdate()
+    {
+        patchAuditData();
+        onPreUpdate();
+    }
 
-  protected void onPrePersist() {}
+    @PostLoad
+    public final void postLoad()
+    {
+        onPostLoad();
+    }
 
-  protected void onPostLoad() {}
+    protected void onPreUpdate() {}
 
-  @Override
-  @JsonIgnore
-  public final boolean isNew()
-  {
-    return id == null;
-  }
+    protected void onPrePersist() {}
 
-  @Override
-  public String toString()
-  {
-    return "AbstractEntity{"
-      + "id="
-      + id
-      + ", createdAt="
-      + createdAt
-      + ", createdBy="
-      + createdBy
-      + ", lastUpdatedAt="
-      + lastUpdatedAt
-      + ", lastUpdatedBy="
-      + lastUpdatedBy
-      + '}';
-  }
+    protected void onPostLoad() {}
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    @Override
+    @JsonIgnore
+    public final boolean isNew()
+    {
+        return id == null;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AbstractEntity{" + "id=" + id + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", lastUpdatedAt=" + lastUpdatedAt
+                + ", lastUpdatedBy=" + lastUpdatedBy + '}';
+    }
+
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

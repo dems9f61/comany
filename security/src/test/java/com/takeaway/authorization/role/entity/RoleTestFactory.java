@@ -12,39 +12,40 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleTestFactory extends AbstractTestFactory<Role, RoleTestFactory.Builder>
 {
-  public Builder builder()
-  {
-    return new Builder();
-  }
-
-  public static class Builder implements AbstractTestFactory.Builder<Role>
-  {
-    private String name;
-
-    private String description;
-
-    Builder()
+    public Builder builder()
     {
-      this.name = RandomStringUtils.randomAlphabetic(12);
-      this.description = RandomStringUtils.randomAlphabetic(40);
+        return new Builder();
     }
 
-    public Builder name(String name)
+    public static class Builder implements AbstractTestFactory.Builder<Role>
     {
-      this.name = name;
-      return this;
-    }
+        private String name;
 
-    public Builder description(String description)
-    {
-      this.description = description;
-      return this;
-    }
+        private String description;
 
-    public Role create()
-    {
-      Role role = new Role();
-      return role.setName(name).setDescription(description);
+        Builder()
+        {
+            this.name = RandomStringUtils.randomAlphabetic(12);
+            this.description = RandomStringUtils.randomAlphabetic(40);
+        }
+
+        public Builder name(String name)
+        {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description)
+        {
+            this.description = description;
+            return this;
+        }
+
+        public Role create()
+        {
+            Role role = new Role();
+            return role.setName(name)
+                       .setDescription(description);
+        }
     }
-  }
 }

@@ -25,44 +25,46 @@ import static org.mockito.Mockito.doThrow;
 @DisplayName("Unit tests for the department controller")
 class DepartmentControllerTest extends UnitTestSuite
 {
-  @Mock
-  private DepartmentServiceCapable departmentService;
+    @Mock
+    private DepartmentServiceCapable departmentService;
 
-  @InjectMocks
-  private DepartmentController departmentController;
+    @InjectMocks
+    private DepartmentController departmentController;
 
-  @Nested
-  @DisplayName("when create")
-  class WhenCreate
-  {
-    @Test
-    @DisplayName("Creating a department throws BadRequestException when departmentService throws Exception")
-    void givenUnderlyingException_whenCreate_thenThrowBadRequestException()
+    @Nested
+    @DisplayName("when create")
+    class WhenCreate
     {
-      // Arrange
-      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
-      doThrow(BadRequestException.class).when(departmentService).create(createDepartmentRequest.toDepartmentParameter());
+        @Test
+        @DisplayName("Creating a department throws BadRequestException when departmentService throws Exception")
+        void givenUnderlyingException_whenCreate_thenThrowBadRequestException()
+        {
+            // Arrange
+            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
+            doThrow(BadRequestException.class).when(departmentService)
+                                              .create(createDepartmentRequest.toDepartmentParameter());
 
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentController.create(createDepartmentRequest));
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentController.create(createDepartmentRequest));
+        }
+
+        @Test
+        @DisplayName("Creating a department succeeds when request is valid")
+        void giveValidRequest_whenCreate_thenSucceed()
+        {
+            // Arrange
+            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
+            Department department = departmentTestFactory.createDefault();
+            doReturn(department).when(departmentService)
+                                .create(createDepartmentRequest.toDepartmentParameter());
+
+            // Act
+            DepartmentResponse departmentResponse = departmentController.create(createDepartmentRequest);
+
+            // Assert
+            assertThat(departmentResponse).isNotNull();
+            assertThat(departmentResponse.getId()).isEqualTo(department.getId());
+            assertThat(departmentResponse.getDepartmentName()).isEqualTo(department.getDepartmentName());
+        }
     }
-
-    @Test
-    @DisplayName("Creating a department succeeds when request is valid")
-    void giveValidRequest_whenCreate_thenSucceed()
-    {
-      // Arrange
-      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.createDefault();
-      Department department = departmentTestFactory.createDefault();
-      doReturn(department).when(departmentService).create(createDepartmentRequest.toDepartmentParameter());
-
-      // Act
-      DepartmentResponse departmentResponse = departmentController.create(createDepartmentRequest);
-
-      // Assert
-      assertThat(departmentResponse).isNotNull();
-      assertThat(departmentResponse.getId()).isEqualTo(department.getId());
-      assertThat(departmentResponse.getDepartmentName()).isEqualTo(department.getDepartmentName());
-    }
-  }
 }

@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="InsertDefaultOauthClients" author="Stéphan.Minko" context="LOCAL">
+        <sql>
+            INSERT INTO data.oauth_client_details (id, created_at, created_by, last_updated_at, last_updated_by, version, access_token_validity, client_authorities, authorized_grant_types, client_id,
+            web_server_redirect_uri, resource_ids, scope, scoped, client_secret, refresh_token_validity, secret_required)
+            VALUES ('0708190c-72a2-490e-8723-417dfc443451', '2019-11-27 13:31:45.379000', 'b50781f4-7fbb-4aa4-8c36-25b51468bbf4', '2019-11-27 13:31:45.379000', 'b50781f4-7fbb-4aa4-8c36-25b51468bbf4',
+            0, 253800, null, 'client_credentials,password,refresh_token', 'client', null, null, 'read,write', true, 'f0ca375d24737775e12906f04cf201177d401c5185cffce1c9a598d25e7b9b37', 592200, true);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

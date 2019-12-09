@@ -30,27 +30,27 @@ import java.util.UUID;
 @Service
 public class UserService extends AbstractDefaultAuditedEntityService<UserRepository, User, UUID>
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @Autowired
-  public UserService(UserRepository repository, Validator validator, PasswordEncoder passwordEncoder)
-  {
-    super(repository, validator);
-    this.passwordEncoder = passwordEncoder;
-  }
+    @Autowired
+    public UserService(UserRepository repository, Validator validator, PasswordEncoder passwordEncoder)
+    {
+        super(repository, validator);
+        this.passwordEncoder = passwordEncoder;
+    }
 
-  // ===========================  public  Methods  =========================
+    // ===========================  public  Methods  =========================
 
-  @Transactional(propagation = Propagation.SUPPORTS)
-  public Optional<User> findByUserName(@NotNull String username)
-  {
-    return getRepository().findByUserName(username);
-  }
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public Optional<User> findByUserName(@NotNull String username)
+    {
+        return getRepository().findByUserName(username);
+    }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public Page<Permission> findAllPermissionByUser(@NotNull UUID id, @NotNull Pageable pageable)
@@ -58,71 +58,74 @@ public class UserService extends AbstractDefaultAuditedEntityService<UserReposit
         return getRepository().findAllPermissionsByUser(id, pageable);
     }
 
-  // =================  protected/package local  Methods ===================
+    // =================  protected/package local  Methods ===================
 
-  /**
-   * Set encoded password hash becore create of User
-   *
-   * @param create The {@link User} to create
-   * @return The created {@link User} on success
-   * @throws RuntimeException on failure
-   */
-  @Override
-  protected User onBeforeCreate(User create)
-  {
-    super.onBeforeCreate(create);
-    String userName = create.getUserName();
-      if (userName != null && findByUserName(userName).isPresent())
+    /**
+     * Set encoded password hash becore create of User
+     *
+     * @param create The {@link User} to create
+     * @return The created {@link User} on success
+     * @throws RuntimeException on failure
+     */
+    @Override
+    protected User onBeforeCreate(User create)
     {
-      throw new BadRequestException("The specified username exists already");
+        super.onBeforeCreate(create);
+        String userName = create.getUserName();
+        if (userName != null && findByUserName(userName).isPresent())
+        {
+            throw new BadRequestException("The specified username exists already");
+        }
+        if (create.getNewPassword() == null || create.getConfirmPassword() == null)
+        {
+            throw new BadRequestException("Password creation requires a new password and a confirm password matching each other");
+        }
+        if (!create.getNewPassword()
+                   .equals(create.getConfirmPassword()))
+        {
+            throw new BadRequestException("New Password and Confirm Password do not match");
+        }
+        create.setPasswordHash(passwordEncoder.encode(create.getNewPassword()));
+        return create;
     }
-    if (create.getNewPassword() == null || create.getConfirmPassword() == null)
-    {
-      throw new BadRequestException("Password creation requires a new password and a confirm password matching each other");
-    }
-    if (!create.getNewPassword().equals(create.getConfirmPassword()))
-    {
-      throw new BadRequestException("New Password and Confirm Password do not match");
-    }
-    create.setPasswordHash(passwordEncoder.encode(create.getNewPassword()));
-    return create;
-  }
 
-  /**
-   * Set encoded password hash becore update of User
-   *
-   * @param update The {@link User} data to update
-   * @return The updated {@link User} on success
-   * @throws RuntimeException on failure
-   */
-  @Override
-  protected User onBeforeUpdate(User existing, User update)
-  {
-    super.onBeforeUpdate(existing, update);
-    String userName = update.getUserName();
-      if (userName != null && findByUserName(userName).isPresent())
+    /**
+     * Set encoded password hash becore update of User
+     *
+     * @param update The {@link User} data to update
+     * @return The updated {@link User} on success
+     * @throws RuntimeException on failure
+     */
+    @Override
+    protected User onBeforeUpdate(User existing, User update)
     {
-      throw new BadRequestException("The specified username exists already");
+        super.onBeforeUpdate(existing, update);
+        String userName = update.getUserName();
+        if (userName != null && findByUserName(userName).isPresent())
+        {
+            throw new BadRequestException("The specified username exists already");
+        }
+        if (update.getOldPassword() != null)
+        {
+            if (!passwordEncoder.encode(update.getOldPassword())
+                                .equals(existing.getPasswordHash()))
+            {
+                throw new BadRequestException("Password update - Bad Credentials");
+            }
+            if (update.getNewPassword() == null || update.getConfirmPassword() == null)
+            {
+                throw new BadRequestException("Password update - Bad Credentials");
+            }
+            if (!update.getNewPassword()
+                       .equals(update.getConfirmPassword()))
+            {
+                throw new BadRequestException("Password update - Bad Credentials");
+            }
+            update.setPasswordHash(passwordEncoder.encode(update.getNewPassword()));
+        }
+        return update;
     }
-    if (update.getOldPassword() != null)
-    {
-      if (!passwordEncoder.encode(update.getOldPassword()).equals(existing.getPasswordHash()))
-      {
-        throw new BadRequestException("Password update - Bad Credentials");
-      }
-      if (update.getNewPassword() == null || update.getConfirmPassword() == null)
-      {
-        throw new BadRequestException("Password update - Bad Credentials");
-      }
-      if (!update.getNewPassword().equals(update.getConfirmPassword()))
-      {
-        throw new BadRequestException("Password update - Bad Credentials");
-      }
-      update.setPasswordHash(passwordEncoder.encode(update.getNewPassword()));
-    }
-    return update;
-  }
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

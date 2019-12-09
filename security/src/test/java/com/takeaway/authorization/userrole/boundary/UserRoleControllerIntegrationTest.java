@@ -32,243 +32,243 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserRoleControllerIntegrationTest extends IntegrationTestSuite
 {
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  private UserService userService;
+    @Autowired
+    private UserService userService;
 
-  @Autowired
-  private RoleService roleService;
+    @Autowired
+    private RoleService roleService;
 
-  @Nested
-  @DisplayName("when assign")
-  class WhenAssign
-  {
-    @Test
-    @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns UNAUTHORIZED for missing Authorization header")
-    void givenMissingAuthorizationHeader_whenAssign_thenStatus401() throws Exception
+    @Nested
+    @DisplayName("when assign")
+    class WhenAssign
     {
-      // Arrange
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns UNAUTHORIZED for missing Authorization header")
+        void givenMissingAuthorizationHeader_whenAssign_thenStatus401() throws Exception
+        {
+            // Arrange
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
-      // Act/ Assert
-        mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isUnauthorized());
-    }
+            // Act/ Assert
+            mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isUnauthorized());
+        }
 
-    @Test
-    @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns FORBIDDEN for missing scope")
-    void givenMissingScope_whenAssign_thenStatus403() throws Exception
-    {
-      // Arrange
-        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                        .clientId("clientWithBadScope")
-                                                                        .clientSecret("secret")
-                                                                        .build();
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns FORBIDDEN for missing scope")
+        void givenMissingScope_whenAssign_thenStatus403() throws Exception
+        {
+            // Arrange
+            AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                            .clientId("clientWithBadScope")
+                                                                            .clientSecret("secret")
+                                                                            .build();
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
-      // Act / Assert
-        mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
-                                                                               "Bearer " + obtainAccessToken(accessTokenParameter))
+            // Act / Assert
+            mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                                   "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                           .contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isForbidden());
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId} returns FORBIDDEN for missing role")
+        void givenMissingRole_whenAssign_thenStatus403() throws Exception
+        {
+            // Arrange
+            AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                            .userName("userWithNoRole")
+                                                                            .userPassword("user")
+                                                                            .build();
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                                   "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                           .contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isForbidden());
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns CREATED and the assigned permission ")
+        void givenRoleAndPermission_whenAssign_thenStatus200AndReturnRole() throws Exception
+        {
+            // Arrange
+            User savedUser = saveUser(userTestFactory.createDefault());
+            Role savedRole = saveRole(roleTestFactory.createDefault());
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+
+            // Act / Assert
+            MvcResult mvcResult = mockMvc.perform(post(uri, savedUser.getId(), savedRole.getId()).header(HttpHeaders.AUTHORIZATION,
+                                                                                                         "Bearer " + obtainAccessToken())
+                                                                                                 .contentType(APPLICATION_JSON_UTF8))
+                                         .andExpect(status().isCreated())
+                                         .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                                         .andExpect(jsonPath("$", notNullValue()))
+                                         .andReturn();
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Role response = objectMapper.readValue(contentAsString, Role.class);
+            assertThat(response).isNotNull();
+            assertThat(response.getId()).isEqualTo(savedRole.getId());
+            assertThat(response.getName()).isEqualTo(savedRole.getName());
+            assertThat(response.getDescription()).isEqualTo(savedRole.getDescription());
+            assertThat(response.getCreatedAt()).isEqualTo(savedRole.getCreatedAt());
+            assertThat(response.getLastUpdatedAt()).isEqualTo(savedRole.getLastUpdatedAt());
+            assertThat(response.getCreatedBy()).isEqualTo(savedRole.getCreatedBy());
+            assertThat(response.getLastUpdatedBy()).isEqualTo(savedRole.getLastUpdatedBy());
+            assertThat(response.getVersion()).isEqualTo(savedRole.getVersion());
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown role ")
+        void givenUnknownRole_whenAssign_thenStatus404() throws Exception
+        {
+            // Arrange
+            User savedUser = saveUser(userTestFactory.createDefault());
+            UUID unknownRoleId = UUID.randomUUID();
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+
+            // Act / Assert
+            mockMvc.perform(post(uri, savedUser.getId(), unknownRoleId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
                                                                        .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isForbidden());
-    }
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
+        }
 
-    @Test
-    @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId} returns FORBIDDEN for missing role")
-    void givenMissingRole_whenAssign_thenStatus403() throws Exception
-    {
-      // Arrange
-        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                        .userName("userWithNoRole")
-                                                                        .userPassword("user")
-                                                                        .build();
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown user ")
+        void givenUnknownUser_whenAssign_thenStatus404() throws Exception
+        {
+            // Arrange
+            Role savedRole = saveRole(roleTestFactory.createDefault());
+            UUID unknownUserId = UUID.randomUUID();
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
-      // Act / Assert
-        mockMvc.perform(post(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
-                                                                               "Bearer " + obtainAccessToken(accessTokenParameter))
+            // Act / Assert
+            mockMvc.perform(post(uri, unknownUserId, savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
                                                                        .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isForbidden());
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", is(String.format("Could not find [User] for Id [%s]!", unknownUserId))));
+        }
     }
 
-    @Test
-    @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns CREATED and the assigned permission ")
-    void givenRoleAndPermission_whenAssign_thenStatus200AndReturnRole() throws Exception
+    @Nested
+    @DisplayName("when unassign")
+    class WhenUnassign
     {
-      // Arrange
-      User savedUser = saveUser(userTestFactory.createDefault());
-      Role savedRole = saveRole(roleTestFactory.createDefault());
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns UNAUTHORIZED for missing Authorization header")
+        void givenMissingAuthorizationHeader_whenUnassign_thenStatus401() throws Exception
+        {
+            // Arrange
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
-      // Act / Assert
-        MvcResult mvcResult = mockMvc.perform(post(uri, savedUser.getId(), savedRole.getId()).header(HttpHeaders.AUTHORIZATION,
-                                                                                                     "Bearer " + obtainAccessToken())
-                                                                                             .contentType(APPLICATION_JSON_UTF8))
-                                     .andExpect(status().isCreated())
-                                     .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-                                     .andExpect(jsonPath("$", notNullValue()))
-                                     .andReturn();
-        String contentAsString = mvcResult.getResponse()
-                                          .getContentAsString();
-      Role response = objectMapper.readValue(contentAsString, Role.class);
-      assertThat(response).isNotNull();
-      assertThat(response.getId()).isEqualTo(savedRole.getId());
-      assertThat(response.getName()).isEqualTo(savedRole.getName());
-      assertThat(response.getDescription()).isEqualTo(savedRole.getDescription());
-      assertThat(response.getCreatedAt()).isEqualTo(savedRole.getCreatedAt());
-      assertThat(response.getLastUpdatedAt()).isEqualTo(savedRole.getLastUpdatedAt());
-      assertThat(response.getCreatedBy()).isEqualTo(savedRole.getCreatedBy());
-      assertThat(response.getLastUpdatedBy()).isEqualTo(savedRole.getLastUpdatedBy());
-      assertThat(response.getVersion()).isEqualTo(savedRole.getVersion());
-    }
+            // Act/ Assert
+            mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isUnauthorized());
+        }
 
-    @Test
-    @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown role ")
-    void givenUnknownRole_whenAssign_thenStatus404() throws Exception
-    {
-      // Arrange
-      User savedUser = saveUser(userTestFactory.createDefault());
-      UUID unknownRoleId = UUID.randomUUID();
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns FORBIDDEN for missing scope")
+        void givenMissingScope_whenUnassign_thenStatus403() throws Exception
+        {
+            // Arrange
+            AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                            .clientId("clientWithBadScope")
+                                                                            .clientSecret("secret")
+                                                                            .build();
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
-      // Act / Assert
-        mockMvc.perform(post(uri, savedUser.getId(), unknownRoleId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                   .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isBadRequest())
-               .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
-    }
+            // Act / Assert
+            mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                                     "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                             .contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isForbidden());
+        }
 
-    @Test
-    @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown user ")
-    void givenUnknownUser_whenAssign_thenStatus404() throws Exception
-    {
-      // Arrange
-      Role savedRole = saveRole(roleTestFactory.createDefault());
-      UUID unknownUserId = UUID.randomUUID();
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId} returns FORBIDDEN for missing role")
+        void givenMissingRole_whenUnassign_thenStatus403() throws Exception
+        {
+            // Arrange
+            AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
+                                                                            .userName("userWithNoRole")
+                                                                            .userPassword("user")
+                                                                            .build();
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
-      // Act / Assert
-        mockMvc.perform(post(uri, unknownUserId, savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                   .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isBadRequest())
-               .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", is(String.format("Could not find [User] for Id [%s]!", unknownUserId))));
-    }
-  }
+            // Act / Assert
+            mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
+                                                                                     "Bearer " + obtainAccessToken(accessTokenParameter))
+                                                                             .contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isForbidden());
+        }
 
-  @Nested
-  @DisplayName("when unassign")
-  class WhenUnassign
-  {
-    @Test
-    @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns UNAUTHORIZED for missing Authorization header")
-    void givenMissingAuthorizationHeader_whenUnassign_thenStatus401() throws Exception
-    {
-      // Arrange
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns NO CONTENT  ")
+        void givenRoleAndPermission_whenUnassign_thenStatus204() throws Exception
+        {
+            // Arrange
+            User savedUser = saveUser(userTestFactory.createDefault());
+            Role savedRole = saveRole(roleTestFactory.createDefault());
+            String uri = String.format("%s/{permissionId}", UserRoleController.BASE_URI);
+            mockMvc.perform(post(uri, savedUser.getId(), savedRole.getId()).contentType(APPLICATION_JSON_UTF8));
 
-      // Act/ Assert
-        mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isUnauthorized());
-    }
+            // Act / Assert
+            mockMvc.perform(delete(uri, savedUser.getId(), savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                             .contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(status().isNoContent());
+        }
 
-    @Test
-    @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns FORBIDDEN for missing scope")
-    void givenMissingScope_whenUnassign_thenStatus403() throws Exception
-    {
-      // Arrange
-        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                        .clientId("clientWithBadScope")
-                                                                        .clientSecret("secret")
-                                                                        .build();
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown role ")
+        void givenUnknownRole_whenUnassign_thenStatus404() throws Exception
+        {
+            // Arrange
+            User savedUser = saveUser(userTestFactory.createDefault());
+            UUID unknownRoleId = UUID.randomUUID();
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
-      // Act / Assert
-        mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
-                                                                                 "Bearer " + obtainAccessToken(accessTokenParameter))
+            // Act / Assert
+            mockMvc.perform(delete(uri, savedUser.getId(), unknownRoleId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
                                                                          .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isForbidden());
-    }
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
+        }
 
-    @Test
-    @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId} returns FORBIDDEN for missing role")
-    void givenMissingRole_whenUnassign_thenStatus403() throws Exception
-    {
-      // Arrange
-        AccessTokenParameter accessTokenParameter = AccessTokenParameter.builder()
-                                                                        .userName("userWithNoRole")
-                                                                        .userPassword("user")
-                                                                        .build();
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
+        @Test
+        @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown user ")
+        void givenUnknownUser_whenUnassign_thenStatus404() throws Exception
+        {
+            // Arrange
+            Role savedRole = saveRole(roleTestFactory.createDefault());
+            UUID unknownUserId = UUID.randomUUID();
+            String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
 
-      // Act / Assert
-        mockMvc.perform(delete(uri, UUID.randomUUID(), UUID.randomUUID()).header(HttpHeaders.AUTHORIZATION,
-                                                                                 "Bearer " + obtainAccessToken(accessTokenParameter))
+            // Act / Assert
+            mockMvc.perform(delete(uri, unknownUserId, savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
                                                                          .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isForbidden());
+                   .andExpect(status().isBadRequest())
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$", is(String.format("Could not find [User] for Id [%s]!", unknownUserId))));
+        }
     }
 
-    @Test
-    @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns NO CONTENT  ")
-    void givenRoleAndPermission_whenUnassign_thenStatus204() throws Exception
+    private User saveUser(User user) throws Exception
     {
-      // Arrange
-      User savedUser = saveUser(userTestFactory.createDefault());
-      Role savedRole = saveRole(roleTestFactory.createDefault());
-      String uri = String.format("%s/{permissionId}", UserRoleController.BASE_URI);
-      mockMvc.perform(post(uri, savedUser.getId(), savedRole.getId()).contentType(APPLICATION_JSON_UTF8));
-
-      // Act / Assert
-        mockMvc.perform(delete(uri, savedUser.getId(), savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                         .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isNoContent());
+        return userService.create(user);
     }
 
-    @Test
-    @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown role ")
-    void givenUnknownRole_whenUnassign_thenStatus404() throws Exception
+    private Role saveRole(Role role) throws Exception
     {
-      // Arrange
-      User savedUser = saveUser(userTestFactory.createDefault());
-      UUID unknownRoleId = UUID.randomUUID();
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
-
-      // Act / Assert
-        mockMvc.perform(delete(uri, savedUser.getId(), unknownRoleId).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                     .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isBadRequest())
-               .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", is(String.format("Could not find [Role] for Id [%s]!", unknownRoleId))));
+        return roleService.create(role);
     }
-
-    @Test
-    @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown user ")
-    void givenUnknownUser_whenUnassign_thenStatus404() throws Exception
-    {
-      // Arrange
-      Role savedRole = saveRole(roleTestFactory.createDefault());
-      UUID unknownUserId = UUID.randomUUID();
-      String uri = String.format("%s/{roleId}", UserRoleController.BASE_URI);
-
-      // Act / Assert
-        mockMvc.perform(delete(uri, unknownUserId, savedRole.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                                                     .contentType(APPLICATION_JSON_UTF8))
-               .andExpect(status().isBadRequest())
-               .andExpect(jsonPath("$", notNullValue()))
-               .andExpect(jsonPath("$", is(String.format("Could not find [User] for Id [%s]!", unknownUserId))));
-    }
-  }
-
-  private User saveUser(User user) throws Exception
-  {
-    return userService.create(user);
-  }
-
-  private Role saveRole(Role role) throws Exception
-  {
-    return roleService.create(role);
-  }
 }

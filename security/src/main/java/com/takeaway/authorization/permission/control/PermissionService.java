@@ -16,9 +16,9 @@ import java.util.UUID;
 @Service
 public class PermissionService extends AbstractDefaultAuditedEntityService<PermissionRepository, Permission, UUID>
 {
-  @Autowired
-  public PermissionService(PermissionRepository repository, Validator validator)
-  {
-    super(repository, validator);
-  }
+    @Autowired
+    public PermissionService(PermissionRepository repository, Validator validator)
+    {
+        super(repository, validator);
+    }
 }

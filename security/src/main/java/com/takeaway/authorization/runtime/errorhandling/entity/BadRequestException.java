@@ -2,6 +2,7 @@ package com.takeaway.authorization.runtime.errorhandling.entity;
 
 /**
  * User: StMinko Date: 18.03.2019 Time: 11:22
+ *
  * <p>
  */
 public class BadRequestException extends RuntimeException

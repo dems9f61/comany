@@ -14,15 +14,16 @@ import javax.persistence.*;
 @SequenceGenerator(name = "audit_trail_sequence",allocationSize = 1,sequenceName = "audit_trail_sequence",schema = "history")
 public class CustomRevisionEntity
 {
-  @Setter
-  @Getter
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "audit_trail_sequence")
-  @RevisionNumber
-  private Long revisionNumber;
+    @Setter
+    @Getter
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "audit_trail_sequence")
+    @RevisionNumber
+    private Long revisionNumber;
 
-  @Setter
-  @Getter
-  @RevisionTimestamp
-  private Long revisionTimestamp;
+    @Setter
+    @Getter
+    @RevisionTimestamp
+    private Long revisionTimestamp;
 }

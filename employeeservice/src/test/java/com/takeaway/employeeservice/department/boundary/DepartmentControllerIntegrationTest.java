@@ -21,50 +21,56 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class DepartmentControllerIntegrationTest extends IntegrationTestSuite
 {
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Nested
-  @DisplayName("when new")
-  class WhenAccess
-  {
-    @Test
-    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on empty department name")
-    void givenEmptyDepartmentName_whenCreate_thenStatus400() throws Exception
+    @Nested
+    @DisplayName("when new")
+    class WhenAccess
     {
-      // Arrange
-      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName("").create();
+        @Test
+        @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on empty department name")
+        void givenEmptyDepartmentName_whenCreate_thenStatus400() throws Exception
+        {
+            // Arrange
+            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
+                                                                                                .departmentName("")
+                                                                                                .create();
 
-      // Act / Assert
-      mockMvc
-          .perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(createDepartmentRequest)))
-          .andExpect(status().isBadRequest());
+            // Act / Assert
+            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
+                                                               .content(objectMapper.writeValueAsString(createDepartmentRequest)))
+                   .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on blank department name")
+        void givenBlankDepartmentName_whenCreate_thenStatus400() throws Exception
+        {
+            // Arrange
+            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
+                                                                                                .departmentName("  ")
+                                                                                                .create();
+
+            // Act / Assert
+            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
+                                                               .content(objectMapper.writeValueAsString(createDepartmentRequest)))
+                   .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on null department name")
+        void givenNullDepartmentName_whenCreate_thenStatus400() throws Exception
+        {
+            // Arrange
+            CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder()
+                                                                                                .departmentName("")
+                                                                                                .create();
+
+            // Act / Assert
+            mockMvc.perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
+                                                               .content(objectMapper.writeValueAsString(createDepartmentRequest)))
+                   .andExpect(status().isBadRequest());
+        }
     }
-
-    @Test
-    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on blank department name")
-    void givenBlankDepartmentName_whenCreate_thenStatus400() throws Exception
-    {
-      // Arrange
-      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName("  ").create();
-
-      // Act / Assert
-      mockMvc
-          .perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(createDepartmentRequest)))
-          .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("POST: 'http://.../departments' returns BAD_REQUEST on null department name")
-    void givenNullDepartmentName_whenCreate_thenStatus400() throws Exception
-    {
-      // Arrange
-      CreateDepartmentRequest createDepartmentRequest = createDepartmentRequestTestFactory.builder().departmentName("").create();
-
-      // Act / Assert
-      mockMvc
-          .perform(post(DepartmentController.BASE_URI).contentType(MediaType.APPLICATION_JSON_UTF8).content(objectMapper.writeValueAsString(createDepartmentRequest)))
-          .andExpect(status().isBadRequest());
-    }
-  }
 }

@@ -13,9 +13,9 @@ import java.util.TimeZone;
 @SpringBootApplication
 public class EmployeeServiceApplication
 {
-  public static void main(String[] args)
-  {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    SpringApplication.run(EmployeeServiceApplication.class, args);
-  }
+    public static void main(String[] args)
+    {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        SpringApplication.run(EmployeeServiceApplication.class, args);
+    }
 }

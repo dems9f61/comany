@@ -16,25 +16,25 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DatabaseCleaner
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final DepartmentRepositoryTestHelper departmentRepositoryTestHelper;
+    private final DepartmentRepositoryTestHelper departmentRepositoryTestHelper;
 
-  private final EmployeeRepositoryTestHelper employeeRepositoryTestHelper;
+    private final EmployeeRepositoryTestHelper employeeRepositoryTestHelper;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public void cleanDatabases()
-  {
-    LOGGER.info("Cleaning up the test database");
-    employeeRepositoryTestHelper.cleanDatabase();
-    departmentRepositoryTestHelper.cleanDatabase();
-  }
+    public void cleanDatabases()
+    {
+        LOGGER.info("Cleaning up the test database");
+        employeeRepositoryTestHelper.cleanDatabase();
+        departmentRepositoryTestHelper.cleanDatabase();
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

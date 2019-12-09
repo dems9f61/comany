@@ -30,35 +30,37 @@ import java.net.HttpURLConnection;
 @RestController
 @Api(value = "Department service: Operations pertaining to department service interface")
 @RequestMapping(value = DepartmentController.BASE_URI,
-    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
-    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
+        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 @RequiredArgsConstructor
 public class DepartmentController
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  public static final String BASE_URI = ApiVersions.V1 + "/departments";
+    public static final String BASE_URI = ApiVersions.V1 + "/departments";
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
-  private final DepartmentServiceCapable departmentService;
+    private final DepartmentServiceCapable departmentService;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
-  @ApiOperation(value = "Creates a department with the request values")
-  @ApiResponses({@ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,message = "")})
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  DepartmentResponse create(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
-  {
-    LOGGER.info("Creating a department by the request [{}]", createDepartmentRequest);
-    Department department = departmentService.create(createDepartmentRequest.toDepartmentParameter());
-    return new DepartmentResponse(department.getId(), department.getDepartmentName());
-  }
+    @ApiOperation(value = "Creates a department with the request values")
+    @ApiResponses({
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST,
+                    message = "") })
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    DepartmentResponse create(@RequestBody @NotNull @Valid CreateDepartmentRequest createDepartmentRequest)
+    {
+        LOGGER.info("Creating a department by the request [{}]", createDepartmentRequest);
+        Department department = departmentService.create(createDepartmentRequest.toDepartmentParameter());
+        return new DepartmentResponse(department.getId(), department.getDepartmentName());
+    }
 
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

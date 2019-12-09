@@ -26,40 +26,40 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = UserRoleController.BASE_URI,
-    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
-    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
+        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 public class UserRoleController
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  static final String BASE_URI = UserController.BASE_URI + "/{userId}/roles";
+    static final String BASE_URI = UserController.BASE_URI + "/{userId}/roles";
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
-  private final UserRoleService userRoleService;
+    private final UserRoleService userRoleService;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
-  @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
-  @PostMapping(value = "/{roleId}")
-  @ResponseStatus(HttpStatus.CREATED)
-  @JsonView(DataView.GET.class)
-  Role assign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
-  {
-    return userRoleService.assign(userId, roleId);
-  }
+    @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
+    @PostMapping(value = "/{roleId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @JsonView(DataView.GET.class)
+    Role assign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
+    {
+        return userRoleService.assign(userId, roleId);
+    }
 
-  @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
-  @DeleteMapping(value = "/{roleId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  void unassign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
-  {
-    userRoleService.unassign(userId, roleId);
-  }
+    @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
+    @DeleteMapping(value = "/{roleId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void unassign(@NotNull @PathVariable UUID userId, @NotNull @PathVariable UUID roleId)
+    {
+        userRoleService.unassign(userId, roleId);
+    }
 
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

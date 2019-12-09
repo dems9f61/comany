@@ -17,9 +17,9 @@ import java.util.UUID;
 @Transactional
 public class RoleRepositoryTestHelper extends AbstractRepositoryTestHelper<Role, UUID, RoleRepository>
 {
-  @Autowired
-  public RoleRepositoryTestHelper(RoleRepository repository)
-  {
-    super(repository);
-  }
+    @Autowired
+    public RoleRepositoryTestHelper(RoleRepository repository)
+    {
+        super(repository);
+    }
 }

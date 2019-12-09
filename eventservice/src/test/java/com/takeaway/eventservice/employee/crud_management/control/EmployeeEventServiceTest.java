@@ -30,70 +30,74 @@ import static org.mockito.Mockito.*;
 @DisplayName("Unit tests for the employee event service")
 class EmployeeEventServiceTest extends UnitTestSuite
 {
-  @Mock
-  private EmployeeEventRepository employeeEventRepository;
+    @Mock
+    private EmployeeEventRepository employeeEventRepository;
 
-  @InjectMocks
-  private EmployeeEventService employeeEventService;
+    @InjectMocks
+    private EmployeeEventService employeeEventService;
 
-  @Nested
-  @DisplayName("when Handle event")
-  class WhenHandleEvent
-  {
-    @Test
-    @DisplayName("Handle an employee events persists that event")
-    void givenEmployeeVent_whenHandle_thenPersist()
+    @Nested
+    @DisplayName("when Handle event")
+    class WhenHandleEvent
     {
-      // Arrange
-      EmployeeEvent employeeEvent = employeeEventTestFactory.createDefault();
-      doReturn(null).when(employeeEventRepository).save(any());
+        @Test
+        @DisplayName("Handle an employee events persists that event")
+        void givenEmployeeVent_whenHandle_thenPersist()
+        {
+            // Arrange
+            EmployeeEvent employeeEvent = employeeEventTestFactory.createDefault();
+            doReturn(null).when(employeeEventRepository)
+                          .save(any());
 
-      // Act
-      employeeEventService.handleEmployeeEvent(employeeEvent);
+            // Act
+            employeeEventService.handleEmployeeEvent(employeeEvent);
 
-      // Assert
-      verify(employeeEventRepository)
-          .save(assertArg(persistentEmployeeEvent -> {
-                    Employee employee = employeeEvent.getEmployee();
-                    assertThat(persistentEmployeeEvent.getDepartmentName()).isEqualTo(employee.getDepartment().getDepartmentName());
-                    assertThat(persistentEmployeeEvent.getFirstName()).isEqualTo(employee.getFullName().getFirstName());
-                    assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName().getLastName());
-                    assertThat(persistentEmployeeEvent.getEmployeeId()).isEqualTo(employee.getId());
-                    assertThat(persistentEmployeeEvent.getEmailAddress()).isEqualTo(employee.getEmailAddress());
-                    assertThat(persistentEmployeeEvent.getEventType()).isEqualTo(employeeEvent.getEventType());
-                    assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(Date.from(employee.getBirthday().toInstant()));
-                  }));
+            // Assert
+            verify(employeeEventRepository).save(assertArg(persistentEmployeeEvent -> {
+                Employee employee = employeeEvent.getEmployee();
+                assertThat(persistentEmployeeEvent.getDepartmentName()).isEqualTo(employee.getDepartment()
+                                                                                          .getDepartmentName());
+                assertThat(persistentEmployeeEvent.getFirstName()).isEqualTo(employee.getFullName()
+                                                                                     .getFirstName());
+                assertThat(persistentEmployeeEvent.getLastName()).isEqualTo(employee.getFullName()
+                                                                                    .getLastName());
+                assertThat(persistentEmployeeEvent.getEmployeeId()).isEqualTo(employee.getId());
+                assertThat(persistentEmployeeEvent.getEmailAddress()).isEqualTo(employee.getEmailAddress());
+                assertThat(persistentEmployeeEvent.getEventType()).isEqualTo(employeeEvent.getEventType());
+                assertThat(persistentEmployeeEvent.getBirthday()).isEqualTo(Date.from(employee.getBirthday()
+                                                                                              .toInstant()));
+            }));
+        }
     }
-  }
 
-  @Nested
-  @DisplayName("When access")
-  class WhenAccess
-  {
-    @Test
-    @DisplayName("Finding all employee events invokes the underlying repository")
-    void givenEmployeeVents_whenFindByUuid_thenInvokeRelyOnRepository()
+    @Nested
+    @DisplayName("When access")
+    class WhenAccess
     {
-      // Arrange
-      UUID employeeId = UUID.randomUUID();
-      Pageable mockPageable = mock(Pageable.class);
-      int expectedPageNumber = RandomUtils.nextInt(0, 23);
-      doReturn(expectedPageNumber).when(mockPageable).getPageNumber();
+        @Test
+        @DisplayName("Finding all employee events invokes the underlying repository")
+        void givenEmployeeVents_whenFindByUuid_thenInvokeRelyOnRepository()
+        {
+            // Arrange
+            UUID employeeId = UUID.randomUUID();
+            Pageable mockPageable = mock(Pageable.class);
+            int expectedPageNumber = RandomUtils.nextInt(0, 23);
+            doReturn(expectedPageNumber).when(mockPageable)
+                                        .getPageNumber();
 
-      Page<PersistentEmployeeEvent> mockPageableResult = (Page<PersistentEmployeeEvent>) mock(Page.class);
-      doReturn(mockPageableResult).when(employeeEventRepository).findByEmployeeId(eq(employeeId), any(Pageable.class));
+            Page<PersistentEmployeeEvent> mockPageableResult = (Page<PersistentEmployeeEvent>) mock(Page.class);
+            doReturn(mockPageableResult).when(employeeEventRepository)
+                                        .findByEmployeeId(eq(employeeId), any(Pageable.class));
 
-      // Act
-      employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, mockPageable);
+            // Act
+            employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, mockPageable);
 
-      // Assert
-      verify(employeeEventRepository)
-          .findByEmployeeId(eq(employeeId),
-              assertArg(pageable -> {
-                    assertThat(pageable.getPageNumber()).isEqualTo(expectedPageNumber);
-                    assertThat(pageable.getPageSize()).isEqualTo(EmployeeEventService.MAX_PAGE_SIZE);
-                    assertThat(pageable.getSort()).isEqualTo(EmployeeEventService.CREATED_AT_WITH_ASC_SORT);
-                  }));
+            // Assert
+            verify(employeeEventRepository).findByEmployeeId(eq(employeeId), assertArg(pageable -> {
+                assertThat(pageable.getPageNumber()).isEqualTo(expectedPageNumber);
+                assertThat(pageable.getPageSize()).isEqualTo(EmployeeEventService.MAX_PAGE_SIZE);
+                assertThat(pageable.getSort()).isEqualTo(EmployeeEventService.CREATED_AT_WITH_ASC_SORT);
+            }));
+        }
     }
-  }
 }

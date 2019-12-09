@@ -16,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmployeeEventRepositoryTestHelper
 {
-  private final EmployeeEventRepository employeeEventRepository;
+    private final EmployeeEventRepository employeeEventRepository;
 
-  public void cleanDatabase()
-  {
-    LOGGER.info("Cleaning the employee event repository");
-    employeeEventRepository.deleteAll();
-  }
+    public void cleanDatabase()
+    {
+        LOGGER.info("Cleaning the employee event repository");
+        employeeEventRepository.deleteAll();
+    }
 }

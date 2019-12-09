@@ -19,42 +19,42 @@ import javax.validation.constraints.NotNull;
 @Transactional(propagation = Propagation.REQUIRED)
 public interface EntityService<ENTITY, ID>
 {
-  // =========================== Class Variables ===========================
-  // ==============================  Methods  ==============================
+    // =========================== Class Variables ===========================
+    // ==============================  Methods  ==============================
 
-  @Transactional(propagation = Propagation.SUPPORTS)
-  ResponsePage<ENTITY> findAll(Pageable pageable);
+    @Transactional(propagation = Propagation.SUPPORTS)
+    ResponsePage<ENTITY> findAll(Pageable pageable);
 
-  /**
-   * Find an Entity by its Id. Raise a ResourceNotFoundException if the entity cannot be found by its Id.
-   *
-   * @param id The Id to fetch an entity for
-   * @return The entity for the provided id
-   * @throws ResourceNotFoundException if the requested element cannot be found.
-   */
-  @Transactional(propagation = Propagation.SUPPORTS)
-  ENTITY findById(@NotNull ID id);
+    /**
+     * Find an Entity by its Id. Raise a ResourceNotFoundException if the entity cannot be found by its Id.
+     *
+     * @param id The Id to fetch an entity for
+     * @return The entity for the provided id
+     * @throws ResourceNotFoundException if the requested element cannot be found.
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    ENTITY findById(@NotNull ID id);
 
-  /**
-   * Find an Entity by its Id. Raise an Exception of the prodided Exception Type if the entity cannot be found by its Id.
-   *
-   * @param id The Id to fetch an entity for
-   * @param exceptionClass The Exception type to raise if the requested Entity cannot be found by its id
-   * @return The entity for the provided id
-   * @throws RuntimeException of the specified type if the Element requested cannot be found. Fallback is a plain RuntimeException if the provided Exception Type cannot be
-   *     instantiated. Instantiation ofthe target Exception happens by means of the Exception constructor taking only a Message string.
-   */
-  @Transactional(propagation = Propagation.SUPPORTS)
-  ENTITY findByIdOrElseThrow(@NotNull ID id, @NotNull Class<? extends RuntimeException> exceptionClass);
+    /**
+     * Find an Entity by its Id. Raise an Exception of the prodided Exception Type if the entity cannot be found by its Id.
+     *
+     * @param id             The Id to fetch an entity for
+     * @param exceptionClass The Exception type to raise if the requested Entity cannot be found by its id
+     * @return The entity for the provided id
+     * @throws RuntimeException of the specified type if the Element requested cannot be found. Fallback is a plain RuntimeException if the provided Exception Type cannot be
+     *                          instantiated. Instantiation ofthe target Exception happens by means of the Exception constructor taking only a Message string.
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    ENTITY findByIdOrElseThrow(@NotNull ID id, @NotNull Class<? extends RuntimeException> exceptionClass);
 
-  ENTITY create(@NotNull ENTITY entity);
+    ENTITY create(@NotNull ENTITY entity);
 
-  ENTITY update(@NotNull ID id, @NotNull ENTITY entity, Class<? extends DataView> validationGroup);
+    ENTITY update(@NotNull ID id, @NotNull ENTITY entity, Class<? extends DataView> validationGroup);
 
-  void delete(@NotNull ID id);
+    void delete(@NotNull ID id);
 
-  void deleteAll();
+    void deleteAll();
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

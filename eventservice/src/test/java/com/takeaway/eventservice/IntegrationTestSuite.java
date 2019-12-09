@@ -27,60 +27,62 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT,
-    classes = {EventServiceApplication.class})
+        classes = { EventServiceApplication.class })
 @TestPropertySource(properties = {"config.asyncEnabled=false"})
 @ActiveProfiles("INTEGRATION")
 public abstract class IntegrationTestSuite
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @Autowired
-  protected EmployeeTestFactory employeeTestFactory;
+    @Autowired
+    protected EmployeeTestFactory employeeTestFactory;
 
-  @Autowired
-  protected EmployeeEventTestFactory employeeEventTestFactory;
+    @Autowired
+    protected EmployeeEventTestFactory employeeEventTestFactory;
 
-  @Autowired
-  protected EmployeeMessageTestFactory employeeMessageTestFactory;
+    @Autowired
+    protected EmployeeMessageTestFactory employeeMessageTestFactory;
 
-  @Autowired
-  protected DatabaseCleaner databaseCleaner;
+    @Autowired
+    protected DatabaseCleaner databaseCleaner;
 
-  @Autowired
-  private EmployeeMessageReceiver employeeMessageReceiver;
+    @Autowired
+    private EmployeeMessageReceiver employeeMessageReceiver;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public void receiveRandomMessageFor(UUID uuid)
-  {
-    receiveRandomMessageFor(uuid, 0);
-  }
+    public void receiveRandomMessageFor(UUID uuid)
+    {
+        receiveRandomMessageFor(uuid, 0);
+    }
 
-  public void receiveRandomMessageFor(int count)
-  {
-    receiveRandomMessageFor(null, 0);
-  }
+    public void receiveRandomMessageFor(int count)
+    {
+        receiveRandomMessageFor(null, 0);
+    }
 
-  public void receiveRandomMessageFor(UUID uuid, int count)
-  {
-    List<Employee> employees = employeeTestFactory.createManyDefault(count <= 0 ? RandomUtils.nextInt(30, 100) : count);
-    employees.forEach(employee -> {
-          employee.setId(uuid);
-          EmployeeMessage employeeMessage = employeeMessageTestFactory.builder().employee(employee).create();
-          employeeMessageReceiver.receiveEmployeeMessage(employeeMessage);
+    public void receiveRandomMessageFor(UUID uuid, int count)
+    {
+        List<Employee> employees = employeeTestFactory.createManyDefault(count <= 0 ? RandomUtils.nextInt(30, 100) : count);
+        employees.forEach(employee -> {
+            employee.setId(uuid);
+            EmployeeMessage employeeMessage = employeeMessageTestFactory.builder()
+                                                                        .employee(employee)
+                                                                        .create();
+            employeeMessageReceiver.receiveEmployeeMessage(employeeMessage);
         });
-  }
-  // =================  protected/package local  Methods ===================
+    }
+    // =================  protected/package local  Methods ===================
 
-  @AfterEach
-  void tearDown()
-  {
-    databaseCleaner.cleanDatabases();
-  }
+    @AfterEach
+    void tearDown()
+    {
+        databaseCleaner.cleanDatabases();
+    }
 
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

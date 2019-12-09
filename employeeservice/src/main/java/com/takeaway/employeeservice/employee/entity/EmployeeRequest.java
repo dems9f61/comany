@@ -11,24 +11,32 @@ import java.time.ZonedDateTime;
  */
 public interface EmployeeRequest
 {
-  String getEmailAddress();
 
-  String getFirstName();
+    // Regex emailPattern to valid email address:
+    // at the beginning only a-z, A-Z, 0-9 -_. are valid except for @
+    // after an @ a-z, A-Z, 0-9 - is valid except for further @
+    // after the last dot (.) only the defined characters [a-zA-Z] are valid with a minimum of 2
+    // Does not support special chars any longer, besides -_.
+    String EMAIL_REGEX = "^[a-zA-Z0-9\\-_.]+@[a-zA-Z0-9\\-.]+\\.[a-zA-Z]{2,}$";
 
-  String getLastName();
+    String getEmailAddress();
 
-  ZonedDateTime getBirthday();
+    String getFirstName();
 
-  String getDepartmentName();
+    String getLastName();
 
-  default EmployeeParameter toEmployerParameter()
-  {
-    return EmployeeParameter.builder()
-          .emailAddress(getEmailAddress())
-          .birthday(getBirthday())
-          .firstName(getFirstName())
-          .lastName(getLastName())
-          .departmentName(getDepartmentName())
-          .build();
-  }
+    ZonedDateTime getBirthday();
+
+    String getDepartmentName();
+
+    default EmployeeParameter toEmployerParameter()
+    {
+        return EmployeeParameter.builder()
+                                .emailAddress(getEmailAddress())
+                                .birthday(getBirthday())
+                                .firstName(getFirstName())
+                                .lastName(getLastName())
+                                .departmentName(getDepartmentName())
+                                .build();
+    }
 }

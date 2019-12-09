@@ -36,119 +36,117 @@ import java.util.Arrays;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  static String REALM = "TAKEAWAY_REALM";
+    static String REALM = "TAKEAWAY_REALM";
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
-  private final TokenStore tokenStore;
+    private final TokenStore tokenStore;
 
-  private final UserApprovalHandler userApprovalHandler;
+    private final UserApprovalHandler userApprovalHandler;
 
-  private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-  private final ClientDetailsService clientDetailsService;
+    private final ClientDetailsService clientDetailsService;
 
-  private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-  private final JwtAccessTokenConverter accessTokenConverter;
+    private final JwtAccessTokenConverter accessTokenConverter;
 
-  private final SecurityInfoTokenEnhancer securityInfoTokenEnhancer;
+    private final SecurityInfoTokenEnhancer securityInfoTokenEnhancer;
 
-  @Autowired
-  public AuthorizationServerConfig(TokenStore tokenStore,
-        UserApprovalHandler userApprovalHandler,
-        @Qualifier("authenticationManagerBean") AuthenticationManager authenticationManager,
-        JwtAccessTokenConverter accessTokenConverter,
-        SecurityInfoTokenEnhancer securityInfoTokenEnhancer,
-        ClientDetailsService clientDetailsService,
-        UserDetailsService userDetailsService)
-  {
-    this.tokenStore = tokenStore;
-    this.userApprovalHandler = userApprovalHandler;
-    this.authenticationManager = authenticationManager;
-    this.clientDetailsService = clientDetailsService;
-    this.userDetailsService = userDetailsService;
-    this.accessTokenConverter = accessTokenConverter;
-    this.securityInfoTokenEnhancer = securityInfoTokenEnhancer;
-  }
+    @Autowired
+    public AuthorizationServerConfig(TokenStore tokenStore,
+                                     UserApprovalHandler userApprovalHandler,
+                                     @Qualifier("authenticationManagerBean") AuthenticationManager authenticationManager,
+                                     JwtAccessTokenConverter accessTokenConverter,
+                                     SecurityInfoTokenEnhancer securityInfoTokenEnhancer,
+                                     ClientDetailsService clientDetailsService,
+                                     UserDetailsService userDetailsService)
+    {
+        this.tokenStore = tokenStore;
+        this.userApprovalHandler = userApprovalHandler;
+        this.authenticationManager = authenticationManager;
+        this.clientDetailsService = clientDetailsService;
+        this.userDetailsService = userDetailsService;
+        this.accessTokenConverter = accessTokenConverter;
+        this.securityInfoTokenEnhancer = securityInfoTokenEnhancer;
+    }
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
-  {
-    TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-    tokenEnhancerChain.setTokenEnhancers(Arrays.asList(securityInfoTokenEnhancer, accessTokenConverter));
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
+    {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(securityInfoTokenEnhancer, accessTokenConverter));
 
-    super.configure(endpoints);
-    endpoints
-        .tokenStore(tokenStore)
-        .tokenEnhancer(tokenEnhancerChain)
-        .accessTokenConverter(accessTokenConverter)
-        .userApprovalHandler(userApprovalHandler)
-        .authenticationManager(authenticationManager)
-        .userDetailsService(userDetailsService);
-  }
+        super.configure(endpoints);
+        endpoints.tokenStore(tokenStore)
+                 .tokenEnhancer(tokenEnhancerChain)
+                 .accessTokenConverter(accessTokenConverter)
+                 .userApprovalHandler(userApprovalHandler)
+                 .authenticationManager(authenticationManager)
+                 .userDetailsService(userDetailsService);
+    }
 
-  @Override
-  public void configure(ClientDetailsServiceConfigurer clients) throws Exception
-  {
-    clients.withClientDetails(clientDetailsService);
-  }
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception
+    {
+        clients.withClientDetails(clientDetailsService);
+    }
 
-  @Override
-  public void configure(AuthorizationServerSecurityConfigurer oauthServer)
-  {
-    oauthServer
-        .realm(REALM)
-        .tokenKeyAccess("permitAll()")
-        .checkTokenAccess("isAuthenticated()")
-        .authenticationEntryPoint(new OAuth2AuthenticationEntryPoint())
-        .accessDeniedHandler(new OAuth2AccessDeniedHandler());
-    oauthServer.addTokenEndpointAuthenticationFilter(authorizationServerEndpointCorsFilter());
-  }
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer)
+    {
+        oauthServer.realm(REALM)
+                   .tokenKeyAccess("permitAll()")
+                   .checkTokenAccess("isAuthenticated()")
+                   .authenticationEntryPoint(new OAuth2AuthenticationEntryPoint())
+                   .accessDeniedHandler(new OAuth2AccessDeniedHandler());
+        oauthServer.addTokenEndpointAuthenticationFilter(authorizationServerEndpointCorsFilter());
+    }
 
-  @Bean
-  @Primary
-  public DefaultTokenServices tokenServices()
-  {
-    DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-    defaultTokenServices.setTokenStore(tokenStore);
-    defaultTokenServices.setSupportRefreshToken(true);
-    return defaultTokenServices;
-  }
+    @Bean
+    @Primary
+    public DefaultTokenServices tokenServices()
+    {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore);
+        defaultTokenServices.setSupportRefreshToken(true);
+        return defaultTokenServices;
+    }
 
-  @Bean
-  public CorsFilter authorizationServerEndpointCorsFilter()
-  {
-    // Open Up Auth Endpoint to everyone
-    CorsConfiguration oAuthConfig = new CorsConfiguration();
-    oAuthConfig.setAllowCredentials(true);
-    oAuthConfig.addAllowedOrigin("*");
-    oAuthConfig.addAllowedHeader("*");
-    oAuthConfig.addAllowedMethod("OPTIONS");
-    oAuthConfig.addAllowedMethod("POST");
+    @Bean
+    public CorsFilter authorizationServerEndpointCorsFilter()
+    {
+        // Open Up Auth Endpoint to everyone
+        CorsConfiguration oAuthConfig = new CorsConfiguration();
+        oAuthConfig.setAllowCredentials(true);
+        oAuthConfig.addAllowedOrigin("*");
+        oAuthConfig.addAllowedHeader("*");
+        oAuthConfig.addAllowedMethod("OPTIONS");
+        oAuthConfig.addAllowedMethod("POST");
 
-    CorsConfiguration globalOAuthConfig = new CorsConfiguration();
-    globalOAuthConfig.setAllowCredentials(true);
-    globalOAuthConfig.addAllowedOrigin("*");
-    globalOAuthConfig.addAllowedHeader("*");
-    globalOAuthConfig.addAllowedMethod("OPTIONS");
-    globalOAuthConfig.addAllowedMethod("GET");
-    globalOAuthConfig.addAllowedMethod("POST");
+        CorsConfiguration globalOAuthConfig = new CorsConfiguration();
+        globalOAuthConfig.setAllowCredentials(true);
+        globalOAuthConfig.addAllowedOrigin("*");
+        globalOAuthConfig.addAllowedHeader("*");
+        globalOAuthConfig.addAllowedMethod("OPTIONS");
+        globalOAuthConfig.addAllowedMethod("GET");
+        globalOAuthConfig.addAllowedMethod("POST");
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/oauth/token", oAuthConfig);
-    source.registerCorsConfiguration("/oauth/**", globalOAuthConfig);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/oauth/token", oAuthConfig);
+        source.registerCorsConfiguration("/oauth/**", globalOAuthConfig);
 
-    return new CorsFilter(source);
-  }
+        return new CorsFilter(source);
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

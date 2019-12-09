@@ -7,18 +7,18 @@ package com.takeaway.employeeservice.runtime.errorhandling.entity;
  */
 public class ResourceNotFoundException extends RuntimeException
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
 
-  public ResourceNotFoundException(String message)
-  {
-    super(message);
-  }
+    public ResourceNotFoundException(String message)
+    {
+        super(message);
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

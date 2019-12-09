@@ -18,23 +18,23 @@ import java.time.ZonedDateTime;
 @Builder
 public class EmployeeParameter
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final String emailAddress;
+    private final String emailAddress;
 
-  private final String firstName;
+    private final String firstName;
 
-  private final String lastName;
+    private final String lastName;
 
-  private final ZonedDateTime birthday;
+    private final ZonedDateTime birthday;
 
-  private final String departmentName;
+    private final String departmentName;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

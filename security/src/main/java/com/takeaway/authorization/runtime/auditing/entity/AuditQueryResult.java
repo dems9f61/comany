@@ -16,19 +16,19 @@ import java.io.Serializable;
 @RequiredArgsConstructor
 public class AuditQueryResult<ID extends Serializable, ENTITY extends AuditedEntity<ID>>
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final ENTITY entity;
+    private final ENTITY entity;
 
-  private final CustomRevisionEntity revision;
+    private final CustomRevisionEntity revision;
 
-  private final RevisionType type;
+    private final RevisionType type;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

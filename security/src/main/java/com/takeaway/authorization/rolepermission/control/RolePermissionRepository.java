@@ -17,12 +17,12 @@ import java.util.UUID;
 @Repository
 interface RolePermissionRepository extends JpaRepository<RolePermission, UUID>
 {
-  // =========================== Class Variables ===========================
-  // ==============================  Methods  ==============================
+    // =========================== Class Variables ===========================
+    // ==============================  Methods  ==============================
 
-  @Query("SELECT rp FROM RolePermission rp WHERE rp.role.id = :roleId AND rp.permission.id = :permissionId")
-  Optional<RolePermission> findByRoleAndPermission(@Param("roleId") UUID roleId, @Param("permissionId") UUID permissionId);
+    @Query("SELECT rp FROM RolePermission rp WHERE rp.role.id = :roleId AND rp.permission.id = :permissionId")
+    Optional<RolePermission> findByRoleAndPermission(@Param("roleId") UUID roleId, @Param("permissionId") UUID permissionId);
 
     // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  End of class  ===========================
 }

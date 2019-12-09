@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.ZonedDateTime;
 
 /**
@@ -27,51 +27,51 @@ import java.time.ZonedDateTime;
 @EqualsAndHashCode
 public class CreateEmployeeRequest implements EmployeeRequest
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @NullOrNotBlank
-  @ApiModelProperty(example = "stephan.minko@nba.com")
-  @Email
-  private final String emailAddress;
+    @NullOrNotBlank
+    @ApiModelProperty(example = "stephan.minko@nba.com")
+    @Pattern(regexp = EMAIL_REGEX)
+    private final String emailAddress;
 
-  @NullOrNotBlank
-  @ApiModelProperty(example = "Stéphan")
-  private final String firstName;
+    @NullOrNotBlank
+    @ApiModelProperty(example = "Stéphan")
+    private final String firstName;
 
-  @NullOrNotBlank
-  @ApiModelProperty(example = "Minko")
-  private final String lastName;
+    @NullOrNotBlank
+    @ApiModelProperty(example = "Minko")
+    private final String lastName;
 
-  @ApiModelProperty(example = "1980-06-13")
-  @JsonDeserialize(using = JsonDateDeSerializer.class)
-  @JsonSerialize(using = JsonDateSerializer.class)
-  @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
-  private final ZonedDateTime birthday;
+    @ApiModelProperty(example = "1980-06-13")
+    @JsonDeserialize(using = JsonDateDeSerializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @DateTimeFormat(pattern = UsableDateFormat.Constants.DEFAULT_DATE_FORMAT)
+    private final ZonedDateTime birthday;
 
-  @NotBlank
-  @ApiModelProperty(example = "Java Development")
-  private final String departmentName;
+    @NotBlank
+    @ApiModelProperty(example = "Java Development")
+    private final String departmentName;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @JsonCreator
-  public CreateEmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
-        @JsonProperty(value = "firstName") String firstName,
-        @JsonProperty(value = "lastName") String lastName,
-        @JsonProperty(value = "birthday") ZonedDateTime birthday,
-        @JsonProperty(value = "departmentName") String departmentName)
-  {
-    this.emailAddress = emailAddress;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.birthday = birthday;
-    this.departmentName = departmentName;
-  }
+    @JsonCreator
+    public CreateEmployeeRequest(@JsonProperty(value = "emailAddress") String emailAddress,
+                                 @JsonProperty(value = "firstName") String firstName,
+                                 @JsonProperty(value = "lastName") String lastName,
+                                 @JsonProperty(value = "birthday") ZonedDateTime birthday,
+                                 @JsonProperty(value = "departmentName") String departmentName)
+    {
+        this.emailAddress = emailAddress;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+        this.departmentName = departmentName;
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * User: StMinko Date: 10.11.2019 Time: 12:53
+ *
  * <p>
  */
 @Data

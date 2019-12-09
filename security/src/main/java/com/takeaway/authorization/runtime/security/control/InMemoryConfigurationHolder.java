@@ -34,119 +34,126 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class InMemoryConfigurationHolder
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  private static final int ONE_DAY = 60 * 60 * 24;
-  private static final int THIRTY_DAYS = 60 * 60 * 24 * 30;
+    private static final int ONE_DAY     = 60 * 60 * 24;
 
-  // =============================  Variables  =============================
+    private static final int THIRTY_DAYS = 60 * 60 * 24 * 30;
 
-  private final PasswordEncoder passwordEncoder;
+    // =============================  Variables  =============================
 
-  // ============================  Constructors  ===========================
+    private final PasswordEncoder passwordEncoder;
 
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
 
-  @Bean
-  @Profile("INTEGRATION")
-  @Primary
-  public ClientDetailsService inMemoryClientDetailService()
-  {
-    InMemoryClientDetailsService clientDetailsService = new InMemoryClientDetailsService();
-    Map<String, BaseClientDetails> clients = Maps.newHashMap();
-    BaseClientDetails firstClient = new BaseClientDetails("client", "", "read,write", "client_credentials,password,refresh_token", "", "");
-    firstClient.setClientSecret(passwordEncoder.encode("secret"));
-    firstClient.setAccessTokenValiditySeconds(ONE_DAY);
-    firstClient.setRefreshTokenValiditySeconds(THIRTY_DAYS);
-    clients.put("client", firstClient);
+    // ===========================  public  Methods  =========================
 
-    BaseClientDetails secondClient = new BaseClientDetails("clientWithBadScope", "", "bad_scope", "password,refresh_token", "", "");
-    secondClient.setClientSecret(passwordEncoder.encode("secret"));
-    secondClient.setAccessTokenValiditySeconds(ONE_DAY);
-    secondClient.setRefreshTokenValiditySeconds(THIRTY_DAYS);
-    clients.put("clientWithBadScope", secondClient);
+    @Bean
+    @Profile("INTEGRATION")
+    @Primary
+    public ClientDetailsService inMemoryClientDetailService()
+    {
+        InMemoryClientDetailsService clientDetailsService = new InMemoryClientDetailsService();
+        Map<String, BaseClientDetails> clients = Maps.newHashMap();
+        BaseClientDetails firstClient = new BaseClientDetails("client", "", "read,write", "client_credentials,password,refresh_token", "", "");
+        firstClient.setClientSecret(passwordEncoder.encode("secret"));
+        firstClient.setAccessTokenValiditySeconds(ONE_DAY);
+        firstClient.setRefreshTokenValiditySeconds(THIRTY_DAYS);
+        clients.put("client", firstClient);
 
-    clientDetailsService.setClientDetailsStore(clients);
-    return clientDetailsService;
-  }
+        BaseClientDetails secondClient = new BaseClientDetails("clientWithBadScope",
+                                                               "",
+                                                               "bad_scope",
+                                                               "client_credentials,password,refresh_token",
+                                                               "",
+                                                               "");
+        secondClient.setClientSecret(passwordEncoder.encode("secret"));
+        secondClient.setAccessTokenValiditySeconds(ONE_DAY);
+        secondClient.setRefreshTokenValiditySeconds(THIRTY_DAYS);
+        clients.put("clientWithBadScope", secondClient);
 
-  @Bean
-  @Profile("INTEGRATION")
-  @Primary
-  public UserDetailsService inMemoryUserDetailsService()
-  {
-    List<UserDetails> users = Lists.newArrayList();
-    List<GrantedAuthority> firstUserAuthorities = new LinkedList<>();
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_READ"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_CREATE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_UPDATE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_DELETE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_AUDIT_TRAIL"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_READ"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_CREATE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_UPDATE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_DELETE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_AUDIT_TRAIL"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_READ"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_CREATE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_UPDATE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_DELETE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_AUDIT_TRAIL"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_READ"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_DELETE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_CREATE"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_AUDIT_TRAIL"));
-    firstUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_UPDATE"));
+        clientDetailsService.setClientDetailsStore(clients);
+        return clientDetailsService;
+    }
 
-      CustomUserDetails firstUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), firstUserAuthorities),
-                                                          "admin",
-                                                          passwordEncoder.encode("admin"),
-                                                          true,
-                                                          firstUserAuthorities);
-    users.add(firstUser);
+    @Bean
+    @Profile("INTEGRATION")
+    @Primary
+    public UserDetailsService inMemoryUserDetailsService()
+    {
+        List<UserDetails> users = Lists.newArrayList();
+        List<GrantedAuthority> allAuthorities = new LinkedList<>();
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_READ"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_CREATE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_UPDATE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_DELETE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_AUDIT_TRAIL"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_READ"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_CREATE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_UPDATE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_DELETE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_AUDIT_TRAIL"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_READ"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_CREATE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_UPDATE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_DELETE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_AUDIT_TRAIL"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_READ"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_DELETE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_CREATE"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_AUDIT_TRAIL"));
+        allAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_UPDATE"));
 
-    List<GrantedAuthority> secondUserAuthorities = new LinkedList<>();
-    secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_READ"));
-    secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_AUDIT_TRAIL"));
-    secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_READ"));
-    secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_AUDIT_TRAIL"));
-    secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_READ"));
-    secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_AUDIT_TRAIL"));
-    secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_READ"));
-    secondUserAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_AUDIT_TRAIL"));
+        CustomUserDetails admintUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), allAuthorities),
+                                                             "admin",
+                                                             passwordEncoder.encode("admin"),
+                                                             true,
+                                                             allAuthorities);
+        users.add(admintUser);
 
-      CustomUserDetails secondUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), secondUserAuthorities),
+        List<GrantedAuthority> readAuthorities = new LinkedList<>();
+        readAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_READ"));
+        readAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_AUDIT_TRAIL"));
+        readAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_READ"));
+        readAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_ROLE_AUDIT_TRAIL"));
+        readAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_READ"));
+        readAuthorities.add(new SimpleGrantedAuthority("ROLE_USER_PERMISSION_AUDIT_TRAIL"));
+        readAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_READ"));
+        readAuthorities.add(new SimpleGrantedAuthority("ROLE_OAUTH_CLIENT_AUDIT_TRAIL"));
+
+        CustomUserDetails readUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), readAuthorities),
                                                            "user",
                                                            passwordEncoder.encode("user"),
                                                            true,
-                                                           secondUserAuthorities);
-    users.add(secondUser);
+                                                           readAuthorities);
+        users.add(readUser);
 
-    List<GrantedAuthority> thirdUserAuthorities = new LinkedList<>();
-    thirdUserAuthorities.add(new SimpleGrantedAuthority("ROLE_USELESS_ROLE"));
-    CustomUserDetails thirdUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), thirdUserAuthorities),
-            "userWithNoRole",
-            passwordEncoder.encode("user"),
-            true,
-            thirdUserAuthorities);
-    users.add(thirdUser);
+        List<GrantedAuthority> uselessAuthorities = new LinkedList<>();
+        uselessAuthorities.add(new SimpleGrantedAuthority("ROLE_USELESS_ROLE"));
+        CustomUserDetails uselessUser = new CustomUserDetails(new UserInformation(UUID.randomUUID(), uselessAuthorities),
+                                                              "userWithNoRole",
+                                                              passwordEncoder.encode("user"),
+                                                              true,
+                                                              uselessAuthorities);
+        users.add(uselessUser);
 
-    return new InMemoryUserDetailsManager(users)
-    {
-      @Override
-      public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
-      {
-        UserDetails userDetails = super.loadUserByUsername(username);
-        return users.stream()
-              .filter(user -> user.getUsername().equals(userDetails.getUsername()))
-              .findFirst()
-              .orElseThrow(() -> new UsernameNotFoundException(username));
-      }
-    };
-  }
+        return new InMemoryUserDetailsManager(users)
+        {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+            {
+                UserDetails userDetails = super.loadUserByUsername(username);
+                return users.stream()
+                            .filter(user -> user.getUsername()
+                                                .equals(userDetails.getUsername()))
+                            .findFirst()
+                            .orElseThrow(() -> new UsernameNotFoundException(username));
+            }
+        };
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

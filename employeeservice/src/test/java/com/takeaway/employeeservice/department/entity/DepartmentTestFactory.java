@@ -14,41 +14,41 @@ import org.springframework.stereotype.Component;
 public class DepartmentTestFactory extends AbstractTestFactory<Department, DepartmentTestFactory.Builder>
 {
 
-  public Builder builder()
-  {
-    return new Builder();
-  }
-
-  public static class Builder implements AbstractTestFactory.Builder<Department>
-  {
-    private long id;
-
-    private String departmentName;
-
-    Builder()
+    public Builder builder()
     {
-      this.id = RandomUtils.nextInt(10, 10_000);
-      this.departmentName = RandomStringUtils.randomAlphabetic(24);
+        return new Builder();
     }
 
-    public Builder id(long id)
+    public static class Builder implements AbstractTestFactory.Builder<Department>
     {
-      this.id = id;
-      return this;
-    }
+        private long id;
 
-    public Builder departmentName(String departmentName)
-    {
-      this.departmentName = departmentName;
-      return this;
-    }
+        private String departmentName;
 
-    public Department create()
-    {
-      Department department = new Department();
-      department.setId(id);
-      department.setDepartmentName(departmentName);
-      return department;
+        Builder()
+        {
+            this.id = RandomUtils.nextInt(10, 10_000);
+            this.departmentName = RandomStringUtils.randomAlphabetic(24);
+        }
+
+        public Builder id(long id)
+        {
+            this.id = id;
+            return this;
+        }
+
+        public Builder departmentName(String departmentName)
+        {
+            this.departmentName = departmentName;
+            return this;
+        }
+
+        public Department create()
+        {
+            Department department = new Department();
+            department.setId(id);
+            department.setDepartmentName(departmentName);
+            return department;
+        }
     }
-  }
 }

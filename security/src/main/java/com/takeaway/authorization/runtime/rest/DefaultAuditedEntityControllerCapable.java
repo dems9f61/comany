@@ -12,6 +12,7 @@ import java.io.Serializable;
 
 /**
  * User: StMinko Date: 16.10.2019 Time: 14:31
+ *
  * <p>
  */
 @Validated

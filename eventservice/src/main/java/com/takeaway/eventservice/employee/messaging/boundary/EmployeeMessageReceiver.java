@@ -19,23 +19,23 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EmployeeMessageReceiver
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @RabbitListener(queues = "${amqp.queue-name}")
-  public void receiveEmployeeMessage(@NonNull EmployeeMessage employeeMessage)
-  {
-    LOGGER.info("###### Received Message on employee ##### [{}]", employeeMessage);
-    eventPublisher.publishEvent(new EmployeeEvent(employeeMessage.getEmployee(), employeeMessage.getEventType()));
-  }
+    @RabbitListener(queues = "${amqp.queue-name}")
+    public void receiveEmployeeMessage(@NonNull EmployeeMessage employeeMessage)
+    {
+        LOGGER.info("###### Received Message on employee ##### [{}]", employeeMessage);
+        eventPublisher.publishEvent(new EmployeeEvent(employeeMessage.getEmployee(), employeeMessage.getEventType()));
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

@@ -19,45 +19,45 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final TokenStore tokenStore;
+    private final TokenStore tokenStore;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @Autowired
-  public ResourceServerConfig(TokenStore tokenStore)
-  {
-    this.tokenStore = tokenStore;
-  }
+    @Autowired
+    public ResourceServerConfig(TokenStore tokenStore)
+    {
+        this.tokenStore = tokenStore;
+    }
 
-  // ===========================  public  Methods  =========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public void configure(HttpSecurity http) throws Exception
-  {
-      http.anonymous()
-          .disable()
-          .authorizeRequests()
-          .anyRequest()
-          .authenticated()
-          .and()
-          .exceptionHandling()
-          .accessDeniedHandler(new OAuth2AccessDeniedHandler());
-  }
+    @Override
+    public void configure(HttpSecurity http) throws Exception
+    {
+        http.anonymous()
+            .disable()
+            .authorizeRequests()
+            .anyRequest()
+            .authenticated()
+            .and()
+            .exceptionHandling()
+            .accessDeniedHandler(new OAuth2AccessDeniedHandler());
+    }
 
-  @Override
-  public void configure(ResourceServerSecurityConfigurer resources) throws Exception
-  {
-    super.configure(resources);
-    DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-    defaultTokenServices.setTokenStore(tokenStore);
-    resources.tokenServices(defaultTokenServices);
-  }
+    @Override
+    public void configure(ResourceServerSecurityConfigurer resources) throws Exception
+    {
+        super.configure(resources);
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore);
+        resources.tokenServices(defaultTokenServices);
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

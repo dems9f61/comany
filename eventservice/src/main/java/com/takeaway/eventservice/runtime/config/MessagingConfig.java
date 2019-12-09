@@ -37,157 +37,168 @@ import javax.validation.constraints.NotBlank;
 @RequiredArgsConstructor
 public class MessagingConfig
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  private static final String ERROR = "error";
+    private static final String ERROR = "error";
 
-  private static final String DEAD_LETTER = "deadLetter";
+    private static final String DEAD_LETTER = "deadLetter";
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
-  @NotBlank
-  private String exchangeName;
+    @NotBlank
+    private String exchangeName;
 
-  @NotBlank
-  private String queueName;
+    @NotBlank
+    private String queueName;
 
-  @NotBlank
-  private String routingKey;
+    @NotBlank
+    private String routingKey;
 
-  @Min(value = 1)
-  private int concurrentConsumers;
+    @Min(value = 1)
+    private int concurrentConsumers;
 
-  @Max(value = 20)
-  private int maxConcurrentConsumers;
+    @Max(value = 20)
+    private int maxConcurrentConsumers;
 
-  private final ConnectionFactory cachingConnectionFactory;
+    private final ConnectionFactory cachingConnectionFactory;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Bean
-  public Jackson2JsonMessageConverter jsonMessageConverter(ClassMapper classMapper, ObjectMapper objectMapper)
-  {
-    Jackson2JsonMessageConverter jsonConverter = new Jackson2JsonMessageConverter(objectMapper);
-    jsonConverter.setClassMapper(classMapper);
-    jsonConverter.setCreateMessageIds(true);
-    return jsonConverter;
-  }
+    @Bean
+    public Jackson2JsonMessageConverter jsonMessageConverter(ClassMapper classMapper, ObjectMapper objectMapper)
+    {
+        Jackson2JsonMessageConverter jsonConverter = new Jackson2JsonMessageConverter(objectMapper);
+        jsonConverter.setClassMapper(classMapper);
+        jsonConverter.setCreateMessageIds(true);
+        return jsonConverter;
+    }
 
-  @Bean
-  public ClassMapper classMapper()
-  {
-    return new DefaultJackson2JavaTypeMapper();
-  }
+    @Bean
+    public ClassMapper classMapper()
+    {
+        return new DefaultJackson2JavaTypeMapper();
+    }
 
-  @Bean
-  public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory,
-        Jackson2JsonMessageConverter converter,
-        MethodInterceptor retryOperationsInterceptor)
-  {
-    SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-    factory.setConnectionFactory(connectionFactory);
-    factory.setMessageConverter(converter);
-    factory.setConcurrentConsumers(concurrentConsumers);
-    factory.setMaxConcurrentConsumers(maxConcurrentConsumers);
-    factory.setAdviceChain(retryOperationsInterceptor);
-    return factory;
-  }
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory,
+                                                                               Jackson2JsonMessageConverter converter,
+                                                                               MethodInterceptor retryOperationsInterceptor)
+    {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(converter);
+        factory.setConcurrentConsumers(concurrentConsumers);
+        factory.setMaxConcurrentConsumers(maxConcurrentConsumers);
+        factory.setAdviceChain(retryOperationsInterceptor);
+        return factory;
+    }
 
-  @Bean
-  public RabbitAdmin admin()
-  {
-    RabbitAdmin rabbitAdmin = new RabbitAdmin(cachingConnectionFactory);
-    rabbitAdmin.afterPropertiesSet();
-    return rabbitAdmin;
-  }
+    @Bean
+    public RabbitAdmin admin()
+    {
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(cachingConnectionFactory);
+        rabbitAdmin.afterPropertiesSet();
+        return rabbitAdmin;
+    }
 
-  @Primary
-  @Bean
-  public MethodInterceptor interceptor(RabbitTemplate rabbitTemplate)
-  {
-    ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-    backOffPolicy.setInitialInterval(1000);
+    @Primary
+    @Bean
+    public MethodInterceptor interceptor(RabbitTemplate rabbitTemplate)
+    {
+        ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+        backOffPolicy.setInitialInterval(1000);
 
-    return RetryInterceptorBuilder.stateless()
-          .backOffPolicy(backOffPolicy)
-          .maxAttempts(3)
-          .recoverer(new RepublishMessageRecoverer(rabbitTemplate, errorQueue().getName(), routingKey))
-          .build();
-  }
+        return RetryInterceptorBuilder.stateless()
+                                      .backOffPolicy(backOffPolicy)
+                                      .maxAttempts(3)
+                                      .recoverer(new RepublishMessageRecoverer(rabbitTemplate, errorQueue().getName(), routingKey))
+                                      .build();
+    }
 
-  @Bean
-  public Exchange exchange()
-  {
-    TopicExchange deadLetterExchange = new TopicExchange(exchangeName, true, false);
-    deadLetterExchange.setAdminsThatShouldDeclare(admin());
-    return deadLetterExchange;
-  }
+    @Bean
+    public Exchange exchange()
+    {
+        TopicExchange deadLetterExchange = new TopicExchange(exchangeName, true, false);
+        deadLetterExchange.setAdminsThatShouldDeclare(admin());
+        return deadLetterExchange;
+    }
 
-  @Bean
-  public Exchange deadLetterExchange()
-  {
-    DirectExchange deadLetterExchange = new DirectExchange(exchangeName + "." + DEAD_LETTER, true, false);
-    deadLetterExchange.setAdminsThatShouldDeclare(admin());
-    return deadLetterExchange;
-  }
+    @Bean
+    public Exchange deadLetterExchange()
+    {
+        DirectExchange deadLetterExchange = new DirectExchange(exchangeName + "." + DEAD_LETTER, true, false);
+        deadLetterExchange.setAdminsThatShouldDeclare(admin());
+        return deadLetterExchange;
+    }
 
-  @Bean
-  public Exchange errorExchange()
-  {
-    DirectExchange errorExchange = new DirectExchange(exchangeName + "." + ERROR, true, false);
-    errorExchange.setAdminsThatShouldDeclare(admin());
-    return errorExchange;
-  }
+    @Bean
+    public Exchange errorExchange()
+    {
+        DirectExchange errorExchange = new DirectExchange(exchangeName + "." + ERROR, true, false);
+        errorExchange.setAdminsThatShouldDeclare(admin());
+        return errorExchange;
+    }
 
-  @Bean
-  public Queue queue()
-  {
-    Queue queue = QueueBuilder.durable(queueName)
-              .withArgument("x-message-ttl", 10000)
-              .withArgument("x-dead-letter-exchange", exchangeName + "." + DEAD_LETTER)
-              .withArgument("x-dead-letter-routing-key", routingKey)
-              .build();
-    queue.setAdminsThatShouldDeclare(admin());
-    return queue;
-  }
+    @Bean
+    public Queue queue()
+    {
+        Queue queue = QueueBuilder.durable(queueName)
+                                  .withArgument("x-message-ttl", 10000)
+                                  .withArgument("x-dead-letter-exchange", exchangeName + "." + DEAD_LETTER)
+                                  .withArgument("x-dead-letter-routing-key", routingKey)
+                                  .build();
+        queue.setAdminsThatShouldDeclare(admin());
+        return queue;
+    }
 
-  @Bean
-  public Queue deadLetterQueue()
-  {
-    Queue queue = QueueBuilder.durable(queueName + "." + DEAD_LETTER).build();
-    queue.setAdminsThatShouldDeclare(admin());
-    return queue;
-  }
+    @Bean
+    public Queue deadLetterQueue()
+    {
+        Queue queue = QueueBuilder.durable(queueName + "." + DEAD_LETTER)
+                                  .build();
+        queue.setAdminsThatShouldDeclare(admin());
+        return queue;
+    }
 
-  @Bean
-  public Queue errorQueue()
-  {
-    Queue queue = QueueBuilder.durable(queueName + "." + ERROR).build();
-    queue.setAdminsThatShouldDeclare(admin());
-    return queue;
-  }
+    @Bean
+    public Queue errorQueue()
+    {
+        Queue queue = QueueBuilder.durable(queueName + "." + ERROR)
+                                  .build();
+        queue.setAdminsThatShouldDeclare(admin());
+        return queue;
+    }
 
-  @Bean
-  public Binding queueBinding()
-  {
-    return BindingBuilder.bind(queue()).to(exchange()).with(routingKey).noargs();
-  }
+    @Bean
+    public Binding queueBinding()
+    {
+        return BindingBuilder.bind(queue())
+                             .to(exchange())
+                             .with(routingKey)
+                             .noargs();
+    }
 
-  @Bean
-  public Binding queueBindingDlx()
-  {
-    return BindingBuilder.bind(deadLetterQueue()).to(deadLetterExchange()).with(routingKey).noargs();
-  }
+    @Bean
+    public Binding queueBindingDlx()
+    {
+        return BindingBuilder.bind(deadLetterQueue())
+                             .to(deadLetterExchange())
+                             .with(routingKey)
+                             .noargs();
+    }
 
-  @Bean
-  public Binding queueBindingError()
-  {
-    return BindingBuilder.bind(errorQueue()).to(errorExchange()).with(routingKey).noargs();
-  }
+    @Bean
+    public Binding queueBindingError()
+    {
+        return BindingBuilder.bind(errorQueue())
+                             .to(errorExchange())
+                             .with(routingKey)
+                             .noargs();
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

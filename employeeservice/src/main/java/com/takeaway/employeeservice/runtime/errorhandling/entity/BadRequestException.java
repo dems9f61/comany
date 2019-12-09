@@ -7,28 +7,28 @@ package com.takeaway.employeeservice.runtime.errorhandling.entity;
  */
 public class BadRequestException extends RuntimeException
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
 
-  public BadRequestException(Throwable cause)
-  {
-    super(cause);
-  }
+    public BadRequestException(Throwable cause)
+    {
+        super(cause);
+    }
 
-  public BadRequestException(String message)
-  {
-    super(message);
-  }
+    public BadRequestException(String message)
+    {
+        super(message);
+    }
 
-  public BadRequestException(String message, Throwable cause)
-  {
-    super(message, cause);
-  }
+    public BadRequestException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

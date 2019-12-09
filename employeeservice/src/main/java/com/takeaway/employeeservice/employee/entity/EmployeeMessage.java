@@ -10,26 +10,27 @@ import lombok.Data;
 @Data
 public class EmployeeMessage
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  public enum EventType {
-    EMPLOYEE_CREATED,
+    public enum EventType
+    {
+        EMPLOYEE_CREATED,
 
-    EMPLOYEE_UPDATED,
+        EMPLOYEE_UPDATED,
 
-    EMPLOYEE_DELETED
-  }
+        EMPLOYEE_DELETED
+    }
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
-  private EventType eventType;
+    private EventType eventType;
 
-  private Employee employee;
+    private Employee employee;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

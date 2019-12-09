@@ -24,107 +24,113 @@ import java.util.stream.Stream;
 public class EmployeeTestFactory
 {
 
-  public Employee createDefault()
-  {
-    return builder().create();
-  }
-
-  public List<Employee> createManyDefault(int count)
-  {
-    return manyBuilders(count).map(Builder::create).collect(Collectors.toList());
-  }
-
-  private Stream<Builder> manyBuilders(int count)
-  {
-    return IntStream.range(0, count).mapToObj(i -> builder());
-  }
-
-  public Builder builder()
-  {
-    return new Builder();
-  }
-
-  public static class Builder
-  {
-    private UUID uuid;
-
-    private String emailAddress;
-
-    private Employee.FullName fullName;
-
-    private ZonedDateTime birthday;
-
-    private Department department;
-
-    private DepartmentTestFactory departmentTestFactory = new DepartmentTestFactory();
-
-    Builder()
+    public Employee createDefault()
     {
-      this.uuid = UUID.randomUUID();
-      this.emailAddress = generateRandomEmail();
-      this.department = departmentTestFactory.createDefault();
-      this.birthday = createRandomBirthday();
-      this.fullName = new Employee.FullName();
-      this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
-      this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
+        return builder().create();
     }
 
-    public Builder emailAddress(String emailAddress)
+    public List<Employee> createManyDefault(int count)
     {
-      this.emailAddress = emailAddress;
-      return this;
+        return manyBuilders(count).map(Builder::create)
+                                  .collect(Collectors.toList());
     }
 
-    public Builder fullName(Employee.FullName fullName)
+    private Stream<Builder> manyBuilders(int count)
     {
-      this.fullName = fullName;
-      return this;
+        return IntStream.range(0, count)
+                        .mapToObj(i -> builder());
     }
 
-    public Builder birthday(ZonedDateTime birthday)
+    public Builder builder()
     {
-      this.birthday = birthday;
-      return this;
+        return new Builder();
     }
 
-    public Builder department(Department department)
+    public static class Builder
     {
-      this.department = department;
-      return this;
-    }
+        private UUID uuid;
 
-    private LocalDate generateRandomDate()
-    {
-      return createRandomDate(1900, 2000);
-    }
+        private String emailAddress;
 
-    private String generateRandomEmail()
-    {
-      return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
-    }
+        private Employee.FullName fullName;
 
-    public Employee create()
-    {
-      Employee employee = new Employee();
-      return employee.setBirthday(birthday).setId(uuid).setDepartment(department).setEmailAddress(emailAddress).setFullName(fullName);
-    }
+        private ZonedDateTime birthday;
 
-    private ZonedDateTime createRandomBirthday()
-    {
-      return createRandomDate(1900, 2010).atStartOfDay(ZoneOffset.UTC);
-    }
+        private Department department;
 
-    private LocalDate createRandomDate(int startYear, int endYear)
-    {
-      int day = createRandomIntBetween(1, 28);
-      int month = createRandomIntBetween(1, 12);
-      int year = createRandomIntBetween(startYear, endYear);
-      return LocalDate.of(year, month, day);
-    }
+        private DepartmentTestFactory departmentTestFactory = new DepartmentTestFactory();
 
-    private int createRandomIntBetween(int start, int end)
-    {
-      return start + (int) Math.round(Math.random() * (end - start));
+        Builder()
+        {
+            this.uuid = UUID.randomUUID();
+            this.emailAddress = generateRandomEmail();
+            this.department = departmentTestFactory.createDefault();
+            this.birthday = createRandomBirthday();
+            this.fullName = new Employee.FullName();
+            this.fullName.setLastName(RandomStringUtils.randomAlphabetic(12));
+            this.fullName.setFirstName(RandomStringUtils.randomAlphabetic(12));
+        }
+
+        public Builder emailAddress(String emailAddress)
+        {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public Builder fullName(Employee.FullName fullName)
+        {
+            this.fullName = fullName;
+            return this;
+        }
+
+        public Builder birthday(ZonedDateTime birthday)
+        {
+            this.birthday = birthday;
+            return this;
+        }
+
+        public Builder department(Department department)
+        {
+            this.department = department;
+            return this;
+        }
+
+        private LocalDate generateRandomDate()
+        {
+            return createRandomDate(1900, 2000);
+        }
+
+        private String generateRandomEmail()
+        {
+            return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(10, 24)) + "@" + (RandomStringUtils.randomAlphanumeric(10) + ".com");
+        }
+
+        public Employee create()
+        {
+            Employee employee = new Employee();
+            return employee.setBirthday(birthday)
+                           .setId(uuid)
+                           .setDepartment(department)
+                           .setEmailAddress(emailAddress)
+                           .setFullName(fullName);
+        }
+
+        private ZonedDateTime createRandomBirthday()
+        {
+            return createRandomDate(1900, 2010).atStartOfDay(ZoneOffset.UTC);
+        }
+
+        private LocalDate createRandomDate(int startYear, int endYear)
+        {
+            int day = createRandomIntBetween(1, 28);
+            int month = createRandomIntBetween(1, 12);
+            int year = createRandomIntBetween(startYear, endYear);
+            return LocalDate.of(year, month, day);
+        }
+
+        private int createRandomIntBetween(int start, int end)
+        {
+            return start + (int) Math.round(Math.random() * (end - start));
+        }
     }
-  }
 }

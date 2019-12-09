@@ -34,28 +34,28 @@ import java.util.UUID;
 @Validated
 @RestController
 @RequestMapping(value = UserController.BASE_URI,
-    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
-    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
+        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 public class UserController
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  public static final String BASE_URI = ApiVersions.V1 + "/users";
+    public static final String BASE_URI = ApiVersions.V1 + "/users";
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
     private final DefaultAuditedEntityController<UserService, User, UUID> controllerDelegator;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @Autowired
-  public UserController(@NotNull UserService userService)
-  {
-      this.controllerDelegator = new DefaultAuditedEntityController<>(userService);
-  }
+    @Autowired
+    public UserController(@NotNull UserService userService)
+    {
+        this.controllerDelegator = new DefaultAuditedEntityController<>(userService);
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
     @PreAuthorize("hasRole('USER_READ') and #oauth2.hasScope('read')")
     @GetMapping
@@ -116,7 +116,7 @@ public class UserController
     User doFullUpdate(@PathVariable @NotNull UUID id, @RequestBody @JsonView(DataView.PUT.class) User fullUpdateRequest)
     {
         return controllerDelegator.doFullUpdate(id, fullUpdateRequest);
-  }
+    }
 
     @PreAuthorize("hasRole('USER_UPDATE') and #oauth2.hasScope('write')")
     @PatchMapping(value = "/{id}")
@@ -134,7 +134,7 @@ public class UserController
     {
         controllerDelegator.delete(id);
     }
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

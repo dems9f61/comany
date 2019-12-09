@@ -32,166 +32,174 @@ import static org.mockito.Mockito.*;
 @DisplayName("Unit tests for the employee controller")
 class EmployeeControllerTest extends UnitTestSuite
 {
-  @Mock
-  private EmployeeServiceCapable employeeService;
+    @Mock
+    private EmployeeServiceCapable employeeService;
 
-  @InjectMocks
-  private EmployeeController employeeController;
+    @InjectMocks
+    private EmployeeController employeeController;
 
-  @Nested
-  @DisplayName("when delete")
-  class WhenDelete
-  {
-    @Test
-    @DisplayName("Deleting an employee with a wrong id throws ResourceNotFoundException")
-    void givenUnknownId_whenDelete_thenThrowNotFoundException()
+    @Nested
+    @DisplayName("when delete")
+    class WhenDelete
     {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      doThrow(ResourceNotFoundException.class).when(employeeService).deleteById(any());
+        @Test
+        @DisplayName("Deleting an employee with a wrong id throws ResourceNotFoundException")
+        void givenUnknownId_whenDelete_thenThrowNotFoundException()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            doThrow(ResourceNotFoundException.class).when(employeeService)
+                                                    .deleteById(any());
 
-      // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.deleteEmployee(id));
+            // Act / Assert
+            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.deleteEmployee(id));
+        }
+
+        @Test
+        @DisplayName("Deleting an employee with a valid id succeeds")
+        void givenValidId_whenDelete_thenSucceed()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            doNothing().when(employeeService)
+                       .deleteById(any());
+
+            // Act
+            employeeController.deleteEmployee(id);
+
+            // Assert
+            verify(employeeService).deleteById(id);
+        }
     }
 
-    @Test
-    @DisplayName("Deleting an employee with a valid id succeeds")
-    void givenValidId_whenDelete_thenSucceed()
+    @Nested
+    @DisplayName("when access")
+    class WhenAccess
     {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      doNothing().when(employeeService).deleteById(any());
+        @Test
+        @DisplayName("Finding an employee with a wrong id throws ResourceNotFoundException")
+        void givenUnknownId_whenFindById_thenThrowNotFoundException()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            doThrow(ResourceNotFoundException.class).when(employeeService)
+                                                    .findById(id);
 
-      // Act
-      employeeController.deleteEmployee(id);
+            // Act / Assert
+            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(id));
+        }
 
-      // Assert
-      verify(employeeService).deleteById(id);
-    }
-  }
+        @Test
+        @DisplayName("Finding an employee with a valid id succeeds")
+        void givenValidId_whenFindById_thenSucceed()
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(employee).when(employeeService)
+                              .findById(any());
 
-  @Nested
-  @DisplayName("when access")
-  class WhenAccess
-  {
-    @Test
-    @DisplayName("Finding an employee with a wrong id throws ResourceNotFoundException")
-    void givenUnknownId_whenFindById_thenThrowNotFoundException()
-    {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      doThrow(ResourceNotFoundException.class).when(employeeService).findById(id);
+            // Act
+            employeeController.findEmployee(id);
 
-      // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(id));
-    }
-
-    @Test
-    @DisplayName("Finding an employee with a valid id succeeds")
-    void givenValidId_whenFindById_thenSucceed()
-    {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      Employee employee = employeeTestFactory.createDefault();
-      doReturn(employee).when(employeeService).findById(any());
-
-      // Act
-      employeeController.findEmployee(id);
-
-      // Assert
-      verify(employeeService).findById(id);
-    }
-  }
-
-  @Nested
-  @DisplayName("when update")
-  class WhenUpdate
-  {
-    @Test
-    @DisplayName("Updating an employee with a valid request succeeds")
-    void givenValidRequest_whenUpdate_thenSucceed() throws Exception
-    {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
-      doNothing().when(employeeService).update(any(), any());
-
-      // Act
-      employeeController.updateEmployee(id, employeeRequest);
-
-      // Assert
-      verify(employeeService).update(eq(id), assertArg(getEmployeeParameterConsumer(employeeRequest)));
+            // Assert
+            verify(employeeService).findById(id);
+        }
     }
 
-    @Test
-    @DisplayName("Updating an employee throws ResourceNotFoundException if the underlying service throws ResourceNotFoundException")
-    void givenUnderlyingNotFound_whenCreate_thenThrowNotFoundException() throws Exception
+    @Nested
+    @DisplayName("when update")
+    class WhenUpdate
     {
-      // Arrange
-      UUID id = UUID.randomUUID();
-      UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
-      doThrow(ResourceNotFoundException.class).when(employeeService).update(id, employeeRequest.toEmployerParameter());
+        @Test
+        @DisplayName("Updating an employee with a valid request succeeds")
+        void givenValidRequest_whenUpdate_thenSucceed() throws Exception
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
+            doNothing().when(employeeService)
+                       .update(any(), any());
 
-      // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.updateEmployee(id, employeeRequest));
+            // Act
+            employeeController.updateEmployee(id, employeeRequest);
+
+            // Assert
+            verify(employeeService).update(eq(id), assertArg(getEmployeeParameterConsumer(employeeRequest)));
+        }
+
+        @Test
+        @DisplayName("Updating an employee throws ResourceNotFoundException if the underlying service throws ResourceNotFoundException")
+        void givenUnderlyingNotFound_whenCreate_thenThrowNotFoundException() throws Exception
+        {
+            // Arrange
+            UUID id = UUID.randomUUID();
+            UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
+            doThrow(ResourceNotFoundException.class).when(employeeService)
+                                                    .update(id, employeeRequest.toEmployerParameter());
+
+            // Act / Assert
+            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.updateEmployee(id, employeeRequest));
+        }
+
+        @Test
+        @DisplayName("Updating an employee throws BadRequestException if the underlying service throws a BadRequestException")
+        void givenUnderlyingBadRequest_whenCreate_thenThrowBadRequestException()
+        {
+            // Arrange
+            UUID uuid = UUID.randomUUID();
+            UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
+            doThrow(BadRequestException.class).when(employeeService)
+                                              .update(uuid, employeeRequest.toEmployerParameter());
+
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
+        }
     }
 
-    @Test
-    @DisplayName("Updating an employee throws BadRequestException if the underlying service throws a BadRequestException")
-    void givenUnderlyingBadRequest_whenCreate_thenThrowBadRequestException()
+    @Nested
+    @DisplayName("when new")
+    class WhenNew
     {
-      // Arrange
-      UUID uuid = UUID.randomUUID();
-      UpdateEmployeeRequest employeeRequest = updateEmployeeRequestTestFactory.createDefault();
-      doThrow(BadRequestException.class).when(employeeService).update(uuid, employeeRequest.toEmployerParameter());
+        @Test
+        @DisplayName("Creating an employee with a valid request succeeds")
+        void givenValidRequest_whenCreate_thenSucceed() throws Exception
+        {
+            // Arrange
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
+            Employee employee = employeeTestFactory.createDefault();
+            doReturn(employee).when(employeeService)
+                              .create(any());
 
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.updateEmployee(uuid, employeeRequest));
+            // Act
+            employeeController.createEmployee(employeeRequest);
+
+            // Assert
+            verify(employeeService).create(assertArg(getEmployeeParameterConsumer(employeeRequest)));
+        }
+
+        @Test
+        @DisplayName("Creating an employee throws BadRequestException if the underlying service throws a BadRequestException")
+        void givenUnderlyingBadRequestException_whenCreate_thenThrowBadRequestException() throws Exception
+        {
+            // Arrange
+            CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
+            doThrow(BadRequestException.class).when(employeeService)
+                                              .create(employeeRequest.toEmployerParameter());
+
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.createEmployee(employeeRequest));
+        }
     }
 
-  }
-
-  @Nested
-  @DisplayName("when new")
-  class WhenNew
-  {
-    @Test
-    @DisplayName("Creating an employee with a valid request succeeds")
-    void givenValidRequest_whenCreate_thenSucceed() throws Exception
+    private Consumer<EmployeeParameter> getEmployeeParameterConsumer(EmployeeRequest employeeRequest)
     {
-      // Arrange
-      CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
-      Employee employee = employeeTestFactory.createDefault();
-      doReturn(employee).when(employeeService).create(any());
-
-      // Act
-      employeeController.createEmployee(employeeRequest);
-
-      // Assert
-      verify(employeeService).create(assertArg(getEmployeeParameterConsumer(employeeRequest)));
+        return employeeParameter -> {
+            assertThat(employeeParameter.getBirthday()).isEqualTo(employeeRequest.getBirthday());
+            assertThat(employeeParameter.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
+            assertThat(employeeParameter.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
+            assertThat(employeeParameter.getFirstName()).isEqualTo(employeeRequest.getFirstName());
+            assertThat(employeeParameter.getLastName()).isEqualTo(employeeRequest.getLastName());
+        };
     }
-
-    @Test
-    @DisplayName("Creating an employee throws BadRequestException if the underlying service throws a BadRequestException")
-    void givenUnderlyingBadRequestException_whenCreate_thenThrowBadRequestException() throws Exception
-    {
-      // Arrange
-      CreateEmployeeRequest employeeRequest = createEmployeeRequestTestFactory.createDefault();
-      doThrow(BadRequestException.class).when(employeeService).create(employeeRequest.toEmployerParameter());
-
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> employeeController.createEmployee(employeeRequest));
-    }
-  }
-
-  private Consumer<EmployeeParameter> getEmployeeParameterConsumer(EmployeeRequest employeeRequest)
-  {
-    return employeeParameter -> {
-      assertThat(employeeParameter.getBirthday()).isEqualTo(employeeRequest.getBirthday());
-      assertThat(employeeParameter.getEmailAddress()).isEqualTo(employeeRequest.getEmailAddress());
-      assertThat(employeeParameter.getDepartmentName()).isEqualTo(employeeRequest.getDepartmentName());
-      assertThat(employeeParameter.getFirstName()).isEqualTo(employeeRequest.getFirstName());
-      assertThat(employeeParameter.getLastName()).isEqualTo(employeeRequest.getLastName());
-    };
-  }
 }

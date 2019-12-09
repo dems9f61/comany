@@ -14,25 +14,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public abstract class UnitTestSuite
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  protected EmployeeEventTestFactory employeeEventTestFactory;
+    protected EmployeeEventTestFactory employeeEventTestFactory;
 
-  protected EmployeeMessageTestFactory employeeMessageTestFactory;
+    protected EmployeeMessageTestFactory employeeMessageTestFactory;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @BeforeEach
-  public void initFactories()
-  {
-    employeeEventTestFactory = new EmployeeEventTestFactory();
-    employeeMessageTestFactory = new EmployeeMessageTestFactory();
-  }
+    @BeforeEach
+    public void initFactories()
+    {
+        employeeEventTestFactory = new EmployeeEventTestFactory();
+        employeeMessageTestFactory = new EmployeeMessageTestFactory();
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

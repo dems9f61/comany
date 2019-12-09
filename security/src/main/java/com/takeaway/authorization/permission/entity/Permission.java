@@ -29,32 +29,34 @@ import javax.validation.groups.Default;
 @Entity
 @Table(name = "permissions",
         schema = "data",
-      uniqueConstraints = @UniqueConstraint(name = "uk_permissions_name",columnNames = "name"),
-      indexes = @Index(name = "idx_permissions_name",columnList = "name"))
+        uniqueConstraints = @UniqueConstraint(name = "uk_permissions_name",
+                columnNames = "name"),
+        indexes = @Index(name = "idx_permissions_name",
+                columnList = "name"))
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class Permission extends AuditedUUIDEntity
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @NotBlank(groups = {Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class})
-  @NullOrNotBlank(groups = {DataView.PATCH.class})
-  @JsonView({DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class})
-  @Size(min = 1,
-      max = 255,
-      groups = {Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class})
-  private String name;
+    @NotBlank(groups = { Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class })
+    @NullOrNotBlank(groups = { DataView.PATCH.class })
+    @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class })
+    @Size(min = 1,
+            max = 255,
+            groups = { Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class })
+    private String name;
 
-  @NotBlank(groups = {DataView.PUT.class})
-  @NullOrNotBlank(groups = {DataView.PATCH.class, DataView.POST.class})
-  @JsonView({DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class})
-  private String description;
+    @NotBlank(groups = { DataView.PUT.class })
+    @NullOrNotBlank(groups = { DataView.PATCH.class, DataView.POST.class })
+    @JsonView({ DataView.GET.class, DataView.PUT.class, DataView.PATCH.class, DataView.POST.class })
+    private String description;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

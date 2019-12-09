@@ -7,11 +7,11 @@ package com.takeaway.authorization.runtime.rest;
  */
 public interface DataView
 {
-  interface GET extends DataView {}
+    interface GET extends DataView {}
 
-  interface POST extends DataView {}
+    interface POST extends DataView {}
 
-  interface PUT extends DataView {}
+    interface PUT extends DataView {}
 
-  interface PATCH extends DataView {}
+    interface PATCH extends DataView {}
 }

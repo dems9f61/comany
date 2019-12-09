@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 11:36
+ *
  * <p>
  */
 @AutoConfigureMockMvc
@@ -159,7 +160,6 @@ class OauthClientControllerIntegrationTest extends IntegrationTestSuite
             assertThat(oAuthClient.getClientScoped()).isEqualTo(persistedOauthClient.getClientScoped());
             assertThat(oAuthClient.getClientScope()).isEqualTo(persistedOauthClient.getClientScope());
             assertThat(oAuthClient.getSecretRequired()).isEqualTo(persistedOauthClient.getSecretRequired());
-            assertThat(oAuthClient.getClientSecretHash()).isEqualTo(persistedOauthClient.getClientSecretHash());
             assertThat(oAuthClient.getClientAuthorizedGrantTypes()).isEqualTo(persistedOauthClient.getClientAuthorizedGrantTypes());
             assertThat(oAuthClient.getClientRegisteredRedirectUri()).isEqualTo(persistedOauthClient.getClientRegisteredRedirectUri());
             assertThat(oAuthClient.getClientAuthorities()).isEqualTo(persistedOauthClient.getClientAuthorities());
@@ -255,7 +255,6 @@ class OauthClientControllerIntegrationTest extends IntegrationTestSuite
             assertThat(created.getClientScoped()).isEqualTo(toPersist.getClientScoped());
             assertThat(created.getClientScope()).isEqualTo(toPersist.getClientScope());
             assertThat(created.getSecretRequired()).isEqualTo(toPersist.getSecretRequired());
-            assertThat(created.getClientSecretHash()).isNotNull();
             assertThat(created.getClientAuthorizedGrantTypes()).isEqualTo(toPersist.getClientAuthorizedGrantTypes());
             assertThat(created.getClientRegisteredRedirectUri()).isEqualTo(toPersist.getClientRegisteredRedirectUri());
             assertThat(created.getClientAuthorities()).isEqualTo(toPersist.getClientAuthorities());
@@ -266,28 +265,6 @@ class OauthClientControllerIntegrationTest extends IntegrationTestSuite
             assertThat(created.getCreatedBy()).isNotNull();
             assertThat(created.getLastUpdatedBy()).isNotNull();
         }
-
-        //    @Test
-        //    void createClients() throws Exception
-        //    {
-        //      OauthClient oauthClient = new OauthClient();
-        //      oauthClient
-        //          .setClientId("client")
-        //          .setSecretRequired(true)
-        //          .setClientSecretHash("secret")
-        //          .setClientScoped(true)
-        //          .setClientScope("read,write")
-        //          .setClientAuthorizedGrantTypes("client_credentials,password,refresh_token")
-        //          .setAccessTokenValidityInSeconds(60 * 60 * 24)
-        //          .setRefreshTokenValidityInSeconds(60 * 60 * 24 * 30);
-        //      String jsonRequest = transformRequestToJSON(oauthClient, DataView.POST.class);
-        //
-        //      String uri = String.format("%s", OauthClientController.BASE_URI);
-        //
-        //      mockMvc
-        //          .perform(post(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken()).contentType(APPLICATION_JSON_UTF8).content(jsonRequest))
-        //          .andExpect(status().isCreated());
-        //    }
 
         @Test
         @DisplayName("POST: 'http://.../oauth-clients' returns CREATED with the minimal creation request")
@@ -323,7 +300,6 @@ class OauthClientControllerIntegrationTest extends IntegrationTestSuite
             assertThat(created.getClientScoped()).isTrue();
             assertThat(created.getClientScope()).isEqualTo(toPersist.getClientScope());
             assertThat(created.getSecretRequired()).isTrue();
-            assertThat(created.getClientSecretHash()).isNotNull();
             assertThat(created.getClientAuthorizedGrantTypes()).isEqualTo(toPersist.getClientAuthorizedGrantTypes());
             assertThat(created.getClientRegisteredRedirectUri()).isNull();
             assertThat(created.getClientAuthorities()).isNull();
@@ -541,7 +517,6 @@ class OauthClientControllerIntegrationTest extends IntegrationTestSuite
             assertThat(updated.getClientScoped()).isEqualTo(update.getClientScoped());
             assertThat(updated.getClientScope()).isEqualTo(update.getClientScope());
             assertThat(updated.getSecretRequired()).isEqualTo(update.getSecretRequired());
-            assertThat(updated.getClientSecretHash()).isNotNull();
             assertThat(updated.getClientAuthorizedGrantTypes()).isEqualTo(update.getClientAuthorizedGrantTypes());
             assertThat(updated.getClientRegisteredRedirectUri()).isEqualTo(update.getClientRegisteredRedirectUri());
             assertThat(updated.getClientAuthorities()).isEqualTo(update.getClientAuthorities());

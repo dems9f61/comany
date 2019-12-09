@@ -32,73 +32,75 @@ import java.time.ZonedDateTime;
 @Validated
 public class MessagingConfig
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @NotBlank
-  private String exchangeName;
+    @NotBlank
+    private String exchangeName;
 
-  @NotBlank
-  private String routingKey;
+    @NotBlank
+    private String routingKey;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Bean
-  @Primary
-  public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter messageConverter, MessagePostProcessor messagePostProcessor)
-  {
-    RabbitTemplate template = new RabbitTemplate(connectionFactory);
-    template.setRetryTemplate(retryTemplate());
-    template.setMessageConverter(messageConverter);
-    template.setBeforePublishPostProcessors(messagePostProcessor);
-    return template;
-  }
+    @Bean
+    @Primary
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
+                                         Jackson2JsonMessageConverter messageConverter,
+                                         MessagePostProcessor messagePostProcessor)
+    {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setRetryTemplate(retryTemplate());
+        template.setMessageConverter(messageConverter);
+        template.setBeforePublishPostProcessors(messagePostProcessor);
+        return template;
+    }
 
-  @Bean
-  public MessagePostProcessor messagePostProcessor()
-  {
-    return message -> {
-      MessageProperties messageProperties = message.getMessageProperties();
-      messageProperties.setHeader("timestamp", ZonedDateTime.now());
-      return message;
-    };
-  }
+    @Bean
+    public MessagePostProcessor messagePostProcessor()
+    {
+        return message -> {
+            MessageProperties messageProperties = message.getMessageProperties();
+            messageProperties.setHeader("timestamp", ZonedDateTime.now());
+            return message;
+        };
+    }
 
-  @Bean
-  public RetryTemplate retryTemplate()
-  {
-    RetryTemplate retryTemplate = new RetryTemplate();
+    @Bean
+    public RetryTemplate retryTemplate()
+    {
+        RetryTemplate retryTemplate = new RetryTemplate();
 
-    SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
-    retryPolicy.setMaxAttempts(5);
-    retryTemplate.setRetryPolicy(retryPolicy);
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
+        retryPolicy.setMaxAttempts(5);
+        retryTemplate.setRetryPolicy(retryPolicy);
 
-    ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-    backOffPolicy.setInitialInterval(500);
-    backOffPolicy.setMultiplier(10.0);
-    backOffPolicy.setMaxInterval(10000);
-    retryTemplate.setBackOffPolicy(backOffPolicy);
+        ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+        backOffPolicy.setInitialInterval(500);
+        backOffPolicy.setMultiplier(10.0);
+        backOffPolicy.setMaxInterval(10000);
+        retryTemplate.setBackOffPolicy(backOffPolicy);
 
-    return retryTemplate;
-  }
+        return retryTemplate;
+    }
 
-  @Bean
-  public Jackson2JsonMessageConverter jsonMessageConverter(ClassMapper classMapper, ObjectMapper objectMapper)
-  {
-    Jackson2JsonMessageConverter jsonConverter = new Jackson2JsonMessageConverter(objectMapper);
-    jsonConverter.setClassMapper(classMapper);
-    return jsonConverter;
-  }
+    @Bean
+    public Jackson2JsonMessageConverter jsonMessageConverter(ClassMapper classMapper, ObjectMapper objectMapper)
+    {
+        Jackson2JsonMessageConverter jsonConverter = new Jackson2JsonMessageConverter(objectMapper);
+        jsonConverter.setClassMapper(classMapper);
+        return jsonConverter;
+    }
 
-  @Bean
-  public ClassMapper classMapper()
-  {
-    return new DefaultJackson2JavaTypeMapper();
-  }
+    @Bean
+    public ClassMapper classMapper()
+    {
+        return new DefaultJackson2JavaTypeMapper();
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

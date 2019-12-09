@@ -19,38 +19,39 @@ import java.time.Instant;
 @ControllerAdvice
 public class GlobalExceptionMapper
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
-  @Order(1999)
-  @ExceptionHandler(value = {Exception.class})
-  protected ResponseEntity<String> handleException(HttpServletRequest httpServletRequest, Exception exception)
-  {
-    return serializeExceptionToResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR, httpServletRequest);
-  }
-
-  // ===========================  private  Methods  ========================
-
-  private ResponseEntity<String> serializeExceptionToResponse(Exception exception, HttpStatus httpStatus, HttpServletRequest httpServletRequest)
-  {
-    String localizedMessage = exception.getLocalizedMessage();
-    if (httpStatus.is4xxClientError())
+    @Order(1999)
+    @ExceptionHandler(value = { Exception.class })
+    protected ResponseEntity<String> handleException(HttpServletRequest httpServletRequest, Exception exception)
     {
-      LOGGER.info("Client Exception occurred. Error: {}", localizedMessage);
+        return serializeExceptionToResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR, httpServletRequest);
     }
-    else
-    {
-      LOGGER.error("Unhandled Exception occurred. Error: {}", localizedMessage, exception);
-    }
-    Instant time = Instant.now();
-    String requestURI = httpServletRequest.getRequestURI();
-    String sb = "Time: " + time + "\n" + "Requested URI: " + requestURI + "\n" + "Error message: " + localizedMessage;
-    return ResponseEntity.status(httpStatus.value()).body(exception.getMessage());
-  }
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+
+    private ResponseEntity<String> serializeExceptionToResponse(Exception exception, HttpStatus httpStatus, HttpServletRequest httpServletRequest)
+    {
+        String localizedMessage = exception.getLocalizedMessage();
+        if (httpStatus.is4xxClientError())
+        {
+            LOGGER.info("Client Exception occurred. Error: {}", localizedMessage);
+        }
+        else
+        {
+            LOGGER.error("Unhandled Exception occurred. Error: {}", localizedMessage, exception);
+        }
+        Instant time = Instant.now();
+        String requestURI = httpServletRequest.getRequestURI();
+        String sb = "Time: " + time + "\n" + "Requested URI: " + requestURI + "\n" + "Error message: " + localizedMessage;
+        return ResponseEntity.status(httpStatus.value())
+                             .body(exception.getMessage());
+    }
+
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

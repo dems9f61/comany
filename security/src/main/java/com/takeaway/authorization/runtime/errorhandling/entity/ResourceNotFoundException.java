@@ -2,6 +2,7 @@ package com.takeaway.authorization.runtime.errorhandling.entity;
 
 /**
  * User: StMinko Date: 18.03.2019 Time: 11:26
+ *
  * <p>
  */
 public class ResourceNotFoundException extends RuntimeException

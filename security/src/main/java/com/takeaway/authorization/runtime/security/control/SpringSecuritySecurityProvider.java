@@ -18,53 +18,57 @@ import java.util.UUID;
 @Slf4j
 public class SpringSecuritySecurityProvider implements EntitySecurityHolder.SecurityProvider
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  private static final String DEFAULT_UUID = "e60a3835-fbe3-440c-8003-9b6942426368";
+    private static final String DEFAULT_UUID = "e60a3835-fbe3-440c-8003-9b6942426368";
 
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public String getActingUser()
-  {
-    if (SecurityContextHolder.getContext().getAuthentication() instanceof OAuth2Authentication)
+    @Override
+    public String getActingUser()
     {
-      OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
-      Authentication userAuthentication = auth.getUserAuthentication();
-      if (userAuthentication != null)
-      {
-        String authenticatedUser = userAuthentication.getName();
-        if (auth.getDetails() != null)
+        if (SecurityContextHolder.getContext()
+                                 .getAuthentication() instanceof OAuth2Authentication)
         {
-          OAuth2AuthenticationDetails authDetails = (OAuth2AuthenticationDetails) auth.getDetails();
-          Object decodedDetails = authDetails.getDecodedDetails();
-          Map<String, Object> userInformationMap = (Map<String, Object>) ((Map<String, Object>) decodedDetails).get("user_information");
-          LOGGER.debug("The authenticated user information [{}] ", authenticatedUser);
-          return userInformationMap.get("userId").toString();
+            OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext()
+                                                                                    .getAuthentication();
+            Authentication userAuthentication = auth.getUserAuthentication();
+            if (userAuthentication != null)
+            {
+                String authenticatedUser = userAuthentication.getName();
+                if (auth.getDetails() != null)
+                {
+                    OAuth2AuthenticationDetails authDetails = (OAuth2AuthenticationDetails) auth.getDetails();
+                    Object decodedDetails = authDetails.getDecodedDetails();
+                    Map<String, Object> userInformationMap = (Map<String, Object>) ((Map<String, Object>) decodedDetails).get("user_information");
+                    LOGGER.debug("The authenticated user information [{}] ", authenticatedUser);
+                    return userInformationMap.get("userId")
+                                             .toString();
+                }
+                else if (userAuthentication.getPrincipal() instanceof CustomUserDetails)
+                {
+                    CustomUserDetails customUserDetails = (CustomUserDetails) userAuthentication.getPrincipal();
+                    UUID userId = customUserDetails.getUserInformation()
+                                                   .getUserId();
+                    LOGGER.debug("The user [{}] with id [{}] is authenticated", authenticatedUser, userId);
+                    return userId.toString();
+                }
+            }
+            else
+            {
+                String clientId = (String) auth.getPrincipal();
+                LOGGER.debug("No authenticated user. Client [{}] is therefore the acting user", clientId);
+                return clientId;
+            }
         }
-        else if (userAuthentication.getPrincipal() instanceof CustomUserDetails)
-        {
-          CustomUserDetails customUserDetails = (CustomUserDetails) userAuthentication.getPrincipal();
-          UUID userId = customUserDetails.getUserInformation().getUserId();
-          LOGGER.debug("The user [{}] with id [{}] is authenticated", authenticatedUser, userId);
-          return userId.toString();
-        }
-      }
-      else
-      {
-        String clientId = (String) auth.getPrincipal();
-        LOGGER.debug("No authenticated user. Client [{}] is therefore the acting user", clientId);
-        return clientId;
-      }
+        LOGGER.debug("No authentication found! Default value [{}] is the acting user", DEFAULT_UUID);
+        return DEFAULT_UUID;
     }
-    LOGGER.debug("No authentication found! Default value [{}] is the acting user", DEFAULT_UUID);
-    return DEFAULT_UUID;
-  }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

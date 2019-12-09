@@ -24,126 +24,135 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 @DisplayName("Integration tests for the department service")
 class DepartmentServiceIntegrationTest extends IntegrationTestSuite
 {
-  @Autowired
-  private DepartmentRepository departmentRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
-  @Autowired
-  private DepartmentService departmentService;
+    @Autowired
+    private DepartmentService departmentService;
 
-  @Nested
-  @DisplayName("when new")
-  class WhenNew
-  {
-    @Test
-    @DisplayName("Creating a department with a valid parameter succeeds")
-    void givenValidRequestParams_whenCreate_thenStatusSucceed()
+    @Nested
+    @DisplayName("when new")
+    class WhenNew
     {
-      // Arrange
-      DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
+        @Test
+        @DisplayName("Creating a department with a valid parameter succeeds")
+        void givenValidRequestParams_whenCreate_thenStatusSucceed()
+        {
+            // Arrange
+            DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
 
-      // Act
-      Department department = departmentService.create(creationParameter);
+            // Act
+            Department department = departmentService.create(creationParameter);
 
-      // Assert
-      assertThat(department).isNotNull();
-      assertThat(department.getId()).isGreaterThan(0L);
-      assertThat(department.getDepartmentName()).isNotBlank().isEqualTo(creationParameter.getDepartmentName());
+            // Assert
+            assertThat(department).isNotNull();
+            assertThat(department.getId()).isGreaterThan(0L);
+            assertThat(department.getDepartmentName()).isNotBlank()
+                                                      .isEqualTo(creationParameter.getDepartmentName());
+        }
+
+        @Test
+        @DisplayName("Creating a departments with a already existing name fails")
+        void givenAlreadyExistingDepartmentName_whenCreate_thenThrowException()
+        {
+            // Arrange
+            String departmentName = RandomStringUtils.randomAlphabetic(23);
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
+                                                                                  .departmentName(departmentName)
+                                                                                  .create();
+            departmentService.create(creationParameter);
+
+            DepartmentParameter creationParameter_2 = departmentParameterTestFactory.builder()
+                                                                                    .departmentName(departmentName)
+                                                                                    .create();
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter_2));
+        }
+
+        @Test
+        @DisplayName("Creating a departments with a empty name fails")
+        void givenBlankDepartmentName_whenCreate_thenThrowException()
+        {
+            // Arrange
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
+                                                                                  .departmentName(" ")
+                                                                                  .create();
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
+        }
+
+        @Test
+        @DisplayName("Creating a departments with a null name fails")
+        void givenNullDepartmentName_whenCreate_thenThrowException()
+        {
+            // Arrange
+            DepartmentParameter creationParameter = departmentParameterTestFactory.builder()
+                                                                                  .departmentName(null)
+                                                                                  .create();
+            // Act / Assert
+            assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
+        }
     }
 
-    @Test
-    @DisplayName("Creating a departments with a already existing name fails")
-    void givenAlreadyExistingDepartmentName_whenCreate_thenThrowException()
+    @Nested
+    @DisplayName("when access")
+    class WhenAccess
     {
-      // Arrange
-      String departmentName = RandomStringUtils.randomAlphabetic(23);
-      DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(departmentName).create();
-      departmentService.create(creationParameter);
+        @Test
+        @DisplayName("Finding all departments returns all existing departments")
+        void givenDepartments_whenFindAll_thenReturnAll()
+        {
+            // Arrange
+            departmentRepository.deleteAll();
+            List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
+            for (DepartmentParameter creationParameter : creationParameters)
+            {
+                departmentService.create(creationParameter);
+            }
 
-      DepartmentParameter creationParameter_2 = departmentParameterTestFactory.builder().departmentName(departmentName).create();
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter_2));
+            // Act
+            List<Department> all = departmentService.findAll();
+
+            // Assert
+            assertThat(all.size()).isEqualTo(creationParameters.size());
+        }
+
+        @Test
+        @DisplayName("Finding a department with a correct department name returns the related department")
+        void givenDepartments_whenFindByDepartmentName_thenReturnDepartment()
+        {
+            // Arrange
+            List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
+            for (DepartmentParameter creationParameter : creationParameters)
+            {
+                departmentService.create(creationParameter);
+            }
+
+            DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
+            Department department = departmentService.create(creationParameter);
+
+            // Act
+            Department foundDepartment = departmentService.findByDepartmentName(creationParameter.getDepartmentName());
+
+            // Assert
+            assertThat(foundDepartment.getId()).isEqualTo(department.getId());
+            assertThat(foundDepartment.getDepartmentName()).isEqualTo(department.getDepartmentName());
+        }
+
+        @Test
+        @DisplayName("Finding a department with a wrong department name returns nothing")
+        void givenNotExistingDepartmentName_whenFindByDepartmentName_thenReturnNothing()
+        {
+            // Arrange
+            List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
+            for (DepartmentParameter creationParameter : creationParameters)
+            {
+                departmentService.create(creationParameter);
+            }
+            String wrongDepartmentName = "unknownName";
+
+            // Act / Assert
+            assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> departmentService.findByDepartmentName(wrongDepartmentName));
+        }
     }
-
-    @Test
-    @DisplayName("Creating a departments with a empty name fails")
-    void givenBlankDepartmentName_whenCreate_thenThrowException()
-    {
-      // Arrange
-      DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(" ").create();
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
-    }
-
-    @Test
-    @DisplayName("Creating a departments with a null name fails")
-    void givenNullDepartmentName_whenCreate_thenThrowException()
-    {
-      // Arrange
-      DepartmentParameter creationParameter = departmentParameterTestFactory.builder().departmentName(null).create();
-      // Act / Assert
-      assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> departmentService.create(creationParameter));
-    }
-  }
-
-  @Nested
-  @DisplayName("when access")
-  class WhenAccess
-  {
-    @Test
-    @DisplayName("Finding all departments returns all existing departments")
-    void givenDepartments_whenFindAll_thenReturnAll()
-    {
-      // Arrange
-      departmentRepository.deleteAll();
-      List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
-      for (DepartmentParameter creationParameter : creationParameters)
-      {
-        departmentService.create(creationParameter);
-      }
-
-      // Act
-      List<Department> all = departmentService.findAll();
-
-      // Assert
-      assertThat(all.size()).isEqualTo(creationParameters.size());
-    }
-
-    @Test
-    @DisplayName("Finding a department with a correct department name returns the related department")
-    void givenDepartments_whenFindByDepartmentName_thenReturnDepartment()
-    {
-      // Arrange
-      List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
-      for (DepartmentParameter creationParameter : creationParameters)
-      {
-        departmentService.create(creationParameter);
-      }
-
-      DepartmentParameter creationParameter = departmentParameterTestFactory.createDefault();
-      Department department = departmentService.create(creationParameter);
-
-      // Act
-      Department foundDepartment = departmentService.findByDepartmentName(creationParameter.getDepartmentName());
-
-      // Assert
-      assertThat(foundDepartment.getId()).isEqualTo(department.getId());
-      assertThat(foundDepartment.getDepartmentName()).isEqualTo(department.getDepartmentName());
-    }
-
-    @Test
-    @DisplayName("Finding a department with a wrong department name returns nothing")
-    void givenNotExistingDepartmentName_whenFindByDepartmentName_thenReturnNothing()
-    {
-      // Arrange
-      List<DepartmentParameter> creationParameters = departmentParameterTestFactory.createManyDefault(RandomUtils.nextInt(10, 50));
-      for (DepartmentParameter creationParameter : creationParameters)
-      {
-        departmentService.create(creationParameter);
-      }
-      String wrongDepartmentName = "unknownName";
-
-      // Act / Assert
-      assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> departmentService.findByDepartmentName(wrongDepartmentName));
-    }
-  }
 }

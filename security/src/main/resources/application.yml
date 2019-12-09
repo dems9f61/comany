@@ -5,6 +5,7 @@ server.port: 8084
 spring:
   liquibase:
     change-log: classpath:db/security-master-changelog.xml
+    contexts: ${mode:LOCAL}
   banner:
     location: classpath:/banner.txt
   application.name: security-service

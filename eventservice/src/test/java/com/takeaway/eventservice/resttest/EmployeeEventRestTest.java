@@ -27,55 +27,56 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Rest tests for the employee event service")
 class EmployeeEventRestTest extends RestTestSuite
 {
-  @Nested
-  @DisplayName("when access")
-  class WhenAccess
-  {
-    @Test
-    @DisplayName("GET: 'http://.../events/{id}' returns OK and an asc sorted list ")
-    void givenEmployeeVents_whenFindByUuid_thenStatus200AndAscSortedList()
+    @Nested
+    @DisplayName("when access")
+    class WhenAccess
     {
-      // Arrange
-        UUID id = UUID.randomUUID();
-        receiveRandomMessageFor(id);
-
-      // Act
-        ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
-                                                                                                                        EmployeeEventController.BASE_URI,
-                                                                                                                        id),
-                                                                                                          HttpMethod.GET,
-                                                                                                          new HttpEntity<>(defaultHttpHeaders()),
-                                                                                                          new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
-
-      // Assert
-      assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-      Page<EmployeeEventResponse> eventResponsePage = responseEntity.getBody();
-      assertThat(eventResponsePage).isNotNull().isNotEmpty();
-      Instant previous = null;
-      for (EmployeeEventResponse event : eventResponsePage)
-      {
-        Instant current = event.getCreatedAt();
-        if (previous != null)
+        @Test
+        @DisplayName("GET: 'http://.../events/{id}' returns OK and an asc sorted list ")
+        void givenEmployeeVents_whenFindByUuid_thenStatus200AndAscSortedList()
         {
-          assertThat(previous).isBefore(current);
-        }
-        previous = current;
-      }
-    }
+            // Arrange
+            UUID id = UUID.randomUUID();
+            receiveRandomMessageFor(id);
 
-//      @Test
-//      @DisplayName("GET: 'http://.../events/{employeeId}' returns NOT FOUND for unknown id ")
-//      void givenUnknownId_whenFindByUuid_thenStatus404()
-//      {
-//          // Arrange
-//          UUID unknownId = UUID.randomUUID();
-//
-//          ResponseEntity<String> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeEventController.BASE_URI, unknownId),
-//                                                                            HttpMethod.GET,
-//                                                                            new HttpEntity<>(defaultHttpHeaders()),
-//                                                                            String.class);
-//          assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-//          assertThat(responseEntity.getBody()).contains(String.format("Could not find employee events for employee id [%s]", unknownId));
-//      }
-  }
+            // Act
+            ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
+                                                                                                                            EmployeeEventController.BASE_URI,
+                                                                                                                            id),
+                                                                                                              HttpMethod.GET,
+                                                                                                              new HttpEntity<>(defaultHttpHeaders()),
+                                                                                                              new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Page<EmployeeEventResponse> eventResponsePage = responseEntity.getBody();
+            assertThat(eventResponsePage).isNotNull()
+                                         .isNotEmpty();
+            Instant previous = null;
+            for (EmployeeEventResponse event : eventResponsePage)
+            {
+                Instant current = event.getCreatedAt();
+                if (previous != null)
+                {
+                    assertThat(previous).isBefore(current);
+                }
+                previous = current;
+            }
+        }
+
+        //      @Test
+        //      @DisplayName("GET: 'http://.../events/{employeeId}' returns NOT FOUND for unknown id ")
+        //      void givenUnknownId_whenFindByUuid_thenStatus404()
+        //      {
+        //          // Arrange
+        //          UUID unknownId = UUID.randomUUID();
+        //
+        //          ResponseEntity<String> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeEventController.BASE_URI, unknownId),
+        //                                                                            HttpMethod.GET,
+        //                                                                            new HttpEntity<>(defaultHttpHeaders()),
+        //                                                                            String.class);
+        //          assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        //          assertThat(responseEntity.getBody()).contains(String.format("Could not find employee events for employee id [%s]", unknownId));
+        //      }
+    }
 }

@@ -15,11 +15,11 @@ import java.util.List;
 @Repository
 interface DepartmentRepository extends JpaRepository<Department, Long>, RevisionRepository<Department, Long, Long>
 {
-  // =========================== Class Variables ===========================
-  // ==============================  Methods  ==============================
+    // =========================== Class Variables ===========================
+    // ==============================  Methods  ==============================
 
-  List<Department> findByDepartmentName(String departmentName);
+    List<Department> findByDepartmentName(String departmentName);
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

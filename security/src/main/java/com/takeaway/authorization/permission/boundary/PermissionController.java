@@ -35,98 +35,98 @@ import java.util.UUID;
 @RestController
 @Api(value = "User permission service: Operations pertaining to the user permission service interface")
 @RequestMapping(value = PermissionController.BASE_URI,
-    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
-    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
+        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 public class PermissionController
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  static final String BASE_URI = ApiVersions.V1 + "/permissions";
+    static final String BASE_URI = ApiVersions.V1 + "/permissions";
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
-  private final DefaultAuditedEntityController<PermissionService, Permission, UUID> controllerDelegator;
+    private final DefaultAuditedEntityController<PermissionService, Permission, UUID> controllerDelegator;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @Autowired
-  public PermissionController(@NotNull PermissionService permissionService)
-  {
-    this.controllerDelegator = new DefaultAuditedEntityController<PermissionService, Permission, UUID>(permissionService);
-  }
+    @Autowired
+    public PermissionController(@NotNull PermissionService permissionService)
+    {
+        this.controllerDelegator = new DefaultAuditedEntityController<PermissionService, Permission, UUID>(permissionService);
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
-  @PreAuthorize("hasRole('USER_PERMISSION_READ') and #oauth2.hasScope('read')")
-  @GetMapping
-  @ResponseStatus(HttpStatus.OK)
-  Page<Permission> findAll(@NotNull Pageable pageable)
-  {
-    return controllerDelegator.findAll(pageable);
-  }
+    @PreAuthorize("hasRole('USER_PERMISSION_READ') and #oauth2.hasScope('read')")
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    Page<Permission> findAll(@NotNull Pageable pageable)
+    {
+        return controllerDelegator.findAll(pageable);
+    }
 
-  @PreAuthorize("hasRole('USER_PERMISSION_READ') and #oauth2.hasScope('read')")
-  @GetMapping("/{id}")
-  @ResponseStatus(HttpStatus.OK)
-  @JsonView(DataView.GET.class)
-  Permission findById(@PathVariable @NotNull UUID id)
-  {
-    return controllerDelegator.findById(id);
-  }
+    @PreAuthorize("hasRole('USER_PERMISSION_READ') and #oauth2.hasScope('read')")
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
+    Permission findById(@PathVariable @NotNull UUID id)
+    {
+        return controllerDelegator.findById(id);
+    }
 
-  @PreAuthorize("hasRole('USER_PERMISSION_AUDIT_TRAIL') and #oauth2.hasScope('read')")
-  @GetMapping("/{id}/revisions")
-  @ResponseStatus(HttpStatus.OK)
-  Page<Revision<Long, Permission>> findRevisions(@PathVariable @NotNull UUID id, @NotNull @PageableDefault(50) Pageable pageable)
-  {
-    return controllerDelegator.findRevisions(id, pageable);
-  }
+    @PreAuthorize("hasRole('USER_PERMISSION_AUDIT_TRAIL') and #oauth2.hasScope('read')")
+    @GetMapping("/{id}/revisions")
+    @ResponseStatus(HttpStatus.OK)
+    Page<Revision<Long, Permission>> findRevisions(@PathVariable @NotNull UUID id, @NotNull @PageableDefault(50) Pageable pageable)
+    {
+        return controllerDelegator.findRevisions(id, pageable);
+    }
 
-  @PreAuthorize("hasRole('USER_PERMISSION_AUDIT_TRAIL') and #oauth2.hasScope('read')")
-  @GetMapping("/{id}/auditTrails")
-  @ResponseStatus(HttpStatus.OK)
-  ResponsePage<AuditTrail<UUID, Permission>> findAuditTrails(@PathVariable @NotNull UUID id, @PageableDefault(50) @NotNull Pageable pageable)
-  {
-    return controllerDelegator.findAuditTrails(id, pageable, Permission.class);
-  }
+    @PreAuthorize("hasRole('USER_PERMISSION_AUDIT_TRAIL') and #oauth2.hasScope('read')")
+    @GetMapping("/{id}/auditTrails")
+    @ResponseStatus(HttpStatus.OK)
+    ResponsePage<AuditTrail<UUID, Permission>> findAuditTrails(@PathVariable @NotNull UUID id, @PageableDefault(50) @NotNull Pageable pageable)
+    {
+        return controllerDelegator.findAuditTrails(id, pageable, Permission.class);
+    }
 
-  @PreAuthorize("hasRole('USER_PERMISSION_CREATE') and #oauth2.hasScope('write')")
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  @JsonView(DataView.GET.class)
-  ResponseEntity<Permission> create(@RequestBody @JsonView(DataView.POST.class) @NotNull Permission createRequest)
-  {
-    return controllerDelegator.create(createRequest);
-  }
+    @PreAuthorize("hasRole('USER_PERMISSION_CREATE') and #oauth2.hasScope('write')")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @JsonView(DataView.GET.class)
+    ResponseEntity<Permission> create(@RequestBody @JsonView(DataView.POST.class) @NotNull Permission createRequest)
+    {
+        return controllerDelegator.create(createRequest);
+    }
 
-  @PreAuthorize("hasRole('USER_PERMISSION_UPDATE') and #oauth2.hasScope('write')")
-  @PutMapping(value = "/{id}")
-  @ResponseStatus(HttpStatus.OK)
-  @JsonView(DataView.GET.class)
-  Permission doFullUpdate(@PathVariable @NotNull UUID id, @RequestBody @JsonView(DataView.PUT.class) Permission fullUpdateRequest)
-  {
-    return controllerDelegator.doFullUpdate(id, fullUpdateRequest);
-  }
+    @PreAuthorize("hasRole('USER_PERMISSION_UPDATE') and #oauth2.hasScope('write')")
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
+    Permission doFullUpdate(@PathVariable @NotNull UUID id, @RequestBody @JsonView(DataView.PUT.class) Permission fullUpdateRequest)
+    {
+        return controllerDelegator.doFullUpdate(id, fullUpdateRequest);
+    }
 
-  @PreAuthorize("hasRole('USER_PERMISSION_UPDATE') and #oauth2.hasScope('write')")
-  @PatchMapping(value = "/{id}")
-  @ResponseStatus(HttpStatus.OK)
-  @JsonView(DataView.GET.class)
-  Permission doPartialUpdate(@PathVariable @NotNull UUID id, @RequestBody @JsonView(DataView.PATCH.class) Permission partialUpdateRequest)
-  {
-    return controllerDelegator.doPartialUpdate(id, partialUpdateRequest);
-  }
+    @PreAuthorize("hasRole('USER_PERMISSION_UPDATE') and #oauth2.hasScope('write')")
+    @PatchMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
+    Permission doPartialUpdate(@PathVariable @NotNull UUID id, @RequestBody @JsonView(DataView.PATCH.class) Permission partialUpdateRequest)
+    {
+        return controllerDelegator.doPartialUpdate(id, partialUpdateRequest);
+    }
 
-  @PreAuthorize("hasRole('USER_PERMISSION_DELETE') and #oauth2.hasScope('write')")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @DeleteMapping("/{id}")
-  void delete(@PathVariable @NotNull UUID id)
-  {
-    controllerDelegator.delete(id);
-  }
+    @PreAuthorize("hasRole('USER_PERMISSION_DELETE') and #oauth2.hasScope('write')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    void delete(@PathVariable @NotNull UUID id)
+    {
+        controllerDelegator.delete(id);
+    }
 
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

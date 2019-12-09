@@ -14,62 +14,62 @@ public class UserTestFactory extends AbstractTestFactory<User, UserTestFactory.B
 {
     public static final String PWD = "PASSWORD";
 
-  public Builder builder()
-  {
-    return new Builder();
-  }
-
-  public static class Builder implements AbstractTestFactory.Builder<User>
-  {
-    private String userName;
-
-    private String oldPassword;
-
-    private String newPassword;
-
-    private String confirmPassword;
-
-    Builder()
+    public Builder builder()
     {
-      this.userName = RandomStringUtils.randomAlphabetic(10);
-      this.oldPassword = PWD;
-      this.newPassword = oldPassword;
-      this.confirmPassword = newPassword;
+        return new Builder();
     }
 
-    public Builder userName(String userName)
+    public static class Builder implements AbstractTestFactory.Builder<User>
     {
-      this.userName = userName;
-      return this;
-    }
+        private String userName;
 
-    public Builder oldPassword(String oldPassword)
-    {
-      this.oldPassword = oldPassword;
-      return this;
-    }
+        private String oldPassword;
 
-    public Builder newPassword(String newPassword)
-    {
-      this.newPassword = newPassword;
-      return this;
-    }
+        private String newPassword;
 
-    public Builder confirmPassword(String confirmPassword)
-    {
-      this.confirmPassword = confirmPassword;
-      return this;
-    }
+        private String confirmPassword;
 
-    @Override
-    public User create()
-    {
-      User user = new User();
-      user.setUserName(userName);
-      user.setNewPassword(newPassword);
-      user.setConfirmPassword(confirmPassword);
-      user.setOldPassword(oldPassword);
-      return user;
+        Builder()
+        {
+            this.userName = RandomStringUtils.randomAlphabetic(10);
+            this.oldPassword = PWD;
+            this.newPassword = oldPassword;
+            this.confirmPassword = newPassword;
+        }
+
+        public Builder userName(String userName)
+        {
+            this.userName = userName;
+            return this;
+        }
+
+        public Builder oldPassword(String oldPassword)
+        {
+            this.oldPassword = oldPassword;
+            return this;
+        }
+
+        public Builder newPassword(String newPassword)
+        {
+            this.newPassword = newPassword;
+            return this;
+        }
+
+        public Builder confirmPassword(String confirmPassword)
+        {
+            this.confirmPassword = confirmPassword;
+            return this;
+        }
+
+        @Override
+        public User create()
+        {
+            User user = new User();
+            user.setUserName(userName);
+            user.setNewPassword(newPassword);
+            user.setConfirmPassword(confirmPassword);
+            user.setOldPassword(oldPassword);
+            return user;
+        }
     }
-  }
 }

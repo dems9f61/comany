@@ -16,19 +16,19 @@ import java.util.UUID;
 @Service
 public class RoleService extends AbstractDefaultAuditedEntityService<RoleRepository, Role, UUID>
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
 
-  @Autowired
-  public RoleService(RoleRepository repository, Validator validator)
-  {
-    super(repository, validator);
-  }
+    @Autowired
+    public RoleService(RoleRepository repository, Validator validator)
+    {
+        super(repository, validator);
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

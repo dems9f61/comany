@@ -17,9 +17,9 @@ import java.util.UUID;
 @Transactional
 public class PermissionRepositoryTestHelper extends AbstractRepositoryTestHelper<Permission, UUID, PermissionRepository>
 {
-  @Autowired
-  public PermissionRepositoryTestHelper(PermissionRepository repository)
-  {
-    super(repository);
-  }
+    @Autowired
+    public PermissionRepositoryTestHelper(PermissionRepository repository)
+    {
+        super(repository);
+    }
 }

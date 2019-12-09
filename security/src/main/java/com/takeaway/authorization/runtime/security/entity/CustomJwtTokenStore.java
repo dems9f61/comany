@@ -14,27 +14,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomJwtTokenStore extends JwtTokenStore
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
 
-  public CustomJwtTokenStore(JwtAccessTokenConverter jwtTokenEnhancer)
-  {
-    super(jwtTokenEnhancer);
-  }
+    public CustomJwtTokenStore(JwtAccessTokenConverter jwtTokenEnhancer)
+    {
+        super(jwtTokenEnhancer);
+    }
 
-  // ===========================  public  Methods  =========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public OAuth2Authentication readAuthentication(OAuth2AccessToken token)
-  {
-    OAuth2Authentication oAuth2Authentication = super.readAuthentication(token);
-    oAuth2Authentication.setDetails(token.getAdditionalInformation());
-    return oAuth2Authentication;
-  }
+    @Override
+    public OAuth2Authentication readAuthentication(OAuth2AccessToken token)
+    {
+        OAuth2Authentication oAuth2Authentication = super.readAuthentication(token);
+        oAuth2Authentication.setDetails(token.getAdditionalInformation());
+        return oAuth2Authentication;
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

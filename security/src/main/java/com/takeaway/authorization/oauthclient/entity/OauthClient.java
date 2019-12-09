@@ -1,5 +1,6 @@
 package com.takeaway.authorization.oauthclient.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Sets;
 import com.takeaway.authorization.runtime.persistence.AuditedUUIDEntity;
@@ -25,13 +26,15 @@ import java.util.stream.Collectors;
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 10:07
+ *
  * <p>
  */
 @Audited
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@ToString(callSuper = true,
+        exclude = { "oldClientSecret", "newClientSecret", "confirmClientSecret" })
 @Entity
 @Table(name = "oauth_client_details",
         schema = "data",
@@ -58,7 +61,7 @@ public class OauthClient extends AuditedUUIDEntity implements ClientDetails
     private Boolean secretRequired;
 
     @NotBlank(groups = { Default.class, DataView.GET.class })
-    @JsonView({ DataView.GET.class, DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
+    @JsonIgnore
     @Column(name = "client_secret")
     private String clientSecretHash;
 

@@ -19,40 +19,40 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public abstract class UnitTestSuite
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  protected DepartmentParameterTestFactory departmentParameterTestFactory;
+    protected DepartmentParameterTestFactory departmentParameterTestFactory;
 
-  protected DepartmentTestFactory departmentTestFactory;
+    protected DepartmentTestFactory departmentTestFactory;
 
-  protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
+    protected CreateDepartmentRequestTestFactory createDepartmentRequestTestFactory;
 
-  protected EmployeeTestFactory employeeTestFactory;
+    protected EmployeeTestFactory employeeTestFactory;
 
-  protected EmployeeParameterTestFactory employeeParameterTestFactory;
+    protected EmployeeParameterTestFactory employeeParameterTestFactory;
 
-  protected CreateEmployeeRequestTestFactory createEmployeeRequestTestFactory;
+    protected CreateEmployeeRequestTestFactory createEmployeeRequestTestFactory;
 
-  protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
+    protected UpdateEmployeeRequestTestFactory updateEmployeeRequestTestFactory;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @BeforeEach
-  public void initFactories()
-  {
-    departmentParameterTestFactory = new DepartmentParameterTestFactory();
-    departmentTestFactory = new DepartmentTestFactory();
-    createDepartmentRequestTestFactory = new CreateDepartmentRequestTestFactory();
-    employeeTestFactory = new EmployeeTestFactory();
-    employeeParameterTestFactory = new EmployeeParameterTestFactory();
-    createEmployeeRequestTestFactory = new CreateEmployeeRequestTestFactory();
-    updateEmployeeRequestTestFactory = new UpdateEmployeeRequestTestFactory();
-  }
+    @BeforeEach
+    public void initFactories()
+    {
+        departmentParameterTestFactory = new DepartmentParameterTestFactory();
+        departmentTestFactory = new DepartmentTestFactory();
+        createDepartmentRequestTestFactory = new CreateDepartmentRequestTestFactory();
+        employeeTestFactory = new EmployeeTestFactory();
+        employeeParameterTestFactory = new EmployeeParameterTestFactory();
+        createEmployeeRequestTestFactory = new CreateEmployeeRequestTestFactory();
+        updateEmployeeRequestTestFactory = new UpdateEmployeeRequestTestFactory();
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

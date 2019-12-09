@@ -22,7 +22,8 @@ import javax.validation.groups.Default;
  * <p>
  */
 @Audited
-@ToString(callSuper = true)
+@ToString(callSuper = true,
+        exclude = { "oldPassword", "newPassword", "confirmPassword" })
 @Setter
 @Getter
 @Entity
@@ -36,40 +37,40 @@ import javax.validation.groups.Default;
 @EqualsAndHashCode(callSuper = true)
 public class User extends AuditedUUIDEntity
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
     @NotBlank(groups = { Default.class, DataView.GET.class, DataView.POST.class, DataView.PUT.class })
     @NullOrNotBlank(groups = { DataView.PATCH.class })
     @JsonView({ DataView.GET.class, DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
-  private String userName;
+    private String userName;
 
-  @NotNull(groups = {Default.class, DataView.GET.class})
-  @JsonIgnore
-  private String passwordHash;
+    @NotNull(groups = { Default.class, DataView.GET.class })
+    @JsonIgnore
+    private String passwordHash;
 
     @NotBlank(groups = { DataView.PUT.class })
     @NullOrNotBlank(groups = { DataView.PATCH.class })
     @JsonView({ DataView.PUT.class, DataView.PATCH.class })
-  @Transient
-  private String oldPassword;
+    @Transient
+    private String oldPassword;
 
     @NotBlank(groups = { DataView.PUT.class })
     @NullOrNotBlank(groups = { DataView.PATCH.class })
     @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
-  @Transient
-  private String newPassword;
+    @Transient
+    private String newPassword;
 
     @NotBlank(groups = { DataView.PUT.class })
     @NullOrNotBlank(groups = { DataView.PATCH.class })
     @JsonView({ DataView.POST.class, DataView.PUT.class, DataView.PATCH.class })
-  @Transient
-  private String confirmPassword;
+    @Transient
+    private String confirmPassword;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

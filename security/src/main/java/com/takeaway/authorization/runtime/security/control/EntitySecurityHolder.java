@@ -9,46 +9,46 @@ import java.util.UUID;
  */
 public class EntitySecurityHolder
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  private static SecurityProvider instance;
+    private static SecurityProvider instance;
 
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public static void set(SecurityProvider holder)
-  {
-    instance = holder;
-  }
-
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-
-  public interface SecurityProvider
-  {
-      String getActingUser();
-  }
-
-  static class DummyHolder implements SecurityProvider
-  {
-    @Override
-    public String getActingUser()
+    public static void set(SecurityProvider holder)
     {
-        return UUID.randomUUID()
-                   .toString();
+        instance = holder;
     }
-  }
 
-  public static SecurityProvider get()
-  {
-    if (instance == null)
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+
+    public interface SecurityProvider
     {
-      instance = new DummyHolder();
+        String getActingUser();
     }
-    return instance;
-  }
 
-  // ============================  End of class  ===========================
+    static class DummyHolder implements SecurityProvider
+    {
+        @Override
+        public String getActingUser()
+        {
+            return UUID.randomUUID()
+                       .toString();
+        }
+    }
+
+    public static SecurityProvider get()
+    {
+        if (instance == null)
+        {
+            instance = new DummyHolder();
+        }
+        return instance;
+    }
+
+    // ============================  End of class  ===========================
 }

@@ -35,28 +35,28 @@ import java.util.UUID;
 @RestController
 @Api(value = "User role service: Operations pertaining to the user role service interface")
 @RequestMapping(value = RoleController.BASE_URI,
-    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE},
-    consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE },
+        consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 public class RoleController
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  public static final String BASE_URI = ApiVersions.V1 + "/roles";
+    public static final String BASE_URI = ApiVersions.V1 + "/roles";
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
     private final DefaultAuditedEntityController<RoleService, Role, UUID> controllerDelegator;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @Autowired
-  public RoleController(@NotNull RoleService roleService)
-  {
-      this.controllerDelegator = new DefaultAuditedEntityController<>(roleService);
-  }
+    @Autowired
+    public RoleController(@NotNull RoleService roleService)
+    {
+        this.controllerDelegator = new DefaultAuditedEntityController<>(roleService);
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
 
     @PreAuthorize("hasRole('USER_ROLE_READ') and #oauth2.hasScope('read')")
     @GetMapping
@@ -126,7 +126,7 @@ public class RoleController
         controllerDelegator.delete(id);
     }
 
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

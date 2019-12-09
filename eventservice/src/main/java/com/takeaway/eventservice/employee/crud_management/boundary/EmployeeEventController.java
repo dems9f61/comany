@@ -29,32 +29,34 @@ import java.util.UUID;
 @RestController
 @Api(value = "Employee event service: Operations related to employee event service interface")
 @RequestMapping(value = EmployeeEventController.BASE_URI,
-    produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE})
+        produces = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE })
 @RequiredArgsConstructor
 public class EmployeeEventController
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  public static final String BASE_URI = ApiVersions.V1 + "/events";
+    public static final String BASE_URI = ApiVersions.V1 + "/events";
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
-  private final EmployeeEventService employeeEventService;
+    private final EmployeeEventService employeeEventService;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @ApiOperation(value = "Retrieves all events related to an employee id in ascending order")
-  @GetMapping("/{employeeId}")
-  @ResponseStatus(HttpStatus.OK)
-  ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("employeeId") UUID employeeId, @NotNull @PageableDefault(50) Pageable pageable)
-  {
-    Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, pageable).map(EmployeeEventResponse::new);
-    return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
-  }
+    @ApiOperation(value = "Retrieves all events related to an employee id in ascending order")
+    @GetMapping("/{employeeId}")
+    @ResponseStatus(HttpStatus.OK)
+    ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("employeeId") UUID employeeId,
+                                                                         @NotNull @PageableDefault(50) Pageable pageable)
+    {
+        Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, pageable)
+                                                                                 .map(EmployeeEventResponse::new);
+        return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

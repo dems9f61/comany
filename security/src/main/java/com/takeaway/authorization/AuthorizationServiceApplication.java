@@ -14,9 +14,9 @@ import java.util.TimeZone;
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class AuthorizationServiceApplication
 {
-  public static void main(String[] args)
-  {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    SpringApplication.run(AuthorizationServiceApplication.class, args);
-  }
+    public static void main(String[] args)
+    {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        SpringApplication.run(AuthorizationServiceApplication.class, args);
+    }
 }

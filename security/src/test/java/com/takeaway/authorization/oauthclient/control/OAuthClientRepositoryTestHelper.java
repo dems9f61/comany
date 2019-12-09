@@ -17,9 +17,9 @@ import java.util.UUID;
 @Transactional
 public class OAuthClientRepositoryTestHelper extends AbstractRepositoryTestHelper<OauthClient, UUID, OauthClientRepository>
 {
-  @Autowired
-  public OAuthClientRepositoryTestHelper(OauthClientRepository repository)
-  {
-    super(repository);
-  }
+    @Autowired
+    public OAuthClientRepositoryTestHelper(OauthClientRepository repository)
+    {
+        super(repository);
+    }
 }

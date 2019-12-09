@@ -18,44 +18,44 @@ import java.security.NoSuchAlgorithmException;
 @Component
 public class CustomPasswordEncoder implements PasswordEncoder
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  private static final String SALT = "21377353-84af-4c3e-8979-fdc4c582a9f0";
+    private static final String SALT = "21377353-84af-4c3e-8979-fdc4c582a9f0";
 
-  private static final int ITERATIONS = 42;
+    private static final int ITERATIONS = 42;
 
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public String encode(CharSequence rawPassword)
-  {
-    try
+    @Override
+    public String encode(CharSequence rawPassword)
     {
-      MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] toDigest = (SALT + rawPassword).getBytes(StandardCharsets.UTF_8);
-      for (int i = 0; i < ITERATIONS; i++)
-      {
-        toDigest = digest.digest(toDigest);
-      }
-      return Hex.encodeHexString(toDigest);
+        try
+        {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] toDigest = (SALT + rawPassword).getBytes(StandardCharsets.UTF_8);
+            for (int i = 0; i < ITERATIONS; i++)
+            {
+                toDigest = digest.digest(toDigest);
+            }
+            return Hex.encodeHexString(toDigest);
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            LOGGER.warn("Encoding Password failed: [{}]", e.getMessage(), e);
+        }
+        return null;
     }
-    catch (NoSuchAlgorithmException e)
+
+    @Override
+    public boolean matches(CharSequence rawPassword, String encodedPassword)
     {
-      LOGGER.warn("Encoding Password failed: [{}]", e.getMessage(), e);
+        return encodedPassword != null && encodedPassword.equals(encode(rawPassword));
     }
-    return null;
-  }
 
-  @Override
-  public boolean matches(CharSequence rawPassword, String encodedPassword)
-  {
-    return encodedPassword != null && encodedPassword.equals(encode(rawPassword));
-  }
-
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

@@ -10,8 +10,8 @@ import org.springframework.data.repository.history.RevisionRepository;
  */
 @NoRepositoryBean
 public interface JpaAuditedSpecificationRepository<ENTITY, ID> extends JpaSpecificationRepository<ENTITY, ID>, RevisionRepository<ENTITY, ID, Long> {
-  // =========================== Class Variables ===========================
-  // ==============================  Methods  ==============================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =========================== Class Variables ===========================
+    // ==============================  Methods  ==============================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

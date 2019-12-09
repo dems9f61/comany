@@ -14,76 +14,76 @@ import java.time.ZonedDateTime;
 @Component
 public class UpdateEmployeeRequestTestFactory extends AbstractTestFactory<UpdateEmployeeRequest, UpdateEmployeeRequestTestFactory.Builder>
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public UpdateEmployeeRequestTestFactory.Builder builder()
-  {
-    return new UpdateEmployeeRequestTestFactory.Builder();
-  }
-
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-
-  public static class Builder implements AbstractTestFactory.Builder<UpdateEmployeeRequest>
-  {
-    private String emailAddress;
-
-    private String firstName;
-
-    private String lastName;
-
-    private ZonedDateTime birthday;
-
-    private String departmentName;
-
-    Builder()
+    public UpdateEmployeeRequestTestFactory.Builder builder()
     {
-      this.emailAddress = generateRandomEmail();
-      this.birthday = createRandomBirthday();
-      this.firstName = RandomStringUtils.randomAlphabetic(20);
-      this.lastName = RandomStringUtils.randomAlphabetic(10);
-      this.departmentName = RandomStringUtils.randomAlphabetic(10);
+        return new UpdateEmployeeRequestTestFactory.Builder();
     }
 
-    public UpdateEmployeeRequestTestFactory.Builder emailAddress(String emailAddress)
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+
+    public static class Builder implements AbstractTestFactory.Builder<UpdateEmployeeRequest>
     {
-      this.emailAddress = emailAddress;
-      return this;
+        private String emailAddress;
+
+        private String firstName;
+
+        private String lastName;
+
+        private ZonedDateTime birthday;
+
+        private String departmentName;
+
+        Builder()
+        {
+            this.emailAddress = generateRandomEmail();
+            this.birthday = createRandomBirthday();
+            this.firstName = RandomStringUtils.randomAlphabetic(20);
+            this.lastName = RandomStringUtils.randomAlphabetic(10);
+            this.departmentName = RandomStringUtils.randomAlphabetic(10);
+        }
+
+        public UpdateEmployeeRequestTestFactory.Builder emailAddress(String emailAddress)
+        {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public UpdateEmployeeRequestTestFactory.Builder firstName(String firstName)
+        {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public UpdateEmployeeRequestTestFactory.Builder lastName(String lastName)
+        {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public UpdateEmployeeRequestTestFactory.Builder birthday(ZonedDateTime birthday)
+        {
+            this.birthday = birthday;
+            return this;
+        }
+
+        public UpdateEmployeeRequestTestFactory.Builder departmentName(String departmentName)
+        {
+            this.departmentName = departmentName;
+            return this;
+        }
+
+        public UpdateEmployeeRequest create()
+        {
+            return new UpdateEmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
+        }
     }
 
-    public UpdateEmployeeRequestTestFactory.Builder firstName(String firstName)
-    {
-      this.firstName = firstName;
-      return this;
-    }
-
-    public UpdateEmployeeRequestTestFactory.Builder lastName(String lastName)
-    {
-      this.lastName = lastName;
-      return this;
-    }
-
-    public UpdateEmployeeRequestTestFactory.Builder birthday(ZonedDateTime birthday)
-    {
-      this.birthday = birthday;
-      return this;
-    }
-
-    public UpdateEmployeeRequestTestFactory.Builder departmentName(String departmentName)
-    {
-      this.departmentName = departmentName;
-      return this;
-    }
-
-    public UpdateEmployeeRequest create()
-    {
-      return new UpdateEmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
-    }
-  }
-
-  // ============================  End of class  ===========================
+    // ============================  End of class  ===========================
 }

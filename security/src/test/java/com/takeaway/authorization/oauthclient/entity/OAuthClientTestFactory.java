@@ -8,6 +8,7 @@ import java.net.URI;
 
 /**
  * User: StMinko Date: 06.11.2019 Time: 11:39
+ *
  * <p>
  */
 @Component
@@ -61,7 +62,7 @@ public class OAuthClientTestFactory extends AbstractTestFactory<OauthClient, OAu
             this.confirmClientSecret = newClientSecret;
             this.scoped = true;
             this.scope = "read,write";
-            this.authorizedGrantTypes = "password,refresh_token";
+            this.authorizedGrantTypes = "client_credentials,password,refresh_token";
             this.registeredRedirectUri = URI.create(
                     RandomStringUtils.randomAlphabetic(4) + "." + RandomStringUtils.randomAlphabetic(4) + ".com//authorize")
                                             .toASCIIString();

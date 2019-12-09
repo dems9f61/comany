@@ -16,11 +16,11 @@ import java.util.UUID;
 @Repository
 interface EmployeeRepository extends JpaRepository<Employee, UUID>, RevisionRepository<Employee, UUID, Long>
 {
-  // =========================== Class Variables ===========================
-  // ==============================  Methods  ==============================
+    // =========================== Class Variables ===========================
+    // ==============================  Methods  ==============================
 
-  List<Employee> findByEmailAddress(String emailAddress);
+    List<Employee> findByEmailAddress(String emailAddress);
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

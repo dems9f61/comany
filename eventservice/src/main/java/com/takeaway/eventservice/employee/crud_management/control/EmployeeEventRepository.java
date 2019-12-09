@@ -16,11 +16,11 @@ import java.util.UUID;
 @Repository
 interface EmployeeEventRepository extends MongoRepository<PersistentEmployeeEvent, String>
 {
-  // =========================== Class Variables ===========================
-  // ==============================  Methods  ==============================
+    // =========================== Class Variables ===========================
+    // ==============================  Methods  ==============================
 
-  Page<PersistentEmployeeEvent> findByEmployeeId(UUID employeeId, Pageable pageable);
+    Page<PersistentEmployeeEvent> findByEmployeeId(UUID employeeId, Pageable pageable);
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

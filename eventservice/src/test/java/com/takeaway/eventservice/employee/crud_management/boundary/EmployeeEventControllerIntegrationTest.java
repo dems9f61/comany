@@ -25,42 +25,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class EmployeeEventControllerIntegrationTest extends IntegrationTestSuite
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
 
-  @Nested
-  @DisplayName("when access")
-  class WhenAccess
-  {
-    @Test
-    @DisplayName("GET: 'http://.../events/{employeeId}' returns OK and an list ")
-    void givenEmployeeVents_whenFindByEmployeeId_thenStatus200AndContent() throws Exception
+    @Nested
+    @DisplayName("when access")
+    class WhenAccess
     {
-      // Arrange
-      UUID employeeId = UUID.randomUUID();
-      int expectedEventCount = RandomUtils.nextInt(10, 20);
-      receiveRandomMessageFor(employeeId, expectedEventCount);
+        @Test
+        @DisplayName("GET: 'http://.../events/{employeeId}' returns OK and an list ")
+        void givenEmployeeVents_whenFindByEmployeeId_thenStatus200AndContent() throws Exception
+        {
+            // Arrange
+            UUID employeeId = UUID.randomUUID();
+            int expectedEventCount = RandomUtils.nextInt(10, 20);
+            receiveRandomMessageFor(employeeId, expectedEventCount);
 
-      String uri = String.format("%s/{employeeId}", EmployeeEventController.BASE_URI);
+            String uri = String.format("%s/{employeeId}", EmployeeEventController.BASE_URI);
 
-      // Act / Assert
-      mockMvc
-          .perform(get(uri, employeeId))
-          .andExpect(status().isOk())
-          .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-          .andExpect(jsonPath("$", notNullValue()))
-          .andExpect(jsonPath("$.content", hasSize(expectedEventCount)));
+            // Act / Assert
+            mockMvc.perform(get(uri, employeeId))
+                   .andExpect(status().isOk())
+                   .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                   .andExpect(jsonPath("$", notNullValue()))
+                   .andExpect(jsonPath("$.content", hasSize(expectedEventCount)));
+        }
     }
-  }
 
-  // ============================  End of class  ===========================
+    // ============================  End of class  ===========================
 }

@@ -25,33 +25,33 @@ import java.util.UUID;
 @Document(collection = "employee-events")
 public class PersistentEmployeeEvent
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @Id
-  private String id;
+    @Id
+    private String id;
 
-  private EventType eventType;
+    private EventType eventType;
 
-  private UUID employeeId;
+    private UUID employeeId;
 
-  private String emailAddress;
+    private String emailAddress;
 
-  private String firstName;
+    private String firstName;
 
-  private String lastName;
+    private String lastName;
 
-  private Date birthday;
+    private Date birthday;
 
-  private String departmentName;
+    private String departmentName;
 
-  @CreatedDate
-  private Instant createdAt;
+    @CreatedDate
+    private Instant createdAt;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

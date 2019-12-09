@@ -27,47 +27,49 @@ import java.util.UUID;
 @Service
 public class EmployeeEventService
 {
-  // =========================== Class Variables ===========================
+    // =========================== Class Variables ===========================
 
-  static final Sort CREATED_AT_WITH_ASC_SORT = new Sort(Sort.Direction.ASC, "createdAt");
+    static final Sort CREATED_AT_WITH_ASC_SORT = new Sort(Sort.Direction.ASC, "createdAt");
 
-  static final int MAX_PAGE_SIZE = 1000;
+    static final int MAX_PAGE_SIZE = 1000;
 
-  // =============================  Variables  =============================
+    // =============================  Variables  =============================
 
-  private final EmployeeEventRepository employeeEventRepository;
+    private final EmployeeEventRepository employeeEventRepository;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Async
-  @EventListener
-  public void handleEmployeeEvent(@NonNull EmployeeEvent employeeEvent)
-  {
-    PersistentEmployeeEvent persistentEmployeeEvent = new PersistentEmployeeEvent();
-    Employee employee = employeeEvent.getEmployee();
-    persistentEmployeeEvent.setEventType(employeeEvent.getEventType());
-    persistentEmployeeEvent.setBirthday(Date.from(employee.getBirthday().toInstant()));
-    persistentEmployeeEvent.setEmailAddress(employee.getEmailAddress());
-    Employee.FullName fullName = employee.getFullName();
-    if (fullName != null)
+    @Async
+    @EventListener
+    public void handleEmployeeEvent(@NonNull EmployeeEvent employeeEvent)
     {
-      persistentEmployeeEvent.setFirstName(fullName.getFirstName());
-      persistentEmployeeEvent.setLastName(fullName.getLastName());
+        PersistentEmployeeEvent persistentEmployeeEvent = new PersistentEmployeeEvent();
+        Employee employee = employeeEvent.getEmployee();
+        persistentEmployeeEvent.setEventType(employeeEvent.getEventType());
+        persistentEmployeeEvent.setBirthday(Date.from(employee.getBirthday()
+                                                              .toInstant()));
+        persistentEmployeeEvent.setEmailAddress(employee.getEmailAddress());
+        Employee.FullName fullName = employee.getFullName();
+        if (fullName != null)
+        {
+            persistentEmployeeEvent.setFirstName(fullName.getFirstName());
+            persistentEmployeeEvent.setLastName(fullName.getLastName());
+        }
+        persistentEmployeeEvent.setEmployeeId(employee.getId());
+        persistentEmployeeEvent.setDepartmentName(employee.getDepartment()
+                                                          .getDepartmentName());
+        employeeEventRepository.save(persistentEmployeeEvent);
     }
-    persistentEmployeeEvent.setEmployeeId(employee.getId());
-    persistentEmployeeEvent.setDepartmentName(employee.getDepartment().getDepartmentName());
-    employeeEventRepository.save(persistentEmployeeEvent);
-  }
 
-  public Page<PersistentEmployeeEvent> findByEmployeeIdOrderByCreatedAtAsc(@NonNull UUID employeeId, @NonNull Pageable pageable)
-  {
-    PageRequest createdAtPageRequest = PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE, CREATED_AT_WITH_ASC_SORT);
-    return employeeEventRepository.findByEmployeeId(employeeId, createdAtPageRequest);
-  }
+    public Page<PersistentEmployeeEvent> findByEmployeeIdOrderByCreatedAtAsc(@NonNull UUID employeeId, @NonNull Pageable pageable)
+    {
+        PageRequest createdAtPageRequest = PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE, CREATED_AT_WITH_ASC_SORT);
+        return employeeEventRepository.findByEmployeeId(employeeId, createdAtPageRequest);
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

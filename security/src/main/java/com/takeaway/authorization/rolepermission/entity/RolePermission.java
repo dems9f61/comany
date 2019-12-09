@@ -23,28 +23,27 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "role_permissions",
         schema = "data",
-      uniqueConstraints =
-        @UniqueConstraint(name = "uk_role_permissions_role_id_permission_id",
-            columnNames = {"role_id", "permission_id"}))
+        uniqueConstraints = @UniqueConstraint(name = "uk_role_permissions_role_id_permission_id",
+                columnNames = { "role_id", "permission_id" }))
 public class RolePermission extends UUIDEntity
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @NotNull
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "role_id")
-  private Role role;
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-  @NotNull
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "permission_id")
-  private Permission permission;
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "permission_id")
+    private Permission permission;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

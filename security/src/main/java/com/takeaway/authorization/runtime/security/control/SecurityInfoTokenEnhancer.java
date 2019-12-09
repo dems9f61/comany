@@ -22,48 +22,51 @@ import java.util.Map;
 @Component
 public class SecurityInfoTokenEnhancer implements TokenEnhancer
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final CustomUserDetailsEnhancer customUserDetailsEnhancer;
+    private final CustomUserDetailsEnhancer customUserDetailsEnhancer;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @Autowired
-  public SecurityInfoTokenEnhancer(CustomUserDetailsEnhancer customUserDetailsEnhancer)
-  {
-    this.customUserDetailsEnhancer = customUserDetailsEnhancer;
-  }
-
-  // ===========================  public  Methods  =========================
-
-  @Override
-  public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication)
-  {
-    LOGGER.info("Calling Token SecurityInfoTokenEnhancer, AccessToken: [{}]. Authentication: [{}]", accessToken, authentication);
-    Map<String, Object> additionalInformation = Maps.newHashMap(accessToken.getAdditionalInformation());
-    if (accessToken.getAdditionalInformation() == null)
+    @Autowired
+    public SecurityInfoTokenEnhancer(CustomUserDetailsEnhancer customUserDetailsEnhancer)
     {
-        LOGGER.warn("AccessToken.getAdditionalInformation is null");
+        this.customUserDetailsEnhancer = customUserDetailsEnhancer;
     }
-    else
-    {
-        LOGGER.debug("Adding additionalInformation to Access Token");
-      if (authentication != null
-        && authentication.getUserAuthentication() != null
-        && authentication.getUserAuthentication().getPrincipal() != null
-        && authentication.getUserAuthentication().getPrincipal() instanceof CustomUserDetails)
-      {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getUserAuthentication().getPrincipal();
-        additionalInformation.put("user_information", customUserDetailsEnhancer.enhance(userDetails).getUserInformation());
-      }
-      ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInformation);
-    }
-    return accessToken;
-  }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  public  Methods  =========================
+
+    @Override
+    public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication)
+    {
+        LOGGER.info("Calling Token SecurityInfoTokenEnhancer, AccessToken: [{}]. Authentication: [{}]", accessToken, authentication);
+        Map<String, Object> additionalInformation = Maps.newHashMap(accessToken.getAdditionalInformation());
+        if (accessToken.getAdditionalInformation() == null)
+        {
+            LOGGER.warn("AccessToken.getAdditionalInformation is null");
+        }
+        else
+        {
+            LOGGER.debug("Adding additionalInformation to Access Token");
+            if (authentication != null && authentication.getUserAuthentication() != null && authentication.getUserAuthentication()
+                                                                                                          .getPrincipal() != null
+                    && authentication.getUserAuthentication()
+                                     .getPrincipal() instanceof CustomUserDetails)
+            {
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getUserAuthentication()
+                                                                                  .getPrincipal();
+                additionalInformation.put("user_information",
+                                          customUserDetailsEnhancer.enhance(userDetails)
+                                                                   .getUserInformation());
+            }
+            ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInformation);
+        }
+        return accessToken;
+    }
+
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

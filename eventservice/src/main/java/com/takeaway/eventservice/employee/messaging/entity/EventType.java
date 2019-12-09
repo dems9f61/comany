@@ -6,9 +6,9 @@ package com.takeaway.eventservice.employee.messaging.entity;
  * <p>
  */
 public enum EventType {
-  EMPLOYEE_CREATED,
+    EMPLOYEE_CREATED,
 
-  EMPLOYEE_UPDATED,
+    EMPLOYEE_UPDATED,
 
-  EMPLOYEE_DELETED
+    EMPLOYEE_DELETED
 }

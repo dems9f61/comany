@@ -15,17 +15,17 @@ import static com.takeaway.eventservice.employee.crud_management.entity.UsableDa
 @ToString
 @RequiredArgsConstructor
 public enum UsableDateFormat {
-  DEFAULT(DEFAULT_DATE_FORMAT);
+    DEFAULT(DEFAULT_DATE_FORMAT);
 
-  private final String dateFormat;
+    private final String dateFormat;
 
-  public static class Constants
-  {
-    static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-
-    private Constants()
+    public static class Constants
     {
-      throw new AssertionError("Don't meant to be initiated!");
+        static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+
+        private Constants()
+        {
+            throw new AssertionError("Don't meant to be initiated!");
+        }
     }
-  }
 }

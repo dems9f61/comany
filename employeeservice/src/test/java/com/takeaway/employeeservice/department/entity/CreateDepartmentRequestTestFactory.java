@@ -13,29 +13,29 @@ import org.springframework.stereotype.Component;
 public class CreateDepartmentRequestTestFactory extends AbstractTestFactory<CreateDepartmentRequest, CreateDepartmentRequestTestFactory.Builder>
 {
 
-  public Builder builder()
-  {
-    return new Builder();
-  }
-
-  public static class Builder implements AbstractTestFactory.Builder<CreateDepartmentRequest>
-  {
-    private String departmentName;
-
-    Builder()
+    public Builder builder()
     {
-      this.departmentName = RandomStringUtils.randomAlphabetic(23);
+        return new Builder();
     }
 
-    public Builder departmentName(String departmentName)
+    public static class Builder implements AbstractTestFactory.Builder<CreateDepartmentRequest>
     {
-      this.departmentName = departmentName;
-      return this;
-    }
+        private String departmentName;
 
-    public CreateDepartmentRequest create()
-    {
-      return new CreateDepartmentRequest(departmentName);
+        Builder()
+        {
+            this.departmentName = RandomStringUtils.randomAlphabetic(23);
+        }
+
+        public Builder departmentName(String departmentName)
+        {
+            this.departmentName = departmentName;
+            return this;
+        }
+
+        public CreateDepartmentRequest create()
+        {
+            return new CreateDepartmentRequest(departmentName);
+        }
     }
-  }
 }

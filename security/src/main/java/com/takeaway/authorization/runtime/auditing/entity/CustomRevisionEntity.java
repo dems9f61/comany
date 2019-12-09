@@ -21,43 +21,43 @@ import javax.persistence.*;
         allocationSize = 1)
 public class CustomRevisionEntity
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE,
-          generator = "audit_trail_sequence")
-  @RevisionNumber
-  private Long revisionNumber;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "audit_trail_sequence")
+    @RevisionNumber
+    private Long revisionNumber;
 
-  @RevisionTimestamp
-  private Long revisionTimestamp;
+    @RevisionTimestamp
+    private Long revisionTimestamp;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public Long getRevisionNumber()
-  {
-    return revisionNumber;
-  }
+    public Long getRevisionNumber()
+    {
+        return revisionNumber;
+    }
 
-  public void setRevisionNumber(Long revisionNumber)
-  {
-    this.revisionNumber = revisionNumber;
-  }
+    public void setRevisionNumber(Long revisionNumber)
+    {
+        this.revisionNumber = revisionNumber;
+    }
 
-  public Long getRevisionTimestamp()
-  {
-    return revisionTimestamp;
-  }
+    public Long getRevisionTimestamp()
+    {
+        return revisionTimestamp;
+    }
 
-  public void setRevisionTimestamp(Long revisionTimestamp)
-  {
-    this.revisionTimestamp = revisionTimestamp;
-  }
+    public void setRevisionTimestamp(Long revisionTimestamp)
+    {
+        this.revisionTimestamp = revisionTimestamp;
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

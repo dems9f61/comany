@@ -18,46 +18,46 @@ import org.springframework.stereotype.Component;
 @Component
 class EmployeeEventPublisher implements EmployeeEventPublisherCapable
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final RabbitTemplate template;
+    private final RabbitTemplate template;
 
-  private final MessagingConfig messagingConfig;
+    private final MessagingConfig messagingConfig;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public void employeeCreated(Employee createdEmployee)
-  {
-    LOGGER.info("Sending creation message [{}]", createdEmployee);
-    EmployeeMessage createdEmployeeMessage = new EmployeeMessage();
-    createdEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_CREATED);
-    createdEmployeeMessage.setEmployee(createdEmployee);
-    template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), createdEmployeeMessage);
-  }
+    public void employeeCreated(Employee createdEmployee)
+    {
+        LOGGER.info("Sending creation message [{}]", createdEmployee);
+        EmployeeMessage createdEmployeeMessage = new EmployeeMessage();
+        createdEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_CREATED);
+        createdEmployeeMessage.setEmployee(createdEmployee);
+        template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), createdEmployeeMessage);
+    }
 
-  public void employeeDeleted(Employee deletedEmployee)
-  {
-    LOGGER.info("Sending deletion message {}", deletedEmployee);
-    EmployeeMessage deletedEmployeeMessage = new EmployeeMessage();
-    deletedEmployeeMessage.setEmployee(deletedEmployee);
-    deletedEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_DELETED);
-    template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), deletedEmployeeMessage);
-  }
+    public void employeeDeleted(Employee deletedEmployee)
+    {
+        LOGGER.info("Sending deletion message {}", deletedEmployee);
+        EmployeeMessage deletedEmployeeMessage = new EmployeeMessage();
+        deletedEmployeeMessage.setEmployee(deletedEmployee);
+        deletedEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_DELETED);
+        template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), deletedEmployeeMessage);
+    }
 
-  public void employeeUpdated(Employee updatedEmployee)
-  {
-    LOGGER.info("Sending update message [{}]", updatedEmployee);
-    EmployeeMessage updatedEmployeeMessage = new EmployeeMessage();
-    updatedEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_UPDATED);
-    updatedEmployeeMessage.setEmployee(updatedEmployee);
-    template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), updatedEmployeeMessage);
-  }
+    public void employeeUpdated(Employee updatedEmployee)
+    {
+        LOGGER.info("Sending update message [{}]", updatedEmployee);
+        EmployeeMessage updatedEmployeeMessage = new EmployeeMessage();
+        updatedEmployeeMessage.setEventType(EmployeeMessage.EventType.EMPLOYEE_UPDATED);
+        updatedEmployeeMessage.setEmployee(updatedEmployee);
+        template.convertAndSend(messagingConfig.getExchangeName(), messagingConfig.getRoutingKey(), updatedEmployeeMessage);
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
 
-  // ============================  End of class  ===========================
+    // ============================  End of class  ===========================
 }

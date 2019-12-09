@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * User: StMinko Date: 12.11.2019 Time: 14:18
+ *
  * <p>
  */
 class BeanToolTest extends UnitTestSuite

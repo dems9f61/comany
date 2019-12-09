@@ -14,65 +14,65 @@ import java.time.ZonedDateTime;
 @Component
 public class CreateEmployeeRequestTestFactory extends AbstractTestFactory<CreateEmployeeRequest, CreateEmployeeRequestTestFactory.Builder>
 {
-  public Builder builder()
-  {
-    return new Builder();
-  }
-
-  public static class Builder implements AbstractTestFactory.Builder<CreateEmployeeRequest>
-  {
-    private String emailAddress;
-
-    private String firstName;
-
-    private String lastName;
-
-    private ZonedDateTime birthday;
-
-    private String departmentName;
-
-    Builder()
+    public Builder builder()
     {
-      this.emailAddress = generateRandomEmail();
-      this.birthday = createRandomBirthday();
-      this.firstName = RandomStringUtils.randomAlphabetic(20);
-      this.lastName = RandomStringUtils.randomAlphabetic(10);
-      this.departmentName = RandomStringUtils.randomAlphabetic(10);
+        return new Builder();
     }
 
-    public Builder emailAddress(String emailAddress)
+    public static class Builder implements AbstractTestFactory.Builder<CreateEmployeeRequest>
     {
-      this.emailAddress = emailAddress;
-      return this;
-    }
+        private String emailAddress;
 
-    public Builder firstName(String firstName)
-    {
-      this.firstName = firstName;
-      return this;
-    }
+        private String firstName;
 
-    public Builder lastName(String lastName)
-    {
-      this.lastName = lastName;
-      return this;
-    }
+        private String lastName;
 
-    public Builder birthday(ZonedDateTime birthday)
-    {
-      this.birthday = birthday;
-      return this;
-    }
+        private ZonedDateTime birthday;
 
-    public Builder departmentName(String departmentName)
-    {
-      this.departmentName = departmentName;
-      return this;
-    }
+        private String departmentName;
 
-    public CreateEmployeeRequest create()
-    {
-      return new CreateEmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
+        Builder()
+        {
+            this.emailAddress = generateRandomEmail();
+            this.birthday = createRandomBirthday();
+            this.firstName = RandomStringUtils.randomAlphabetic(20);
+            this.lastName = RandomStringUtils.randomAlphabetic(10);
+            this.departmentName = RandomStringUtils.randomAlphabetic(10);
+        }
+
+        public Builder emailAddress(String emailAddress)
+        {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public Builder firstName(String firstName)
+        {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder lastName(String lastName)
+        {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder birthday(ZonedDateTime birthday)
+        {
+            this.birthday = birthday;
+            return this;
+        }
+
+        public Builder departmentName(String departmentName)
+        {
+            this.departmentName = departmentName;
+            return this;
+        }
+
+        public CreateEmployeeRequest create()
+        {
+            return new CreateEmployeeRequest(emailAddress, firstName, lastName, birthday, departmentName);
+        }
     }
-  }
 }

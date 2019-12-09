@@ -25,31 +25,31 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfig extends AsyncConfigurerSupport
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private boolean asyncEnabled = true;
+    private boolean asyncEnabled = true;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public Executor getAsyncExecutor()
-  {
-    if (asyncEnabled)
+    @Override
+    public Executor getAsyncExecutor()
     {
-      ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-      executor.initialize();
-      return executor;
+        if (asyncEnabled)
+        {
+            ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+            executor.initialize();
+            return executor;
+        }
+        else
+        {
+            return new SyncTaskExecutor();
+        }
     }
-    else
-    {
-      return new SyncTaskExecutor();
-    }
-  }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

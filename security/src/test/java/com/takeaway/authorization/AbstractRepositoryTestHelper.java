@@ -13,22 +13,24 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @RequiredArgsConstructor
 public abstract class AbstractRepositoryTestHelper<ENTITY, ID, REPOSITORY extends JpaRepository<ENTITY, ID>>
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  private final REPOSITORY repository;
+    private final REPOSITORY repository;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  public final void cleanDatabase()
-  {
-    LOGGER.info("{}.cleanDatabase ()", this.getClass().getSimpleName());
-    repository.deleteAll();
-  }
+    public final void cleanDatabase()
+    {
+        LOGGER.info("{}.cleanDatabase ()",
+                    this.getClass()
+                        .getSimpleName());
+        repository.deleteAll();
+    }
 
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

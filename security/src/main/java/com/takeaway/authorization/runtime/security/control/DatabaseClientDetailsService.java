@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * User: StMinko Date: 12.11.2019 Time: 11:51
+ *
  * <p>
  */
 @Profile("!INTEGRATION")

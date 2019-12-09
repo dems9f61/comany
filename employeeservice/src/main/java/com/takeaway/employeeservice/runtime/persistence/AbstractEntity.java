@@ -17,76 +17,76 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 public abstract class AbstractEntity<ID extends Serializable> implements Persistable<ID>
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
 
-  @NotNull
-  @Column(nullable = false)
-  private ZonedDateTime createdAt;
+    @NotNull
+    @Column(nullable = false)
+    private ZonedDateTime createdAt;
 
-  @NotNull
-  @Column(nullable = false)
-  private ZonedDateTime modifiedAt;
+    @NotNull
+    @Column(nullable = false)
+    private ZonedDateTime modifiedAt;
 
-  @Setter(value = AccessLevel.PRIVATE)
-  @Column(nullable = false)
-  @Version
-  private Long version;
+    @Setter(value = AccessLevel.PRIVATE)
+    @Column(nullable = false)
+    @Version
+    private Long version;
 
-  // ============================  Constructors  ===========================
-  // ===========================  public  Methods  =========================
+    // ============================  Constructors  ===========================
+    // ===========================  public  Methods  =========================
 
-  @Override
-  public final boolean isNew()
-  {
-    return getId() == null;
-  }
-
-  @PrePersist
-  public final void prePersist()
-  {
-    patchAuditData();
-    onPrePersist();
-  }
-
-  @PreUpdate
-  public final void preUpdate()
-  {
-    patchAuditData();
-    onPreUpdate();
-  }
-
-  @PostLoad
-  public final void postLoad()
-  {
-    onPostLoad();
-  }
-
-  @Override
-  public String toString()
-  {
-    return "AbstractEntity{" + "id=" + getId() + ", created at=" + createdAt + ", modified At=" + modifiedAt + '}';
-  }
-
-  // =================  protected/package local  Methods ===================
-
-  protected void onPreUpdate() {}
-
-  protected void onPrePersist() {}
-
-  protected void onPostLoad() {}
-
-  // ===========================  private  Methods  ========================
-
-  private void patchAuditData()
-  {
-    this.modifiedAt = ZonedDateTime.now();
-    if (this.createdAt == null)
+    @Override
+    public final boolean isNew()
     {
-      this.createdAt = this.modifiedAt;
+        return getId() == null;
     }
-  }
 
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    @PrePersist
+    public final void prePersist()
+    {
+        patchAuditData();
+        onPrePersist();
+    }
+
+    @PreUpdate
+    public final void preUpdate()
+    {
+        patchAuditData();
+        onPreUpdate();
+    }
+
+    @PostLoad
+    public final void postLoad()
+    {
+        onPostLoad();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AbstractEntity{" + "id=" + getId() + ", created at=" + createdAt + ", modified At=" + modifiedAt + '}';
+    }
+
+    // =================  protected/package local  Methods ===================
+
+    protected void onPreUpdate() {}
+
+    protected void onPrePersist() {}
+
+    protected void onPostLoad() {}
+
+    // ===========================  private  Methods  ========================
+
+    private void patchAuditData()
+    {
+        this.modifiedAt = ZonedDateTime.now();
+        if (this.createdAt == null)
+        {
+            this.createdAt = this.modifiedAt;
+        }
+    }
+
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }

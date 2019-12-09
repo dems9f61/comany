@@ -21,29 +21,29 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode
 public class DepartmentResponse
 {
-  // =========================== Class Variables ===========================
-  // =============================  Variables  =============================
-  @ApiModelProperty(example = "245")
-  @NotNull
-  @Min(1)
-  private final Long id;
+    // =========================== Class Variables ===========================
+    // =============================  Variables  =============================
+    @ApiModelProperty(example = "245")
+    @NotNull
+    @Min(1)
+    private final Long id;
 
-  @ApiModelProperty(example = "Human Resources (HR)")
-  @NotBlank
-  private final String departmentName;
+    @ApiModelProperty(example = "Human Resources (HR)")
+    @NotBlank
+    private final String departmentName;
 
-  // ============================  Constructors  ===========================
+    // ============================  Constructors  ===========================
 
-  @JsonCreator
-  public DepartmentResponse(@JsonProperty(value = "id") Long id, @JsonProperty(value = "departmentName") String departmentName)
-  {
-    this.id = id;
-    this.departmentName = departmentName;
-  }
+    @JsonCreator
+    public DepartmentResponse(@JsonProperty(value = "id") Long id, @JsonProperty(value = "departmentName") String departmentName)
+    {
+        this.id = id;
+        this.departmentName = departmentName;
+    }
 
-  // ===========================  public  Methods  =========================
-  // =================  protected/package local  Methods ===================
-  // ===========================  private  Methods  ========================
-  // ============================  Inner Classes  ==========================
-  // ============================  End of class  ===========================
+    // ===========================  public  Methods  =========================
+    // =================  protected/package local  Methods ===================
+    // ===========================  private  Methods  ========================
+    // ============================  Inner Classes  ==========================
+    // ============================  End of class  ===========================
 }
