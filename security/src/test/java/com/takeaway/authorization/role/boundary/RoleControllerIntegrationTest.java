@@ -239,7 +239,10 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
         void givenCreateRequestWithoutDesc_whenCreateRole_thenStatus201AndReturnNewRole() throws Exception
         {
             // Arrange
-            Role toPersist = roleTestFactory.builder().description(null).create();
+            Role toPersist = roleTestFactory.builder()
+                                            .name("EMPLOYEE_EVENT_MANAGER")
+                                            .description(null)
+                                            .create();
             String requestAsJson = transformRequestToJSON(toPersist, DataView.POST.class);
 
             String uri = String.format("%s", RoleController.BASE_URI);

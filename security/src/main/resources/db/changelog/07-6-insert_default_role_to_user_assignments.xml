@@ -1,0 +1,79 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="InsertDefaultPermissionToRoleAssignments" author="Stéphan.Minko" context="LOCAL">
+        <sql>
+            <!-- ASSIGN ROLE 'USER' to USER 'USER'-->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('bc68930c-5520-454c-859b-f59a63363e3d', '2019-12-12
+            09:40:10.797000', 'e0bc975b-1a93-4016-ab37-460b9494ba63', '2019-12-12 09:40:10.797000', 'e0bc975b-1a93-4016-ab37-460b9494ba63', 0, '091d803c-49d1-42af-818a-796553b4d23b',
+            '3929bca0-6e34-4a90-b00c-8546a139336a');
+
+            <!-- ASSIGN ROLE 'USER_MANAGER' to USER 'ADMIN'-->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('f6400a82-dc61-4426-94cd-7a28cdf4931f', '2019-12-12
+            09:54:13.167000', 'c787063e-f503-4488-8b28-8e0a66ec446f', '2019-12-12 09:54:13.167000', 'c787063e-f503-4488-8b28-8e0a66ec446f', 0, 'bf55f775-f0e6-4ef9-b650-459ae100090a',
+            '747792dc-ca41-47a2-8254-a1c551216cec');
+
+            <!-- ASSIGN ROLE 'ROLE' to USER 'USER'-->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('759b5e8d-b6ef-4322-934f-6425f7aa5d67', '2019-12-12
+            10:22:32.441000', '83ba94e5-c66d-461f-9cb5-de528c56c0af', '2019-12-12 10:22:32.441000', '83ba94e5-c66d-461f-9cb5-de528c56c0af', 0, '74da9a27-5116-4f7c-bb57-f259a450cd5d',
+            '3929bca0-6e34-4a90-b00c-8546a139336a');
+
+            <!-- ASSIGN ROLE 'ROLE_MANAGER' to USER 'ADMIN'-->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('a38c0aed-b55d-4191-9046-c5c4c98711b4', '2019-12-12
+            10:26:16.297000', 'd4f0bd35-db1b-4751-a42f-e1c2f5471247', '2019-12-12 10:26:16.297000', 'd4f0bd35-db1b-4751-a42f-e1c2f5471247', 0, 'bbc26049-b500-4e56-899e-a0bea9223693',
+            '747792dc-ca41-47a2-8254-a1c551216cec');
+
+            <!-- ASSIGN ROLE 'PERMISSION' to USER 'USER' -->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('168e7acc-7d05-42fe-9074-d123e12a682d', '2019-12-12
+            11:22:43.624000', '7144c284-8a74-4530-b838-ad4712c52602', '2019-12-12 11:22:43.624000', '7144c284-8a74-4530-b838-ad4712c52602', 0, '39eef09e-b2c1-47e5-953f-fde0c6e6b9cf',
+            '3929bca0-6e34-4a90-b00c-8546a139336a');
+
+            <!-- ASSIGN ROLE 'PERMISSION_MANAGER' to USER 'ADMIN' -->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('cabdee37-c4ee-465e-8137-b964f5b1c75c', '2019-12-12
+            11:28:05.582000', '1ef31863-0f75-4630-8b3d-74d636ff5069', '2019-12-12 11:28:05.582000', '1ef31863-0f75-4630-8b3d-74d636ff5069', 0, '29c8a87b-0bde-4cf0-8c6a-aa5a843edbc4',
+            '747792dc-ca41-47a2-8254-a1c551216cec');
+
+            <!-- ASSIGN ROLE 'OAUTH_CLIENT' to USER 'USER' -->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('cabdee37-c4ee-465e-8137-b964f5b1c75c', '2019-12-12
+            11:28:05.582000', '1ef31863-0f75-4630-8b3d-74d636ff5069', '2019-12-12 11:28:05.582000', '1ef31863-0f75-4630-8b3d-74d636ff5069', 0, 'da697236-117c-42bb-8f0f-1cbaeba34eeb',
+            '3929bca0-6e34-4a90-b00c-8546a139336a');
+
+            <!-- ASSIGN ROLE 'OAUTH_CLIENT_MANAGER' to USER 'ADMIN'-->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('c6aecb46-2b0d-45aa-a8fb-d4289278b131', '2019-12-12
+            11:39:15.277000', '0bedea1e-9667-4803-b443-22f0259c817e', '2019-12-12 11:39:15.277000', '0bedea1e-9667-4803-b443-22f0259c817e', 0, 'f350caaf-279b-4fc5-9493-572ab6fe07f1',
+            '747792dc-ca41-47a2-8254-a1c551216cec');
+
+            <!-- ASSIGN ROLE 'EMPLOYEE' to USER 'USER'-->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('c15484ff-c825-4b48-a146-f9762798ac70', '2019-12-12
+            11:42:02.072000', 'bacea3b5-b828-476c-9af5-27bb97bc4890', '2019-12-12 11:42:02.072000', 'bacea3b5-b828-476c-9af5-27bb97bc4890', 0, '8585e933-bc15-42a1-b069-51df7c01ea11',
+            '3929bca0-6e34-4a90-b00c-8546a139336a');
+
+            <!-- ASSIGN ROLE 'EMPLOYEE_MANAGER' to USER 'ADMIN' -->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('caa8a59b-bf02-453c-892e-f6a61f66aaf9', '2019-12-12
+            11:48:31.010000', 'f94a5638-0010-4d59-a8e1-7f1447c63e0b', '2019-12-12 11:48:31.010000', 'f94a5638-0010-4d59-a8e1-7f1447c63e0b', 0, '64adb0dd-fd7f-477e-8c38-b75df4acb64f',
+            '747792dc-ca41-47a2-8254-a1c551216cec');
+
+            <!-- ASSIGN ROLE 'DEPARTMENT' to USER 'USER' -->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('a118f6e3-484a-43cf-a93f-2f3cba5e2ddf', '2019-12-12
+            11:50:34.828000', 'cb1f7fb2-5f6b-4569-825c-852bb04f886e', '2019-12-12 11:50:34.828000', 'cb1f7fb2-5f6b-4569-825c-852bb04f886e', 0, '7226fe1e-23b1-4aa2-b330-2277e88bc137',
+            '3929bca0-6e34-4a90-b00c-8546a139336a');
+
+            <!-- ASSIGN ROLE 'DEPARTMENT_MANAGER' to USER 'ADMIN' -->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('4f9c276a-d855-4a8e-9660-c328b7ad9ab2', '2019-12-12
+            11:54:02.521000', '1958bb80-78db-4b07-9382-27be9019c55f', '2019-12-12 11:54:02.521000', '1958bb80-78db-4b07-9382-27be9019c55f', 0, '302e82fe-95d3-4e52-8c21-fc3cdc63f25b',
+            '747792dc-ca41-47a2-8254-a1c551216cec');
+
+            <!-- ASSIGN ROLE 'EMPLOYEE_EVENT' TO to USER 'USER'-->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('77ce4630-622b-475c-a77c-9038786da59d', '2019-12-12
+            13:54:22.938000', 'ece66aad-96f1-480f-bdc4-1ee110a83015', '2019-12-12 13:54:22.938000', 'ece66aad-96f1-480f-bdc4-1ee110a83015', 0, 'fba1bd57-4658-4a53-9013-d224c852906b',
+            '3929bca0-6e34-4a90-b00c-8546a139336a');
+
+            <!-- ASSIGN ROLE 'EMPLOYEE_EVENT_MANAGER' TO to USER 'ADMIN'-->
+            INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('a3780768-e5c5-4a49-8920-3dd8cd3ed998', '2019-12-12
+            15:11:28.704000', '0f231ee1-58e2-4079-9588-eef8b5550cf9', '2019-12-12 15:11:28.704000', '0f231ee1-58e2-4079-9588-eef8b5550cf9', 0, 'b214870d-f3db-45b3-8866-d19084f2f3d0',
+            '747792dc-ca41-47a2-8254-a1c551216cec');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

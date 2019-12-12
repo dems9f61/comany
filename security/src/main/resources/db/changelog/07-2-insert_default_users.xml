@@ -1,0 +1,19 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="InsertDefaultUsers" author="Stéphan.Minko" context="LOCAL">
+        <sql>
+            <!-- CREATE USER 'ADMIN'-->
+            INSERT INTO data.users (id, created_at, created_by, last_updated_at, last_updated_by, version, password_hash, user_name) VALUES ('747792dc-ca41-47a2-8254-a1c551216cec', '2019-11-27
+            14:27:31.623000', '34952a21-2ce0-4501-9965-01b4460ac4a2', '2019-11-27 14:27:31.623000', '34952a21-2ce0-4501-9965-01b4460ac4a2', 0,
+            'eca5480678fce7d59efacbe9afb0abfd96149ce21585fab94aaea15dd244ac50', 'admin');
+
+            <!-- CREATE USER 'USER'-->
+            INSERT INTO data.users (id, created_at, created_by, last_updated_at, last_updated_by, version, password_hash, user_name) VALUES ('3929bca0-6e34-4a90-b00c-8546a139336a', '2019-11-27
+            14:32:35.652000', '56eb3eb0-ba04-40d5-9a6b-dfee23cb2db1', '2019-11-27 14:32:35.652000', '56eb3eb0-ba04-40d5-9a6b-dfee23cb2db1', 0,
+            '7ac1fae8e99e0f3ebc4a9a0b26d4ae32043144b44542aa4a2d92e443fd290c88', 'user');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

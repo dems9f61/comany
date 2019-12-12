@@ -5,71 +5,6 @@
 
     <changeSet id="InsertDefaultUsersWithRolesAndPermissions" author="Stéphan.Minko" context="LOCAL">
         <sql>
-            <!-- CREATE DEFAULT USERS-->
-            <!-- CREATE USER 'ADMIN'-->
-            INSERT INTO data.users (id, created_at, created_by, last_updated_at, last_updated_by, version, password_hash, user_name) VALUES ('747792dc-ca41-47a2-8254-a1c551216cec', '2019-11-27
-            14:27:31.623000', '34952a21-2ce0-4501-9965-01b4460ac4a2', '2019-11-27 14:27:31.623000', '34952a21-2ce0-4501-9965-01b4460ac4a2', 0,
-            'eca5480678fce7d59efacbe9afb0abfd96149ce21585fab94aaea15dd244ac50', 'admin');
-
-            <!-- CREATE USER 'USER'-->
-            INSERT INTO data.users (id, created_at, created_by, last_updated_at, last_updated_by, version, password_hash, user_name) VALUES ('3929bca0-6e34-4a90-b00c-8546a139336a', '2019-11-27
-            14:32:35.652000', '56eb3eb0-ba04-40d5-9a6b-dfee23cb2db1', '2019-11-27 14:32:35.652000', '56eb3eb0-ba04-40d5-9a6b-dfee23cb2db1', 0,
-            '7ac1fae8e99e0f3ebc4a9a0b26d4ae32043144b44542aa4a2d92e443fd290c88', 'user');
-
-            <!-- CREATE DEFAULT ROLES-->
-            <!-- CREATE ROLE 'USER'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('091d803c-49d1-42af-818a-796553b4d23b', '2019-11-27
-            15:33:28.932000', '2940dbd6-4aa9-4f72-8ff1-066489ddc390', '2019-11-27 15:33:28.932000', '2940dbd6-4aa9-4f72-8ff1-066489ddc390', 0, null, 'USER');
-
-            <!-- CREATE ROLE 'USER_MANAGER'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('bf55f775-f0e6-4ef9-b650-459ae100090a', '2019-11-27
-            15:36:59.619000', '627053b5-d479-4cc5-a382-486afde8d4a3', '2019-11-27 15:36:59.619000', '627053b5-d479-4cc5-a382-486afde8d4a3', 0, null, 'USER_MANAGER');
-
-            <!-- CREATE ROLE 'ROLE'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('74da9a27-5116-4f7c-bb57-f259a450cd5d', '2019-11-27
-            15:39:34.113000', '8ba8d4dd-f87b-489f-88eb-9fa933fe7df5', '2019-11-27 15:39:34.113000', '8ba8d4dd-f87b-489f-88eb-9fa933fe7df5', 0, null, 'ROLE');
-
-            <!-- CREATE ROLE 'ROLE_MANAGER'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('bbc26049-b500-4e56-899e-a0bea9223693', '2019-11-27
-            15:42:13.311000', '72cbdac3-b36c-4113-ac3d-9f61aa7c0c0a', '2019-11-27 15:42:13.311000', '72cbdac3-b36c-4113-ac3d-9f61aa7c0c0a', 0, null, 'ROLE_MANAGER');
-
-            <!-- CREATE ROLE 'PERMISSION'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('39eef09e-b2c1-47e5-953f-fde0c6e6b9cf', '2019-12-06
-            11:32:05.687000', '97990c8b-40b7-4c38-8126-3d997a3b90d5', '2019-12-06 11:32:05.687000', '97990c8b-40b7-4c38-8126-3d997a3b90d5', 0, null, 'PERMISSION');
-
-            <!-- CREATE ROLE 'PERMISSION_MANAGER'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('29c8a87b-0bde-4cf0-8c6a-aa5a843edbc4', '2019-12-06
-            11:33:20.090000', '3ac665db-4b8a-4625-a940-80d6078e4f1c', '2019-12-06 11:33:20.090000', '3ac665db-4b8a-4625-a940-80d6078e4f1c', 0, null, 'PERMISSION_MANAGER');
-
-            <!-- CREATE ROLE 'OAUTH_CLIENT'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('da697236-117c-42bb-8f0f-1cbaeba34eeb', '2019-11-27
-            16:37:06.924000', '980cfaf6-a85a-4729-a3fb-701645dc9245', '2019-11-27 16:37:06.924000', '980cfaf6-a85a-4729-a3fb-701645dc9245', 0, null, 'OAUTH_CLIENT');
-
-            <!-- CREATE ROLE 'OAUTH_CLIENT_MANAGER'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('f350caaf-279b-4fc5-9493-572ab6fe07f1', '2019-11-27
-            16:48:09.433000', '3248f84c-ba04-4b81-8347-a148fa497d29', '2019-11-27 16:48:09.433000', '3248f84c-ba04-4b81-8347-a148fa497d29', 0, null, 'OAUTH_CLIENT_MANAGER');
-
-            <!-- CREATE ROLE 'EMPLOYEE'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('8585e933-bc15-42a1-b069-51df7c01ea11', '2019-11-28
-            13:38:19.309000', 'e1e7b477-ae7b-4028-ae41-bdb6b233356c', '2019-11-28 13:38:19.309000', 'e1e7b477-ae7b-4028-ae41-bdb6b233356c', 0, null, 'EMPLOYEE');
-
-            <!-- CREATE ROLE 'EMPLOYEE_MANAGER'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('64adb0dd-fd7f-477e-8c38-b75df4acb64f', '2019-11-28
-            13:40:35.521000', 'a56c80fe-02f8-4079-8504-3e666e998a8c', '2019-11-28 13:40:35.521000', 'a56c80fe-02f8-4079-8504-3e666e998a8c', 0, null, 'EMPLOYEE_MANAGER');
-
-            <!-- CREATE ROLE 'DEPARTMENT'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('7226fe1e-23b1-4aa2-b330-2277e88bc137', '2019-11-28
-            13:43:15.215000', '85045648-6f53-4a7e-9107-525651b4eeab', '2019-11-28 13:43:15.215000', '85045648-6f53-4a7e-9107-525651b4eeab', 0, null, 'DEPARTMENT');
-
-            <!-- CREATE ROLE 'DEPARTMENT_MANAGER'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('302e82fe-95d3-4e52-8c21-fc3cdc63f25b', '2019-11-28
-            13:45:42.882000', 'd05eb95d-beef-4ae5-81f4-77dc730d98dd', '2019-11-28 13:45:42.882000', 'd05eb95d-beef-4ae5-81f4-77dc730d98dd', 0, null, 'DEPARTMENT_MANAGER');
-
-            <!-- CREATE ROLE 'EMPLOYEE_EVENT'-->
-            INSERT INTO data.roles (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('fba1bd57-4658-4a53-9013-d224c852906b', '2019-11-28
-            13:49:44.927000', '857d0e8c-7159-4240-aa69-a6a591bb074c', '2019-11-28 13:49:44.927000', '857d0e8c-7159-4240-aa69-a6a591bb074c', 0, null, 'EMPLOYEE_EVENT');
-
-            <!-- CREATE DEFAULT PERMISSIONS-->
             <!-- CREATE PERMISSION 'USER_READ'-->
             INSERT INTO data.permissions (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('482fa888-9f97-443d-b562-4b24e1f45c13', '2019-11-28
             13:57:18.396000', '58a59be7-3c39-4f65-9a07-5130e802006f', '2019-11-28 13:57:18.396000', '58a59be7-3c39-4f65-9a07-5130e802006f', 0, null, 'USER_READ');
@@ -130,6 +65,7 @@
             INSERT INTO data.permissions (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('55fe658d-807b-4f59-bccf-e9eb5b0ec868', '2019-11-28
             14:38:45.445000', '55339864-1d54-4613-ae84-9d964b80fabf', '2019-11-28 14:38:45.445000', '55339864-1d54-4613-ae84-9d964b80fabf', 0, null, 'USER_PERMISSION_DELETE');
 
+            <!-- CREATE PERMISSION 'OAUTH_CLIENT_READ'-->
             INSERT INTO data.permissions (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('fe6c3a05-0434-42c0-bdde-6824f637c0b2', '2019-11-28
             14:41:03.735000', 'b96c3f4b-b004-439e-bb87-738c7fdce3a2', '2019-11-28 14:41:03.735000', 'b96c3f4b-b004-439e-bb87-738c7fdce3a2', 0, null, 'OAUTH_CLIENT_READ');
 
@@ -192,17 +128,6 @@
             <!-- CREATE PERMISSION 'EMPLOYEE_EVENT_READ'-->
             INSERT INTO data.permissions (id, created_at, created_by, last_updated_at, last_updated_by, version, description, name) VALUES ('e346508b-4ab6-45e6-bf11-39d85714836d', '2019-11-28
             15:26:05.191000', '0ee9c892-2e3f-48ff-ab93-83cc3a9ac095', '2019-11-28 15:26:05.191000', '0ee9c892-2e3f-48ff-ab93-83cc3a9ac095', 0, null, 'EMPLOYEE_EVENT_READ');
-
-            <!-- ASSIGN DEFAULT PERMISSIONS TO DEFAULT ROLES -->
-            <!-- ASSIGN 'USER_READ <-> USER' -->
-            INSERT INTO data.role_permissions (id, created_at, created_by, last_updated_at, last_updated_by, version, permission_id, role_id) VALUES ('bed3b696-11e5-4d0b-b9ac-0f79a63191f5',
-            '2019-11-28 15:28:16.596000', '807bac2b-de7e-4fe4-ad1c-b8d4afe5a866', '2019-11-28 15:28:16.596000', '807bac2b-de7e-4fe4-ad1c-b8d4afe5a866', 0, '482fa888-9f97-443d-b562-4b24e1f45c13',
-            '091d803c-49d1-42af-818a-796553b4d23b');
-
-            <!-- ASSIGN 'USER_READ <-> USER_MANAGER' -->
-            INSERT INTO data.role_permissions (id, created_at, created_by, last_updated_at, last_updated_by, version, permission_id, role_id) VALUES ('84a7309c-1dc9-4a59-b4cc-522b8eba6349',
-            '2019-11-28 15:32:07.016000', '5ddbe411-7fc5-427a-b366-43ae16d8c8c9', '2019-11-28 15:32:07.016000', '5ddbe411-7fc5-427a-b366-43ae16d8c8c9', 0, '482fa888-9f97-443d-b562-4b24e1f45c13',
-            'bf55f775-f0e6-4ef9-b650-459ae100090a');
 
         </sql>
     </changeSet>

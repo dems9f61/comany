@@ -88,7 +88,7 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
 
         @Test
         @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns CREATED and the assigned permission ")
-        void givenRoleAndPermission_whenAssign_thenStatus200AndReturnRole() throws Exception
+        void givenRoleAndUser_whenAssignRoleToUser_thenStatus200AndReturnRole() throws Exception
         {
             // Arrange
             User savedUser = saveUser(userTestFactory.createDefault());
@@ -118,7 +118,7 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
 
         @Test
         @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown role ")
-        void givenUnknownRole_whenAssign_thenStatus404() throws Exception
+        void givenUnknownRole_whenAssignToAnyUser_thenStatus404() throws Exception
         {
             // Arrange
             User savedUser = saveUser(userTestFactory.createDefault());
@@ -134,7 +134,7 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
 
         @Test
         @DisplayName("POST: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown user ")
-        void givenUnknownUser_whenAssign_thenStatus404() throws Exception
+        void givenUnknownUser_whenAssignAnyRole_thenStatus404() throws Exception
         {
             // Arrange
             Role savedRole = saveRole(roleTestFactory.createDefault());
@@ -196,7 +196,7 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
 
         @Test
         @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns NO CONTENT  ")
-        void givenRoleAndPermission_whenUnassign_thenStatus204() throws Exception
+        void givenRoleAndUser_whenUnassignRoleFromUser_thenStatus204() throws Exception
         {
             // Arrange
             User savedUser = saveUser(userTestFactory.createDefault());
@@ -213,7 +213,7 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
 
         @Test
         @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown role ")
-        void givenUnknownRole_whenUnassign_thenStatus404() throws Exception
+        void givenUnknownRole_whenUnassignFromAnyUser_thenStatus404() throws Exception
         {
             // Arrange
             User savedUser = saveUser(userTestFactory.createDefault());
@@ -231,7 +231,7 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
 
         @Test
         @DisplayName("DELETE: 'http://.../users/{userId}/roles/{roleId}' returns BAD REQUEST on unknown user ")
-        void givenUnknownUser_whenUnassign_thenStatus404() throws Exception
+        void givenUnknownUser_whenUnassignAnyRole_thenStatus404() throws Exception
         {
             // Arrange
             Role savedRole = saveRole(roleTestFactory.createDefault());
@@ -248,12 +248,12 @@ class UserRoleControllerIntegrationTest extends IntegrationTestSuite
         }
     }
 
-    private User saveUser(User user) throws Exception
+    private User saveUser(User user)
     {
         return userService.create(user);
     }
 
-    private Role saveRole(Role role) throws Exception
+    private Role saveRole(Role role)
     {
         return roleService.create(role);
     }
