@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet id="InsertDefaultPermissionToRoleAssignments" author="Stéphan.Minko" context="LOCAL">
+    <changeSet id="InsertDefaultRoleToUserAssignments" author="Stéphan.Minko" context="LOCAL">
         <sql>
             <!-- ASSIGN ROLE 'USER' to USER 'USER'-->
             INSERT INTO data.user_roles (id, created_at, created_by, last_updated_at, last_updated_by, version, role_id, user_id) VALUES ('bc68930c-5520-454c-859b-f59a63363e3d', '2019-12-12
