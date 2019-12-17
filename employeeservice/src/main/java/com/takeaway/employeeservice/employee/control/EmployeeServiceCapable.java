@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,9 +34,16 @@ public interface EmployeeServiceCapable
     void update(@NonNull UUID id, @NonNull EmployeeParameter updateParameter);
 
     @Transactional(propagation = Propagation.SUPPORTS)
+    default List<Employee> findAll()
+    {
+        LOGGER.info("Finding employee");
+        return getRepository().findAll();
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
     default Employee findById(@NonNull UUID id)
     {
-        LOGGER.info("Finding employee by name [{}", id);
+        LOGGER.info("Finding employee by name [{}]", id);
         return findByIdOrElseThrow(id, ResourceNotFoundException.class);
     }
 

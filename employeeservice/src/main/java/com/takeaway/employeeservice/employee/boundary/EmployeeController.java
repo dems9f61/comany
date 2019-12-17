@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.HttpURLConnection;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * User: StMinko Date: 19.03.2019 Time: 23:18
@@ -83,6 +85,29 @@ public class EmployeeController
                 fullName != null ? fullName.getLastName() : null,
                 employee.getBirthday(),
                 employee.getDepartment().getDepartmentName());
+    }
+
+    @ApiOperation(value = "Retrieves all employees")
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    List<EmployeeResponse> findAllEmployees()
+    {
+        LOGGER.info("Retrieving all employees");
+        return employeeService.findAll()
+                              .stream()
+                              .map(employee -> {
+                                  Employee.FullName fullName = employee.getFullName();
+                                  String firstName = fullName != null ? fullName.getFirstName() : null;
+                                  String lastName = fullName != null ? fullName.getLastName() : null;
+                                  return new EmployeeResponse(employee.getId(),
+                                                              employee.getEmailAddress(),
+                                                              firstName,
+                                                              lastName,
+                                                              employee.getBirthday(),
+                                                              employee.getDepartment()
+                                                                      .getDepartmentName());
+                              })
+                              .collect(Collectors.toList());
     }
 
     @ApiOperation(value = "Updates an employee with the request values")

@@ -8,16 +8,21 @@ import com.takeaway.employeeservice.employee.entity.EmployeeRequest;
 import com.takeaway.employeeservice.employee.entity.EmployeeResponse;
 import com.takeaway.employeeservice.employee.entity.UsableDateFormat;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -181,7 +186,7 @@ class EmployeeRestTest extends RestTestSuite
     {
         @Test
         @DisplayName("GET: 'http://.../employees/{id}' returns NOT FOUND if the specified uuid doesn't exist ")
-        void givenUnknownUuid_whenFindEmployeeByUuid_thenStatus404()
+        void givenUnknownId_whenFindEmployeeById_thenStatus404()
         {
             // Arrange
             UUID wrongUuid = UUID.randomUUID();
@@ -217,15 +222,47 @@ class EmployeeRestTest extends RestTestSuite
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertThat(responseEntity.getBody()).isEqualTo(persistedEmployee);
         }
+
+        @Test
+        @DisplayName("GET: 'http://.../employees' returns OK")
+        void givenEmployees_whenFindEmployeeById_thenStatus200()
+        {
+            // Arrange
+            List<EmployeeResponse> expected = new LinkedList<>();
+            IntStream.range(0, RandomUtils.nextInt(10, 15))
+                     .forEach(value -> {
+                         String departmentName = RandomStringUtils.randomAlphabetic(23);
+                         createAndPersistDepartment(departmentName);
+                         EmployeeRequest employeeRequest = employeeRequestTestFactory.builder()
+                                                                                     .departmentName(departmentName)
+                                                                                     .create();
+                         expected.add(createAndPersistEmployee(employeeRequest));
+                     });
+
+            // Act
+            ResponseEntity<List<EmployeeResponse>> responseEntity = testRestTemplate.exchange(String.format("%s", EmployeeController.BASE_URI),
+                                                                                              HttpMethod.GET,
+                                                                                              new HttpEntity<>(defaultHttpHeaders()),
+                                                                                              new ParameterizedTypeReference<List<EmployeeResponse>>() {});
+
+            // Assert
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            List<EmployeeResponse> founds = responseEntity.getBody();
+            assertThat(founds).isNotNull()
+                              .isNotEmpty()
+                              .hasSize(expected.size());
+            founds.forEach(found -> assertThat(expected.stream()
+                                                       .anyMatch(value -> value.equals(found))).isTrue());
+        }
     }
 
     @Nested
     @DisplayName("when partial update")
-    class WhenPartialUpdate
+    class WhenUpdate
     {
         @Test
         @DisplayName("PATCH: 'http://.../employees/{id}' returns NOT FOUND if the specified employee doesn't exist ")
-        void givenUnknownEmployee_whenUpdateEmployee_thenStatus404()
+        void givenUnknownEmployee_whenPartialUpdateEmployee_thenStatus404()
         {
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
@@ -246,7 +283,7 @@ class EmployeeRestTest extends RestTestSuite
 
         @Test
         @DisplayName("PATCH: 'http://.../employees/{id}' returns BAD REQUEST if the specified department doesn't exist ")
-        void givenUnknownDepartment_whenUpdateEmployee_thenStatus404()
+        void givenUnknownDepartment_whenPartialUpdateEmployee_thenStatus404()
         {
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);
@@ -271,7 +308,7 @@ class EmployeeRestTest extends RestTestSuite
 
         @Test
         @DisplayName("PATCH: 'http://.../employees/{id} returns NO CONTENT if the specified parameters are valid")
-        void givenValidParameters_whenUpdateEmployee_thenStatus204()
+        void givenValidParameters_whenPartialUpdateEmployee_thenStatus204()
         {
             // Arrange
             String firstDepartmentName = RandomStringUtils.randomAlphabetic(23);
@@ -306,7 +343,7 @@ class EmployeeRestTest extends RestTestSuite
 
         @Test
         @DisplayName("PATCH: 'http://.../employees/{id} returns NO CONTENT on only updating birthday")
-        void givenNewBirthDay_whenUpdateEmployee_thenStatus204()
+        void givenNewBirthDay_whenPartialUpdateEmployee_thenStatus204()
         {
             // Arrange
             String departmentName = RandomStringUtils.randomAlphabetic(23);

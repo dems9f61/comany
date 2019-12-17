@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -83,6 +84,22 @@ class EmployeeControllerTest extends UnitTestSuite
             // Act / Assert
             assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> employeeController.findEmployee(id));
         }
+
+        @Test
+        @DisplayName("Finding an all employees succeeds")
+        void whenFindAll_thenSucceed()
+        {
+            // Arrange
+            doReturn(Collections.emptyList()).when(employeeService)
+                                             .findAll();
+
+            // Act
+            employeeController.findAllEmployees();
+
+            // Assert
+            verify(employeeService).findAll();
+        }
+
 
         @Test
         @DisplayName("Finding an employee with a valid id succeeds")
