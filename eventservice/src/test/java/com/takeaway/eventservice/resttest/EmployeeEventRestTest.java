@@ -2,7 +2,6 @@ package com.takeaway.eventservice.resttest;
 
 import com.takeaway.eventservice.RestTestSuite;
 import com.takeaway.eventservice.employee.crud_management.boundary.EmployeeEventController;
-import com.takeaway.eventservice.employee.crud_management.entity.ApiResponsePage;
 import com.takeaway.eventservice.employee.crud_management.entity.EmployeeEventResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -40,10 +39,12 @@ class EmployeeEventRestTest extends RestTestSuite
             receiveRandomMessageFor(id);
 
             // Act
-            ResponseEntity<ApiResponsePage<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s", EmployeeEventController.BASE_URI, id),
-                            HttpMethod.GET,
-                            new HttpEntity<>(defaultHttpHeaders()),
-                            new ParameterizedTypeReference<ApiResponsePage<EmployeeEventResponse>>() {});
+            ResponseEntity<Page<EmployeeEventResponse>> responseEntity = testRestTemplate.exchange(String.format("%s/%s",
+                                                                                                                 EmployeeEventController.BASE_URI,
+                                                                                                                 id),
+                                                                                                   HttpMethod.GET,
+                                                                                                   new HttpEntity<>(defaultHttpHeaders()),
+                                                                                                   new ParameterizedTypeReference<Page<EmployeeEventResponse>>() {});
 
             // Assert
             assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

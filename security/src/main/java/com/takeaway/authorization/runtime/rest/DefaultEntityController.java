@@ -6,6 +6,7 @@ import com.takeaway.authorization.runtime.persistence.AbstractEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,9 +37,11 @@ public class DefaultEntityController<SERVICE extends EntityService<ENTITY, ID>, 
     // ===========================  public  Methods  =========================
 
     @Override
-    public final ResponsePage<ENTITY> findAll(@NotNull Pageable pageable)
+    public final Page<ENTITY> findAll(@NotNull Pageable pageable)
     {
-        LOGGER.info("Calling {}.findAll", this.getClass().getSimpleName());
+        LOGGER.info("Calling {}.findAll",
+                    this.getClass()
+                        .getSimpleName());
         return getService().findAll(pageable);
     }
 

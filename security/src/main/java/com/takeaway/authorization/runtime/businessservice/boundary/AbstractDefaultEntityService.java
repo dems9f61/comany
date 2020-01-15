@@ -5,7 +5,6 @@ import com.takeaway.authorization.runtime.errorhandling.entity.ResourceNotFoundE
 import com.takeaway.authorization.runtime.persistence.AbstractEntity;
 import com.takeaway.authorization.runtime.persistence.JpaSpecificationRepository;
 import com.takeaway.authorization.runtime.rest.DataView;
-import com.takeaway.authorization.runtime.rest.ResponsePage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -50,11 +49,10 @@ public abstract class AbstractDefaultEntityService<REPOSITORY extends JpaSpecifi
     // ===========================  public  Methods  =========================
 
     @Override
-    public ResponsePage<ENTITY> findAll(Pageable pageable)
+    public Page<ENTITY> findAll(Pageable pageable)
     {
         LOGGER.info("{}.findAll ( {} )", getClass().getSimpleName(), pageable);
-        Page<ENTITY> all = repository.findAll(pageable);
-        return new ResponsePage<>(all.getContent(), pageable, all.getTotalElements());
+        return repository.findAll(pageable);
     }
 
     @Override

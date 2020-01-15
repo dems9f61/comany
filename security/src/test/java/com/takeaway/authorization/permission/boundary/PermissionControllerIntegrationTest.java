@@ -6,7 +6,6 @@ import com.takeaway.authorization.permission.control.PermissionService;
 import com.takeaway.authorization.permission.entity.Permission;
 import com.takeaway.authorization.runtime.auditing.entity.AuditTrail;
 import com.takeaway.authorization.runtime.rest.DataView;
-import com.takeaway.authorization.runtime.rest.ResponsePage;
 import com.takeaway.authorization.runtime.security.boundary.AccessTokenParameter;
 import org.apache.commons.lang3.RandomUtils;
 import org.hibernate.envers.RevisionType;
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -98,8 +98,9 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
                             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                             .andExpect(jsonPath("$", notNullValue()))
                             .andReturn();
-            String contentAsString = mvcResult.getResponse().getContentAsString();
-            ResponsePage<Permission> responsePage = objectMapper.readValue(contentAsString, new TypeReference<ResponsePage<Permission>>() {});
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Page<Permission> responsePage = objectMapper.readValue(contentAsString, new TypeReference<Page<Permission>>() {});
 
             assertThat(responsePage).isNotNull();
             assertThat(responsePage.getTotalElements()).isEqualTo(savedPermissions.size());
@@ -481,25 +482,26 @@ class PermissionControllerIntegrationTest extends IntegrationTestSuite
             uri = String.format("%s/{id}/auditTrails", PermissionController.BASE_URI);
 
             // Act / Assert
-            MvcResult revisionResult = mockMvc.perform(get(uri, created.getId())
-                                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
-                                            .contentType(APPLICATION_JSON_UTF8))
-                            .andExpect(status().isOk())
-                            .andExpect(jsonPath("$", notNullValue()))
-                            .andReturn();
-            String revisionResultAsString = revisionResult.getResponse().getContentAsString();
-            ResponsePage<AuditTrail<UUID, Permission>> responsePage = objectMapper.readValue(revisionResultAsString,
-                            new TypeReference<ResponsePage<AuditTrail<UUID, Permission>>>() {});
-            assertThat(responsePage).isNotNull().hasSize(3);
+            MvcResult revisionResult = mockMvc.perform(get(uri, created.getId()).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken())
+                                                                                .contentType(APPLICATION_JSON_UTF8))
+                                              .andExpect(status().isOk())
+                                              .andExpect(jsonPath("$", notNullValue()))
+                                              .andReturn();
+            String revisionResultAsString = revisionResult.getResponse()
+                                                          .getContentAsString();
+            Page<AuditTrail<UUID, Permission>> responsePage = objectMapper.readValue(revisionResultAsString,
+                                                                                     new TypeReference<Page<AuditTrail<UUID, Permission>>>() {});
+            assertThat(responsePage).isNotNull()
+                                    .hasSize(3);
 
             responsePage.forEach(page -> {
-                        RevisionType revisionType = page.getRevisionType();
-                        Permission entity = page.getEntity();
-                        switch (revisionType)
-                        {
-                            case ADD:
-                                {
-                                    assertThat(entity.getId()).isEqualTo(created.getId());
+                RevisionType revisionType = page.getRevisionType();
+                Permission entity = page.getEntity();
+                switch (revisionType)
+                {
+                    case ADD:
+                    {
+                        assertThat(entity.getId()).isEqualTo(created.getId());
                                     assertThat(entity.getName()).isEqualTo(created.getName());
                                     assertThat(entity.getDescription()).isEqualTo(created.getDescription());
                                     assertThat(entity.getLastUpdatedAt()).isEqualTo(created.getLastUpdatedAt());

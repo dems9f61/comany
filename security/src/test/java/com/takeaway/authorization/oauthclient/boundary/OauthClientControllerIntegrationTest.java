@@ -5,7 +5,6 @@ import com.takeaway.authorization.IntegrationTestSuite;
 import com.takeaway.authorization.oauthclient.control.OauthClientService;
 import com.takeaway.authorization.oauthclient.entity.OauthClient;
 import com.takeaway.authorization.runtime.rest.DataView;
-import com.takeaway.authorization.runtime.rest.ResponsePage;
 import com.takeaway.authorization.runtime.security.boundary.AccessTokenParameter;
 import com.takeaway.authorization.user.entity.User;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -97,8 +97,9 @@ class OauthClientControllerIntegrationTest extends IntegrationTestSuite
                             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                             .andExpect(jsonPath("$", notNullValue()))
                             .andReturn();
-            String contentAsString = mvcResult.getResponse().getContentAsString();
-            ResponsePage<User> responsePage = objectMapper.readValue(contentAsString, new TypeReference<ResponsePage<User>>() {});
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Page<User> responsePage = objectMapper.readValue(contentAsString, new TypeReference<Page<User>>() {});
             assertThat(responsePage).isNotNull();
             assertThat(responsePage.getTotalElements()).isEqualTo(savedOauthClients.size());
             assertThat(savedOauthClients.stream()

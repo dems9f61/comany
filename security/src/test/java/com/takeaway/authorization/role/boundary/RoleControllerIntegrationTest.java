@@ -6,7 +6,6 @@ import com.takeaway.authorization.role.control.RoleService;
 import com.takeaway.authorization.role.entity.Role;
 import com.takeaway.authorization.runtime.auditing.entity.AuditTrail;
 import com.takeaway.authorization.runtime.rest.DataView;
-import com.takeaway.authorization.runtime.rest.ResponsePage;
 import com.takeaway.authorization.runtime.security.boundary.AccessTokenParameter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.envers.RevisionType;
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -100,8 +100,9 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                             .andExpect(jsonPath("$", notNullValue()))
                             .andReturn();
-            String contentAsString = mvcResult.getResponse().getContentAsString();
-            ResponsePage<Role> responsePage = objectMapper.readValue(contentAsString, new TypeReference<ResponsePage<Role>>() {});
+            String contentAsString = mvcResult.getResponse()
+                                              .getContentAsString();
+            Page<Role> responsePage = objectMapper.readValue(contentAsString, new TypeReference<Page<Role>>() {});
             assertThat(responsePage).isNotNull();
             assertThat(responsePage.getTotalElements()).isEqualTo(savedRoles.size());
             assertThat(savedRoles.stream()
@@ -807,8 +808,10 @@ class RoleControllerIntegrationTest extends IntegrationTestSuite
                             .andExpect(status().isOk())
                             .andExpect(jsonPath("$", notNullValue()))
                             .andReturn();
-            String revisionResultAsString = revisionResult.getResponse().getContentAsString();
-            ResponsePage<AuditTrail<UUID, Role>> responsePage = objectMapper.readValue(revisionResultAsString, new TypeReference<ResponsePage<AuditTrail<UUID, Role>>>() {});
+            String revisionResultAsString = revisionResult.getResponse()
+                                                          .getContentAsString();
+            Page<AuditTrail<UUID, Role>> responsePage = objectMapper.readValue(revisionResultAsString,
+                                                                               new TypeReference<Page<AuditTrail<UUID, Role>>>() {});
             assertThat(responsePage).isNotNull().hasSize(3);
 
             responsePage.forEach(page -> {

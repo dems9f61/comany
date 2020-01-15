@@ -1,7 +1,6 @@
 package com.takeaway.eventservice.employee.crud_management.boundary;
 
 import com.takeaway.eventservice.employee.crud_management.control.EmployeeEventService;
-import com.takeaway.eventservice.employee.crud_management.entity.ApiResponsePage;
 import com.takeaway.eventservice.employee.crud_management.entity.EmployeeEventResponse;
 import com.takeaway.eventservice.runtime.rest.ApiVersions;
 import io.swagger.annotations.Api;
@@ -47,10 +46,11 @@ public class EmployeeEventController
     @ApiOperation(value = "Retrieves all events related to an employee id in ascending order")
     @GetMapping("/{employeeId}")
     @ResponseStatus(HttpStatus.OK)
-    ApiResponsePage<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("employeeId") UUID employeeId, @NotNull @PageableDefault(50) Pageable pageable)
+    Page<EmployeeEventResponse> findByUuidOrderByCreatedAtAsc(@NotNull @PathVariable("employeeId") UUID employeeId,
+                                                              @NotNull @PageableDefault(50) Pageable pageable)
     {
-        Page<EmployeeEventResponse> employeeEventResponses = employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, pageable).map(EmployeeEventResponse::new);
-        return new ApiResponsePage<>(employeeEventResponses.getContent(), pageable, employeeEventResponses.getTotalElements());
+        return employeeEventService.findByEmployeeIdOrderByCreatedAtAsc(employeeId, pageable)
+                                   .map(EmployeeEventResponse::new);
     }
 
     // =================  protected/package local  Methods ===================

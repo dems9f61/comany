@@ -6,7 +6,6 @@ import com.takeaway.authorization.runtime.auditing.entity.AuditTrail;
 import com.takeaway.authorization.runtime.rest.ApiVersions;
 import com.takeaway.authorization.runtime.rest.DataView;
 import com.takeaway.authorization.runtime.rest.DefaultAuditedEntityController;
-import com.takeaway.authorization.runtime.rest.ResponsePage;
 import com.takeaway.authorization.user.control.UserService;
 import com.takeaway.authorization.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +84,7 @@ public class UserController
     @PreAuthorize("hasRole('USER_AUDIT_TRAIL') and #oauth2.hasScope('read')")
     @GetMapping("/{id}/auditTrails")
     @ResponseStatus(HttpStatus.OK)
-    ResponsePage<AuditTrail<UUID, User>> findAuditTrails(@PathVariable @NotNull UUID id, @PageableDefault(50) @NotNull Pageable pageable)
+    Page<AuditTrail<UUID, User>> findAuditTrails(@PathVariable @NotNull UUID id, @PageableDefault(50) @NotNull Pageable pageable)
     {
         return controllerDelegator.findAuditTrails(id, pageable, User.class);
     }
@@ -95,8 +94,8 @@ public class UserController
     @ResponseStatus(HttpStatus.OK)
     Page<Permission> findAllPermissionByUser(@NotNull @PathVariable UUID id, @NotNull @PageableDefault(50) Pageable pageable)
     {
-        Page<Permission> permissions = controllerDelegator.getService().findAllPermissionByUser(id, pageable);
-        return new ResponsePage<>(permissions.getContent(), pageable, permissions.getTotalElements());
+        return controllerDelegator.getService()
+                                  .findAllPermissionByUser(id, pageable);
     }
 
     @PreAuthorize("hasRole('USER_CREATE') and #oauth2.hasScope('write')")

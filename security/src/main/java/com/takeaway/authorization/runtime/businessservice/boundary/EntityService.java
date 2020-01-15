@@ -2,7 +2,7 @@ package com.takeaway.authorization.runtime.businessservice.boundary;
 
 import com.takeaway.authorization.runtime.errorhandling.entity.ResourceNotFoundException;
 import com.takeaway.authorization.runtime.rest.DataView;
-import com.takeaway.authorization.runtime.rest.ResponsePage;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ public interface EntityService<ENTITY, ID>
     // ==============================  Methods  ==============================
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    ResponsePage<ENTITY> findAll(Pageable pageable);
+    Page<ENTITY> findAll(Pageable pageable);
 
     /**
      * Find an Entity by its Id. Raise a ResourceNotFoundException if the entity cannot be found by its Id.

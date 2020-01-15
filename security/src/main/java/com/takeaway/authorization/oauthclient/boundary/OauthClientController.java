@@ -7,7 +7,6 @@ import com.takeaway.authorization.runtime.auditing.entity.AuditTrail;
 import com.takeaway.authorization.runtime.rest.ApiVersions;
 import com.takeaway.authorization.runtime.rest.DataView;
 import com.takeaway.authorization.runtime.rest.DefaultAuditedEntityController;
-import com.takeaway.authorization.runtime.rest.ResponsePage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -84,7 +83,7 @@ public class OauthClientController
     @PreAuthorize("hasRole('OAUTH_CLIENT_AUDIT_TRAIL') and #oauth2.hasScope('read')")
     @GetMapping("/{id}/auditTrails")
     @ResponseStatus(HttpStatus.OK)
-    ResponsePage<AuditTrail<UUID, OauthClient>> findAuditTrails(@PathVariable @NotNull UUID id, @PageableDefault(50) @NotNull Pageable pageable)
+    Page<AuditTrail<UUID, OauthClient>> findAuditTrails(@PathVariable @NotNull UUID id, @PageableDefault(50) @NotNull Pageable pageable)
     {
         return controllerDelegator.findAuditTrails(id, pageable, OauthClient.class);
     }

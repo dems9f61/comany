@@ -23,7 +23,7 @@ public interface DefaultAuditedEntityControllerCapable<ENTITY extends AuditedEnt
 
     Page<Revision<Long, ENTITY>> findRevisions(@NotNull ID id, @NotNull Pageable pageable);
 
-    ResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable, @NotNull Class<? extends ENTITY> entityClass);
+    Page<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable, @NotNull Class<? extends ENTITY> entityClass);
 
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================

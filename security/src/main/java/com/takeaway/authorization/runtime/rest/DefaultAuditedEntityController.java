@@ -4,6 +4,7 @@ import com.takeaway.authorization.runtime.auditing.boundary.AuditedEntityService
 import com.takeaway.authorization.runtime.auditing.entity.AuditTrail;
 import com.takeaway.authorization.runtime.persistence.AuditedEntity;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.history.Revision;
 import org.springframework.validation.annotation.Validated;
@@ -33,17 +34,16 @@ public class DefaultAuditedEntityController<SERVICE extends AuditedEntityService
     // ===========================  public  Methods  =========================
 
     @Override
-    public ResponsePage<Revision<Long, ENTITY>> findRevisions(@NotNull ID id, @NotNull Pageable pageable)
+    public Page<Revision<Long, ENTITY>> findRevisions(@NotNull ID id, @NotNull Pageable pageable)
     {
-        Page<Revision<Long, ENTITY>> history = getService().findHistory(id, pageable);
-        return new ResponsePage<>(history.getContent(), pageable, history.getTotalElements());
+        return getService().findHistory(id, pageable);
     }
 
     @Override
-    public ResponsePage<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable, @NotNull Class<? extends ENTITY> entityClass)
+    public Page<AuditTrail<ID, ENTITY>> findAuditTrails(@NotNull ID id, @NotNull Pageable pageable, @NotNull Class<? extends ENTITY> entityClass)
     {
         List<AuditTrail<ID, ENTITY>> auditTrails = getService().findAuditTrails(id, entityClass);
-        return new ResponsePage<>(auditTrails, pageable, auditTrails.size());
+        return new PageImpl<>(auditTrails, pageable, auditTrails.size());
     }
 
     // =================  protected/package local  Methods ===================
