@@ -19,64 +19,64 @@ import java.util.List;
  */
 class PageDeserializer extends JsonDeserializer<Page<?>> implements ContextualDeserializer
 {
-    private static final String   CONTENT        = "content";
+    private static final String CONTENT        = "content";
 
-    private static final String   NUMBER         = "number";
+    private static final String NUMBER         = "number";
 
-    private static final String   SIZE           = "size";
+    private static final String SIZE           = "size";
 
-    private static final String   TOTAL_ELEMENTS = "totalElements";
+    private static final String TOTAL_ELEMENTS = "totalElements";
 
-    private              JavaType valueType;
+    private JavaType valueType;
 
     @Override
-    public Page<?> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
+    public Page<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException
     {
-        final CollectionType valuesListType = ctxt.getTypeFactory()
-                                                  .constructCollectionType(List.class, valueType);
+        final CollectionType valuesListType = deserializationContext.getTypeFactory()
+                                                                    .constructCollectionType(List.class, valueType);
 
         List<?> list = new ArrayList<>();
         int pageNumber = 0;
         int pageSize = 0;
         long total = 0;
-        if (p.isExpectedStartObjectToken())
+        if (jsonParser.isExpectedStartObjectToken())
         {
-            p.nextToken();
-            if (p.hasTokenId(JsonTokenId.ID_FIELD_NAME))
+            jsonParser.nextToken();
+            if (jsonParser.hasTokenId(JsonTokenId.ID_FIELD_NAME))
             {
-                String propName = p.getCurrentName();
+                String propName = jsonParser.getCurrentName();
                 do
                 {
-                    p.nextToken();
+                    jsonParser.nextToken();
                     switch (propName)
                     {
                         case CONTENT:
-                            list = ctxt.readValue(p, valuesListType);
+                            list = deserializationContext.readValue(jsonParser, valuesListType);
                             break;
                         case NUMBER:
-                            pageNumber = ctxt.readValue(p, Integer.class);
+                            pageNumber = deserializationContext.readValue(jsonParser, Integer.class);
                             break;
                         case SIZE:
-                            pageSize = ctxt.readValue(p, Integer.class);
+                            pageSize = deserializationContext.readValue(jsonParser, Integer.class);
                             break;
                         case TOTAL_ELEMENTS:
-                            total = ctxt.readValue(p, Long.class);
+                            total = deserializationContext.readValue(jsonParser, Long.class);
                             break;
                         default:
-                            p.skipChildren();
+                            jsonParser.skipChildren();
                             break;
                     }
                 }
-                while (((propName = p.nextFieldName())) != null);
+                while (((propName = jsonParser.nextFieldName())) != null);
             }
             else
             {
-                ctxt.handleUnexpectedToken(handledType(), p);
+                deserializationContext.handleUnexpectedToken(handledType(), jsonParser);
             }
         }
         else
         {
-            ctxt.handleUnexpectedToken(handledType(), p);
+            deserializationContext.handleUnexpectedToken(handledType(), jsonParser);
         }
 
         // Note that Sort field of Page is ignored here.
