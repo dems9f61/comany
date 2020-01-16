@@ -59,7 +59,7 @@ public class UserController
     @PreAuthorize("hasRole('USER_READ') and #oauth2.hasScope('read')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    Page<User> findAll(@NotNull Pageable pageable)
+    Page<User> findAll(@NotNull @PageableDefault(50) Pageable pageable)
     {
         return controllerDelegator.findAll(pageable);
     }

@@ -100,7 +100,7 @@ class UserControllerIntegrationTest extends IntegrationTestSuite
         {
             // Arrange
             List<User> savedUsers = saveRandomUsers(4);
-            String uri = String.format("%s", UserController.BASE_URI);
+            String uri = String.format("%s?page=%d&size=%d", UserController.BASE_URI, 0, 20);
 
             // Act / Assert
             MvcResult mvcResult = mockMvc.perform(get(uri).header(HttpHeaders.AUTHORIZATION, "Bearer " + obtainAccessToken()).contentType(APPLICATION_JSON_UTF8))
