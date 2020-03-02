@@ -31,7 +31,20 @@ public class EmployeeMessageReceiver
     public void receiveEmployeeMessage(@NonNull EmployeeMessage employeeMessage)
     {
         LOGGER.info("###### Received Message on employee ##### [{}]", employeeMessage);
-        eventPublisher.publishEvent(new EmployeeEvent(employeeMessage.getEmployee(), employeeMessage.getEventType()));
+        // Catch any Exception to have the Message marked as processed on the Message Broker
+        // Avoids infinite Loops on Message Processing
+        try
+        {
+            LOGGER.info("Publishing pdf engine delivery [{}]", employeeMessage);
+            eventPublisher.publishEvent(new EmployeeEvent(employeeMessage.getEmployee(), employeeMessage.getEventType()));
+        }
+        catch (Exception caught)
+        {
+            LOGGER.error("An error occurred during EmployeeMessageReceiver.receiveEmployeeMessage ( [{}] ). Error was: {}",
+                         employeeMessage,
+                         caught.getMessage(),
+                         caught);
+        }
     }
 
     // =================  protected/package local  Methods ===================
