@@ -35,17 +35,3 @@ public class JsonDateDeSerializer extends JsonDeserializer<ZonedDateTime>
     // ============================  Inner Classes  ==========================
     // ============================  End of class  ===========================
 }
-
-// class Test
-// {
-//  public static void main(String[] args)
-//  {
-//    java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//    java.time.LocalDate localDate = java.time.LocalDate.parse("2011-12-03", dateFormatter);
-//    ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneOffset.UTC);
-//    System.out.println("zonedDateTime = " + zonedDateTime);
-//
-//    System.out.println(zonedDateTime.toLocalDate()
-//                                    .toString());
-//  }
-// }
