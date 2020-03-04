@@ -31,10 +31,7 @@ public class Employee extends AbstractEntity<UUID>
 {
     // =========================== Class Variables ===========================
     // =============================  Variables  =============================
-    @Getter(onMethod =
-                    @__(
-                            @Override
-                            ))
+    @Getter(onMethod = @__(@Override))
     @Id
     private UUID id;
 
