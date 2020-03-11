@@ -2,7 +2,10 @@ package com.takeaway.authorization.runtime.config;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonTokenId;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.springframework.data.domain.Page;
@@ -85,7 +88,7 @@ class PageDeserializer extends JsonDeserializer<Page<?>> implements ContextualDe
     }
 
     @Override
-    public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException
+    public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
     {
         // This is the Page actually
         final JavaType wrapperType = ctxt.getContextualType();
