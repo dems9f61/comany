@@ -58,6 +58,7 @@ public class OauthClientController
     @PreAuthorize("hasRole('OAUTH_CLIENT_READ') and #oauth2.hasScope('read')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
     Page<OauthClient> findAll(@NotNull Pageable pageable)
     {
         return controllerDelegator.findAll(pageable);
@@ -75,6 +76,7 @@ public class OauthClientController
     @PreAuthorize("hasRole('OAUTH_CLIENT_AUDIT_TRAIL') and #oauth2.hasScope('read')")
     @GetMapping("/{id}/revisions")
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
     Page<Revision<Long, OauthClient>> findRevisions(@PathVariable @NotNull UUID id, @NotNull @PageableDefault(50) Pageable pageable)
     {
         return controllerDelegator.findRevisions(id, pageable);
@@ -83,6 +85,7 @@ public class OauthClientController
     @PreAuthorize("hasRole('OAUTH_CLIENT_AUDIT_TRAIL') and #oauth2.hasScope('read')")
     @GetMapping("/{id}/auditTrails")
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
     Page<AuditTrail<UUID, OauthClient>> findAuditTrails(@PathVariable @NotNull UUID id, @PageableDefault(50) @NotNull Pageable pageable)
     {
         return controllerDelegator.findAuditTrails(id, pageable, OauthClient.class);

@@ -2,6 +2,7 @@ package com.takeaway.authorization.oauthclient.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.Sets;
 import com.takeaway.authorization.runtime.persistence.AuditedUUIDEntity;
 import com.takeaway.authorization.runtime.rest.DataView;
@@ -158,9 +159,10 @@ public class OauthClient extends AuditedUUIDEntity implements ClientDetails
         return clientScoped;
     }
 
+    @Override
     public Set<String> getScope()
     {
-        return Sets.newHashSet(clientScope.split(","));
+        return clientScope == null ? Collections.emptySet() : Sets.newHashSet(clientScope.split(","));
     }
 
     public String getClientAuthorities()
@@ -168,23 +170,27 @@ public class OauthClient extends AuditedUUIDEntity implements ClientDetails
         return clientAuthorities;
     }
 
+    @Override
     public Set<String> getAuthorizedGrantTypes()
     {
         return Sets.newHashSet(clientAuthorizedGrantTypes.split(","));
     }
 
+    @Override
     public Set<String> getRegisteredRedirectUri()
     {
         return Sets.newHashSet(clientRegisteredRedirectUri);
     }
 
+    @JsonDeserialize(using = CustomAuthorityDeserializer.class)
+    @Override
     public Collection<GrantedAuthority> getAuthorities()
     {
         if (clientAuthorities != null)
         {
             return Arrays.stream(clientAuthorities.split(","))
-                        .map(authority -> new SimpleGrantedAuthority(!authority.startsWith("ROLE_") ? "ROLE_" + authority : authority))
-                        .collect(Collectors.toSet());
+                         .map(authority -> new SimpleGrantedAuthority(!authority.startsWith("ROLE_") ? "ROLE_" + authority : authority))
+                         .collect(Collectors.toSet());
         }
         return Collections.emptySet();
     }

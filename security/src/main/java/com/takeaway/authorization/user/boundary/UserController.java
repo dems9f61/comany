@@ -59,6 +59,7 @@ public class UserController
     @PreAuthorize("hasRole('USER_READ') and #oauth2.hasScope('read')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
     Page<User> findAll(@NotNull @PageableDefault(50) Pageable pageable)
     {
         return controllerDelegator.findAll(pageable);
@@ -76,6 +77,7 @@ public class UserController
     @PreAuthorize("hasRole('USER_AUDIT_TRAIL') and #oauth2.hasScope('read')")
     @GetMapping("/{id}/revisions")
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
     Page<Revision<Long, User>> findRevisions(@PathVariable @NotNull UUID id, @NotNull @PageableDefault(50) Pageable pageable)
     {
         return controllerDelegator.findRevisions(id, pageable);
@@ -84,6 +86,7 @@ public class UserController
     @PreAuthorize("hasRole('USER_AUDIT_TRAIL') and #oauth2.hasScope('read')")
     @GetMapping("/{id}/auditTrails")
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
     Page<AuditTrail<UUID, User>> findAuditTrails(@PathVariable @NotNull UUID id, @PageableDefault(50) @NotNull Pageable pageable)
     {
         return controllerDelegator.findAuditTrails(id, pageable, User.class);
@@ -92,6 +95,7 @@ public class UserController
     @PreAuthorize("hasRole('USER_READ') and #oauth2.hasScope('read')")
     @GetMapping("/{id}/permissions")
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(DataView.GET.class)
     Page<Permission> findAllPermissionByUser(@NotNull @PathVariable UUID id, @NotNull @PageableDefault(50) Pageable pageable)
     {
         return controllerDelegator.getService()
