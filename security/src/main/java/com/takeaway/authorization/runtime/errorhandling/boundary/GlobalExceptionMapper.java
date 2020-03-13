@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
@@ -77,7 +78,7 @@ public class GlobalExceptionMapper
     ResponseEntity<String> handleNotReadableException(HttpMessageNotReadableException notReadableException)
     {
         Throwable mostSpecificCause = notReadableException.getMostSpecificCause();
-        String errorMessage = mostSpecificCause != null ? mostSpecificCause.getMessage() : notReadableException.getMessage();
+        String errorMessage = mostSpecificCause.getMessage();
         return handleBadRequestException(new BadRequestException(errorMessage));
     }
 
@@ -148,6 +149,12 @@ public class GlobalExceptionMapper
         if (mostSpecificCause instanceof ConstraintViolationException)
         {
             return handleConstraintViolationException((ConstraintViolationException) mostSpecificCause);
+        }
+        if (mostSpecificCause instanceof SQLIntegrityConstraintViolationException)
+        {
+            SQLIntegrityConstraintViolationException sqlIntegrityConstraintViolationException = (SQLIntegrityConstraintViolationException) mostSpecificCause;
+            return handleBadRequestException(new BadRequestException(sqlIntegrityConstraintViolationException.getLocalizedMessage(),
+                                                                     sqlIntegrityConstraintViolationException));
         }
         if (mostSpecificCause instanceof IllegalArgumentException)
         {

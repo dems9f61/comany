@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
@@ -146,6 +147,13 @@ public class GlobalExceptionMapper
         {
             return handleConstraintViolationException((ConstraintViolationException) mostSpecificCause);
         }
+        if (mostSpecificCause instanceof SQLIntegrityConstraintViolationException)
+        {
+            SQLIntegrityConstraintViolationException sqlIntegrityConstraintViolationException = (SQLIntegrityConstraintViolationException) mostSpecificCause;
+            return handleBadRequestException(new BadRequestException(sqlIntegrityConstraintViolationException.getLocalizedMessage(),
+                                                                     sqlIntegrityConstraintViolationException));
+        }
+
         if (mostSpecificCause instanceof IllegalArgumentException)
         {
             IllegalArgumentException illegalArgumentException = (IllegalArgumentException) mostSpecificCause;
